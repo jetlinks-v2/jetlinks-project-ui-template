@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { isArray } from 'lodash-es'
+import { handleAuthMenu } from '@/utils'
 
 const getAuthItem = () => {
 
@@ -18,7 +19,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const getPermission = (code: string): string[] => {
-
       if (code) {
         return permissions.value[code]
       }
@@ -26,8 +26,17 @@ export const useAuthStore = defineStore('auth', () => {
       return []
     }
 
-    const handlePermission = (data: any) => {
+    const hasPermission = (code: string | string[]): boolean => {
+      const codes = isArray(code) ? code : [code]
+      return codes.some((key) => {
+        const [ menuCode, button ] = key
+        return getPermission(menuCode).includes(button)
+      })
+    }
 
+    const handlePermission = (data: any) => {
+        cleanPermission()
+        handleAuthMenu(data, setPermission)
     }
 
     return {
@@ -35,6 +44,7 @@ export const useAuthStore = defineStore('auth', () => {
       getPermission,
       setPermission,
       cleanPermission,
-      handlePermission
+      handlePermission,
+      hasPermission
     }
 })
