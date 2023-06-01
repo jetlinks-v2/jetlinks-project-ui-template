@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
       const codes = isArray(code) ? code : [code]
       return codes.some((key) => {
         const [ menuCode, button ] = key
-        return getPermission(menuCode).includes(button)
+        return !!getPermission(menuCode)?.includes(button)
       })
     }
 

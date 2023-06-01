@@ -132,17 +132,14 @@ export const handleSiderMenu = (menuData: any) => {
 export const handleAuthMenu = (menuData: any, cb: (code, buttons) => void) => {
   if (menuData && menuData.length) {
     return menuData.forEach(item => {
-      const { isApp } = hasAppID(item) // 是否为第三方程序
-      if (!isApp) {
-        const { code, buttons, children} = item
+      const { code, buttons, children} = item
 
-        if (buttons) {
-          cb(code, buttons)
-        }
+      if (buttons) {
+        cb(code, buttons)
+      }
 
-        if (children) {
-          handleAuthMenu(children, cb)
-        }
+      if (children) {
+        handleAuthMenu(children, cb)
       }
     })
   }
