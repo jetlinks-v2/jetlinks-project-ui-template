@@ -79,7 +79,7 @@ export const useMenuStore = defineStore('menu', () => {
             }
 
             routes.push(USER_CENTER_ROUTE) // 添加个人中心
-            authStore.handlePermission(resp.result)
+            authStore.handlePermission(resp.result) // 处理按钮权限
             menu.value = routes
             siderMenus.value = handleSiderMenu(cloneDeep(resp.result)) // 处理菜单
         }
