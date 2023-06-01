@@ -13,7 +13,6 @@
     "@jetlinks/constants": "workspace:^",
     "@jetlinks/core": "workspace:^",
     "@jetlinks/hooks": "workspace:^",
-    "@jetlinks/iot": "workspace:^",
     "@jetlinks/router": "workspace:^",
     "@jetlinks/stores": "workspace:^",
     "@jetlinks/types": "workspace:^",
