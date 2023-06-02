@@ -138,7 +138,7 @@ const columns = [
     search: {
       type: 'date',
     },
-    width: 180,
+    width: 200,
     scopedSlots: true,
   },
   {
@@ -147,7 +147,7 @@ const columns = [
     key: 'action',
     fixed: 'right',
     scopedSlots: true,
-    width: 200,
+    width: 140,
   },
 ]
 const queryParams = ref({ terms: [] })

@@ -18,6 +18,7 @@
 
     <template #rightContentRender>
       <div class="right-content">
+        <Notice />
         <User />
       </div>
     </template>
@@ -33,9 +34,9 @@
 <script setup name="BasicLayoutPage" lang="ts">
 import { useRouter, useRoute } from '@jetlinks/router'
 import { reactive, computed, watchEffect } from 'vue'
-import { User } from './components'
 import { useSystemStore } from '@/store/system'
 import { useMenuStore } from '@/store/menu'
+import { User, Notice } from './components'
 
 
 type StateType = {
@@ -123,5 +124,9 @@ watchEffect(() => {
 </script>
 
 <style scoped>
-
+.right-content {
+  margin-right: 24px;
+  display: flex;
+  align-items: center;
+}
 </style>
