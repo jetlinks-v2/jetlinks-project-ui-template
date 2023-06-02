@@ -1,6 +1,7 @@
 import { h } from 'vue'
-import { initRequest } from '@jetlinks/core'
-import { getGlobalConfig } from '@jetlinks/utils'
+import {initRequest, initWebSocket} from '@jetlinks/core'
+import {getGlobalConfig, getToken} from '@jetlinks/utils'
+import { TOKEN_KEY, BASE_API } from '@jetlinks/constants'
 import { Modal } from 'jetlinks-ui-components'
 
 const LicenseModal = () => {
@@ -38,5 +39,17 @@ export const initPackages = async () => {
     }))
   }
 
-  await Promise.all([_initRequest()])
+  /**
+   * 初始化websocket
+   */
+  const initWs = async () => {
+    const token = getToken()
+    const protocol = document.location.protocol.replace('http', 'ws')
+    const host = document.location.host
+    const url = `${protocol}//${host}${BASE_API}/messaging/${token}?:${TOKEN_KEY}=${token}`
+
+    await initWebSocket(url)
+  }
+
+  await Promise.all([_initRequest(), initWs()])
 }

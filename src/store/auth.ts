@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
     const hasPermission = (code: string | string[]): boolean => {
       const codes = isArray(code) ? code : [code]
       return codes.some((key) => {
-        const [ menuCode, button ] = key
+        const [ menuCode, button ] = key.split(':')
         return !!getPermission(menuCode)?.includes(button)
       })
     }
