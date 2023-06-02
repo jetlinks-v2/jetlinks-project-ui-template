@@ -1,7 +1,7 @@
 export const extraMenu = {
-  'device/Instance': [{
-    code: 'device/Instance/Detail',
-    url: '/:id',
-    name: '设备详情'
+  'system/Role': [{ // 角色管理
+    code: 'system/Role/Detail',
+    url: '/Detail/:id',
+    name: '角色详情'
   }]
 }
