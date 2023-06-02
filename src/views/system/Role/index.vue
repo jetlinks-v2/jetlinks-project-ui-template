@@ -1,10 +1,10 @@
 <template>
     <page-container>
         <div class="role-container">
-            <pro-search
+            <j-search
                 :columns="columns"
                 target="category"
-                @search="(params:any)=>queryParams = {...params}"
+                @search="onSearch"
             />
             <FullPage>
                 <j-pro-table
@@ -55,6 +55,7 @@
                                 type="link"
                                 :hasPermission="`${permission}:delete`"
                                 :tooltip="{ title: '删除' }"
+                                danger
                                 :popConfirm="{
                                     title: `确定要删除吗`,
                                     onConfirm: () => clickDel(slotProps),
@@ -93,6 +94,9 @@ const columns = [
         fixed: 'left',
         search: {
             type: 'string',
+            componentProps: {
+                placeholder: '请输入页面地址'
+            }
         },
     },
     {
@@ -102,6 +106,9 @@ const columns = [
         ellipsis: true,
         search: {
             type: 'string',
+            componentProps: {
+                placeholder: '请输入名称'
+            }
         },
     },
     {
@@ -111,6 +118,9 @@ const columns = [
         dataIndex: 'description',
         search: {
             type: 'string',
+            componentProps: {
+                placeholder: '请输入说明'
+            }
         },
     },
     {
@@ -135,6 +145,12 @@ const clickDel = (row: any) => {
         }
     });
 };
+
+const onSearch = (e: any) => {
+    queryParams.value = {
+        terms: e
+    }
+}
 
 </script>
 

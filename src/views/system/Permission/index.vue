@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <div class="permission-container">
-      <pro-search
+      <j-search
         :columns="columns"
         target="system-permission"
         @search="handleSearch"
@@ -103,13 +103,13 @@
                   "
                 />
               </PermissionButton>
-
               <PermissionButton
                 :hasPermission="`${permission}:delete`"
                 type="link"
                 :tooltip="{
                   title: slotProps.status ? '请先禁用，再删除' : '删除',
                 }"
+                danger
                 :popConfirm="{
                   title: `确认删除`,
                   onConfirm: () => clickDel(slotProps),
@@ -157,6 +157,9 @@ const columns = [
     fixed: 'left',
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入标识'
+      }
     },
   },
   {
@@ -167,6 +170,9 @@ const columns = [
     search: {
       type: 'string',
       first: true,
+      componentProps: {
+        placeholder: '请输入名称'
+      }
     },
   },
   {
@@ -176,6 +182,9 @@ const columns = [
     scopedSlots: true,
     search: {
       type: 'select',
+      componentProps: {
+        placeholder: '请选择状态'
+      },
       options: [
         { label: '启用', value: 1 },
         { label: '禁用', value: 0 },
@@ -205,7 +214,9 @@ const dialog = reactive({
 const tableRef = ref<Record<string, any>>({}) // 表格实例
 
 const handleSearch = (e: any) => {
-  queryParams.value = e
+  queryParams.value = {
+    terms: e
+  }
 }
 
 // 打开编辑弹窗
