@@ -1,4 +1,4 @@
-import { BasicLayoutPage, BlankLayoutPage, Iframe } from '@jetlinks/components'
+import { BasicLayoutPage, BlankLayoutPage, Iframe } from '@/layout'
 
 type Buttons = Array<{ id: string }>
 
