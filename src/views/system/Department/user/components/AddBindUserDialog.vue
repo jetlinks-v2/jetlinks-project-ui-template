@@ -19,13 +19,13 @@
       <j-pro-table
         ref="tableRef"
         :columns="columns"
-        :request="table.requestFun"
+        :request="requestFun"
         :params="queryParams"
         :rowSelection="{
           selectedRowKeys: table._selectedRowKeys,
-          onChange: table.onSelectChange,
+          onChange: onSelectChange,
+          onSelectNone: cancelSelect
         }"
-        @cancelSelect="table.cancelSelect"
         model="TABLE"
         :defaultParams="{
           pageSize: 10,
@@ -43,41 +43,47 @@
 <script setup lang="ts">
 import { bindUser_api, getBindUserList_api } from '@/api/department'
 import { message } from 'jetlinks-ui-components'
-import { useDepartmentStore } from '@/store/department'
+// import { useDepartmentStore } from '@/store/department'
 
-const department = useDepartmentStore()
+// const department = useDepartmentStore()
 
 const emits = defineEmits(['confirm', 'update:visible'])
 
-const props = defineProps<{
-  parentId: string
-  visible: boolean
-}>()
+const props = defineProps({
+    parentId: {
+        type: String,
+        default: ''
+    },
+    visible: {
+        type: Boolean,
+        default: false
+    }
+})
 
 // 弹窗相关
 const loading = ref(false)
 
 const confirm = () => {
-  if (department.crossPageKeys.length && props.parentId) {
-    loading.value = true
-    bindUser_api(props.parentId, department.crossPageKeys)
-      .then(() => {
-        message.success('操作成功')
-        emits('confirm')
-        emits('update:visible', false)
-        // table._selectedRowKeys = [];
-        department.setSelectedKeys([])
-      })
-      .finally(() => (loading.value = false))
-  } else {
-    // emits('update:visible', false);
-    message.warning('请选择要绑定的用户')
-  }
+//   if (department.crossPageKeys.length && props.parentId) {
+//     loading.value = true
+//     bindUser_api(props.parentId, department.crossPageKeys)
+//       .then(() => {
+//         message.success('操作成功')
+//         emits('confirm')
+//         emits('update:visible', false)
+//         table._selectedRowKeys = [];
+//         // department.setSelectedKeys([])
+//       })
+//       .finally(() => (loading.value = false))
+//   } else {
+//     // emits('update:visible', false);
+//     message.warning('请选择要绑定的用户')
+//   }
 }
 
 const cancel = () => {
   emits('update:visible', false)
-  department.setSelectedKeys([])
+//   department.setSelectedKeys([])
 }
 
 const columns = [
@@ -108,7 +114,7 @@ const table = reactive({
 const cancelSelect = () => {
   // console.log('分页会 取消选择', 1111111111);
   // table._selectedRowKeys = [];
-  department.setSelectedKeys([], 'concat')
+//   department.setSelectedKeys([], 'concat')
 }
 const requestFun = async (oParams: any) => {
   cancelSelect()
@@ -150,15 +156,15 @@ const requestFun = async (oParams: any) => {
 const onSelectChange = (keys: string[]) => {
   // console.log('手动选择改变: ', keys);
   // table._selectedRowKeys = keys;
-  department.setSelectedKeys(keys, keys.length ? 'concat' : '')
+//   department.setSelectedKeys(keys, keys.length ? 'concat' : '')
 }
 
-watch(
-  () => department.crossPageKeys,
-  (val: string[]) => {
-    table._selectedRowKeys = val
-  },
-)
+// watch(
+//   () => department.crossPageKeys,
+//   (val: string[]) => {
+//     table._selectedRowKeys = val
+//   },
+// )
 </script>
 
 <style lang="less" scoped>

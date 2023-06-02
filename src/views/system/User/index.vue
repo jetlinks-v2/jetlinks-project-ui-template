@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <div class="user-container">
-      <pro-search :columns="columns" target="category" @search="handleParams" />
+      <j-search :labelWidth="50" :columns="columns" target="category" @search="handleParams" />
       <FullPage>
         <j-pro-table
           ref="tableRef"
@@ -85,6 +85,7 @@
                 :tooltip="{
                   title: slotProps.status ? '请先禁用，再删除' : '删除',
                 }"
+                danger
                 :popConfirm="{
                   title: `确认删除`,
                   onConfirm: () => clickDel(slotProps.id),
@@ -129,6 +130,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入姓名',
+      },
     },
   },
   {
@@ -138,6 +142,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入用户名',
+      }
     },
   },
   {
@@ -147,6 +154,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'select',
+      componentProps: {
+        placeholder: '请选择用户类型',
+      },
       options: () =>
         new Promise((resolve) => {
           getUserType_api().then((resp: any) => {
@@ -169,6 +179,9 @@ const columns = [
     search: {
       rename: 'status',
       type: 'select',
+      componentProps: {
+        placeholder: '请选择状态',
+      },
       options: [
         {
           label: '启用',
@@ -189,6 +202,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入手机号',
+      }
     },
   },
   {
@@ -198,6 +214,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入邮箱',
+      }
     },
   },
   {
@@ -251,38 +270,35 @@ const refresh = () => {
   tableRef.value.reload()
 }
 
-const handleParams = (params: any) => {
-  const newParams = (params?.terms as any[])?.map((item1) => {
+const handleParams = (params: any[]) => {
+  const newParams = (params as any[])?.map((item) => {
     let arr: any[] = []
-    item1.terms = item1.terms.map((item2: any) => {
-      if (['telephone', 'email'].includes(item2.column)) {
-        return {
-          column: 'id$user-detail',
-          value: [item2],
-        }
+    if (['telephone', 'email'].includes(item.column)) {
+      return {
+        column: 'id$user-detail',
+        value: [item],
       }
-      if (['type'].includes(item2.column) && item2.value === 'other') {
-        arr = [
-          {
-            ...item2,
-            type: 'or',
-            termType: 'isnull',
-            value: 1,
-          },
-          {
-            ...item2,
-            type: 'or',
-            termType: 'empty',
-            value: 1,
-          },
-        ]
-      }
-      return item2
-    })
-    if (arr.length) {
-      item1.terms = [...item1.terms, ...arr]
     }
-    return item1
+    if (['type'].includes(item.column) && item.value === 'other') {
+      arr = [
+        {
+          ...item,
+          type: 'or',
+          termType: 'isnull',
+          value: 1,
+        },
+        {
+          ...item,
+          type: 'or',
+          termType: 'empty',
+          value: 1,
+        },
+      ]
+    }
+    if (arr.length) {
+      item.terms = [...item.terms, ...arr]
+    }
+    return item
   })
   queryParams.value = { terms: newParams || [] }
 }

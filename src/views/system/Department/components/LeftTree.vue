@@ -14,7 +14,6 @@
         <div class="add-btn">
             <PermissionButton
                 type="primary"
-                class="add-btn"
                 :hasPermission="`${permission}:add`"
                 @click="openDialog()"
             >
@@ -253,8 +252,10 @@ const openDialog = (row: any = {}) => {
     dialog.visible = true;
 };
 
-watch(selectedKeys, (n) => {
-    emits('change', n[0]);
+watch(() => selectedKeys.value, (n) => {
+    emits('change', n?.[0]);
+}, {
+    immediate: true
 });
 
 onMounted(() => {

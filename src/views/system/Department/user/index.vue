@@ -15,7 +15,7 @@
         :rowSelection="{
           selectedRowKeys: table._selectedRowKeys,
           onChange: onSelectChange,
-          onSelectNone: cancelSelect
+          onSelectNone: cancelSelect,
         }"
         @cancelSelect="cancelSelect"
         model="TABLE"
@@ -28,25 +28,26 @@
         }"
       >
         <template #headerTitle>
-          <PermissionButton
-            type="primary"
-            :hasPermission="`${permission}:bind-user`"
-            @click="dialogVisible = true"
-            style="margin-right: 15px"
-            :disabled="!parentId"
-          >
-            <AIcon type="PlusOutlined" />绑定用户
-          </PermissionButton>
-          <div style="display: inline-block; width: 12px; height: 1px"></div>
-          <PermissionButton
-            :hasPermission="`${permission}:bind`"
-            :popConfirm="{
-              title: `是否解除绑定`,
-              onConfirm: () => unBind(),
-            }"
-          >
-            <AIcon type="DisconnectOutlined" />批量解绑
-          </PermissionButton>
+          <j-space>
+            <PermissionButton
+              type="primary"
+              :hasPermission="`${permission}:bind-user`"
+              @click="dialogVisible = true"
+              style="margin-right: 15px"
+              :disabled="isShow"
+            >
+              <AIcon type="PlusOutlined" />绑定用户
+            </PermissionButton>
+            <PermissionButton
+              :hasPermission="`${permission}:bind`"
+              :popConfirm="{
+                title: `是否解除绑定`,
+                onConfirm: () => unBind(),
+              }"
+            >
+              <AIcon type="DisconnectOutlined" />批量解绑
+            </PermissionButton>
+          </j-space>
         </template>
         <template #status="slotProps">
           <BadgeStatus
@@ -75,27 +76,34 @@
       </j-pro-table>
     </FullPage>
 
-    <!-- <div class="dialogs">
+    <div class="dialogs">
       <AddBindUserDialog
         v-if="dialogVisible"
         v-model:visible="dialogVisible"
         :parent-id="props.parentId"
         @confirm="refresh"
       />
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script setup lang="ts" name="user">
-// import AddBindUserDialog from './components/AddBindUserDialog.vue'
+import AddBindUserDialog from './components/AddBindUserDialog.vue'
 import { getBindUserList_api, unBindUser_api } from '@/api/department'
 import { message } from 'jetlinks-ui-components'
 
 const permission = 'system/Department'
 
-const props = defineProps<{
-  parentId: string
-}>()
+const props = defineProps({
+    parentId: {
+        type: String,
+        default: ''
+    }
+})
+
+const isShow = computed(() => {
+    return !props.parentId
+})
 
 const columns = [
   {

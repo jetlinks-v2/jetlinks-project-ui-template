@@ -1,7 +1,7 @@
 <template>
   <page-container>
     <div class="menu-container">
-      <pro-search :columns="columns" target="category" @search="handleSearch" />
+      <j-search :labelWidth="56" :columns="columns" target="category" @search="handleSearch" />
       <FullPage>
         <j-pro-table
           ref="tableRef"
@@ -53,6 +53,7 @@
                 type="link"
                 :hasPermission="`${permission}:delete`"
                 :tooltip="{ title: '删除' }"
+                danger
                 :popConfirm="{
                   title: `是否删除该菜单`,
                   onConfirm: () => clickDel(slotProps),
@@ -91,6 +92,9 @@ const columns = [
     fixed: 'left',
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入编码'
+      }
     },
     width: 300,
   },
@@ -101,6 +105,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入名称'
+      }
     },
     // width: 220,
   },
@@ -111,6 +118,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入页面地址'
+      }
     },
   },
   {
@@ -120,6 +130,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'number',
+      componentProps: {
+        placeholder: '请输入排序'
+      }
     },
     width: 80,
   },
@@ -160,8 +173,12 @@ const admin = computed(() => {
 })
 
 const handleSearch = (e: any) => {
-  queryParams.value = e
-  if (!e.terms.length) expandedRowKeys.value = []
+  queryParams.value = {
+    terms: e
+  }
+  if (!e.length) {
+    expandedRowKeys.value = []
+  }
 }
 
 const getList = async (_params: any) => {
