@@ -62,7 +62,6 @@
 </template>
 
 <script setup lang="ts">
-import PermissionButton from '@/components/PermissionButton/index.vue';
 import ButtonAddDialog from '../components/ButtonAddDialog.vue';
 import { getMenuInfo_api, saveMenuInfo_api } from '@/api/system/menu';
 import { message } from 'jetlinks-ui-components';

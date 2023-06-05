@@ -258,9 +258,7 @@
 </template>
 
 <script setup lang="ts">
-import PermissionButton from '@/components/PermissionButton/index.vue';
-import { FormInstance } from 'ant-design-vue';
-import { message } from 'jetlinks-ui-components';
+import { onlyMessage } from '@jetlinks/utils'
 import ChooseIconDialog from '../components/ChooseIconDialog.vue';
 import PermissChoose from '../components/PermissChoose.vue';
 import {
@@ -271,8 +269,6 @@ import {
     addMenuInfo_api,
     validCode_api,
 } from '@/api/system/menu';
-import { Rule } from 'ant-design-vue/lib/form';
-import { isNoCommunity } from '@/utils/utils';
 
 const permission = 'system/Menu';
 // 路由
@@ -286,8 +282,8 @@ const routeParams = {
 };
 
 // 表单
-const basicFormRef = ref<FormInstance>();
-const permissFormRef = ref<FormInstance>();
+const basicFormRef = ref<any>();
+const permissFormRef = ref<any>();
 const form = reactive({
     data: {
         name: '',
@@ -318,7 +314,6 @@ const form = reactive({
                 form.sourceCode = resp.result.code;
             });
 
-        if (isNoCommunity) {
           // 获取关联菜单
           getMenuTree_api({ paging: false }).then((resp: any) => {
               form.treeData = resp.result;
@@ -330,9 +325,8 @@ const form = reactive({
                   value: item.id,
               }));
           });
-        }
     },
-    checkCode: async (_rule: Rule, value: string): Promise<any> => {
+    checkCode: async (_rule: any, value: string): Promise<any> => {
         if (!value) return Promise.reject('');
         else if (value.length > 64) return Promise.reject('最多可输入64个字符');
         // 编辑时不校验原本的编码
@@ -373,7 +367,7 @@ const form = reactive({
                 api(params)
                     .then((resp: any) => {
                         if (resp.status === 200) {
-                            message.success('操作成功！');
+                            onlyMessage('操作成功！')
                             // 新增后刷新页面，编辑则不需要
                             if (!routeParams.id) {
                                 router.push(

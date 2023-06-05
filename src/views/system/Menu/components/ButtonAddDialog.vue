@@ -54,7 +54,7 @@
                     },
                 ]"
             >
-                <PermissChoose
+                <PermissionChoose
                     :first-width="8"
                     max-height="350px"
                     v-model:value="form.data.permissions"
@@ -75,9 +75,8 @@
 </template>
 
 <script setup lang="ts">
-import { FormInstance, message } from 'ant-design-vue';
-import { Rule } from 'ant-design-vue/es/form';
-import PermissChoose from '../components/PermissChoose.vue';
+import { onlyMessage } from '@jetlinks/utils';
+import PermissionChoose from '../components/PermissChoose.vue';
 import { saveMenuInfo_api } from '@/api/system/menu';
 
 const emits = defineEmits(['confirm', 'update:visible']);
@@ -111,7 +110,7 @@ const confirm = () => {
             loading.value = true;
             saveMenuInfo_api(params)
                 .then((resp) => {
-                    message.success('操作成功');
+                    onlyMessage('操作成功')
                     emits('confirm');
                     emits('update:visible', false);
                 })
@@ -127,10 +126,10 @@ const initForm = {
     permissions: [],
     describe: '',
 } as formType;
-const formRef = ref<FormInstance>();
+const formRef = ref<any>();
 const form = reactive({
     data: { ...initForm, ...props.data },
-    checkPermission: (_rule: Rule, value: string[]) => {
+    checkPermission: (_rule: any, value: string[]) => {
         if (!value || value.length < 1) return Promise.reject('请选择权限');
         return Promise.resolve();
     },

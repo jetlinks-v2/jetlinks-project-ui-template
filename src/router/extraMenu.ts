@@ -9,6 +9,11 @@ export const extraMenu = {
       code: 'system/Menu/Setting',
       url: '/Setting',
       name: '菜单配置'
-    }
+    },
+    {
+      code: 'system/Menu/Detail',
+      url: '/Detail/:id',
+      name: '菜单详情'
+    },
   ]
 }
