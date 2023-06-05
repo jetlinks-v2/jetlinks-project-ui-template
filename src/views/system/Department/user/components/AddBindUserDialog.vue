@@ -9,12 +9,7 @@
     @ok="confirm"
     @cancel="cancel"
   >
-    <pro-search
-      type="simple"
-      :columns="columns"
-      target="category"
-      @search="(params:any)=>queryParams = {...params}"
-    />
+    <j-search :columns="columns" target="category" @search="onSearch" />
     <div class="table">
       <j-pro-table
         ref="tableRef"
@@ -22,10 +17,12 @@
         :request="requestFun"
         :params="queryParams"
         :rowSelection="{
-          selectedRowKeys: table._selectedRowKeys,
-          onChange: onSelectChange,
-          onSelectNone: cancelSelect
+          selectedRowKeys: _selectedRowKeys,
+          onSelect: onSelect,
+          onSelectAll: onSelectAll,
+          onSelectNone: cancelSelect,
         }"
+        :bodyStyle="{ padding: '0 24px' }"
         model="TABLE"
         :defaultParams="{
           pageSize: 10,
@@ -42,48 +39,46 @@
 
 <script setup lang="ts">
 import { bindUser_api, getBindUserList_api } from '@/api/department'
+import { useRequest } from '@jetlinks/hooks'
 import { message } from 'jetlinks-ui-components'
-// import { useDepartmentStore } from '@/store/department'
-
-// const department = useDepartmentStore()
 
 const emits = defineEmits(['confirm', 'update:visible'])
 
 const props = defineProps({
-    parentId: {
-        type: String,
-        default: ''
-    },
-    visible: {
-        type: Boolean,
-        default: false
-    }
+  parentId: {
+    type: String,
+    default: '',
+  },
+  visible: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 // 弹窗相关
-const loading = ref(false)
+
+const { loading, run } = useRequest(bindUser_api, {
+  immediate: false,
+  onSuccess(res) {
+    if (res.success) {
+      message.success('操作成功')
+      emits('confirm')
+      emits('update:visible', false)
+      _selectedRowKeys.value = []
+    }
+  },
+})
 
 const confirm = () => {
-//   if (department.crossPageKeys.length && props.parentId) {
-//     loading.value = true
-//     bindUser_api(props.parentId, department.crossPageKeys)
-//       .then(() => {
-//         message.success('操作成功')
-//         emits('confirm')
-//         emits('update:visible', false)
-//         table._selectedRowKeys = [];
-//         // department.setSelectedKeys([])
-//       })
-//       .finally(() => (loading.value = false))
-//   } else {
-//     // emits('update:visible', false);
-//     message.warning('请选择要绑定的用户')
-//   }
+  if (_selectedRowKeys.value.length && props.parentId) {
+    run(props.parentId, _selectedRowKeys.value)
+  } else {
+    message.warning('请选择要绑定的用户')
+  }
 }
 
 const cancel = () => {
   emits('update:visible', false)
-//   department.setSelectedKeys([])
 }
 
 const columns = [
@@ -94,6 +89,9 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入姓名',
+      },
     },
   },
   {
@@ -103,21 +101,53 @@ const columns = [
     ellipsis: true,
     search: {
       type: 'string',
+      componentProps: {
+        placeholder: '请输入用户名',
+      },
     },
   },
 ]
 const queryParams = ref({})
-const table = reactive({
-  _selectedRowKeys: [] as string[],
-})
+
+const _selectedRowKeys = ref<string[]>([])
 
 const cancelSelect = () => {
-  // console.log('分页会 取消选择', 1111111111);
-  // table._selectedRowKeys = [];
-//   department.setSelectedKeys([], 'concat')
+  _selectedRowKeys.value = []
+}
+const onSelect = (record: any, selected: boolean) => {
+  const arr = [..._selectedRowKeys.value]
+  const _index = arr.findIndex((item) => item === record?.id)
+  if (selected) {
+    if (!(_index > -1)) {
+      _selectedRowKeys.value.push(record.id)
+    }
+  } else {
+    if (_index > -1) {
+      // 去掉数据
+      _selectedRowKeys.value.splice(_index, 1)
+    }
+  }
+}
+const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
+  if (selected) {
+    changeRows.map((i: any) => {
+      if (!_selectedRowKeys.value.includes(i.id)) {
+        _selectedRowKeys.value.push(i.id)
+      }
+    })
+  } else {
+    const arr = changeRows.map((item: any) => item.id)
+    const _ids: string[] = []
+    ;[..._selectedRowKeys.value].map((i: any) => {
+      if (!arr.includes(i)) {
+        _ids.push(i)
+      }
+    })
+    _selectedRowKeys.value = _ids
+  }
 }
 const requestFun = async (oParams: any) => {
-  cancelSelect()
+  // cancelSelect()
   if (props.parentId) {
     const params = {
       ...oParams,
@@ -153,18 +183,12 @@ const requestFun = async (oParams: any) => {
     }
   }
 }
-const onSelectChange = (keys: string[]) => {
-  // console.log('手动选择改变: ', keys);
-  // table._selectedRowKeys = keys;
-//   department.setSelectedKeys(keys, keys.length ? 'concat' : '')
-}
 
-// watch(
-//   () => department.crossPageKeys,
-//   (val: string[]) => {
-//     table._selectedRowKeys = val
-//   },
-// )
+const onSearch = (e: any[]) => {
+  queryParams.value = {
+    terms: e
+  }
+}
 </script>
 
 <style lang="less" scoped>

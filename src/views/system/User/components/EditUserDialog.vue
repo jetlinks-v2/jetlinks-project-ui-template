@@ -185,7 +185,8 @@ import {
   updatePassword_api,
   getUser_api,
 } from '@/api/user'
-// import { passwordRegEx } from '@/utils/validate'
+import { useRequest } from '@jetlinks/hooks'
+import { passwordRegEx } from '@/utils/validate'
 
 const deptPermission = 'system/Department'
 const rolePermission = 'system/Role'
@@ -219,7 +220,6 @@ const props = defineProps<{
   visible: boolean
 }>()
 // 弹窗相关
-const loading = ref(false)
 const dialogTitle = computed(() => {
   if (props.type === 'add') return '新增'
   else if (props.type === 'edit') return '编辑'
@@ -251,8 +251,8 @@ const rules = {
       if (!value) return reject('请输入密码')
       else if (value.length > 64) return reject('最多可输入64个字符')
       else if (value.length < 8) return reject('密码不能少于8位')
-    //   else if (!passwordRegEx(value))
-    //     return reject('密码必须包含大小写英文和数字')
+        else if (!passwordRegEx(value))
+          return reject('密码必须包含大小写英文和数字')
       validateField_api('password', value).then((resp: any) => {
         resp.result.passed ? resolve('') : reject(resp.result.reason)
       })
@@ -267,7 +267,6 @@ const rules = {
 
 const getUserInfo = () => {
   const id = props.data.id || ''
-  console.log(111)
 
   if (props.type === 'add') form.data = {} as formType
   else if (props.type === 'reset') form.data = { id } as formType
@@ -283,35 +282,6 @@ const getUserInfo = () => {
       })
     })
   }
-}
-
-const submit = (): Promise<any> => {
-  let api: any = undefined
-  let params = {}
-
-  if (props.type === 'add') {
-    api = addUser_api
-    params = {
-      user: form.data,
-      orgIdList: form.data.orgIdList,
-      roleIdList: form.data.roleIdList,
-    }
-  } else if (props.type === 'edit') {
-    api = updateUser_api
-    params = {
-      id: form.data.id,
-      user: form.data,
-      orgIdList: form.data.orgIdList,
-      roleIdList: form.data.roleIdList,
-    }
-  } else if (props.type === 'reset') {
-    api = updatePassword_api
-    params = {
-      id: form.data.id,
-      password: form.data.password,
-    }
-  } else return Promise.reject()
-  return api && api(params)
 }
 
 const getRoleList = () => {
@@ -344,19 +314,57 @@ const init = () => {
   getUserInfo()
 }
 
+const getApi = () => {
+  let api: any = undefined
+  if (props.type === 'add') {
+    api = addUser_api
+  } else if (props.type === 'edit') {
+    api = updateUser_api
+  } else if (props.type === 'reset') {
+    api = updatePassword_api
+  }
+  return api
+}
+
+const { loading, run } = useRequest(getApi, {
+  immediate: false,
+  onSuccess(res) {
+    if (res.success) {
+      message.success('操作成功')
+      emits('confirm')
+      emits('update:visible', false)
+    }
+  },
+})
+
 const confirm = () => {
-  loading.value = true
-  formRef.value
-    ?.validate()
-    .then(() => submit())
-    .then((resp: any) => {
-      if (resp.status === 200) {
-        message.success('操作成功')
-        emits('confirm')
-        emits('update:visible', false)
+  formRef.value?.validate().then(() => {
+    let params = {}
+
+    if (props.type === 'add') {
+      // api = addUser_api
+      params = {
+        user: form.data,
+        orgIdList: form.data.orgIdList,
+        roleIdList: form.data.roleIdList,
       }
-    })
-    .finally(() => (loading.value = false))
+    } else if (props.type === 'edit') {
+      // api = updateUser_api
+      params = {
+        id: form.data.id,
+        user: form.data,
+        orgIdList: form.data.orgIdList,
+        roleIdList: form.data.roleIdList,
+      }
+    } else if (props.type === 'reset') {
+      // api = updatePassword_api
+      params = {
+        id: form.data.id,
+        password: form.data.password,
+      }
+    }
+    run(params)
+  })
 }
 
 watchEffect(() => {
