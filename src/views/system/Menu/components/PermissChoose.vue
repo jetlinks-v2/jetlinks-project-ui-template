@@ -59,8 +59,11 @@ const props = defineProps<{
 const emits = defineEmits(['update:value']);
 const searchValue = ref<string>('');
 
-const search = reactive({
-    searchTimer: null as null | number,
+const search = reactive<{
+  searchTimer: null | NodeJS.Timeout
+  search: () => void
+}>({
+    searchTimer: null,
     search: () => {
         if (search.searchTimer) {
             clearTimeout(search.searchTimer);

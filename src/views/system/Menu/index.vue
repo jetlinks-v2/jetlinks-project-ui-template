@@ -20,12 +20,12 @@
             >
               <AIcon type="PlusOutlined" />新增
             </PermissionButton>
-            <j-button
-              v-if="admin"
-              style="margin-left: 12px"
-              @click="router.push('/system/Menu/Setting')"
-              >菜单配置</j-button
-            >
+<!--            <j-button-->
+<!--              v-if="admin"-->
+<!--              style="margin-left: 12px"-->
+<!--              @click="router.push('/system/Menu/Setting')"-->
+<!--              >菜单配置</j-button-->
+<!--            >-->
           </template>
           <template #createTime="slotProps">
             {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}

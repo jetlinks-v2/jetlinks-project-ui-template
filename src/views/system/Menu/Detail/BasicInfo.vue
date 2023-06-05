@@ -430,7 +430,7 @@ type assetType = {
 
             &::before {
                 position: absolute;
-                top: 5px px;
+                top: 5px;
                 left: 0;
                 width: 4px;
                 height: calc(100% - 10px);

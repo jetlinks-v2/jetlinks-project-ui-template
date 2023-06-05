@@ -1,9 +1,4 @@
-import { cloneDeep, omit } from 'lodash-es';
-import type {
-    AntTreeNodeDropEvent,
-    TreeProps,
-    TreeDataItem,
-} from 'ant-design-vue/es/tree';
+import { cloneDeep } from 'lodash-es';
 
 /**
  * 根据权限过滤菜单
@@ -163,7 +158,7 @@ export const findAllParentsAndChildren = (data: any, code: any) => {
         if (node.children) {
             for (let child of node.children) {
                 if (findParentsAndChildrenRecursive(child)) {
-                    result.parents.push(node.code);
+                    result.parents.push(node.code as never);
                     return true;
                 }
             }
@@ -216,14 +211,14 @@ export const select = (selecteds: Array<string>, e: any, treeData: any) => {
  * @param treeData 当前treeData值
  * @returns 拖拽后treeData值
  */
-export const drop = (info: AntTreeNodeDropEvent, treeData: any) => {
+export const drop = (info: any, treeData: any) => {
     const dropKey = info.node.key;
     const dragKey = info.dragNode.key;
     const dropPos = info.node.pos.split('-');
     const dropPosition =
         info.dropPosition - Number(dropPos[dropPos.length - 1]);
     const loop = (
-        data: TreeProps['treeData'],
+        data: any,
         key: string | number,
         callback: any,
     ) => {
@@ -238,17 +233,17 @@ export const drop = (info: AntTreeNodeDropEvent, treeData: any) => {
     };
     const data = [...treeData];
 
-    let dragObj: TreeDataItem;
+    let dragObj: any;
     loop(
         data,
         dragKey,
-        (item: TreeDataItem, index: number, arr: TreeProps['treeData']) => {
+        (item: any, index: number, arr: any) => {
             arr.splice(index, 1);
             dragObj = item;
         },
     );
     if (!info.dropToGap) {
-        loop(data, dropKey, (item: TreeDataItem) => {
+        loop(data, dropKey, (item: any) => {
             item.children = item.children || [];
             item.children.unshift(dragObj);
         });
@@ -257,20 +252,20 @@ export const drop = (info: AntTreeNodeDropEvent, treeData: any) => {
         info.node.expanded && // Is expanded
         dropPosition === 1 // On the bottom gap
     ) {
-        loop(data, dropKey, (item: TreeDataItem) => {
+        loop(data, dropKey, (item: any) => {
             item.children = item.children || [];
             item.children.unshift(dragObj);
         });
     } else {
-        let ar: TreeProps['treeData'] = [];
+        let ar: any = [];
         let i = 0;
         loop(
             data,
             dropKey,
             (
-                _item: TreeDataItem,
+                _item: any,
                 index: number,
-                arr: TreeProps['treeData'],
+                arr: any,
             ) => {
                 ar = arr;
                 i = index;
