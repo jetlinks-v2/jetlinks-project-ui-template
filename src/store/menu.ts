@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useRouter } from 'vue-router'
+import { router } from '@jetlinks/router'
 import { cloneDeep } from 'lodash-es'
 import { userRouterParams } from '@jetlinks/hooks'
 import { onlyMessage } from '@jetlinks/utils'
@@ -39,7 +39,6 @@ export const useMenuStore = defineStore('menu', () => {
 
     const { setParamsValue } = userRouterParams()
     const authStore = useAuthStore()
-    const router = useRouter()
 
     const hasRouteMenu = () => {
         return !!Object.keys(menu).length
@@ -55,7 +54,7 @@ export const useMenuStore = defineStore('menu', () => {
      * @param param1 {Object} 需要传递的参数
      */
     const jumpPage = (name: string, { params, query }: { params?: Record<string, any>, query?: Record<string, any>}) => {
-        if (hasMenu[name]) {
+        if (hasMenu(name)) {
             router.push({ name, params, query })
             setParamsValue(name, params)
         } else {

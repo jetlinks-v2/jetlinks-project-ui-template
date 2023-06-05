@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { exportPermission_api } from '@/api/system/permission';
+import { exportPermission_api } from '@/api/permission';
 import { Form } from 'jetlinks-ui-components';
 Form.useInjectFormItemContext();
 

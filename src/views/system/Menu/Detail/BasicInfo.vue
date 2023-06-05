@@ -262,13 +262,16 @@ import { onlyMessage } from '@jetlinks/utils'
 import ChooseIconDialog from '../components/ChooseIconDialog.vue';
 import PermissChoose from '../components/PermissChoose.vue';
 import {
-    getMenuTree_api,
-    getAssetsType_api,
-    getMenuInfo_api,
-    saveMenuInfo_api,
-    addMenuInfo_api,
-    validCode_api,
-} from '@/api/system/menu';
+    getMenuTree,
+    getAssetsType,
+    getMenuInfo,
+    updateMenu,
+    addMenu,
+    validMenuCode,
+} from '@/api/menu';
+import {useMenuStore} from "@/store/menu";
+
+const menuStore = useMenuStore()
 
 const permission = 'system/Menu';
 // 路由
@@ -305,7 +308,7 @@ const form = reactive({
     init: () => {
         // 获取菜单详情
         routeParams.id &&
-            getMenuInfo_api(routeParams.id).then((resp: any) => {
+            getMenuInfo(routeParams.id).then((resp: any) => {
                 form.data = {
                     ...(resp.result as formType),
                     accessSupport:
@@ -315,11 +318,11 @@ const form = reactive({
             });
 
           // 获取关联菜单
-          getMenuTree_api({ paging: false }).then((resp: any) => {
+          getMenuTree({ paging: false }).then((resp: any) => {
               form.treeData = resp.result;
           });
           // 获取资产类型
-          getAssetsType_api().then((resp: any) => {
+          getAssetsType().then((resp: any) => {
               form.assetsType = resp.result.map((item: any) => ({
                   label: item.name,
                   value: item.id,
@@ -333,7 +336,7 @@ const form = reactive({
         else if (routeParams.id && value === form.sourceCode)
             return Promise.resolve('');
         else {
-            const resp: any = await validCode_api({
+            const resp: any = await validMenuCode({
                 code: value,
                 owner: 'iot',
             });
@@ -348,7 +351,7 @@ const form = reactive({
             permissFormRef.value?.validate(),
         ])
             .then(() => {
-                const api = routeParams.id ? saveMenuInfo_api : addMenuInfo_api;
+                const api = routeParams.id ? updateMenu : addMenu;
                 form.saveLoading = true;
                 const accessSupportValue = form.data.accessSupport;
                 const params = {
@@ -370,9 +373,7 @@ const form = reactive({
                             onlyMessage('操作成功！')
                             // 新增后刷新页面，编辑则不需要
                             if (!routeParams.id) {
-                                router.push(
-                                    `/system/Menu/detail/${resp.result.id}`,
-                                );
+                              menuStore.jumpPage('system/Menu/Detail', { query: { id: resp.result.id}})
                                 routeParams.id = resp.result.id;
                                 form.init();
                             }

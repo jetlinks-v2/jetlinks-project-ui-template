@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { onlyMessage } from '@jetlinks/utils';
 import PermissionChoose from '../components/PermissChoose.vue';
-import { saveMenuInfo_api } from '@/api/system/menu';
+import { updateMenu } from '@/api/menu';
 
 const emits = defineEmits(['confirm', 'update:visible']);
 const props = defineProps<{
@@ -108,7 +108,7 @@ const confirm = () => {
                 buttons,
             };
             loading.value = true;
-            saveMenuInfo_api(params)
+            updateMenu(params)
                 .then((resp) => {
                     onlyMessage('操作成功')
                     emits('confirm');

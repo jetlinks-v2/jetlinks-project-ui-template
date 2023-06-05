@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 import ButtonAddDialog from '../components/ButtonAddDialog.vue';
-import { getMenuInfo_api, saveMenuInfo_api } from '@/api/system/menu';
+import { getMenuInfo, updateMenu } from '@/api/menu';
 import { message } from 'jetlinks-ui-components';
 
 const permission = 'system/Menu';
@@ -122,7 +122,7 @@ const table = reactive({
     tableData: [] as tableDataItem[],
     getList: () => {
         routeParams.id &&
-            getMenuInfo_api(routeParams.id).then((resp: any) => {
+            getMenuInfo(routeParams.id).then((resp: any) => {
                 menuInfo.value = resp.result;
                 table.tableData =
                     (resp.result?.buttons as tableDataItem[]) || [];
@@ -136,7 +136,7 @@ const table = reactive({
             ...menuInfo.value,
             buttons,
         };
-        saveMenuInfo_api(params).then(() => {
+      updateMenu(params).then(() => {
             message.success('操作成功');
             table.getList();
         });

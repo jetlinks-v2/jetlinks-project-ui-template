@@ -76,11 +76,13 @@ import dayjs from 'dayjs'
 import { useUserStore } from '@/store/user'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+import { useMenuStore } from '@/store/menu'
 
 const permission = 'system/Menu'
 
 const router = useRouter()
 const userInfoStore = useUserStore()
+const menuStore = useMenuStore()
 const { userInfo } = storeToRefs(userInfoStore)
 
 const columns = [
@@ -226,20 +228,29 @@ const getList = async (_params: any) => {
 }
 const addChildren = (row: any) => {
   const sortIndex = row?.children?.length || 0
-
-  router.push(
-    `/system/Menu/detail/:id?pid=${row.id}&basePath=${
-      row.url || ''
-    }&sortIndex=${sortIndex + 1}`,
-  )
+  menuStore.jumpPage('system/Menu/Detail', {
+    params: {
+      id: ':id',
+    },
+    query: {
+      pid: row.id,
+      basePath: row.url || '',
+      sortIndex: sortIndex + 1
+    }
+  })
 }
 // 跳转至详情页
 const toDetails = (row: any) => {
-  router.push(
-    `/system/Menu/detail/${row.id || ':id'}?pid=${row.pid || ''}&basePath=${
-      row.url || ''
-    }&sortIndex=${total.value}`,
-  )
+  menuStore.jumpPage('system/Menu/Detail', {
+    params: {
+      id: row.id || ':id',
+    },
+    query: {
+      pid: row.id,
+      basePath: row.url || '',
+      sortIndex: total.value
+    }
+  })
 }
 // 删除
 const clickDel = (row: any) => {
