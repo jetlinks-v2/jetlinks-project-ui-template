@@ -1,84 +1,83 @@
 <template>
-    <j-modal
-        visible
-        title="新增"
-        width="670px"
-        @cancel="emits('update:visible', false)"
-        @ok="confirm"
-        :confirm-loading="loading"
-    >
-        <j-form ref="formRef" :model="form" layout="vertical">
-            <j-form-item
-                name="name"
-                label="名称"
-                :rules="[
-                    { required: true, message: '请输入名称' },
-                    { max: 64, message: '最多可输入64个字符' },
-                ]"
-            >
-                <j-input
-                    v-model:value="form.name"
-                    placeholder="请输入角色名称"
-                    allow-clear
-                />
-            </j-form-item>
-            <j-form-item name="name" label="说明">
-                <j-textarea
-                    v-model:value="form.description"
-                    placeholder="请输入说明"
-                    allow-clear
-                    :maxlength="200"
-                    show-count
-                />
-            </j-form-item>
-        </j-form>
-    </j-modal>
+  <j-modal
+    visible
+    title="新增"
+    width="670px"
+    @cancel="emits('update:visible', false)"
+    @ok="confirm"
+    :confirm-loading="loading"
+  >
+    <j-form ref="formRef" :model="form" layout="vertical">
+      <j-form-item
+        name="name"
+        label="名称"
+        :rules="[
+          { required: true, message: '请输入名称' },
+          { max: 64, message: '最多可输入64个字符' },
+        ]"
+      >
+        <j-input
+          v-model:value="form.name"
+          placeholder="请输入角色名称"
+          allow-clear
+        />
+      </j-form-item>
+      <j-form-item name="name" label="说明">
+        <j-textarea
+          v-model:value="form.description"
+          placeholder="请输入说明"
+          allow-clear
+          :maxlength="200"
+          show-count
+        />
+      </j-form-item>
+    </j-form>
+  </j-modal>
 </template>
 
 <script setup lang="ts">
-import { message } from 'jetlinks-ui-components';
-import { saveRole_api } from '@/api/role';
-import { useMenuStore } from '@/store/menu';
+import { message } from 'jetlinks-ui-components'
+import { saveRole_api } from '@/api/role'
+import { useMenuStore } from '@/store/menu'
 import { useRoute } from 'vue-router'
-import { useRequest } from '@jetlinks/hooks';
+import { useRequest } from '@jetlinks/hooks'
 
-const route = useRoute();
-const { jumpPage } = useMenuStore();
+const route = useRoute()
+const { jumpPage } = useMenuStore()
 
-const emits = defineEmits(['update:visible']);
+const emits = defineEmits(['update:visible'])
 const props = defineProps<{
-    visible: boolean;
-}>();
+  visible: boolean
+}>()
 // 弹窗相关
-const form = ref<any>({});
-const formRef = ref<any>();
+const form = ref<any>({})
+const formRef = ref<any>()
 
-const { loading, run } = useRequest(saveRole_api,
-  {
-    immediate: false,
-    onSuccess(res: any) {
-      if (res.success) {
-        message.success('操作成功');
-        emits('update:visible', false);
+const { loading, run } = useRequest(saveRole_api, {
+  immediate: false,
+  onSuccess(res: any) {
+    if (res.success) {
+      message.success('操作成功')
+      emits('update:visible', false)
 
-        if (route.query.save) {
-            // @ts-ignore
-            window?.onTabSaveSuccess(res.result.id);
-            setTimeout(() => window.close(), 300);
-        } else {
-            jumpPage(`system/Role/Detail`, {id: res?.result.id})
-        };
+      if (route.query.save) {
+        // @ts-ignore
+        window?.onTabSaveSuccess(res.result.id)
+        setTimeout(() => window.close(), 300)
+      } else {
+        jumpPage(`system/Role/Detail`, {
+          params: {
+            id: res?.result.id,
+          },
+        })
       }
-    },
+    }
   },
-)
+})
 
 const confirm = () => {
-    loading.value = true;
-    formRef.value
-        ?.validate()
-        .then(() => run(form.value))
-};
+  formRef.value?.validate().then(() => run(form.value))
+}
 // 表单相关
 </script>
 

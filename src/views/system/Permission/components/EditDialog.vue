@@ -158,16 +158,17 @@ const columns = [
     title: '名称',
     dataIndex: 'name',
     key: 'name',
-    width: 220,
+    ellipsis: true
   },
   {
     title: '说明',
     dataIndex: 'describe',
     key: 'describe',
-    width: 220,
+    ellipsis: true
   },
   {
     title: '操作',
+    width: 80,
     dataIndex: 'actions',
     key: 'actions',
   },

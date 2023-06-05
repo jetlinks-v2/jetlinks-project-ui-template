@@ -314,19 +314,19 @@ const init = () => {
   getUserInfo()
 }
 
-const getApi = () => {
-  let api: any = undefined
-  if (props.type === 'add') {
-    api = addUser_api
-  } else if (props.type === 'edit') {
-    api = updateUser_api
-  } else if (props.type === 'reset') {
-    api = updatePassword_api
-  }
-  return api
-}
+// const getApi = () => {
+//   let api: any = undefined
+//   if (props.type === 'add') {
+//     api = addUser_api
+//   } else if (props.type === 'edit') {
+//     api = updateUser_api
+//   } else if (props.type === 'reset') {
+//     api = updatePassword_api
+//   }
+//   return api
+// }
 
-const { loading, run } = useRequest(getApi, {
+const { loading, run } = useRequest(props.type === 'add' ? addUser_api : (props.type === 'edit' ? updateUser_api : updatePassword_api), {
   immediate: false,
   onSuccess(res) {
     if (res.success) {
