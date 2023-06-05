@@ -13,11 +13,11 @@
         :request="requestFun"
         :params="queryParams"
         :rowSelection="{
-          selectedRowKeys: table._selectedRowKeys,
-          onChange: onSelectChange,
+          selectedRowKeys: _selectedRowKeys,
+          onSelect: onSelect,
+          onSelectAll: onSelectAll,
           onSelectNone: cancelSelect,
         }"
-        @cancelSelect="cancelSelect"
         model="TABLE"
         :defaultParams="{
           pageSize: 10,
@@ -95,14 +95,14 @@ import { message } from 'jetlinks-ui-components'
 const permission = 'system/Department'
 
 const props = defineProps({
-    parentId: {
-        type: String,
-        default: ''
-    }
+  parentId: {
+    type: String,
+    default: '',
+  },
 })
 
 const isShow = computed(() => {
-    return !props.parentId
+  return !props.parentId
 })
 
 const columns = [
@@ -168,9 +168,7 @@ const handleParams = (params: any) => {
 // 表格
 const tableRef = ref<Record<string, any>>({}) // 表格实例
 
-const table = reactive({
-  _selectedRowKeys: [] as string[],
-})
+const _selectedRowKeys = ref<string[]>([])
 
 // 刷新列表
 const refresh = () => {
@@ -178,11 +176,42 @@ const refresh = () => {
 }
 
 const cancelSelect = () => {
-  table._selectedRowKeys = []
+  _selectedRowKeys.value = []
+}
+const onSelect = (record: any, selected: boolean) => {
+  const arr = [..._selectedRowKeys.value]
+  const _index = arr.findIndex((item) => item === record?.id)
+  if (selected) {
+    if (!(_index > -1)) {
+      _selectedRowKeys.value.push(record.id)
+    }
+  } else {
+    if (_index > -1) {
+      // 去掉数据
+      _selectedRowKeys.value.splice(_index, 1)
+    }
+  }
+}
+const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
+  if (selected) {
+    changeRows.map((i: any) => {
+      if (!_selectedRowKeys.value.includes(i.id)) {
+        _selectedRowKeys.value.push(i.id)
+      }
+    })
+  } else {
+    const arr = changeRows.map((item: any) => item.id)
+    const _ids: string[] = [];
+    _selectedRowKeys.value.map((i: any) => {
+      if (!arr.includes(i)) {
+        _ids.push(i)
+      }
+    })
+    _selectedRowKeys.value = _ids
+  }
 }
 
 const requestFun = async (oParams: any) => {
-  cancelSelect()
   if (props.parentId) {
     const params = {
       ...oParams,
@@ -220,16 +249,13 @@ const requestFun = async (oParams: any) => {
   }
 }
 const unBind = (row?: any) => {
-  const ids = row ? [row.id] : table._selectedRowKeys
+  const ids = row ? [row.id] : _selectedRowKeys.value
   if (ids.length < 1) return message.warning('请勾选需要解绑的数据')
 
   unBindUser_api(props.parentId, ids).then(() => {
     message.success('操作成功')
     refresh()
   })
-}
-const onSelectChange = (keys: string[]) => {
-  table._selectedRowKeys = keys
 }
 
 watch(

@@ -53,21 +53,32 @@
                 <AIcon type="EditOutlined" />
               </PermissionButton>
               <PermissionButton
+                v-if="slotProps.status"
                 :hasPermission="`${permission}:action`"
                 type="link"
                 :tooltip="{
-                  title: `${slotProps.status ? '禁用' : '启用'}`,
+                  title: '禁用',
                 }"
                 :popConfirm="{
-                  title: `确定${slotProps.status ? '禁用' : '启用'}吗？`,
+                  title: `确定禁用吗？`,
                   onConfirm: () => changeStatus(slotProps),
                 }"
               >
-                <AIcon
-                  :type="
-                    slotProps.status ? 'StopOutlined' : 'PlayCircleOutlined'
-                  "
-                />
+                <AIcon type="StopOutlined" />
+              </PermissionButton>
+              <PermissionButton
+                v-else
+                :hasPermission="`${permission}:action`"
+                type="link"
+                :tooltip="{
+                  title: `启用`,
+                }"
+                :popConfirm="{
+                  title: `确定启用吗？`,
+                  onConfirm: () => changeStatus(slotProps),
+                }"
+              >
+                <AIcon type="PlayCircleOutlined" />
               </PermissionButton>
               <PermissionButton
                 :hasPermission="`${permission}:update`"

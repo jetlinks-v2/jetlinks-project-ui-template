@@ -45,7 +45,7 @@
                                 }"
                                 @click="
                                     jumpPage(`system/Role/Detail`, {
-                                        id: slotProps.id,
+                                        params: {id: slotProps.id}
                                     })
                                 "
                             >
@@ -127,7 +127,7 @@ const columns = [
         title: '操作',
         dataIndex: 'action',
         key: 'action',
-        width: 200,
+        width: 120,
         fixed: 'right',
         scopedSlots: true,
     },
