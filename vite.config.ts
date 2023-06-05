@@ -1,4 +1,4 @@
-import { createViteConfig } from '@config/vite'
+import { createViteConfig } from '@jetlinks/vite'
 import { defineConfig, UserConfig } from 'vite'
 
 export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
