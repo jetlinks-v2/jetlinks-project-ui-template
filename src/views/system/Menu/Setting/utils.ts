@@ -25,7 +25,7 @@ export const filterMenu = (permissions: string[], menus: any[]) => {
  * @returns Array 合并后的菜单
  */
 export const mergeArr = (oldData: Array<any>, newData: Array<any>) => {
-    const mergedData = [];
+    const mergedData: any[] = [];
 
     const { checkedKeys } = initData(cloneDeep(newData));
     const filterCodeSet = new Set(checkedKeys); //记录系统选中
@@ -48,7 +48,7 @@ export const mergeArr = (oldData: Array<any>, newData: Array<any>) => {
         // }
 
         if (oldItem.children && newItem.children) {
-            const mergedChildren = [];
+            const mergedChildren: any[] = [];
             const newChildren = [...newItem.children];
             for (const oldChild of oldItem.children) {
                 const index = newChildren.findIndex(
