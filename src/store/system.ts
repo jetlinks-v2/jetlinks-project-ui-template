@@ -14,7 +14,7 @@ export const useSystemStore = defineStore('system', () => {
   const theme = ref<string>('light') // 主题色
   const title = ref<string>('Jetlinks') // 浏览器标签页title
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
-  const systemInfo = ref({})
+  const systemInfo = ref<Record<string, any>>({})
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,

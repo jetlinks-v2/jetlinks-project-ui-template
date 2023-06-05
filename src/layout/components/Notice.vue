@@ -23,8 +23,9 @@ const visible = ref(false)
 const total = ref(0)
 const loading = ref(false)
 
-useWebSocket({
+const { send } = useWebSocket({
   onMessage(data) {
+    // 消息处理
     console.log(data)
   }
 })
@@ -32,6 +33,8 @@ useWebSocket({
 const visibleChange = (v: boolean) => {
   visible.value = v
 }
+
+send('notification','/notifications')
 
 
 </script>

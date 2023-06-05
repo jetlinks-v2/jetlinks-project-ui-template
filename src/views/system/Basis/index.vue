@@ -294,12 +294,12 @@ const backLoading = ref<boolean>(false) // 背景图加载状态
 const iconLoading = ref<boolean>(false) // 页签加载状态
 
 const uploader: uploaderType = {
-  imageTypes: ['.jpg', '.png', '.jfif', '.pjp', '.pjpeg', '.jpeg'],
-  iconTypes: ['image/x-icon'],
+  imageTypes: ['.jpg', '.png', '.jfif', '.pjp', '.pjpeg', '.jpeg'].toString(),
+  iconTypes: ['image/x-icon'].toString(),
   // logo格式校验
   beforeLogoUpload: (file: File) => {
     const typeBool =
-      uploader.imageTypes
+      uploader.imageTypes.split(',')
         .map((m: string) => m.split('.')[1])
         .filter((typeStr) => file.type.includes(typeStr)).length > 0
     const sizeBool = file.size / 1024 / 1024 < 4

@@ -44,8 +44,8 @@ const findComponents = (code: string, level: number, isApp: boolean, components:
     } else if(myComponents) { // components
         return () => myComponents()
     }
-    return components['demo'] // 开发测试用
-    // return undefined
+    // return components['demo'] // 开发测试用
+    return undefined
 }
 
 const hasExtraChildren = (item: MenuItem, extraMenus: any ) => {
@@ -97,6 +97,17 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
     }
 
     return []
+}
+
+export const handleMenusMap = (menuData: any, cb: (data: any) => void) => {
+  if (menuData && menuData.length) {
+    menuData.forEach(item => {
+      cb(item)
+      if (item.children) {
+        handleMenusMap(item.children, cb)
+      }
+    })
+  }
 }
 
 const hideInMenu = (code: string) => {

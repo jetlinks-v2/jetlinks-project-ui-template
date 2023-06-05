@@ -3,14 +3,12 @@ import { useRouter } from 'vue-router'
 import { cloneDeep } from 'lodash-es'
 import { userRouterParams } from '@jetlinks/hooks'
 import { onlyMessage } from '@jetlinks/utils'
-import { handleMenus, handleSiderMenu} from '@/utils'
+import {handleMenus, handleMenusMap, handleSiderMenu} from '@/utils'
 import { getOwnMenuThree } from '@/api/menu'
 import { getGlobModules } from '@/router/globModules'
 import { extraMenu } from '@/router/extraMenu'
 import { USER_CENTER_ROUTE } from "@/router/basic";
 import { useAuthStore } from '@/store/auth'
-
-type MenuItem = Record<string, string>
 
 const defaultOwnParams = [
     {
@@ -36,6 +34,7 @@ const defaultOwnParams = [
 
 export const useMenuStore = defineStore('menu', () => {
     const menu = ref<any[]>([])
+    const menusMap = ref<Map<string, any>>(new Map())
     const siderMenus = ref([])
 
     const { setParamsValue } = userRouterParams()
@@ -47,7 +46,7 @@ export const useMenuStore = defineStore('menu', () => {
     }
 
     const hasMenu = (code: string) => {
-        return !!menu[code]
+        return menusMap.value.has(code)
     }
 
     /**
@@ -65,9 +64,15 @@ export const useMenuStore = defineStore('menu', () => {
         } 
     }
 
+    const handleMenusMapById = (item: { name: string, path: string}) => {
+      const { name, path } = item
+      menusMap.value.set(name, { path })
+    }
+
     const queryMenus = async () => {
         const resp = await getOwnMenuThree({ paging: false, terms: defaultOwnParams })
         const asyncRoutes = getGlobModules()
+        menusMap.value.clear()
 
         if (resp.success) {
             const routes = handleMenus(cloneDeep(resp.result), extraMenu, asyncRoutes) // 处理路由
@@ -81,6 +86,7 @@ export const useMenuStore = defineStore('menu', () => {
             routes.push(USER_CENTER_ROUTE) // 添加个人中心
             authStore.handlePermission(resp.result) // 处理按钮权限
             menu.value = routes
+            handleMenusMap(routes, handleMenusMapById)
             siderMenus.value = handleSiderMenu(cloneDeep(resp.result)) // 处理菜单
         }
     }
@@ -88,6 +94,7 @@ export const useMenuStore = defineStore('menu', () => {
     return {
         menu,
         siderMenus,
+        menusMap,
         hasRouteMenu,
         hasMenu,
         jumpPage,

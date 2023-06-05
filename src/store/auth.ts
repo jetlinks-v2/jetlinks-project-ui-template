@@ -3,10 +3,6 @@ import { ref } from 'vue'
 import { isArray } from 'lodash-es'
 import { handleAuthMenu } from '@/utils'
 
-const getAuthItem = () => {
-
-}
-
 export const useAuthStore = defineStore('auth', () => {
     const permissions = ref<Record<string, string[]>>({})
 

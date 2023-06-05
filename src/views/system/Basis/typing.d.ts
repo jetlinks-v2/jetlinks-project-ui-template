@@ -26,8 +26,8 @@ export interface formValueType {
 * 图片上传表单
 */
 export interface uploaderType {
-    imageTypes: Array<string>;
-    iconTypes: Array<string>,
+    imageTypes: string;
+    iconTypes: string,
     beforeLogoUpload: (file: UploadProps['beforeUpload']) => void
     handleChangeLogo: (info: UploadChangeParam) => void
     beforeBackUpload?: (file: UploadProps['beforeUpload']) => void

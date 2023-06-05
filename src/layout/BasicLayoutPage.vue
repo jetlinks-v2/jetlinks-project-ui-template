@@ -3,8 +3,6 @@
     v-bind="config"
     v-model:openKeys="state.openKeys"
     v-model:collapsed="state.collapsed"
-    @openKeys="openKeys"
-    @select="select"
     :selectedKeys="state.selectedKeys"
     :breadcrumb="{ routes: breadcrumb }"
     :pure="state.pure"
@@ -37,6 +35,7 @@ import { reactive, computed, watchEffect } from 'vue'
 import { useSystemStore } from '@/store/system'
 import { useMenuStore } from '@/store/menu'
 import { User, Notice } from './components'
+import { storeToRefs } from 'pinia'
 
 
 type StateType = {
@@ -51,6 +50,8 @@ const route = useRoute();
 const systemStore = useSystemStore()
 const menuStore = useMenuStore()
 
+const { theme, layout } = storeToRefs(systemStore)
+
 const components = computed(() => {
   const componentName = route.matched[route.matched.length - 1]?.components?.default?.name
   if (componentName !== 'BasicLayoutPage') {
@@ -60,15 +61,12 @@ const components = computed(() => {
 })
 
 
-const config = reactive({
-  theme: systemStore.theme,
-  siderWidth: systemStore.layout.siderWidth,
-  logo: systemStore.layout.logo,
-  title: systemStore.layout.title,
+const config = computed(() => ({
+  ...layout.value,
+  theme: theme.value,
   menuData: menuStore.siderMenus,
-  layout: systemStore.layout.layout,
-  splitMenus: systemStore.layout.layout === 'mix'
-})
+  splitMenus: layout.value.layout === 'mix'
+}))
 
 const state = reactive<StateType>({
   pure: false,
@@ -76,14 +74,6 @@ const state = reactive<StateType>({
   openKeys: [],
   selectedKeys: [],
 });
-
-const openKeys = (keys: any) => {
-  console.log(keys)
-}
-
-const select = (keys: any) => {
-  console.log(keys)
-}
 
 /**
  * 面包屑
