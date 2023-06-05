@@ -40,6 +40,7 @@ import { message } from 'jetlinks-ui-components';
 import { saveRole_api } from '@/api/role';
 import { useMenuStore } from '@/store/menu';
 import { useRoute } from 'vue-router'
+import { useRequest } from '@jetlinks/hooks';
 
 const route = useRoute();
 const { jumpPage } = useMenuStore();
@@ -49,28 +50,34 @@ const props = defineProps<{
     visible: boolean;
 }>();
 // 弹窗相关
-const loading = ref(false);
 const form = ref<any>({});
 const formRef = ref<any>();
+
+const { loading, run } = useRequest(saveRole_api,
+  {
+    immediate: false,
+    onSuccess(res: any) {
+      if (res.success) {
+        message.success('操作成功');
+        emits('update:visible', false);
+
+        if (route.query.save) {
+            // @ts-ignore
+            window?.onTabSaveSuccess(res.result.id);
+            setTimeout(() => window.close(), 300);
+        } else {
+            jumpPage(`system/Role/Detail`, {id: res?.result.id})
+        };
+      }
+    },
+  },
+)
 
 const confirm = () => {
     loading.value = true;
     formRef.value
         ?.validate()
-        .then(() => saveRole_api(form.value))
-        .then((resp) => {
-            if (resp.status === 200) {
-                message.success('操作成功');
-                emits('update:visible', false);
-
-                if (route.query.save) {
-                    // @ts-ignore
-                    window?.onTabSaveSuccess(resp.result.id);
-                    setTimeout(() => window.close(), 300);
-                } else jumpPage(`system/Role/Detail`, { id: resp.result.id });
-            }
-        })
-        .finally(() => (loading.value = false));
+        .then(() => run(form.value))
 };
 // 表单相关
 </script>
