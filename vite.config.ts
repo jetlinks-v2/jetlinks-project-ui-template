@@ -1,4 +1,3 @@
-// import { createViteConfig } from './config'
 import { createViteConfig } from '@jetlinks/vite'
 import { defineConfig, UserConfig } from 'vite'
 
