@@ -143,7 +143,7 @@ import {
   exportPermission_api,
 } from '@/api/permission'
 import { downloadObject } from './tool'
-import { usePermission } from '@jetlinks/components/PermissionButton/hooks'
+import { usePermission } from '@jetlinks/components/src/PermissionButton/hooks'
 
 const permission = 'system/Permission'
 const { hasPerm } = usePermission(`${permission}:import`)

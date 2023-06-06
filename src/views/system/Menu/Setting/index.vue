@@ -75,8 +75,8 @@ import {
 } from './utils';
 import BaseMenu from '@/views/init-home/data/baseMenu';
 import type { AntTreeNodeDropEvent } from 'ant-design-vue/es/tree';
-import { cloneDeep } from 'lodash';
-import { onlyMessage } from '@/utils/comm';
+import { cloneDeep } from 'lodash-es';
+import { onlyMessage } from '@jetlinks/utils';
 import {
     MESSAGE_SUBSCRIBE_MENU_CODE,
     USER_CENTER_MENU_CODE,
