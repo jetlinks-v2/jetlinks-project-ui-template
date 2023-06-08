@@ -4,6 +4,7 @@ import { setupPinia } from '@jetlinks/stores'
 import { initRoute } from '@jetlinks/router'
 import { initPackages } from './package'
 import { setupRouter } from '@/router/guard'
+import { initStoreBus } from '@/store'
 import globalComponents from '@jetlinks/components'
 import './style.css'
 
@@ -12,12 +13,15 @@ import './style.css'
     
     setupPinia(app)
 
+
+
     await initPackages()
 
     const router = initRoute()
 
     app.use(router)
 
+    await initStoreBus()
     await setupRouter()
 
     app.use(globalComponents)

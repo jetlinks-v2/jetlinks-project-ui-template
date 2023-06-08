@@ -15,6 +15,7 @@ export const useSystemStore = defineStore('system', () => {
   const title = ref<string>('Jetlinks') // 浏览器标签页title
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
   const systemInfo = ref<Record<string, any>>({})
+  const amapKey = ref('')
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,
@@ -56,6 +57,15 @@ export const useSystemStore = defineStore('system', () => {
     document.title = value
   }
 
+  const queryAmap = async () => {
+    const resp = await settingDetail('amap')
+    if (resp.success) {
+      const { apiKey } = resp.result
+      amapKey.value = apiKey
+      systemInfo.value.apiKey = apiKey
+    }
+  }
+
   const queryInfo = async () => {
     const resp = await settingDetail('front')
     if (resp.success) {
@@ -67,6 +77,7 @@ export const useSystemStore = defineStore('system', () => {
       layout.logo = logo
       theme.value = headerTheme
     }
+    await queryAmap()
   }
 
 

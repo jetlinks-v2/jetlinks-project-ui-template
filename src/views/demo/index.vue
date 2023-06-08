@@ -33,6 +33,13 @@
       </template>
     </j-table-card>
   </page-container>
+  <div style="width: 100%; height: 300px">
+    <init-Amap>
+      <el-amap-marker
+        :position="[0,0]"
+      />
+    </init-Amap>
+  </div>
 </template>
 
 <script setup name="Demo" lang="ts">
