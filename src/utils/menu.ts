@@ -44,8 +44,8 @@ const findComponents = (code: string, level: number, isApp: boolean, components:
     } else if(myComponents) { // components
         return () => myComponents()
     }
-    // return components['demo'] // 开发测试用
-    return undefined
+    return components['demo'] // 开发测试用
+    // return undefined
 }
 
 const hasExtraChildren = (item: MenuItem, extraMenus: any ) => {

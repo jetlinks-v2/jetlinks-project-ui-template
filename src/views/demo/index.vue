@@ -24,6 +24,14 @@
         button
       </template>
     </permission-button>
+    <j-table-card
+      name="卡片标题"
+      width="400px"
+    >
+      <template #content>
+        中间内容
+      </template>
+    </j-table-card>
   </page-container>
 </template>
 
