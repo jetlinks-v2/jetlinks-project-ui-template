@@ -36,6 +36,7 @@
   <div style="width: 100%; height: 300px">
     <init-Amap
       @dragstart="mapClick"
+      mapStyle="dark"
     >
       <el-amap-marker
         :position="[0,0]"
