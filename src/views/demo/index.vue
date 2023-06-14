@@ -34,7 +34,9 @@
     </j-table-card>
   </page-container>
   <div style="width: 100%; height: 300px">
-    <init-Amap>
+    <init-Amap
+      @dragstart="mapClick"
+    >
       <el-amap-marker
         :position="[0,0]"
       />
@@ -45,6 +47,10 @@
 <script setup name="Demo" lang="ts">
 import { useRoute } from 'vue-router'
 const route = useRoute()
+
+const mapClick = (e: any) => {
+  console.log(e)
+}
 </script>
 
 <style scoped>

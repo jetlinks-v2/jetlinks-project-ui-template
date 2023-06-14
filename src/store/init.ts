@@ -5,9 +5,7 @@ import { useSystemStore } from '@/store/system'
 import { useAuthStore } from '@/store/auth'
 
 export async function initStoreBus() {
-  initStore<{
-    Test: any
-  }>({
+  initStore({
     UserInfoStore: useUserStore(),
     MenuStore: useMenuStore(),
     SystemStore: useSystemStore(),
