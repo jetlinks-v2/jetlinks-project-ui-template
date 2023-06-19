@@ -36,7 +36,7 @@ const handleMeta = (item: MenuItem, isApp: boolean) => {
 const findComponents = (code: string, level: number, isApp: boolean, components: any) => {
     const myComponents = components[code]
     if (level === 1) { // BasicLayoutPage
-      return shallowRef(BasicLayoutPage)
+      return myComponents ? () => myComponents() : shallowRef(BasicLayoutPage)
     } else if (level === 2) { // BlankLayoutPage or components
       return myComponents ? () => myComponents() : BlankLayoutPage
     } else if (isApp){ // iframe
