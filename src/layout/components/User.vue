@@ -23,6 +23,7 @@
 import { computed } from "vue";
 import { jumpLogin, useRouter } from '@jetlinks/router'
 import { useUserStore } from '@/store/user'
+import { logout } from '@/api/login'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -32,7 +33,11 @@ const click = (e: {key: string}) => {
       router.push('/account/center')
       return;
     case 'logout':
-      jumpLogin()
+      logout().then((resp) => {
+        if (resp.success) {
+          jumpLogin()
+        }
+      })
       return;
     default:
         return
