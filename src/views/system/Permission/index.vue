@@ -1,32 +1,27 @@
 <template>
   <page-container>
-    <div class="permission-container">
-      <j-search
+    <j-search
+      :columns="columns"
+      target="system-permission"
+      @search="handleSearch"
+    />
+    <FullPage>
+      <j-pro-table
+        ref="tableRef"
         :columns="columns"
-        target="system-permission"
-        @search="handleSearch"
-      />
-      <FullPage>
-        <j-pro-table
-          ref="tableRef"
-          :columns="columns"
-          :request="getPermission_api"
-          model="TABLE"
-          :params="queryParams"
-          :defaultParams="{
-            pageSize: 10,
-            sorts: [{ name: 'id', order: 'asc' }],
-          }"
-          :pagination="{
-            showSizeChanger: true,
-            pageSizeOptions: ['10', '20', '50', '100'],
-          }"
-        >
-          <template #headerTitle>
+        :request="getPermission_api"
+        model="TABLE"
+        :params="params"
+        :defaultParams="{
+          sorts: [{ name: 'id', order: 'asc' }],
+        }"
+      >
+        <template #headerTitle>
+          <j-space>
             <PermissionButton
               type="primary"
               :hasPermission="`${permission}:add`"
-              @click="openDialog(undefined)"
+              @click="openDialog()"
             >
               <AIcon type="PlusOutlined" />新增
             </PermissionButton>
@@ -62,173 +57,108 @@
                 </j-menu>
               </template>
             </j-dropdown>
-          </template>
-          <template #status="slotProps">
-            <BadgeStatus
-              :status="slotProps.status"
-              :text="slotProps.status ? '启用' : '禁用'"
-              :statusNames="{
-                1: 'success',
-                0: 'error',
+          </j-space>
+        </template>
+        <template #status="slotProps">
+          <BadgeStatus
+            :status="slotProps.status"
+            :text="slotProps.status ? '启用' : '禁用'"
+            :statusNames="{
+              1: 'success',
+              0: 'error',
+            }"
+          ></BadgeStatus>
+        </template>
+        <template #action="slotProps">
+          <j-space :size="16">
+            <PermissionButton
+              :hasPermission="`${permission}:update`"
+              type="link"
+              :tooltip="{
+                title: '编辑',
               }"
-            ></BadgeStatus>
-          </template>
-          <template #action="slotProps">
-            <j-space :size="16">
-              <PermissionButton
-                :hasPermission="`${permission}:update`"
-                type="link"
-                :tooltip="{
-                  title: '编辑',
-                }"
-                @click="openDialog(slotProps)"
-              >
-                <AIcon type="EditOutlined" />
-              </PermissionButton>
+              style="padding: 0"
+              @click="openDialog(slotProps)"
+            >
+              <AIcon type="EditOutlined" />
+            </PermissionButton>
 
-              <PermissionButton
-                :hasPermission="`${permission}:action`"
-                type="link"
-                :popConfirm="{
-                  title: `确定要${slotProps.status ? '禁用' : '启用'}吗？`,
-                  onConfirm: () => changeStatus(slotProps),
-                }"
-                :tooltip="{
-                  title: slotProps.status ? '禁用' : '启用',
-                }"
-              >
-                <AIcon
-                  :type="
-                    slotProps.status ? 'StopOutlined' : 'PlayCircleOutlined'
-                  "
-                />
-              </PermissionButton>
-              <PermissionButton
-                :hasPermission="`${permission}:delete`"
-                type="link"
-                :tooltip="{
-                  title: slotProps.status ? '请先禁用，再删除' : '删除',
-                }"
-                danger
-                :popConfirm="{
-                  title: `确认删除`,
-                  onConfirm: () => clickDel(slotProps),
-                }"
-                :disabled="slotProps.status"
-              >
-                <AIcon type="DeleteOutlined" />
-              </PermissionButton>
-            </j-space>
-          </template>
-        </j-pro-table>
-      </FullPage>
-
-      <EditDialog
-        v-if="dialog.visible"
-        v-model:visible="dialog.visible"
-        :data="dialog.selectItem"
-        @refresh="refresh"
-      />
-    </div>
+            <PermissionButton
+              :hasPermission="`${permission}:action`"
+              type="link"
+              :popConfirm="{
+                title: `确定要${slotProps.status ? '禁用' : '启用'}吗？`,
+                onConfirm: () => changeStatus(slotProps),
+              }"
+              style="padding: 0"
+              :tooltip="{
+                title: slotProps.status ? '禁用' : '启用',
+              }"
+            >
+              <AIcon
+                :type="slotProps.status ? 'StopOutlined' : 'PlayCircleOutlined'"
+              />
+            </PermissionButton>
+            <PermissionButton
+              :hasPermission="`${permission}:delete`"
+              type="link"
+              :tooltip="{
+                title: slotProps.status ? '请先禁用，再删除' : '删除',
+              }"
+              danger
+              :popConfirm="{
+                title: `确认删除`,
+                onConfirm: () => clickDel(slotProps),
+              }"
+              style="padding: 0"
+              :disabled="slotProps.status"
+            >
+              <AIcon type="DeleteOutlined" />
+            </PermissionButton>
+          </j-space>
+        </template>
+      </j-pro-table>
+    </FullPage>
+    <!-- 编辑和新增 -->
+    <EditDialog v-if="visible" :data="current" @close="visible = false" @save="onSave" />
   </page-container>
 </template>
 
 <script setup lang="ts">
 import EditDialog from './components/EditDialog.vue'
-import { message } from 'jetlinks-ui-components'
 import {
   getPermission_api,
   editPermission_api,
   delPermission_api,
   exportPermission_api,
 } from '@/api/permission'
-import { downloadObject } from './tool'
 import { usePermission } from '@jetlinks/components/src/PermissionButton/hooks'
+import { PermissionItem } from './typings'
+import { onlyMessage } from '@jetlinks/utils'
+import { downloadJson } from '@/utils/comm'
+import { columns } from './util'
 
 const permission = 'system/Permission'
 const { hasPerm } = usePermission(`${permission}:import`)
 
-const columns = [
-  {
-    title: '标识',
-    dataIndex: 'id',
-    key: 'id',
-    ellipsis: true,
-    fixed: 'left',
-    search: {
-      type: 'string',
-      componentProps: {
-        placeholder: '请输入标识'
-      }
-    },
-  },
-  {
-    title: '名称',
-    dataIndex: 'name',
-    key: 'name',
-    ellipsis: true,
-    search: {
-      type: 'string',
-      first: true,
-      componentProps: {
-        placeholder: '请输入名称'
-      }
-    },
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    scopedSlots: true,
-    search: {
-      type: 'select',
-      componentProps: {
-        placeholder: '请选择状态'
-      },
-      options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ],
-      handleValue: (v: any) => {
-        return v
-      },
-    },
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    key: 'action',
-    width: '200px',
-    fixed: 'right',
-    scopedSlots: true,
-  },
-]
+const params = ref<any>({})
+const visible = ref<boolean>(false)
+const current = ref<Partial<PermissionItem>>({})
+const tableRef = ref<any>({})  // 表格实例
 
-const queryParams = ref({})
-
-const dialog = reactive({
-  selectItem: {},
-  visible: false,
-})
-// 表格
-const tableRef = ref<Record<string, any>>({}) // 表格实例
-
+// 搜索
 const handleSearch = (e: any) => {
-  queryParams.value = {
-    terms: e
+  params.value = {
+    terms: e,
   }
 }
 
 // 打开编辑弹窗
-const openDialog = (row: object | undefined = {}) => {
-  dialog.selectItem = { ...row }
-  dialog.visible = true
+const openDialog = (row?: PermissionItem) => {
+  current.value = { ...row }
+  visible.value = true
 }
 
-// 刷新列表
-const refresh = () => {
-  tableRef.value?.reload()
-}
 // 导入数据
 const clickImport = (file: File) => {
   if (file.type === 'application/json') {
@@ -239,65 +169,60 @@ const clickImport = (file: File) => {
         const data = JSON.parse(result.target.result)
         editPermission_api(data).then((resp) => {
           if (resp.status === 200) {
-            message.success('导入成功')
-            refresh()
+            onlyMessage('导入成功')
+            tableRef.value?.reload()
           }
         })
       } catch (error) {
-        message.error('导入失败，请重试！')
+        onlyMessage('导入失败，请重试！', 'error')
       }
     }
-  } else message.error('请上传json格式')
+  } else onlyMessage('请上传json格式', 'error')
   return false
 }
+
 // 导出数据
 const clickExport = () => {
-  const params = {
+  const _params = {
     paging: false,
-    ...queryParams.value,
+    ...params.value,
   }
-  exportPermission_api(params).then((resp) => {
+  exportPermission_api(_params).then((resp) => {
     if (resp.status === 200) {
-      downloadObject(resp.result as any, '权限数据')
-      message.success('导出成功')
+      downloadJson(resp.result as any, '权限数据')
+      onlyMessage('导出成功')
     } else {
-      message.error('导出错误')
+      onlyMessage('导出错误', 'error')
     }
   })
 }
+
 // 修改状态
-const changeStatus = (row: any) => {
-  const params = {
+const changeStatus = (row: PermissionItem) => {
+  const _params = {
     ...row,
     status: row.status ? 0 : 1,
   }
-  editPermission_api(params).then(() => {
-    message.success('操作成功')
+  editPermission_api(_params).then(() => {
+    onlyMessage('操作成功')
     tableRef.value.reload()
   })
 }
+
 // 删除
-const clickDel = (row: any) => {
+const clickDel = (row: PermissionItem) => {
+  if(!row.id) return;
   delPermission_api(row.id).then((resp: any) => {
     if (resp.status === 200) {
       tableRef.value?.reload()
-      message.success('操作成功!')
+      onlyMessage('操作成功!')
     }
   })
 }
 
-</script>
-
-<style lang="less" scoped>
-.permission-container {
-  .ant-dropdown-trigger {
-    margin-left: 12px;
-  }
-
-  :deep(.ant-table-cell) {
-    .ant-btn-link {
-      padding: 0;
-    }
-  }
+// 关闭并刷新弹窗
+const onSave = () => {
+  visible.value = false
+  tableRef.value?.reload()
 }
-</style>
+</script>
