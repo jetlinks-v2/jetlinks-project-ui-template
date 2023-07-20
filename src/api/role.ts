@@ -11,9 +11,9 @@ export const updateRole_api = (data: any): Promise<any> => request.patch(`/role`
 // 获取角色详细信息
 export const getRoleDetails_api = (id: string): Promise<any> => request.get(`/role/${id}`);
 // 获取角色对应的权限树
-export const getPrimissTree_api = (id: string): Promise<any> => request.get(`/menu/role/${id}/_grant/tree`);
+export const getPermissionTree_api = (id: string): Promise<any> => request.get(`/menu/role/${id}/_grant/tree`);
 // 更新角色对应的权限树
-export const updatePrimissTree_api = (id: string, data:object): Promise<any> => request.put(`/menu/role/${id}/_grant`,data);
+export const updatePermissionTree_api = (id: string, data:object): Promise<any> => request.put(`/menu/role/${id}/_grant`,data);
 
 
 // 获取用户列表

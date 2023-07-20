@@ -5,9 +5,9 @@
     width="1000px"
     @ok="confirm"
     :confirm-loading="loading"
-    @cancel="emits('update:visible', false)"
+    @cancel="emits('close')"
   >
-    <j-search :columns="columns" @search="onSearch" />
+    <j-search style="padding: 0" :columns="columns" @search="onSearch" />
     <j-pro-table
       ref="tableRef"
       :columns="columns"
@@ -23,14 +23,6 @@
         onSelectAll: onSelectAll,
         onSelectNone: cancelSelect,
       }"
-      :defaultParams="{
-        pageSize: 10,
-      }"
-      :pagination="{
-        pageSizeOptions: ['10', '20', '50', '100'],
-        showSizeChanger: true,
-        hideOnSinglePage: false,
-      }"
     >
     </j-pro-table>
   </j-modal>
@@ -39,19 +31,22 @@
 <script setup lang="ts">
 import { getUserByRole_api, bindUser_api } from '@/api/role'
 import { useRequest } from '@jetlinks/hooks'
-import { message } from 'jetlinks-ui-components'
+import { onlyMessage } from '@jetlinks/utils'
 
-const emits = defineEmits(['refresh', 'update:visible'])
-const props = defineProps<{
-  visible: boolean
-  roleId: string
-}>()
+const emits = defineEmits(['close', 'save'])
+const props = defineProps({
+  id: {
+    type: String,
+    default: '',
+  },
+})
 
 const columns = [
   {
     title: '姓名',
     dataIndex: 'name',
     key: 'name',
+    ellipsis: true,
     search: {
       type: 'string',
       componentProps: {
@@ -63,6 +58,7 @@ const columns = [
     title: '用户名',
     dataIndex: 'username',
     key: 'username',
+    ellipsis: true,
     search: {
       type: 'string',
       componentProps: {
@@ -71,10 +67,11 @@ const columns = [
     },
   },
 ]
-const queryParams = ref({})
 
+const queryParams = ref({})
 const selectedRowKeys = ref<string[]>([])
 
+// 获取数据
 const getUserList = (oParams: any) => {
   const params = {
     ...oParams,
@@ -85,7 +82,7 @@ const getUserList = (oParams: any) => {
         terms: [
           {
             column: 'id$in-dimension$role$not',
-            value: props.roleId,
+            value: props.id,
           },
         ],
       },
@@ -94,28 +91,30 @@ const getUserList = (oParams: any) => {
   return getUserByRole_api(params)
 }
 
+// 提交数据
 const { loading, run } = useRequest(bindUser_api, {
   immediate: false,
   onSuccess(res) {
     if (res.success) {
-      message.success('操作成功')
-      emits('refresh')
-      emits('update:visible', false)
+      onlyMessage('操作成功')
+      emits('save')
     }
   },
 })
 
+// 确认按钮
 const confirm = () => {
   if (selectedRowKeys.value.length < 1) {
-    message.error('请至少选择一项')
+    onlyMessage('请至少选择一项', 'warning')
   } else {
-    run(props.roleId, selectedRowKeys.value)
+    run(props.id, selectedRowKeys.value)
   }
 }
 const cancelSelect = () => {
   selectedRowKeys.value = []
 }
 
+// 选择
 const onSelect = (record: any, selected: boolean) => {
   const arr = [...selectedRowKeys.value]
   const _index = arr.findIndex((item) => item === record?.id)
@@ -131,6 +130,7 @@ const onSelect = (record: any, selected: boolean) => {
   }
 }
 
+// 全选
 const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
   if (selected) {
     changeRows.map((i: any) => {
@@ -150,6 +150,7 @@ const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
   }
 }
 
+// 搜索
 const onSearch = (e: any[]) => {
   queryParams.value = {
     terms: e,
