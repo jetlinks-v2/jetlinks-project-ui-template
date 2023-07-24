@@ -28,6 +28,7 @@ const onChange = (id: string) => {
 .department-container {
   display: flex;
   padding: 24px;
+  gap: 12px;
 
   .left {
     width: 300px;

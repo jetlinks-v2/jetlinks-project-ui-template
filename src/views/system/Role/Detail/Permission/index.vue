@@ -1,145 +1,94 @@
 <template>
-  <div class="role-permiss-container">
-    <section class="card">
-      <h5>基本信息</h5>
-      <j-form
-        ref="formRef"
-        class="basic-form"
-        :model="form.data"
-        layout="vertical"
-      >
-        <j-form-item
-          name="name"
-          label="名称"
-          :rules="[
-            { required: true, message: '请输入名称' },
-            { max: 64, message: '最多可输入64个字符' },
-          ]"
-        >
-          <j-input
-            v-model:value="form.data.name"
-            placeholder="请输入角色名称"
-          />
-        </j-form-item>
-        <j-form-item label="说明">
-          <j-textarea
-            v-model:value="form.data.description"
-            placeholder="请输入说明"
-            :maxlength="200"
-            show-count
-          />
-        </j-form-item>
-      </j-form>
-    </section>
+  <div>
+    <div class="card">
+      <TitleComponent data="基本信息" />
+      <EditBaseInfo ref="baseRef" v-model:value="formModel.data" />
+    </div>
 
-    <section class="card">
-      <h5>权限分配</h5>
-      <PermissTree v-model:select-items="form.menus" />
-
-      <j-button
+    <div class="card">
+      <TitleComponent data="权限分配" />
+      <PermissionTree v-model:value="formModel.menus" />
+      <PermissionButton
+        hasPermission="system/Role:update"
         type="primary"
         :loading="loading"
         @click="clickSave"
         style="margin-top: 24px"
-        >保存</j-button
       >
-    </section>
+        保存
+      </PermissionButton>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts" name="RolePermiss">
-import { message } from 'jetlinks-ui-components'
-import PermissTree from '../components/PermissTree.vue'
-
+<script setup lang="ts" name="RolePermission">
+import EditBaseInfo from '../../components/EditBaseInfo/index.vue'
+import PermissionTree from '../../components/PermissionTree/index.vue'
 import {
   getRoleDetails_api,
   updateRole_api,
-  updatePrimissTree_api,
+  updatePermissionTree_api,
+  getPermissionTree_api,
 } from '@/api/role'
 import { useRoute } from 'vue-router'
+import { RoleType } from '../../typings'
+import { flattenArray } from '../../util'
+import { onlyMessage } from '@jetlinks/utils'
 
 const route = useRoute()
 const roleId = route.params.id as string
-const loading = ref<boolean>(false)
-// 表单相关
-const formRef = ref<any>()
 
-const form = reactive({
-//   loading: false,
+const loading = ref<boolean>(false)
+const baseRef = ref<any>()
+
+const formModel = reactive<RoleType>({
   data: {
+    id: '',
     name: '',
     description: '',
   },
   menus: [],
 })
-const getForm = () => {
+
+const getBaseInfo = () => {
   getRoleDetails_api(roleId).then((resp) => {
-    if (resp.status) {
-      form.data = resp.result
+    if (resp.success) {
+      Object.assign(formModel.data, resp.result)
     }
   })
 }
 
-const clickSave = () => {
-  formRef.value?.validate().then(() => {
-    loading.value = true
-    const updateRole = updateRole_api(form.data)
-    const updateTree = updatePrimissTree_api(roleId, {
-      menus: form.menus,
-    })
-    loading.value = false
-    Promise.all([updateRole, updateTree]).then((resp) => {
-      message.success('操作成功')
-    })
+const getMenuData = () => {
+  getPermissionTree_api(roleId).then((resp) => {
+    if (resp.success) {
+      Object.assign(formModel.menus, resp.result)
+    }
   })
 }
 
+const clickSave = async () => {
+  const _data = await baseRef.value?.onSave()
+  if (_data) {
+    const response = await updateRole_api(formModel.data)
+    const resp = await updatePermissionTree_api(roleId, {
+      menus: flattenArray(formModel.menus),
+    })
+    if (response.success && resp.success) {
+      onlyMessage('操作成功！')
+    }
+  }
+}
+
 onMounted(() => {
-  getForm()
+  getBaseInfo()
+  getMenuData()
 })
 </script>
 
 <style lang="less" scoped>
-.role-permiss-container {
-  .card {
-    margin-bottom: 24px;
-    background-color: #fff;
-    padding: 24px;
-
-    h5 {
-      position: relative;
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      padding: 4px 0 4px 12px;
-      font-weight: bold;
-      font-size: 16px;
-
-      &::before {
-        position: absolute;
-        top: 5px px;
-        left: 0;
-        width: 4px;
-        height: calc(100% - 10px);
-        background-color: #1d39c4;
-        border-radius: 2px;
-        content: ' ';
-      }
-    }
-
-    .basic-form {
-      :deep(.ant-form-item-required) {
-        padding-right: 12px;
-
-        &::before {
-          right: 0;
-        }
-      }
-      .ant-form-item {
-        display: block;
-        width: 60%;
-      }
-    }
-  }
+.card {
+  margin-bottom: 24px;
+  background-color: #fff;
+  padding: 24px;
 }
 </style>
