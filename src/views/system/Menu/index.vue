@@ -1,7 +1,12 @@
 <template>
   <page-container>
     <div class="menu-container">
-      <j-search :labelWidth="56" :columns="columns" target="category" @search="handleSearch" />
+      <j-search
+        :labelWidth="56"
+        :columns="columns"
+        target="category"
+        @search="handleSearch"
+      />
       <FullPage>
         <j-pro-table
           ref="tableRef"
@@ -20,12 +25,6 @@
             >
               <AIcon type="PlusOutlined" />新增
             </PermissionButton>
-<!--            <j-button-->
-<!--              v-if="admin"-->
-<!--              style="margin-left: 12px"-->
-<!--              @click="router.push('/system/Menu/Setting')"-->
-<!--              >菜单配置</j-button-->
-<!--            >-->
           </template>
           <template #createTime="slotProps">
             {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}
@@ -36,6 +35,7 @@
                 type="link"
                 :hasPermission="`${permission}:add`"
                 @click="toDetails(slotProps)"
+                style="padding: 0"
                 :tooltip="{ title: '编辑' }"
               >
                 <AIcon type="EditOutlined" />
@@ -45,6 +45,7 @@
                 type="link"
                 :hasPermission="`${permission}:add`"
                 :tooltip="{ title: '新增子菜单' }"
+                style="padding: 0"
                 @click="addChildren(slotProps)"
               >
                 <AIcon type="PlusCircleOutlined" />
@@ -54,6 +55,7 @@
                 :hasPermission="`${permission}:delete`"
                 :tooltip="{ title: '删除' }"
                 danger
+                style="padding: 0"
                 :popConfirm="{
                   title: `是否删除该菜单`,
                   onConfirm: () => clickDel(slotProps),
@@ -71,19 +73,13 @@
 
 <script setup lang="ts" name="Menu">
 import { getMenuTree, delMenu } from '@/api/menu'
-import { message } from 'jetlinks-ui-components'
 import dayjs from 'dayjs'
-import { useUserStore } from '@/store/user'
-import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
 import { useMenuStore } from '@/store/menu'
+import { onlyMessage } from '@jetlinks/utils'
 
 const permission = 'system/Menu'
 
-const router = useRouter()
-const userInfoStore = useUserStore()
 const menuStore = useMenuStore()
-const { userInfo } = storeToRefs(userInfoStore)
 
 const columns = [
   {
@@ -95,8 +91,8 @@ const columns = [
     search: {
       type: 'string',
       componentProps: {
-        placeholder: '请输入编码'
-      }
+        placeholder: '请输入编码',
+      },
     },
     width: 300,
   },
@@ -108,10 +104,9 @@ const columns = [
     search: {
       type: 'string',
       componentProps: {
-        placeholder: '请输入名称'
-      }
+        placeholder: '请输入名称',
+      },
     },
-    // width: 220,
   },
   {
     title: '页面地址',
@@ -121,8 +116,8 @@ const columns = [
     search: {
       type: 'string',
       componentProps: {
-        placeholder: '请输入页面地址'
-      }
+        placeholder: '请输入页面地址',
+      },
     },
   },
   {
@@ -133,8 +128,8 @@ const columns = [
     search: {
       type: 'number',
       componentProps: {
-        placeholder: '请输入排序'
-      }
+        placeholder: '请输入排序',
+      },
     },
     width: 80,
   },
@@ -143,13 +138,11 @@ const columns = [
     dataIndex: 'describe',
     key: 'describe',
     ellipsis: true,
-    // width: 200,
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
     key: 'createTime',
-    ellipsis: true,
     search: {
       type: 'date',
     },
@@ -170,13 +163,9 @@ const expandedRowKeys = ref<string[]>([])
 const tableRef = ref<Record<string, any>>({}) // 表格实例
 const total = ref<number>(0)
 
-const admin = computed(() => {
-  return userInfo.value?.username === 'admin'
-})
-
 const handleSearch = (e: any) => {
   queryParams.value = {
-    terms: e
+    terms: e,
   }
   if (!e.length) {
     expandedRowKeys.value = []
@@ -235,8 +224,8 @@ const addChildren = (row: any) => {
     query: {
       pid: row.id,
       basePath: row.url || '',
-      sortIndex: sortIndex + 1
-    }
+      sortIndex: sortIndex + 1,
+    },
   })
 }
 // 跳转至详情页
@@ -248,8 +237,8 @@ const toDetails = (row: any) => {
     query: {
       pid: row.id,
       basePath: row.url || '',
-      sortIndex: total.value
-    }
+      sortIndex: total.value,
+    },
   })
 }
 // 删除
@@ -257,19 +246,8 @@ const clickDel = (row: any) => {
   delMenu(row.id).then((resp: any) => {
     if (resp.status === 200) {
       tableRef.value?.reload()
-      message.success('操作成功!')
+      onlyMessage('操作成功!')
     }
   })
 }
 </script>
-
-<style lang="less" scoped>
-.menu-container {
-  width: 100%;
-  :deep(.ant-table-cell) {
-    .ant-btn-link {
-      padding: 0;
-    }
-  }
-}
-</style>
