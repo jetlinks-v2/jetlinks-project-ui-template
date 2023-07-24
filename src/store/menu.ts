@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { router } from '@jetlinks/router'
 import { cloneDeep } from 'lodash-es'
-import { userRouterParams } from '@jetlinks/hooks'
+import { setParamsValue } from '@jetlinks/hooks'
 import { onlyMessage } from '@jetlinks/utils'
 import {handleMenus, handleMenusMap, handleSiderMenu} from '@/utils'
 import { getOwnMenuThree } from '@/api/menu'
@@ -37,7 +37,6 @@ export const useMenuStore = defineStore('menu', () => {
     const menusMap = ref<Map<string, any>>(new Map())
     const siderMenus = ref([])
 
-    const { setParamsValue } = userRouterParams()
     const authStore = useAuthStore()
 
     const hasRouteMenu = () => {
