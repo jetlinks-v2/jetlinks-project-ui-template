@@ -1,20 +1,18 @@
 <template>
   <j-modal
-    class="add-bind-user-dialog-container"
     title="绑定"
-    width="1440px"
+    :width="900"
     visible
-    centered
     :confirmLoading="loading"
     @ok="confirm"
-    @cancel="cancel"
+    @cancel="emits('close')"
   >
-    <j-search :columns="columns" target="category" @search="onSearch" />
+    <j-search :columns="bindUserColumns" target="category" @search="onSearch" />
     <div class="table">
       <j-pro-table
         ref="tableRef"
-        :columns="columns"
-        :request="requestFun"
+        :columns="bindUserColumns"
+        :request="handleSearch"
         :params="queryParams"
         :rowSelection="{
           selectedRowKeys: _selectedRowKeys,
@@ -25,46 +23,40 @@
         :bodyStyle="{ padding: '0 24px' }"
         model="TABLE"
         :defaultParams="{
-          pageSize: 10,
           sorts: [{ name: 'createTime', order: 'desc' }],
         }"
-        :pagination="{
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '50', '100'],
-        }"
+        :scroll="{ y: 500 }"
       />
     </div>
   </j-modal>
 </template>
 
 <script setup lang="ts">
-import { bindUser_api, getBindUserList_api } from '@/api/department'
+import { bindUser_api } from '@/api/department'
 import { useRequest } from '@jetlinks/hooks'
-import { message } from 'jetlinks-ui-components'
+import { onlyMessage } from '@jetlinks/utils'
+import { bindUserColumns, requestFun } from '../../util'
 
-const emits = defineEmits(['confirm', 'update:visible'])
+const emits = defineEmits(['save', 'close'])
 
 const props = defineProps({
   parentId: {
     type: String,
     default: '',
   },
-  visible: {
-    type: Boolean,
-    default: false,
-  },
 })
 
-// 弹窗相关
+const queryParams = ref({})
+const _selectedRowKeys = ref<string[]>([])
 
+// 保存数据
 const { loading, run } = useRequest(bindUser_api, {
   immediate: false,
   onSuccess(res) {
     if (res.success) {
-      message.success('操作成功')
-      emits('confirm')
-      emits('update:visible', false)
+      onlyMessage('操作成功')
       _selectedRowKeys.value = []
+      emits('save')
     }
   },
 })
@@ -73,43 +65,9 @@ const confirm = () => {
   if (_selectedRowKeys.value.length && props.parentId) {
     run(props.parentId, _selectedRowKeys.value)
   } else {
-    message.warning('请选择要绑定的用户')
+    onlyMessage('请选择要绑定的用户', 'warning')
   }
 }
-
-const cancel = () => {
-  emits('update:visible', false)
-}
-
-const columns = [
-  {
-    title: '姓名',
-    dataIndex: 'name',
-    key: 'name',
-    ellipsis: true,
-    search: {
-      type: 'string',
-      componentProps: {
-        placeholder: '请输入姓名',
-      },
-    },
-  },
-  {
-    title: '用户名',
-    dataIndex: 'username',
-    key: 'username',
-    ellipsis: true,
-    search: {
-      type: 'string',
-      componentProps: {
-        placeholder: '请输入用户名',
-      },
-    },
-  },
-]
-const queryParams = ref({})
-
-const _selectedRowKeys = ref<string[]>([])
 
 const cancelSelect = () => {
   _selectedRowKeys.value = []
@@ -146,56 +104,24 @@ const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
     _selectedRowKeys.value = _ids
   }
 }
-const requestFun = async (oParams: any) => {
-  // cancelSelect()
-  if (props.parentId) {
-    const params = {
-      ...oParams,
-      sorts: [{ name: 'createTime', order: 'desc' }],
+
+// 请求数据
+const handleSearch = (oParams: any) =>
+  requestFun(props.parentId, oParams, [
+    {
       terms: [
-        ...oParams.terms,
         {
-          terms: [
-            {
-              column: 'id$in-dimension$org$not',
-              value: props.parentId,
-            },
-          ],
+          column: 'id$in-dimension$org$not',
+          value: props.parentId,
         },
       ],
-    }
-    const resp: any = await getBindUserList_api(params)
-    return {
-      code: resp.status,
-      result: resp.result,
-      status: resp.status,
-    }
-  } else {
-    return {
-      code: 200,
-      result: {
-        data: [],
-        pageIndex: 0,
-        pageSize: 0,
-        total: 0,
-      },
-      status: 200,
-    }
-  }
-}
+    },
+  ])
 
+//
 const onSearch = (e: any[]) => {
   queryParams.value = {
-    terms: e
+    terms: e,
   }
 }
 </script>
-
-<style lang="less" scoped>
-:deep(.add-bind-user-dialog-container) {
-  .table {
-    height: 600px;
-    overflow-y: auto;
-  }
-}
-</style>
