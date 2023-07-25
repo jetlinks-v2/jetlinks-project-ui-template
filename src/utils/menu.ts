@@ -146,7 +146,7 @@ export const handleAuthMenu = (menuData: any, cb: (code, buttons) => void) => {
       const { code, buttons, children} = item
 
       if (buttons) {
-        cb(code, buttons.map(item => item.id))
+        cb(code, buttons.map(a => a.id))
       }
 
       if (children) {
