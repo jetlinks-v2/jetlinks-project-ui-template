@@ -15,42 +15,51 @@
               <j-select v-model:value="formData.headerTheme" :options="headerThemeAreas">
                 </j-select>
             </j-form-item>
-            <!-- 高德地图API Key输入框 -->
-            <j-form-item label="高德地图API Key" name="apiKey">
+            <!-- 高德地图API Key输入框 <AIcon type="QuestionCircleOutlined" /> -->
+            <j-form-item name="apiKey">
+              <template #label>
+                <j-space>
+                  <span>高德API Key</span>
+                  <j-tooltip title="配置后平台可调用高德地图GIS服务">
+                    <AIcon type="QuestionCircleOutlined" />
+                  </j-tooltip>
+                </j-space>
+              </template>
               <j-input v-model:value="formData.apiKey" placeholder="请输入高德API Key"></j-input>
             </j-form-item>
             <!-- base-path输入框 -->
-            <j-form-item label="base-path" name="basePath">
-              <j-input v-model:value="formData.basePath" placeholder="{http/https}: //{前端所在服务器IP地址}:{前端暴露的服务端口}/api"></j-input>
+            <j-form-item name="basePath">
+              <template #label>
+                <j-space>
+                  <span>base-path</span>
+                  <j-tooltip>
+                    <template #title>
+                      <div style="word-break: break-all">
+                        <div>系统后台访问的url。</div>
+                        <div>
+                          格式：{http/https}:
+                          //{前端所在服务器IP地址}:{前端暴露的服务端口}/api
+                        </div>
+                      </div>
+                    </template>
+                    <AIcon type="QuestionCircleOutlined" />
+                  </j-tooltip>
+                </j-space>
+              </template>
+              <j-input v-model:value="formData.basePath" placeholder="请输入 base-path"></j-input>
             </j-form-item>
             <!-- 系统logo 和 浏览器标签 -->
             <div class="form-left-div">
               <!-- 系统logo -->
               <div class="form-left-logo">
                 <j-form-item label="系统logo">
-                  <Upload :drag="uploadInfo.drag" 
-                            :headers="uploadInfo.headers"
-                            :accept="uploadInfo.imageType" 
-                            :beforeUpload="uploadInfo.isLogoImage"
-                            :showUploadList="uploadInfo.showUploadList"
-                            :change="uploadInfo.changeLogoUpload"
-                            :action="uploadInfo.action" 
-                            :imgSrc="`${formData.logo}`"
-                            :messages="uploadInfo.logoTip"/>
+                  <Upload type="logo" v-model:img-src="formData.logo"/>
                 </j-form-item>
               </div>
               <!-- 浏览器页签icon -->
               <div class="form-left-ico">
                 <j-form-item label="浏览器页签">
-                  <Upload :drag="uploadInfo.drag" 
-                            :headers="uploadInfo.headers"
-                            :accept="uploadInfo.icoTyep" 
-                            :beforeUpload="uploadInfo.isicoImage"
-                            :showUploadList="uploadInfo.showUploadList"
-                            :change="uploadInfo.changeicoUpload"
-                            :action="uploadInfo.action" 
-                            :imgSrc="`${formData.ico}`"
-                            :messages="uploadInfo.icoTip"/>
+                  <Upload type="ico" v-model:img-src="formData.ico"/>
                 </j-form-item>
               </div>
             </div>
@@ -62,18 +71,8 @@
           <!-- 表单右侧部分 -->
           <j-col :span="14" class="form-right">
             <div class="form-right-background">
-              <j-form-item label="登录背景图" name="background" :beforeUpload="uploadInfo.isImageLess4M">
-                <Upload :drag="uploadInfo.drag" 
-                            :headers="uploadInfo.headers"
-                            :accept="uploadInfo.imageType" 
-                            :beforeUpload="uploadInfo.isbackground"
-                            :showUploadList="uploadInfo.showUploadList"
-                            :change="uploadInfo.changebackgroundUpload"
-                            :action="uploadInfo.action" 
-                            :imgSrc="`${formData.background}`"
-                            :messages="uploadInfo.backgroundTip"
-                            :height="`400px`"
-                            :width="`550px`"/>
+              <j-form-item label="登录背景图" name="background">
+                <Upload type="background" v-model:img-src="formData.background" height="400px" width="550px"/>
               </j-form-item>
             </div>
           </j-col>
@@ -84,14 +83,12 @@
 </template>
 <script setup name="Basis" lang="ts">
 import { ref, reactive } from 'vue'
-import { formDataType, uploadInfoType } from './typing'
+import { formDataType } from '@/views/system/Basis/typing'
 import { useRequest } from '@jetlinks/hooks';
 import { save_api } from '@/api/basis';
 import { message } from 'jetlinks-ui-components'
 import { useSystemStore } from '@/store';
-import { TOKEN_KEY, BASE_API } from '@jetlinks/constants'
-import { getImage, getToken } from '@jetlinks/utils'
-import Upload from './components/upload.vue'
+import Upload from '@/views/system/Basis/components/upload/upload.vue'
 
 
 // 表单数据
@@ -126,6 +123,13 @@ const formRules = {
     {
       required: true,
     }
+  ],
+  basePath: [
+    {
+      required: true,
+      message: "base-path为必填项",
+      trigger: "blur"
+    }
   ]
 }
 
@@ -134,103 +138,6 @@ const headerThemeAreas = ref([
   { label: '白色', value: 'light' },
   { label: '黑色', value: 'dark' }
 ])
-
-// 上传相关信息
-const uploadInfo: uploadInfoType = {
-  logoTip: ['推荐尺寸200*200', '支持jpg,png,jfif,pjp,pjpeg,jpeg'],
-  icoTip: ['推荐尺寸64*64', '支持ico格式'],
-  backgroundTip: ['支持4M以内的图片: 支持jpg,png,jfif,pjp,pjpeg,jpeg', '建议尺寸1400x1080'],
-  // 上传的地址
-  action: `${BASE_API}/file/static`,
-  headers: { [TOKEN_KEY]: getToken() },
-  // 上传的状态
-  logoLoading: false,
-  icoLoading: false,
-  backgroundLoading: false,
-  // 是否展示uplaodList
-  showUploadList: false,
-  // 是否支持拖拽
-  drag: true,
-  // 上传接受的类型
-  imageType: ['.jpg', '.png', '.jfif', '.pjp', '.pjpeg', '.jpeg'].toString(),
-  icoTyep: ['image/x-icon'].toString(),
-
-  //验证图片是否小于4M
-  isImageLess4M: (file: File) => {
-    const isLess = 1.0 * file.size / 1024 / 1024 < 4
-    if (!isLess) {
-      message.error("支持4M以内的图片")
-    }
-    return isLess
-  },
-
-  //验证图片大小是否小于1M
-  isImageLess1M: (file: File) => {
-    const isLess = 1.0 *  file.size / 1024 / 1024 < 1
-    if (!isLess) {
-      message.error("支持1M以内的图片")
-    }
-    return isLess
-  },
-
-  // 验证是否是图片类型
-  isImageType: (file: File) => {
-    const isImage =uploadInfo.imageType.split(',')
-        .map((m: string) => m.split('.')[1])
-        .filter((typeStr) => file.type.includes(typeStr)).length > 0
-    if(!isImage) {
-      message.error("请上传jpg png格式的图片")
-    }
-    return isImage
-  },
-
-  // 验证是否时ico类型
-  isicoType: (file: File) => {
-    const isico = file.type.includes("x-icon")
-    if(!isico) {
-      message.error("请上传ico格式的文件")
-    }
-    return isico
-  },
-
-  // 上传change事件
-  changUpload: (info: any, loading: string, image: string, msg: string) => {
-    if (info.file.status === 'uploading') {
-      formData[loading] = true
-    } else if (info.file.status === 'done') {
-      info.file.url = info.file.response?.result
-      formData[loading] = false
-      formData[image] = info.file.url
-    } else if (info.file.status === 'error') {
-      formData[loading] = false
-      message.error(msg + '上传失败，请稍后再试')
-    }
-  },
-
-  // logo上传change事件
-  changeLogoUpload: (info: any) => uploadInfo.changUpload(info, "logoLoading", "logo", "系统logo"),
-
-  // 浏览器页签上传change事件
-  changeicoUpload: (info: any) => uploadInfo.changUpload(info, "icoLoading", "ico", "浏览器页签"),
-
-  // 背景图片上传change事件
-  changebackgroundUpload: (info: any) => uploadInfo.changUpload(info, "backgroundLoading", "background", "登录背景图"),
-
-  // logo 上传验证
-  isLogoImage: (file: File) => {
-    return uploadInfo.isImageType(file) && uploadInfo.isImageLess4M(file) 
-  },
-
-  // icon 上传验证
-  isicoImage: (file: File) => {
-    return uploadInfo.isicoType(file) && uploadInfo.isImageLess1M(file) 
-  },
-
-  // 背景图片上传验证
-  isbackground: (file: File) => {
-    return uploadInfo.isImageType(file) && uploadInfo.isImageLess4M(file)
-  }
-}
 
 // 修改系统信息
 const getDetails = async () => {
@@ -289,5 +196,33 @@ const submit = () => {
 
 </script>
 <style lang="less" scoped>
-@import "basis.less";
+.form-container {
+    display: flex;
+    padding: 24px;
+    height: 100%;
+    .form-left {
+      height: inherit;
+      padding-right: 12px;
+      .form-left-div {
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+        .form-left-logo {
+            margin-right: 40px;
+        }
+      }
+    }
+    .form-right {
+      flex: 1;
+      padding-left: 12px;
+      overflow: hidden;
+      .form-right-bgImage {
+        width: 100%;
+        .bgImage-div {
+            width: 550px;
+            height: 400px;
+        }
+      }
+    }
+  }
 </style>
