@@ -253,7 +253,10 @@ const getRoleList = () => {
 // 获取组织列表
 const getDepartmentList = () => {
   getDepartmentList_api().then((resp: any) => {
-    form.departmentOptions= resp.result
+    form.departmentOptions = resp.result.map((item: DictType) => ({
+      label: item.name,
+      value: item.id
+    }))
   })
 }
 
