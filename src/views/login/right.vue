@@ -26,7 +26,7 @@
                         >
                             <template #addonAfter>
                                 <img
-                                    :src="codeUrl"
+                                    :src="url.base64"
                                     @click="getCode"
                                 />
                             </template>
@@ -57,6 +57,9 @@
 <script setup name="LoginRight" lang="ts">
 import Remember from './remember.vue'
 import { getImage } from '@jetlinks/utils'
+import { useRequest } from '@jetlinks/hooks'
+import {captchaConfig, codeUrl} from '@/api/login'
+import { rules } from './util'
 
 const logoImage = getImage('/login/logo.png')
 
@@ -64,10 +67,6 @@ const props = defineProps({
     loading: {
         type: Boolean,
         default: false
-    },
-    codeUrl: {
-        type: String,
-        default: ''
     },
     logo: {
         type: String,
@@ -81,6 +80,18 @@ const props = defineProps({
 
 const emit = defineEmits(['submit'])
 
+const { data: url, run: getCode } = useRequest(codeUrl, {
+  immediate: false
+})
+
+useRequest(captchaConfig, {
+  onSuccess(resp) {
+    if (resp.success && resp.result?.enabled) {
+      getCode()
+    }
+  }
+})
+
 const formData = reactive({
   username: '',
   password: '',
@@ -90,52 +101,12 @@ const formData = reactive({
   verifyKey: undefined,
 })
 
-const rules = {
-  username: [
-    {
-      validator(_: any, value: string) {
-        if (!value) {
-          return Promise.reject('请输入账号!')
-        }
-        return Promise.resolve()
-      },
-      trigger: 'change'
-    }
-  ],
-  password: [
-    {
-      validator(_: any, value: string) {
-        if (!value) {
-          return Promise.reject('请输入密码!')
-        }
-        return Promise.resolve()
-      },
-      trigger: 'change'
-    }
-  ],
-  verifyCode: [
-    {
-      validator(_: any, value: string) {
-        if (!value) {
-          return Promise.reject('请输入验证码!')
-        }
-        return Promise.resolve()
-      },
-      trigger: 'change'
-    }
-  ]
-}
-
 const showCode = computed(() => {
-    return !!props.codeUrl
+    return !!url?.value?.base64
 })
 
 const submit = () => {
     emit('submit', formData)
-}
-
-const getCode = () => {
-
 }
 
 </script>
@@ -146,10 +117,17 @@ const getCode = () => {
     .top {
         padding-top: 30%;
 
-        .herader {
-            height: 44px;
-            line-height: 44px;
+        .header {
             text-align: center;
+
+          .desc {
+            margin-top: 24px;
+            margin-bottom: 40px;
+            color: #000000b3;
+            font-weight: 600;
+            font-size: 22px;
+            text-align: center;
+          }
         }
     }
 
@@ -160,13 +138,6 @@ const getCode = () => {
         vertical-align: top;
     }
 
-  .desc {
-    margin-top: 24px;
-    margin-bottom: 40px;
-    color: #000000b3;
-    font-weight: 600;
-    font-size: 22px;
-    text-align: center;
-  }
+
 }
 </style>

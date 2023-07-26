@@ -15,19 +15,20 @@
 </template>
 <script setup name="Login" lang="ts">
 import { useRequest } from '@jetlinks/hooks'
-import { login } from '@/api/user'
-import { getImage, setToken } from '@jetlinks/utils'
-import { systemVersion, settingDetail } from '@/api/system'
+import { login, encryptionConfig } from '@/api/login'
+import { getImage, setToken, encrypt } from '@jetlinks/utils'
+// import { systemVersion, settingDetail } from '@/api/system'
 import { useUserStore } from '@/store/user'
 import { useSystemStore } from '@/store/system'
 import { storeToRefs } from 'pinia'
 import Right from './right.vue'
+import { cloneDeep } from "lodash-es";
 
 const userStore = useUserStore()
 const systemStore = useSystemStore()
 const { systemInfo } = storeToRefs(systemStore)
 
-const { data: sysVersion } = useRequest<any, { version: string}>(systemVersion)
+// const { data: sysVersion } = useRequest<any, { version: string}>(systemVersion)
 
 const { loading, run } = useRequest(login, {
   immediate: false,
@@ -40,10 +41,19 @@ const { loading, run } = useRequest(login, {
   }
 })
 
+const { data: encryption } = useRequest(encryptionConfig)
+
 const bgImage = getImage('/login/login.png')
 
 const submit = (data: any) => {
-  run(data)
+  const copyData = cloneDeep(data)
+
+  if (encryption.value?.encrypt?.enabled) {
+    const _encrypt = encryption.value?.encrypt
+    copyData.password = encrypt(copyData.password, _encrypt.publicKey)
+    copyData.encryptId = _encrypt.id
+  }
+  run(copyData)
 }
 
 systemStore.queryInfo()
@@ -75,6 +85,7 @@ systemStore.queryInfo()
   }
 
   .right {
+    min-width: 400px;
     width: 27%;
     display: flex;  
     flex-direction: column;
