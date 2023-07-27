@@ -70,6 +70,9 @@ export const columns = [
         fixed: 'left',
         search: {
             type: 'string',
+            componentProps: {
+                placeholder: '请输入姓名',
+            },
         },
     },
     {
@@ -80,6 +83,9 @@ export const columns = [
         fixed: 'left',
         search: {
             type: 'string',
+            componentProps: {
+                placeholder: '请输入用户名',
+            },
         },
     },
 
@@ -91,6 +97,9 @@ export const columns = [
         fixed: 'left',
         search: {
             type: 'select',
+            componentProps: {
+                placeholder: '请选择',
+            },
             options: [
                 {
                     label: '正常',

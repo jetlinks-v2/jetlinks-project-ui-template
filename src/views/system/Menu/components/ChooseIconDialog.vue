@@ -3,7 +3,7 @@
         visible
         title="菜单图标"
         width="800px"
-        @cancel="emits('update:visible', false)"
+        @cancel="emits('close')"
         @ok="confirm"
     >
         <j-radio-group v-model:value="selected" class="radio">
@@ -22,14 +22,10 @@
 <script setup lang="ts">
 import iconKeys from './fields';
 
-const emits = defineEmits(['confirm', 'update:visible']);
-const props = defineProps<{
-    visible: boolean;
-}>();
+const emits = defineEmits(['save', 'close']);
 
 const confirm = () => {
-    emits('confirm', selected.value);
-    emits('update:visible', false);
+    emits('save', selected.value);
 };
 
 const selected = ref<string>('');

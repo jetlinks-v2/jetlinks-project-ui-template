@@ -26,9 +26,9 @@
                 <template #label>
                   <span>高德API Key</span>
                   <j-tooltip title="配置后平台可调用高德地图GIS服务">
-                    <img
-                      class="img-style"
-                      :src="getImage('/init-home/mark.png')"
+                    <AIcon
+                      type="QuestionCircleOutlined"
+                      style="font-size: 14px;margin-left: 5px;"
                     />
                   </j-tooltip>
                 </template>
@@ -51,9 +51,9 @@
                       </div>
                     </template>
 
-                    <img
-                      class="img-style"
-                      :src="getImage('/init-home/mark.png')"
+                    <AIcon
+                      type="QuestionCircleOutlined"
+                      style="font-size: 14px;margin-left: 5px;"
                     />
                   </j-tooltip>
                 </template>
@@ -126,9 +126,9 @@
                     <template #label>
                       <span>浏览器页签</span>
                       <j-tooltip title="浏览器tab页中显示的图片元素">
-                        <img
-                          class="img-style"
-                          :src="getImage('/init-home/mark.png')"
+                        <AIcon
+                          type="QuestionCircleOutlined"
+                          style="font-size: 14px;margin-left: 5px;"
                         />
                       </j-tooltip>
                     </template>
@@ -242,12 +242,12 @@
 import { formValueType, uploaderType } from './typing'
 import { message } from 'jetlinks-ui-components'
 import { TOKEN_KEY, BASE_API } from '@jetlinks/constants'
-import { getImage, getToken } from '@jetlinks/utils'
+import { getToken } from '@jetlinks/utils'
 import { useSystemStore } from '@/store/system'
-import { save_api } from '@/api/basis';
+import { save_api } from '@/api/basis'
 import { useRequest } from '@jetlinks/hooks'
 
-const action = `${BASE_API}/file/static`;
+const action = `${BASE_API}/file/static`
 const headers = { [TOKEN_KEY]: getToken() }
 
 const formValue = reactive<formValueType>({
@@ -299,7 +299,8 @@ const uploader: uploaderType = {
   // logo格式校验
   beforeLogoUpload: (file: File) => {
     const typeBool =
-      uploader.imageTypes.split(',')
+      uploader.imageTypes
+        .split(',')
         .map((m: string) => m.split('.')[1])
         .filter((typeStr) => file.type.includes(typeStr)).length > 0
     const sizeBool = file.size / 1024 / 1024 < 4
@@ -381,10 +382,10 @@ const { loading, run } = useRequest(save_api, {
   immediate: false,
   onSuccess(res) {
     if (res.success) {
-        message.success('保存成功')
-        getDetails()
+      message.success('保存成功')
+      getDetails()
     }
-  }
+  },
 })
 
 const clickSave = () => {
@@ -395,7 +396,7 @@ const clickSave = () => {
         properties: {
           ...formValue,
           apiKey: '',
-          'basePath': '',
+          basePath: '',
         },
       },
       {
@@ -407,7 +408,7 @@ const clickSave = () => {
       {
         scope: 'paths',
         properties: {
-          'basePath': formValue.basePath,
+          basePath: formValue.basePath,
         },
       },
     ]

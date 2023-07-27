@@ -14,7 +14,8 @@ export const getRoleDetails_api = (id: string): Promise<any> => request.get(`/ro
 export const getPermissionTree_api = (id: string): Promise<any> => request.get(`/menu/role/${id}/_grant/tree`);
 // 更新角色对应的权限树
 export const updatePermissionTree_api = (id: string, data:any): Promise<any> => request.put(`/menu/role/${id}/_grant`,data);
-
+// 获取角色列表
+export const getRoleListNoPaging_api = () => request.get(`/role/_query/no-paging?paging=false`);
 
 // 获取用户列表
 export const getUserByRole_api = (data: any): Promise<any> => request.post(`/user/_query/`, data);
