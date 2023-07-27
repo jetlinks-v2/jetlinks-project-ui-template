@@ -1,16 +1,21 @@
-import { dictType } from "./typing"
+import { DictType } from "./typing"
 import { getUserType_api } from "@/api/user"
+import { message } from 'jetlinks-ui-components'
 
 // 获取用户类型
 const userTypes = () =>
     new Promise((resolve) => {
-        getUserType_api().then((resp: any) => {
-            resolve(
-                resp.result.map((item: dictType) => ({
-                    label: item.name,
-                    value: item.id,
-                })),
-            )
+        getUserType_api().then((resp: any) => { 
+            if(resp.success) {
+              resolve(
+                  resp.result.map((item: DictType) => ({
+                      label: item.name,
+                      value: item.id,
+                  })),
+              )
+            } else {
+              message.error('获取用户类型失败')
+            }
         })
     })
 

@@ -21,4 +21,4 @@ export interface FormDataType {
 }
 
 // 对话框类型
-export type ModalType = '' | 'add' | 'edit' | 'reset'
+export type ModalType = 'add' | 'edit' | 'reset'

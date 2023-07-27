@@ -12,5 +12,5 @@ export interface OptionType {
 }
 
 // 按钮类型
-export type ModalType = '' | 'add' | 'edit' | 'reset'
+export type ModalType = 'add' | 'edit' | 'reset'
 

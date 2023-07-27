@@ -7,15 +7,7 @@
         <!-- 用户管理表格 -->
         <j-pro-table :columns="columns" model="TABLE" ref="tableRef"
                      :request="getUserList_api"
-                     :params = "queryParams"
-                     :defaultParams="{
-                        pageSize: 10,
-                        sorts: [{ name: 'createTime', order: 'desc' }]
-                     }"
-                     :pagination="{
-                        showSizeChanger: true,
-                        pageSizeOptions: ['10', '20', '50', '100'],
-                     }">
+                     :params = "queryParams">
           <!-- 新增用户按钮 -->
           <template #headerTitle>
             <PermissionButton :hasPermission="`${permission}:add`" type="primary" @click="showModal('add')" >
@@ -74,13 +66,13 @@ import { ModalType } from './typing'
 import { ref, reactive } from 'vue';
 import UserDialog from './components/UserDialog/UserDialog.vue';
 import { getUserList_api, changeUserStatus_api, deleteUser_api } from '@/api/user';
-import { message } from 'jetlinks-ui-components'
+import { onlyMessage } from '@jetlinks/utils';
 
 // 权限
 const permission = 'system/User'
 
 // 表格实例
-const tableRef = ref<Record<string, any>>({})
+const tableRef = ref<any>()
 
 // 控制对话框的显示
 const visible = ref<boolean>(false);
@@ -149,7 +141,7 @@ const changeStatus = ({ id, status }: any) => {
     id,
   }
   changeUserStatus_api(params).then(() => {
-    message.success('操作成功')
+    onlyMessage('操作成功', 'success')
     tableRef.value.reload()
   })
 }
@@ -157,7 +149,7 @@ const changeStatus = ({ id, status }: any) => {
 // 删除用户
 const deleteUser = (id: string) => {
   deleteUser_api(id).then(() => {
-    message.success('操作成功')
+    onlyMessage('操作成功', 'success')
     tableRef.value.reload()
   })
 }

@@ -7,10 +7,6 @@ export interface UploadInfoType {
     // 上传的地址
     action: string,
     headers: object,
-    // 上传的状态
-    logoLoading: boolean,
-    icoLoading: boolean,
-    backgroundLoading: boolean,
     // 是否展示uplaodList
     showUploadList: boolean,
     // 是否支持拖拽

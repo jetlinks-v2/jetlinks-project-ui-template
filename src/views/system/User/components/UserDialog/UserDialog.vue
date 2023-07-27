@@ -1,8 +1,8 @@
 <template>
-  <j-modal width="675px" :visible="visible" @ok="handleOk" @cancel="handleCancel" :title="title">
+  <j-modal width="675px" :visible="visible" @ok="handleOk" @cancel="handleCancel" :title="title" :confirmLoading="loading">
     <!-- 新增用户表单 -->
     <j-form layout="vertical" :model="form.formData" :rules="formRules" ref="formRef" class="user-dialog-form">
-        <j-row v-if="modalType !== 'reset'">
+        <j-row v-if="!isReset">
             <!-- 姓名输入框 -->
             <j-col :span="12">
                 <j-form-item label="姓名" name="name" class="userDialog-form-item-left">
@@ -16,7 +16,7 @@
                 </j-form-item>
             </j-col>
         </j-row>
-        <j-row v-if="modalType !== 'edit'">
+        <j-row v-if="!isEdit">
             <!-- 密码输入框 -->
             <j-col :span="24">
                 <j-form-item label="密码" name="password">
@@ -24,7 +24,7 @@
                 </j-form-item>
             </j-col>
         </j-row>
-        <j-row v-if="modalType !== 'edit'">
+        <j-row v-if="!isEdit">
             <!-- 确认密码输入框 -->
             <j-col :span="24">
                 <j-form-item label="确认密码" name="confirmPassword">
@@ -32,7 +32,7 @@
                 </j-form-item>
             </j-col>
         </j-row>
-        <j-row v-if="modalType !== 'reset'">
+        <j-row v-if="!isReset">
             <!-- 角色选择框 -->
             <j-col :span="12">
                 <j-form-item name="roleIdList" label="角色" class="userDialog-form-item-left flex" >
@@ -54,7 +54,7 @@
                 </j-form-item>
             </j-col>
         </j-row>
-        <j-row v-if="modalType !== 'reset'">
+        <j-row v-if="!isReset">
             <j-col :span="12">
                 <j-form-item label="手机号" name="telephone" class="userDialog-form-item-left">
                     <j-input v-model:value="form.formData.telephone" placeholder="请输入邮箱"></j-input>
@@ -72,7 +72,7 @@
 
 <script setup lang="ts" name="UserDialog">
 import { ref, reactive } from 'vue';
-import { message } from 'jetlinks-ui-components'
+import { onlyMessage } from '@jetlinks/utils';
 import { FormDataType } from '@/views/system/User/components/UserDialog/typing'
 import { OptionType, DictType, ModalType } from '@/views/system/User/typing'
 import { passwordRegEx } from '@/utils/validate'
@@ -110,26 +110,6 @@ const props = defineProps({
 })
 
 // 表单相关数据
-// let form.formData = reactive<FormDataType>({
-      // 用户id
-      //id: "",
-    // 姓名
-    // name: "",
-    // 用户名
-    //username: "",
-    // 密码
-    //password: "",
-    // 确认密码
-    //confirmPassword: "",
-    // 角色列表
-    //roleIdList: [],
-    // 组织列表
-    //orgIdList: [],
-    // 手机号
-    //telephone: "",
-    // 邮箱
-    //email: ""
-//})
 const form = reactive({
   // 表单数据
   formData: {} as FormDataType,
@@ -139,12 +119,26 @@ const form = reactive({
   departmentOptions: [] as OptionType[]
 })
 
+// 是否是编辑模式
+const isEdit = computed(() => {
+  return props.modalType === 'edit'
+})
+
+// 是否是修改密码模式
+const isReset = computed(() => {
+  return props.modalType === 'reset'
+})
+
 // 对话框标题
 const title = computed(() => {
-    if (props.modalType === 'add') return '新增';
-    else if (props.modalType === 'edit') return '编辑';
-    else if (props.modalType === 'reset') return '重置密码';
-    else return '';
+    switch (props.modalType) {
+      case 'add':
+        return '新增';
+      case 'edit':
+        return '编辑'
+      case 'reset':
+        return '重置密码';
+    }
 })
 
 
@@ -241,24 +235,47 @@ const formRules = {
 const emit = defineEmits(['handleOk', 'update:visible'])
 
 // 获取角色列表
-const getRoleList = () => {
-    getRoleList_api().then((resp: any) => {
-        form.roleOptions = resp.result.map((item: DictType) => ({
-            label: item.name,
-            value: item.id
-        }))
-    })
-}
+const { loading: getRoleLoading, run: runGetRoleList} = useRequest(getRoleList_api, {
+  immediate: false,
+  onSuccess(res) {
+    if(res.success) {
+      form.roleOptions = res.result.map((item: DictType) => ({
+        label: item.name,
+        value: item.id
+      }))
+    }
+  }
+})
+
 
 // 获取组织列表
-const getDepartmentList = () => {
-  getDepartmentList_api().then((resp: any) => {
-    form.departmentOptions = resp.result.map((item: DictType) => ({
-      label: item.name,
-      value: item.id
-    }))
-  })
-}
+const { loading: getDepartLoading, run: runGetDepartmentList} = useRequest(getDepartmentList_api, {
+  immediate: false,
+  onSuccess(res) {
+    if(res.success) {
+      form.departmentOptions = res.result.map((item: DictType) => ({
+        label: item.name,
+        value: item.id
+      }))
+    }
+  }
+})
+
+const { loading: getUserLoading, run: runGetUser} = useRequest(getUser_api, {
+  immediate: false,
+  onSuccess(res) {
+    if(res.success) {
+      form.formData = {
+        ...(res.result as FormDataType),
+        orgIdList: res.result.orgList.map((item: DictType) => item.id),
+        roleIdList: res.result.roleList.map((item: DictType) => item.id)
+      }
+      nextTick(() => {
+        formRef.value?.clearValidate()
+      })
+    }
+  }
+})
 
 // 获取当前用户信息
 const getUserInfo = () => {
@@ -267,16 +284,7 @@ const getUserInfo = () => {
   if (props.modalType === 'add') form.formData = {} as FormDataType
   else if (props.modalType === 'reset') form.formData = { id } as FormDataType
   else if (props.modalType === 'edit') {
-    getUser_api(id).then((resp: any) => {
-      form.formData = {
-        ...(resp.result as FormDataType),
-        orgIdList: resp.result.orgList.map((item: DictType) => item.id),
-        roleIdList: resp.result.roleList.map((item: DictType) => item.id),
-      }
-      nextTick(() => {
-        formRef.value?.clearValidate()
-      })
-    })
+    runGetUser(id);
   }
 }
 
@@ -285,51 +293,89 @@ const clickAddItem = (prop: 'roleIdList' | 'orgIdList', target: string) => {
   const tab: any = window.open(`${origin}/#/system/${target}?save=true`)
   tab.onTabSaveSuccess = (value: string) => {
     form.formData[prop] = [...(form.formData[prop] || []), value]
-    if (prop === 'roleIdList') getRoleList()
-    else getDepartmentList()
+    if (prop === 'roleIdList') runGetRoleList()
+    else runGetDepartmentList()
+  }
+}
+
+// 添加用户
+const {loading: addLoading, run: runAdd} = useRequest(addUser_api, {
+  immediate: false,
+  onSuccess(res) {
+    if (res.success) {
+      onlyMessage('添加用户成功', 'success')
+      emit('handleOk')
+      emit('update:visible', false)
+    }
+  }
+})
+
+// 修改用户信息
+const {loading: editLoading, run: runEdit} = useRequest(updateUser_api, {
+  immediate: false,
+  onSuccess(res) {
+    if (res.success) {
+      onlyMessage('修改用户信息成功', 'success')
+      emit('handleOk')
+      emit('update:visible', false)
+    }
+  }
+})
+
+// 修改密码
+const {loading: resetLoading, run: runReset} = useRequest(updatePassword_api, {
+  immediate: false,
+  onSuccess(res) {
+    if (res.success) {
+      onlyMessage('修改密码成功', 'success')
+      emit('handleOk')
+      emit('update:visible', false)
+    }
+  }
+})
+
+const loading = computed(() => {
+  return addLoading.value || editLoading.value || resetLoading.value
+})
+
+// 获取提交接口参数
+const getParams = () => {
+  switch (props.modalType) {
+    case 'add':
+      return {
+        user: form.formData,
+        orgIdList: form.formData.orgIdList,
+        roleIdList: form.formData.roleIdList
+      }
+    case 'edit':
+      return {
+        id: form.formData.id,
+        user: form.formData,
+        orgIdList: form.formData.orgIdList,
+        roleIdList: form.formData.roleIdList
+      }
+    case 'reset':
+      return {
+        id: form.formData.id,
+        password: form.formData.password
+      }
   }
 }
 
 // 点击确认按钮事件
 const handleOk = () => {
   formRef.value?.validate().then(() => {
-    let params = {}
-    const { loading, run } = useRequest(props.modalType === 'add' ? addUser_api : (props.modalType === 'edit' ? updateUser_api : updatePassword_api), {
-      immediate: false,
-      onSuccess(res) {
-        if (res.success) {
-          message.success('操作成功')
-          emit('handleOk')
-          emit('update:visible', false)
-        }
-      },
-    })
-
+    const params = getParams()
     // 新增用户
     if (props.modalType === 'add') {
-      params = {
-        user: form.formData,
-        orgIdList: form.formData.orgIdList,
-        roleIdList: form.formData.roleIdList,
-      }
+      runAdd(params);
       // 修改用户信息
     } else if (props.modalType === 'edit') {
-      params = {
-        id: form.formData.id,
-        user: form.formData,
-        orgIdList: form.formData.orgIdList,
-        roleIdList: form.formData.roleIdList,
-      }
+      runEdit(params);
       // 修改密码
     } else if (props.modalType === 'reset') {
-      params = {
-        id: form.formData.id,
-        password: form.formData.password,
-      }
+      runReset(params);
     }
-    console.log("params", params)
-    console.log('run', run)
-    run(params)
   })
 }
 
@@ -340,8 +386,8 @@ const handleCancel = (e: any) => {
 
 // 对话框初始化
 const init = () => {
-    getRoleList()
-    getDepartmentList()
+    runGetRoleList()
+    runGetDepartmentList()
     getUserInfo()
 }
 

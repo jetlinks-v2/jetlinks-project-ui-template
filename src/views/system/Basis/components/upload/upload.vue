@@ -9,8 +9,11 @@
             @change="change"
             :action="uploadInfo.action">
         <div class="upload-div" :style="`width: ${width};`">
-            <img id="upload-img" :style="`height: ${height};`" :src="imgSrc" alt="上传图片">
-            <div class="upload-mask" :style="`height: ${height};`">点击修改</div>
+            <img v-if="!loading" id="upload-img" :style="`height: ${height};`" :src="imgSrc" alt="上传图片">
+            <div v-if="loading">
+              <AIcon type="LoadingOutlined" />
+            </div>
+            <div v-else class="upload-mask" :style="`height: ${height};`">点击修改</div>
         </div>
         <div v-for="item in messages" :key="item" class="uploadTip">{{item}}</div>
     </j-upload>
@@ -21,8 +24,8 @@
 import { UploadInfoType } from '@/views/system/Basis/components/upload/typing'
 import { TOKEN_KEY, BASE_API } from '@jetlinks/constants'
 import { getToken } from '@jetlinks/utils'
-import { message } from 'jetlinks-ui-components'
-import { defineProps } from 'vue'
+import { onlyMessage } from '@jetlinks/utils'
+import { defineProps, ref } from 'vue'
 
 
 const emit = defineEmits(['update:imgSrc'])
@@ -49,34 +52,61 @@ const props = defineProps({
 
 // 上传框接收类型
 const accept = computed(() => {
-  if (props.uploadType === 'logo' || props.uploadType === 'background') return uploadInfo.imageType
-  else if (props.uploadType === 'ico') return uploadInfo.icoType
-  else return ''
+  switch (props.uploadType) {
+    case 'logo':
+    case 'background':
+      return uploadInfo.imageType;
+    case 'ico':
+      return uploadInfo.icoType;
+    default:
+      return '';
+  }
 })
 
 // 上传校验
 const beforeUpload = computed(() => {
-  if (props.uploadType === 'logo') return uploadInfo.isLogoImage
-  else if (props.uploadType === 'ico') return uploadInfo.isIcoImage
-  else if (props.uploadType === 'background') return uploadInfo.isBackground
-  else return () => {}
+  switch (props.uploadType) {
+    case 'logo':
+      return uploadInfo.isLogoImage;
+    case 'ico':
+      return uploadInfo.isIcoImage;
+    case 'background':
+      return uploadInfo.isBackground;
+    default:
+      return () =>  {};
+  }
 })
 
 // 上传事件
 const change = computed(() => {
-  if (props.uploadType === 'logo') return uploadInfo.changeLogoUpload
-  else if (props.uploadType === 'ico') return uploadInfo.changeIcoUpload
-  else if (props.uploadType === 'background') return uploadInfo.changeBackgroundUpload
-  else return () => {}
+  switch (props.uploadType) {
+    case 'logo':
+      return uploadInfo.changeLogoUpload;
+    case 'ico':
+      return uploadInfo.changeIcoUpload;
+    case 'background':
+      return uploadInfo.changeBackgroundUpload;
+    default:
+      return () =>  {};
+  }
 })
 
 // 提示文字
 const messages = computed(() => {
-  if (props.uploadType === 'logo') return uploadInfo.logoTip
-  else if (props.uploadType === 'ico') return uploadInfo.icoTip
-  else if (props.uploadType === 'background') return uploadInfo.backgroundTip
-  else return () => {}
+  switch (props.uploadType) {
+    case 'logo':
+      return uploadInfo.logoTip;
+    case 'ico':
+      return uploadInfo.icoTip;
+    case 'background':
+      return uploadInfo.backgroundTip;
+    default:
+      return () =>  {};
+  }
 })
+
+// 上传状态
+const loading = ref<Boolean>(false)
 
 // 上传相关信息
 const uploadInfo: UploadInfoType = {
@@ -87,10 +117,6 @@ const uploadInfo: UploadInfoType = {
   // 上传的地址
   action: `${BASE_API}/file/static`,
   headers: { [TOKEN_KEY]: getToken() },
-  // 上传的状态
-  logoLoading: false,
-  icoLoading: false,
-  backgroundLoading: false,
   // 是否展示uplaodList
   showUploadList: false,
   // 是否支持拖拽
@@ -103,7 +129,7 @@ const uploadInfo: UploadInfoType = {
   isImageLess4M: (file: File) => {
     const isLess = 1.0 * file.size / 1024 / 1024 < 4
     if (!isLess) {
-      message.error("支持4M以内的图片")
+      onlyMessage('支持4M以内的图片','error')
     }
     return isLess
   },
@@ -112,7 +138,7 @@ const uploadInfo: UploadInfoType = {
   isImageLess1M: (file: File) => {
     const isLess = 1.0 *  file.size / 1024 / 1024 < 1
     if (!isLess) {
-      message.error("支持1M以内的图片")
+      onlyMessage("支持1M以内的图片","error")
     }
     return isLess
   },
@@ -123,7 +149,7 @@ const uploadInfo: UploadInfoType = {
         .map((m: string) => m.split('.')[1])
         .filter((typeStr) => file.type.includes(typeStr)).length > 0
     if(!isImage) {
-      message.error("请上传jpg png格式的图片")
+      onlyMessage("请上传jpg png格式的图片",'error')
     }
     return isImage
   },
@@ -132,34 +158,35 @@ const uploadInfo: UploadInfoType = {
   isIcoType: (file: File) => {
     const isico = file.type.includes("x-icon")
     if(!isico) {
-      message.error("请上传ico格式的文件")
+      onlyMessage("请上传ico格式的文件",'error')
     }
     return isico
   },
 
   // 上传change事件
-  changUpload: (info: any, loading: string, image: string, msg: string) => {
+  changUpload: (info: any, msg: string) => {
+    console.log("status",  info.file.status)
     if (info.file.status === 'uploading') {
-      uploadInfo[loading] = true
+      loading.value = true
     } else if (info.file.status === 'done') {
       info.file.url = info.file.response?.result
-      uploadInfo[loading] = false
+      loading.value = false
       // imgSrc.value = info.file.url
       emit('update:imgSrc', info.file.url)
     } else if (info.file.status === 'error') {
-      uploadInfo[loading] = false
-      message.error(msg + '上传失败，请稍后再试')
+      loading.value = false
+      onlyMessage(msg + '上传失败，请稍后再试', 'error')
     }
   },
 
   // logo上传change事件
-  changeLogoUpload: (info: any) => uploadInfo.changUpload(info, "logoLoading", "logo", "系统logo"),
+  changeLogoUpload: (info: any) => {uploadInfo.changUpload(info, "系统logo")},
 
   // 浏览器页签上传change事件
-  changeIcoUpload: (info: any) => uploadInfo.changUpload(info, "icoLoading", "ico", "浏览器页签"),
+  changeIcoUpload: (info: any) => {uploadInfo.changUpload(info, "浏览器页签")},
 
   // 背景图片上传change事件
-  changeBackgroundUpload: (info: any) => uploadInfo.changUpload(info, "backgroundLoading", "background", "登录背景图"),
+  changeBackgroundUpload: (info: any) => {uploadInfo.changUpload(info, "登录背景图")},
 
   // logo 上传验证
   isLogoImage: (file: File) => {

@@ -53,13 +53,13 @@
               <!-- 系统logo -->
               <div class="form-left-logo">
                 <j-form-item label="系统logo">
-                  <Upload type="logo" v-model:img-src="formData.logo"/>
+                  <Upload uploadType="logo" v-model:img-src="formData.logo"/>
                 </j-form-item>
               </div>
               <!-- 浏览器页签icon -->
               <div class="form-left-ico">
                 <j-form-item label="浏览器页签">
-                  <Upload type="ico" v-model:img-src="formData.ico"/>
+                  <Upload uploadType="ico" v-model:img-src="formData.ico"/>
                 </j-form-item>
               </div>
             </div>
@@ -72,7 +72,7 @@
           <j-col :span="14" class="form-right">
             <div class="form-right-background">
               <j-form-item label="登录背景图" name="background">
-                <Upload type="background" v-model:img-src="formData.background" height="400px" width="550px"/>
+                <Upload uploadType="background" v-model:img-src="formData.background" height="400px" width="550px"/>
               </j-form-item>
             </div>
           </j-col>
@@ -86,9 +86,9 @@ import { ref, reactive } from 'vue'
 import { formDataType } from '@/views/system/Basis/typing'
 import { useRequest } from '@jetlinks/hooks';
 import { save_api } from '@/api/basis';
-import { message } from 'jetlinks-ui-components'
 import { useSystemStore } from '@/store';
 import Upload from '@/views/system/Basis/components/upload/upload.vue'
+import { onlyMessage } from '@jetlinks/utils';
 
 
 // 表单数据
@@ -146,9 +146,9 @@ const getDetails = async () => {
   Object.assign(formData, {
     title: system.layout?.title,
     headerTheme: system.theme,
-    logo: system.layout?.logo || '/logo.png',
+    logo: system.layout?.logo || '/images/login/logo.png',
     ico: system.systemInfo?.ico || '/favicon.ico',
-    background: system.systemInfo?.background || '/images/login.png',
+    background: system.systemInfo?.background || '/images/login/login.png',
     apiKey: system.systemInfo?.apiKey,
     basePath: system.systemInfo?.basePath,
   })
@@ -159,7 +159,7 @@ const { loading, run} = useRequest(save_api, {
   immediate: false,
   onSuccess(res) {
     if(res.success) {
-      message.success('保存成功')
+      onlyMessage('保存成功', 'success')
       getDetails()
     }
   }
