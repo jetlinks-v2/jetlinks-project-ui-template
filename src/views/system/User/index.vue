@@ -1,287 +1,107 @@
 <template>
   <page-container>
     <div class="user-container">
-      <j-search :labelWidth="50" :columns="columns" target="category" @search="handleParams" />
+      <!-- 搜索框 -->
+      <j-search :labelWidth="50" :columns="columns" target="category" @search="onSearch" />
       <FullPage>
-        <j-pro-table
-          ref="tableRef"
-          :columns="columns"
-          :request="getUserList_api"
-          model="TABLE"
-          :params="queryParams"
-          :defaultParams="{
-            pageSize: 10,
-            sorts: [{ name: 'createTime', order: 'desc' }],
-          }"
-          :pagination="{
-            showSizeChanger: true,
-            pageSizeOptions: ['10', '20', '50', '100'],
-          }"
-        >
+        <!-- 用户管理表格 -->
+        <j-pro-table :columns="columns" model="TABLE" ref="tableRef"
+                     :request="getUserList_api"
+                     :params = "queryParams">
+          <!-- 新增用户按钮 -->
           <template #headerTitle>
-            <PermissionButton
-              :hasPermission="`${permission}:add`"
-              type="primary"
-              @click="openDialog('add')"
-            >
+            <PermissionButton :hasPermission="`${permission}:add`" type="primary" @click="showModal('add')" >
               <AIcon type="PlusOutlined" />新增
             </PermissionButton>
           </template>
+          <!-- 用户类型显示处理 -->
           <template #type="slotProps">
             {{ slotProps.type.name }}
           </template>
+          <!-- 状态显示处理 -->
           <template #status="slotProps">
-            <BadgeStatus
-              :status="slotProps.status"
-              :text="slotProps.status ? '正常' : '禁用'"
-              :statusNames="{
-                1: 'success',
-                0: 'error',
-              }"
-            ></BadgeStatus>
+            <BadgeStatus :status="slotProps.status" :text="slotProps.status ? '正常' : '禁用'" :statusNames="{0: 'error', 1: 'success'}"></BadgeStatus>
           </template>
+          <!-- 操作列 -->
           <template #action="slotProps">
             <j-space :size="16">
-              <PermissionButton
-                :hasPermission="`${permission}:update`"
-                type="link"
-                :tooltip="{
-                  title: '编辑',
-                }"
-                @click="openDialog('edit', slotProps)"
-              >
+              <!-- 编辑按钮 -->
+              <PermissionButton :hasPermission="`${permission}:update`" type="link" :tooltip="{title: '编辑'}" @click="showModal('edit', slotProps)">
                 <AIcon type="EditOutlined" />
               </PermissionButton>
-              <PermissionButton
-                v-if="slotProps.status"
-                :hasPermission="`${permission}:action`"
-                type="link"
-                :tooltip="{
-                  title: '禁用',
-                }"
-                :popConfirm="{
-                  title: `确定禁用吗？`,
-                  onConfirm: () => changeStatus(slotProps),
-                }"
-              >
+              <!-- 状态修改按钮 -->
+              <!-- 状态为正常时显示 -->
+              <PermissionButton v-if="slotProps.status" :hasPermission="`${permission}:action`" type="link" 
+                                :tooltip="{title: '禁用'}" :popConfirm="{title: '确认禁用吗？', onConfirm: () => changeStatus(slotProps)}">
                 <AIcon type="StopOutlined" />
               </PermissionButton>
-              <PermissionButton
-                v-else
-                :hasPermission="`${permission}:action`"
-                type="link"
-                :tooltip="{
-                  title: `启用`,
-                }"
-                :popConfirm="{
-                  title: `确定启用吗？`,
-                  onConfirm: () => changeStatus(slotProps),
-                }"
-              >
+              <!-- 状态为禁用时显示 -->
+              <PermissionButton v-else :hasPermission="`${permission}:action`" type="link" 
+                                :tooltip="{title: '启用'}" :popConfirm="{title: '确认启用吗？', onConfirm: () => changeStatus(slotProps)}">
                 <AIcon type="PlayCircleOutlined" />
               </PermissionButton>
-              <PermissionButton
-                :hasPermission="`${permission}:update`"
-                type="link"
-                :tooltip="{
-                  title: '重置密码',
-                }"
-                @click="openDialog('reset', slotProps)"
-              >
+              <!-- 重置密码按钮 -->
+              <PermissionButton :hasPermission="`${permission}:update`" type="link" :tooltip="{title: '重置密码'}" @click="showModal('reset', slotProps)">
                 <AIcon type="icon-zhongzhimima" />
               </PermissionButton>
-              <PermissionButton
-                type="link"
-                :hasPermission="`${permission}:delete`"
-                :tooltip="{
-                  title: slotProps.status ? '请先禁用，再删除' : '删除',
-                }"
-                danger
-                :popConfirm="{
-                  title: `确认删除`,
-                  onConfirm: () => clickDel(slotProps.id),
-                }"
-                :disabled="slotProps.status"
-              >
+              <!-- 删除按钮 -->
+              <PermissionButton :hasPermission="`${permission}:delete`" type="link"  danger
+                                :tooltip="{title: slotProps.status ? '请先禁用，再删除' : '删除'}"
+                                :popConfirm="{title: '确认删除', onConfirm: () => deleteUser(slotProps.id)}"
+                                :disabled="slotProps.status">
                 <AIcon type="DeleteOutlined" />
               </PermissionButton>
             </j-space>
           </template>
         </j-pro-table>
       </FullPage>
-
-      <EditUserDialog
-        v-if="visible"
-        :type="dialog.type"
-        v-model:visible="visible"
-        :data="dialog.selectItem"
-        @confirm="refresh"
-      />
+      <UserDialog v-model:visible="visible" :data="dialog.data" :modalType="dialog.modalType" @handle-ok="refresh"/>
     </div>
   </page-container>
 </template>
 
-<script setup lang="ts" name="UserMange">
-import EditUserDialog from './components/EditUserDialog.vue'
-import {
-  getUserType_api,
-  getUserList_api,
-  changeUserStatus_api,
-  deleteUser_api,
-} from '@/api/user'
-import { message } from 'jetlinks-ui-components'
+<script setup lang="ts">
+import columns from './columns'
+import { ModalType } from './typing'
+import { ref, reactive } from 'vue';
+import UserDialog from './components/UserDialog/UserDialog.vue';
+import { getUserList_api, changeUserStatus_api, deleteUser_api } from '@/api/user';
+import { onlyMessage } from '@jetlinks/utils';
 
+// 权限
 const permission = 'system/User'
 
-const columns = [
-  {
-    title: '姓名',
-    dataIndex: 'name',
-    key: 'name',
-    ellipsis: true,
-    search: {
-      type: 'string',
-      componentProps: {
-        placeholder: '请输入姓名',
-      },
-    },
-  },
-  {
-    title: '用户名',
-    dataIndex: 'username',
-    key: 'username',
-    ellipsis: true,
-    search: {
-      type: 'string',
-      componentProps: {
-        placeholder: '请输入用户名',
-      }
-    },
-  },
-  {
-    title: '用户类型',
-    dataIndex: 'type',
-    key: 'type',
-    ellipsis: true,
-    search: {
-      type: 'select',
-      componentProps: {
-        placeholder: '请选择用户类型',
-      },
-      options: () =>
-        new Promise((resolve) => {
-          getUserType_api().then((resp: any) => {
-            resolve(
-              resp.result.map((item: dictType) => ({
-                label: item.name,
-                value: item.id,
-              })),
-            )
-          })
-        }),
-    },
-    scopedSlots: true,
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    ellipsis: true,
-    search: {
-      rename: 'status',
-      type: 'select',
-      componentProps: {
-        placeholder: '请选择状态',
-      },
-      options: [
-        {
-          label: '启用',
-          value: 1,
-        },
-        {
-          label: '禁用',
-          value: 0,
-        },
-      ],
-    },
-    scopedSlots: true,
-  },
-  {
-    title: '手机号',
-    dataIndex: 'telephone',
-    key: 'telephone',
-    ellipsis: true,
-    search: {
-      type: 'string',
-      componentProps: {
-        placeholder: '请输入手机号',
-      }
-    },
-  },
-  {
-    title: '邮箱',
-    dataIndex: 'email',
-    key: 'email',
-    ellipsis: true,
-    search: {
-      type: 'string',
-      componentProps: {
-        placeholder: '请输入邮箱',
-      }
-    },
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    key: 'action',
-    fixed: 'right',
-    scopedSlots: true,
-  },
-]
-type dictType = {
-  id: string
-  name: string
-}
-type modalType = '' | 'add' | 'edit' | 'reset'
+// 表格实例
+const tableRef = ref<any>()
 
+// 控制对话框的显示
+const visible = ref<boolean>(false);
+
+// 搜索框的搜索参数
+const queryParams = ref<Object>({})
+
+// 对话框数据
 const dialog = reactive({
-  selectItem: {},
-  type: '' as modalType,
+  data: {},
+  modalType: '' as ModalType
 })
 
-const queryParams = ref({})
-const visible = ref<boolean>(false)
-
-const tableRef = ref<Record<string, any>>({}) // 表格实例
-// 打开编辑弹窗
-const openDialog = (type: modalType, row?: any) => {
-  dialog.selectItem = { ...(row || {}) }
-  dialog.type = type
-  visible.value = true
-}
-const changeStatus = ({ id, status }: any) => {
-  const params = {
-    status: status === 0 ? 1 : 0,
-    id,
-  }
-  changeUserStatus_api(params).then(() => {
-    message.success('操作成功')
-    tableRef.value.reload()
-  })
-}
-// 删除
-const clickDel = (id: string) => {
-  deleteUser_api(id).then(() => {
-    message.success('操作成功')
-    tableRef.value.reload()
-  })
+//显示对话框
+const showModal = (type: ModalType, data?: any) => {
+  console.log("data", data)
+  dialog.data = { ...(data || {}) }
+  dialog.modalType = type
+  visible.value = true;
 }
 
+// 重新加载表格数据
 const refresh = () => {
+  console.log("重新加载表格")
   tableRef.value.reload()
 }
 
-const handleParams = (params: any[]) => {
+// 搜索事件
+const onSearch = (params: any[]) => {
   const newParams = (params as any[])?.map((item) => {
     let arr: any[] = []
     if (['telephone', 'email'].includes(item.column)) {
@@ -313,6 +133,27 @@ const handleParams = (params: any[]) => {
   })
   queryParams.value = { terms: newParams || [] }
 }
+
+// 修改用户状态
+const changeStatus = ({ id, status }: any) => {
+  const params = {
+    status: status === 0 ? 1 : 0,
+    id,
+  }
+  changeUserStatus_api(params).then(() => {
+    onlyMessage('操作成功', 'success')
+    tableRef.value.reload()
+  })
+}
+
+// 删除用户
+const deleteUser = (id: string) => {
+  deleteUser_api(id).then(() => {
+    onlyMessage('操作成功', 'success')
+    tableRef.value.reload()
+  })
+}
+
 </script>
 
 <style lang="less" scoped>
