@@ -1,6 +1,6 @@
 <template>
   <page-container>
-    <j-form :model="formData" layout="vertical" :rules="formRules" ref="formRef">
+    <j-form :model="formData" layout="vertical" :rules="formRules" ref="formRef" :confirmLoading="loading>
       <FullPage>
         <!-- 基本配置表单 -->
         <j-row class="form-container">
