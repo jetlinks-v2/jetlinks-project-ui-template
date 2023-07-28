@@ -36,12 +36,13 @@ fillColor | 导出时背景颜色填充 | 空 | `#ffffff`, `white`
 
 ### CropperModal props
 
-名称 | 功能 | 默认值                | 可选值                        
---- | --- |--------------------|----------------------------
-img | 裁剪图片的地址 | 空                  | `url 地址`, `base64`, `blob` 
-outputSize | 裁剪生成图片的质量 | `1`                | 0.1 ~ 1                    
+名称 | 功能        | 默认值               | 可选值                        
+--- |-----------|-------------------|----------------------------
+img | 裁剪图片的地址   | 空                 | `url 地址`, `base64`, `blob` 
+outputSize | 裁剪生成图片的质量 | `1`               | 0.1 ~ 1                    
 outputType | 裁剪生成图片的格式 | jpg (jpg 需要传入jpeg) | `jpeg`, `png`, `webp`      
-autoCrop | 是否默认生成截图框 | `true`             | `true`, `false`            
-autoCropWidth | 默认生成截图框宽度 | 200                | 0 ~ max                    
-autoCropHeight | 默认生成截图框高度 | 200                | 0 ~ max                    
-fixedBox | 固定截图框大小 | 不允许改变              | `true`                     | `true`, `false`
+autoCrop | 是否默认生成截图框 | `true`            | `true`, `false`            
+autoCropWidth | 默认生成截图框宽度 | 200               | 0 ~ max                    
+autoCropHeight | 默认生成截图框高度 | 200               | 0 ~ max                    
+fixedBox | 固定截图框大小        | `true`                     | `true`, `false`
+openServer | 是否开启文件上传  |    `true`                     | `true`, `false`
