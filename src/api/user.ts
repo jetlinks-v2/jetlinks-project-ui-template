@@ -1,22 +1,10 @@
 import { request } from '@jetlinks/core'
 
 /**
- * 登录
- * @param data 
- * @returns 
- */
-export const login = (data: any) => request.post('/authorize/login', data)
-
-/**
- * 获取配置信息
- * @returns 
+ * 获取用户基本信息
+ * @returns
  */
 export const detail = () => request.get('/user/detail')
-
-/**
- * 退出登录
- */
-export const logout = () => request.get('/user-token/reset')
 
 // 获取用户类型
 export const getUserType_api = () => request.get(`/user/detail/types`);
@@ -52,3 +40,4 @@ export const updatePassword_api = (data: { id: string, password: string }) => re
 export const changeUserStatus_api = (data: object) => request.patch(`/user`,data);
 // 删除用户
 export const deleteUser_api = (id: string) => request.remove(`/user/${id}`);
+

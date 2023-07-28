@@ -36,7 +36,7 @@ const handleMeta = (item: MenuItem, isApp: boolean) => {
 const findComponents = (code: string, level: number, isApp: boolean, components: any) => {
     const myComponents = components[code]
     if (level === 1) { // BasicLayoutPage
-      return myComponents ? () => myComponents() : shallowRef(BasicLayoutPage)
+      return shallowRef(BasicLayoutPage)
     } else if (level === 2) { // BlankLayoutPage or components
       return myComponents ? () => myComponents() : BlankLayoutPage
     } else if (isApp){ // iframe
@@ -146,7 +146,7 @@ export const handleAuthMenu = (menuData: any, cb: (code, buttons) => void) => {
       const { code, buttons, children} = item
 
       if (buttons) {
-        cb(code, buttons.map(item => item.id))
+        cb(code, buttons.map(a => a.id))
       }
 
       if (children) {
