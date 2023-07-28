@@ -1,8 +1,9 @@
 import { defineComponent } from "vue";
+import type { CSSProperties, PropType } from "vue";
 import { Modal } from 'jetlinks-ui-components'
 import { VueCropper } from 'vue-cropper';
 import { useRequest } from '@jetlinks/hooks'
-import { getDetails_api } from '@/api/basis'
+import { fileUpload } from '@/api/comm'
 import 'vue-cropper/dist/index.css'
 
 const CropperModalProps = {
@@ -17,7 +18,7 @@ const CropperModalProps = {
     default: 400
   },
   bodyStyle: {
-    type: Object,
+    type: Object as PropType<CSSProperties>,
     default: () => ({})
   },
   fixedBox: {
@@ -44,19 +45,27 @@ const CropperModalProps = {
     type: String,
     default: 'jpeg'
   },
+  openServer: {
+    type: Boolean,
+    default: true
+  }
 }
-
 
 const CropperModal = defineComponent({
   name: 'CropperModal',
   props: CropperModalProps,
-  emits: ['cancel', 'ok'],
+  emits: ['cancel', 'ok', 'change'],
   setup( props, { emit }) {
 
-    const { title, width, bodyStyle, ...cropper } = props
+    const { title, width, openServer, bodyStyle, ...cropper } = props
 
-    const { loading, run } = useRequest(getDetails_api, {
-      immediate: true
+    const { loading, run } = useRequest(fileUpload, {
+      immediate: false,
+      onSuccess(resp) {
+        if (resp.success) {
+          emit('ok', resp.result)
+        }
+      }
     })
 
     const cropperRef = ref()
@@ -68,23 +77,28 @@ const CropperModal = defineComponent({
 
     const onOk = () => {
       cropperRef.value.getCropBlob( async (data: Blob) => {
-        const formData = new FormData()
-        formData.append('file', data, new Date().getTime() + '.jpg')
-        imgUrl.value = data
-        loading.value = true
-        // 上传文件
-        run(formData)
+        if (openServer) {
+          const formData = new FormData()
+          formData.append('file', data, new Date().getTime() + '.jpg')
+          imgUrl.value = data
+          loading.value = true
+          // 上传文件
+          run(formData)
+        } else {
+          emit('change', data)
+          emit('ok', data)
+        }
       })
     }
 
     return () => {
-
+      console.log('cropper', cropper, loading.value)
       return (
         <Modal
           visible
           title={title}
           width={width}
-          confirmLoading={loading}
+          confirmLoading={loading.value}
           onCancel={onCancel}
           onOk={onOk}
         >
