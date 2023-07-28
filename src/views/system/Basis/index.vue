@@ -1,18 +1,25 @@
 <template>
   <page-container>
-    <j-form :model="formData" layout="vertical" :rules="formRules" ref="formRef">
-      <FullPage>
-        <!-- 基本配置表单 -->
-        <j-row class="form-container">
-          <!-- 表单左侧部分 -->
-          <j-col :span="10" class="form-left">
-            <!-- 系统名称输入框 -->
-            <j-form-item label="系统名称" name="title">
-              <j-input v-model:value="formData.title" placeholder="请输入系统名称"></j-input>
-            </j-form-item>
-            <!-- 主题色输入框 -->
-            <j-form-item label="主题色" name="headerTheme">
-              <j-select v-model:value="formData.headerTheme" :options="headerThemeAreas">
+    <FullPage>
+      <div class="basis-container">
+        <j-form
+          layout="vertical"
+          ref="formRef"
+          :rules="rulesFrom"
+          :model="formValue"
+        >
+          <j-row :span="24" :gutter="24">
+            <j-col :span="10">
+              <j-form-item label="系统名称" name="title">
+                <j-input
+                  v-model:value="formValue.title"
+                  placeholder="请输入系统名称"
+                />
+              </j-form-item>
+              <j-form-item label="主题色" name="headerTheme">
+                <j-select v-model:value="formValue.headerTheme">
+                  <j-select-option value="light"> 白色 </j-select-option>
+                  <j-select-option value="dark"> 黑色 </j-select-option>
                 </j-select>
             </j-form-item>
             <!-- 高德地图API Key输入框 <AIcon type="QuestionCircleOutlined" /> -->
@@ -110,12 +117,12 @@ const formRules = {
   title: [ 
     {
       required: true,
-      message: '系统名称为必填项',
+      message: '请输入系统名称',
       trigger: 'blur'
     },
     {
       max: 64,
-      message: '最多可输入64位'
+      message: '最多可输入64个字符'
     }
   ],
   // 主题色验证规则
