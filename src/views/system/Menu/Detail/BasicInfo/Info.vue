@@ -1,121 +1,128 @@
 <template>
   <div>
     <j-form ref="formRef" :model="formModel" layout="vertical">
-      <div class="row" style="display: flex">
-        <j-form-item
-          label="菜单图标"
-          name="icon"
-          :rules="[
-            {
-              required: true,
-              message: '请上传图标',
-              trigger: 'change',
-            },
-          ]"
-          style="flex: 0 0 186px"
-        >
-          <div class="icon-upload has-icon" v-if="formModel.icon">
-            <AIcon :type="formModel.icon" style="font-size: 90px" />
-            <span class="mark" @click="dialogVisible = true">点击修改</span>
-          </div>
+      <j-row type="flex">
+        <j-col flex="186px">
+          <j-form-item
+            label="菜单图标"
+            name="icon"
+            :rules="[
+              {
+                required: true,
+                message: '请上传图标',
+                trigger: 'change',
+              },
+            ]"
+          >
+            <div class="icon-upload has-icon" v-if="formModel.icon">
+              <AIcon :type="formModel.icon" style="font-size: 90px" />
+              <span class="mark" @click="dialogVisible = true">点击修改</span>
+            </div>
 
-          <div v-else @click="dialogVisible = true" class="icon-upload no-icon">
-            <span>
-              <AIcon type="PlusOutlined" style="font-size: 30px" />
-              <p>点击选择图标</p>
-            </span>
-          </div>
-        </j-form-item>
-        <j-row :gutter="24" style="flex: 1 1 auto">
-          <j-col :span="12">
-            <j-form-item
-              label="名称"
-              name="name"
-              :rules="[
-                {
-                  required: true,
-                  message: '请输入名称',
-                  trigger: 'change',
-                },
-                {
-                  max: 64,
-                  message: '最多可输入64个字符',
-                  trigger: 'change',
-                },
-              ]"
+            <div
+              v-else
+              @click="dialogVisible = true"
+              class="icon-upload no-icon"
             >
-              <j-input
-                v-model:value="formModel.name"
-                placeholder="请输入名称"
-              />
-            </j-form-item>
-          </j-col>
-          <j-col :span="12">
-            <j-form-item
-              label="编码"
-              name="code"
-              :rules="[
-                {
-                  required: true,
-                  message: '请输入编码',
-                  trigger: 'change',
-                },
-                {
-                  max: 64,
-                  message: '最多可输入64个字符',
-                  trigger: 'change',
-                },
-                {
-                  validator: checkCode,
-                  trigger: 'blur',
-                },
-              ]"
-            >
-              <j-input
-                v-model:value="formModel.code"
-                placeholder="请输入编码"
-              />
-            </j-form-item>
-          </j-col>
-          <j-col :span="12">
-            <j-form-item
-              label="页面地址"
-              name="url"
-              :rules="[
-                {
-                  required: true,
-                  message: '请输入页面地址',
-                },
-                { max: 128, message: '最多可输入128字符' },
-                { pattern: /^\//, message: '请正确填写地址，以/开头' },
-              ]"
-            >
-              <j-input
-                v-model:value="formModel.url"
-                placeholder="请输入页面地址"
-              />
-            </j-form-item>
-          </j-col>
-          <j-col :span="12">
-            <j-form-item
-              label="排序"
-              name="sortIndex"
-              :rules="[
-                {
-                  pattern: /^[0-9]*[1-9][0-9]*$/,
-                  message: '请输入大于0的整数',
-                },
-              ]"
-            >
-              <j-input-number
-                v-model:value="formModel.sortIndex"
-                placeholder="请输入排序"
-                style="width: 100%"
-              />
-            </j-form-item>
-          </j-col>
-        </j-row>
-      </div>
+              <span>
+                <AIcon type="PlusOutlined" style="font-size: 30px" />
+                <p>点击选择图标</p>
+              </span>
+            </div>
+          </j-form-item>
+        </j-col>
+        <j-col flex="auto">
+          <j-row :gutter="24">
+            <j-col :span="12">
+              <j-form-item
+                label="名称"
+                name="name"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入名称',
+                    trigger: 'change',
+                  },
+                  {
+                    max: 64,
+                    message: '最多可输入64个字符',
+                    trigger: 'change',
+                  },
+                ]"
+              >
+                <j-input
+                  v-model:value="formModel.name"
+                  placeholder="请输入名称"
+                />
+              </j-form-item>
+            </j-col>
+            <j-col :span="12">
+              <j-form-item
+                label="编码"
+                name="code"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入编码',
+                    trigger: 'change',
+                  },
+                  {
+                    max: 64,
+                    message: '最多可输入64个字符',
+                    trigger: 'change',
+                  },
+                  {
+                    validator: checkCode,
+                    trigger: 'blur',
+                  },
+                ]"
+              >
+                <j-input
+                  v-model:value="formModel.code"
+                  placeholder="请输入编码"
+                />
+              </j-form-item>
+            </j-col>
+            <j-col :span="12">
+              <j-form-item
+                label="页面地址"
+                name="url"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入页面地址',
+                  },
+                  { max: 128, message: '最多可输入128字符' },
+                  { pattern: /^\//, message: '请正确填写地址，以/开头' },
+                ]"
+              >
+                <j-input
+                  v-model:value="formModel.url"
+                  placeholder="请输入页面地址"
+                />
+              </j-form-item>
+            </j-col>
+            <j-col :span="12">
+              <j-form-item
+                label="排序"
+                name="sortIndex"
+                :rules="[
+                  {
+                    pattern: /^[0-9]*[1-9][0-9]*$/,
+                    message: '请输入大于0的整数',
+                  },
+                ]"
+              >
+                <j-input-number
+                  v-model:value="formModel.sortIndex"
+                  placeholder="请输入排序"
+                  style="width: 100%"
+                />
+              </j-form-item>
+            </j-col>
+          </j-row>
+        </j-col>
+      </j-row>
 
       <j-form-item label="说明" name="describe">
         <j-textarea
@@ -152,12 +159,12 @@ const props = defineProps({
 })
 
 const routeParams = {
-    id: route.params.id === ':id' ? undefined : (route.params.id as string),
-    ...route.query,
-    sortIndex: route.query.sortIndex,
-    url: route.query.basePath,
-    parentId: route.query.pid,
-};
+  id: route.params.id === ':id' ? undefined : (route.params.id as string),
+  ...route.query,
+  sortIndex: route.query.sortIndex,
+  url: route.query.basePath,
+  parentId: route.query.pid,
+}
 
 const formModel = reactive({
   id: routeParams.id,
@@ -166,7 +173,7 @@ const formModel = reactive({
   sortIndex: routeParams?.sortIndex || undefined,
   icon: '',
   describe: '',
-  url: routeParams?.url || ""
+  url: routeParams?.url || '',
 })
 
 const dialogVisible = ref<boolean>(false)
@@ -181,7 +188,11 @@ const checkCode = async (_rule: any, value: string): Promise<any> => {
     return Promise.reject('')
   } else if (value.length > 64) {
     return Promise.reject('最多可输入64个字符')
-  } else if ((route.params.id && route.params.id !== ':id') && value === props.value?.code) {
+  } else if (
+    route.params.id &&
+    route.params.id !== ':id' &&
+    value === props.value?.code
+  ) {
     // 编辑时不校验原本的编码
     return Promise.resolve('')
   } else {
@@ -212,7 +223,7 @@ const onSave = () =>
       .then((_data) => {
         resolve({
           ...routeParams,
-          ..._data
+          ..._data,
         })
       })
       .catch(() => {
