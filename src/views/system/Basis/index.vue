@@ -1,6 +1,10 @@
 <template>
   <page-container>
+<<<<<<< HEAD
     <j-form :model="formData" layout="vertical" :rules="formRules" ref="formRef"  :confirmLoading="loading>
+=======
+    <j-form :model="formData" layout="vertical" :rules="formRules" ref="formRef" :confirmLoading="loading>
+>>>>>>> 2138ceab8cef9cf9c541d6021de2268149a639c3
       <FullPage>
         <!-- 基本配置表单 -->
         <j-row class="form-container">
