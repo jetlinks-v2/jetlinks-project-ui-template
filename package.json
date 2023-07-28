@@ -21,7 +21,7 @@
     "@jetlinks/vite": "workspace:^",
     "@vuemap/vue-amap": "^2.0.13",
     "dayjs": "^1.11.8",
-    "jetlinks-ui-components": "^1.0.26",
+    "jetlinks-ui-components": "^1.0.27",
     "lodash-es": "^4.17.21",
     "pinia": "^2.1.3",
     "vue": "^3.3.4",

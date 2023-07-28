@@ -50,7 +50,7 @@ const submit = (data: any) => {
 
   if (encryption.value?.encrypt?.enabled) {
     const _encrypt = encryption.value?.encrypt
-    copyData.password = encrypt(copyData.password, _encrypt.publicKey)
+    copyData.password = encrypt(data.password, _encrypt.publicKey)
     copyData.encryptId = _encrypt.id
   }
   run(copyData)
