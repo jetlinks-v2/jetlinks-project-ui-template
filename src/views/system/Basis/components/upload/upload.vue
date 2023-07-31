@@ -128,7 +128,12 @@ const uploadInfo: UploadInfoType = {
   imageType: ['.jpg', '.png', '.jfif', '.pjp', '.pjpeg', '.jpeg'].toString(),
   icoType: ['image/x-icon'].toString(),
 
-  //验证图片是否在范围内
+/**
+ * 验证图片是否在范围内
+ * @param file 需要判断的文件
+ * @param size 文件大小的最大值，超出该范围文件返回 false
+ * @returns {boolean} 如果文件在范围内，返回 true，否则返回 false
+ */
   isImageLessSize: (file: File, size: number) => {
     const isLess = 1.0 * file.size / 1024 / 1024 < size
     if (!isLess) {
@@ -137,7 +142,11 @@ const uploadInfo: UploadInfoType = {
     return isLess
   },
 
-  // 验证是否是图片类型
+/**
+ * 验证图片是否为jpg、png等格式
+ * @param file 需要判断的文件
+ * @returns {boolean} 如果文件为jpg、png等格式，返回 true，否则返回 false
+ */
   isImageType: (file: File) => {
     const isImage =uploadInfo.imageType.split(',')
         .map((m: string) => m.split('.')[1])
@@ -148,7 +157,11 @@ const uploadInfo: UploadInfoType = {
     return isImage
   },
 
-  // 验证是否时ico类型
+/**
+ * 验证图片是否为ico格式
+ * @param file 需要判断的文件
+ * @returns {boolean} 如果文件为jico格式，返回 true，否则返回 false
+ */
   isIcoType: (file: File) => {
     const isico = file.type.includes("x-icon")
     if(!isico) {
@@ -157,7 +170,11 @@ const uploadInfo: UploadInfoType = {
     return isico
   },
 
-  // 上传change事件
+ /**
+ * 验证图片是否为jpg、png等格式
+ * @param info 上传信息
+ * @param msg 上传的内容名称，作为上传失败提示文字
+ */
   changUpload: (info: any, msg: string) => {
     console.log("status",  info.file.status)
     if (info.file.status === 'uploading') {
@@ -165,7 +182,6 @@ const uploadInfo: UploadInfoType = {
     } else if (info.file.status === 'done') {
       info.file.url = info.file.response?.result
       loading.value = false
-      // imgSrc.value = info.file.url
       emit('update:imgSrc', info.file.url)
     } else if (info.file.status === 'error') {
       loading.value = false
@@ -173,26 +189,50 @@ const uploadInfo: UploadInfoType = {
     }
   },
 
-  // logo上传change事件
-  changeLogoUpload: (info: any) => {uploadInfo.changUpload(info, "系统logo")},
-
-  // 浏览器页签上传change事件
-  changeIcoUpload: (info: any) => {uploadInfo.changUpload(info, "浏览器页签")},
-
-  // 背景图片上传change事件
-  changeBackgroundUpload: (info: any) => {uploadInfo.changUpload(info, "登录背景图")},
-
-  // logo 上传验证
-  isLogoImage: (file: File) => {
-    return uploadInfo.isImageType(file) && uploadInfo.isImageLessSize(file, 4) 
+/**
+ * logo上传change事件
+ * @param info 上传信息
+ */
+  changeLogoUpload: (info: any) => {
+    uploadInfo.changUpload(info, "系统logo")
   },
 
-  // icon 上传验证
+/**
+ * 浏览器页签上传change事件
+ * @param info 上传信息
+ */
+  changeIcoUpload: (info: any) => {
+    uploadInfo.changUpload(info, "浏览器页签")
+  },
+
+/**
+ * 背景图片上传change事件
+ * @param info 上传信息
+ */
+  changeBackgroundUpload: (info: any) => {
+    uploadInfo.changUpload(info, "登录背景图")
+  },
+
+/**
+ * logo 上传验证
+ * @param file 上传文件
+ */
+  isLogoImage: (file: File) => {
+    return uploadInfo.isImageType(file) && uploadInfo.isImageLessSize(file, 4)
+  },
+
+/**
+ * icon 上传验证
+ * @param file 上传文件
+ */
   isIcoImage: (file: File) => {
     return uploadInfo.isIcoType(file) && uploadInfo.isImageLessSize(file, 1) 
   },
 
-  // 背景图片上传验证
+/**
+ * 背景图片上传验证
+ * @param file 上传文件
+ */
   isBackground: (file: File) => {
     return uploadInfo.isImageType(file) && uploadInfo.isImageLessSize(file, 4)
   }

@@ -17,9 +17,7 @@
                 />
               </j-form-item>
               <j-form-item label="主题色" name="headerTheme">
-                <j-select v-model:value="formData.headerTheme">
-                  <j-select-option value="light"> 白色 </j-select-option>
-                  <j-select-option value="dark"> 黑色 </j-select-option>
+                <j-select v-model:value="formData.headerTheme" :options="headerThemeAreas">
                 </j-select>
             </j-form-item>
             <!-- 高德地图API Key输入框 <AIcon type="QuestionCircleOutlined" /> -->
@@ -146,6 +144,7 @@ const headerThemeAreas = ref([
   { label: '黑色', value: 'dark' }
 ])
 
+
 // 修改系统信息
 const getDetails = async () => {
   const system = useSystemStore()
@@ -157,12 +156,17 @@ const getDetails = async () => {
     ico: system.systemInfo?.ico || '/favicon.ico',
     background: system.systemInfo?.background || '/images/login/login.png',
     apiKey: system.systemInfo?.apiKey,
-    basePath: system.systemInfo?.basePath,
+    basePath: system.systemInfo?.basePath || `${window.location.origin}/api`,
   })
 }
 
+// 回显数据
+onMounted(() => {
+  getDetails()
+})
+
 // 保存请求
-const { loading, run} = useRequest(save_api, {
+const { run } = useRequest(save_api, {
   immediate: false,
   onSuccess(res) {
     if(res.success) {
@@ -204,7 +208,6 @@ const submit = () => {
 </script>
 <style lang="less" scoped>
 .form-container {
-    display: flex;
     padding: 24px;
     height: 100%;
     .form-left {
@@ -220,7 +223,6 @@ const submit = () => {
       }
     }
     .form-right {
-      flex: 1;
       padding-left: 12px;
       overflow: hidden;
       .form-right-bgImage {

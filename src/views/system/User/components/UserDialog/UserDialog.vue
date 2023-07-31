@@ -173,8 +173,11 @@ const formRules = {
         validator: (_rule: any, value: string): Promise<any> =>
             new Promise((resolve, reject) => {
                 if (props.modalType === 'edit') return resolve('')
-                if(!value) reject('请输入用户名')
-                else if (value.length > 64) return reject('最多可输入64个字符')
+                if(!value) {
+                  return reject('请输入用户名')
+                } else if (value.length > 64) {
+                  return reject('最多可输入64个字符')
+                }
                 validateField_api('username', value).then((resp: any): any => {
                     resp.result.passed ? resolve('') : reject(resp.result.reason)
                 })
@@ -190,10 +193,13 @@ const formRules = {
     {
         validator: (_rulw: any, value: string): Promise<any> => 
             new Promise((resolve, reject) => {
-                if(!value) return reject('请输入密码')
-                else if(value.length < 8) return reject('密码不能少于8位')
-                else if (value.length > 64) return reject('最多可输入64个字符')
-                // else if (!passwordRegEx(value)) return reject('密码必须包含大小写英文和数字')
+                if(!value) {
+                  return reject('请输入密码')
+                } else if(value.length < 8) {
+                  return reject('密码不能少于8位')
+                } else if (value.length > 64) {
+                  return reject('最多可输入64个字符')
+                }
                 validateField_api('password', value).then((resp: any) => {
                     resp.result.passed ? resolve('') : reject(resp.result.reason)
                 })
@@ -209,10 +215,15 @@ const formRules = {
     {
         validator: (_rulw: any, value: string): Promise<any> => 
             new Promise((resolve, reject) => {
-                if(!value) return reject('请输入确认密码')
-                else if(value.length < 8) return reject('密码不能少于8位')
-                else if (value.length > 64) return reject('最多可输入64个字符')
-                else return value === form.formData.password ? resolve('') : reject('两次密码不一致')
+                if(!value) {
+                  return reject('请输入确认密码')
+                } else if(value.length < 8) {
+                  return reject('密码不能少于8位')
+                } else if (value.length > 64) {
+                  return reject('最多可输入64个字符')
+                } else {
+                  return value === form.formData.password ? resolve('') : reject('两次密码不一致')
+                }
             })
     }
   ],
@@ -235,7 +246,7 @@ const formRules = {
 const emit = defineEmits(['handleOk', 'update:visible'])
 
 // 获取角色列表
-const { loading: getRoleLoading, run: runGetRoleList} = useRequest(getRoleList_api, {
+const { run: runGetRoleList} = useRequest(getRoleList_api, {
   immediate: false,
   onSuccess(res) {
     if(res.success) {
@@ -249,7 +260,7 @@ const { loading: getRoleLoading, run: runGetRoleList} = useRequest(getRoleList_a
 
 
 // 获取组织列表
-const { loading: getDepartLoading, run: runGetDepartmentList} = useRequest(getDepartmentList_api, {
+const { run: runGetDepartmentList} = useRequest(getDepartmentList_api, {
   immediate: false,
   onSuccess(res) {
     if(res.success) {
@@ -261,7 +272,7 @@ const { loading: getDepartLoading, run: runGetDepartmentList} = useRequest(getDe
   }
 })
 
-const { loading: getUserLoading, run: runGetUser} = useRequest(getUser_api, {
+const { run: runGetUser} = useRequest(getUser_api, {
   immediate: false,
   onSuccess(res) {
     if(res.success) {
@@ -277,7 +288,9 @@ const { loading: getUserLoading, run: runGetUser} = useRequest(getUser_api, {
   }
 })
 
-// 获取当前用户信息
+ /**
+ * 获取当前用户信息
+ */
 const getUserInfo = () => {
   const id = props.data.id || ''
 
@@ -288,13 +301,20 @@ const getUserInfo = () => {
   }
 }
 
-// 点击新增按钮操作 （角色或组织）
+ /**
+ * 点击新增按钮操作 （角色或组织）
+ * @param prop 类型 'roleIdList' 或 'orgIdList'
+ * @param target 跳转目标
+ */
 const clickAddItem = (prop: 'roleIdList' | 'orgIdList', target: string) => {
   const tab: any = window.open(`${origin}/#/system/${target}?save=true`)
   tab.onTabSaveSuccess = (value: string) => {
     form.formData[prop] = [...(form.formData[prop] || []), value]
-    if (prop === 'roleIdList') runGetRoleList()
-    else runGetDepartmentList()
+    if (prop === 'roleIdList') {
+      runGetRoleList()
+    } else {
+      runGetDepartmentList()
+    }
   }
 }
 
@@ -338,7 +358,9 @@ const loading = computed(() => {
   return addLoading.value || editLoading.value || resetLoading.value
 })
 
-// 获取提交接口参数
+ /**
+ * 获取提交接口参数
+ */
 const getParams = () => {
   switch (props.modalType) {
     case 'add':
@@ -362,7 +384,9 @@ const getParams = () => {
   }
 }
 
-// 点击确认按钮事件
+ /**
+ * 点击确认按钮事件
+ */
 const handleOk = () => {
   formRef.value?.validate().then(() => {
     const params = getParams()
@@ -379,18 +403,25 @@ const handleOk = () => {
   })
 }
 
-// 点击取消按钮事件
+ /**
+ * 点击取消按钮事件
+ */
 const handleCancel = (e: any) => {
     emit('update:visible', false)
 }
 
-// 对话框初始化
+ /**
+ * 对话框初始化
+ */
 const init = () => {
     runGetRoleList()
     runGetDepartmentList()
     getUserInfo()
 }
 
+ /**
+ * 如果对话框显示，执行初始化函数
+ */
 watchEffect(() => {
   if (props.visible) {
     init()

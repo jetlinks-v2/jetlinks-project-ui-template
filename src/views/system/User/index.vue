@@ -86,19 +86,28 @@ const dialog = reactive({
   modalType: '' as ModalType
 })
 
-//显示对话框
+ /**
+ * 显示对话框
+ * @param type 对话框类型
+ * @param [data] 向对话框传递的数据
+ */
 const showModal = (type: ModalType, data?: any) => {
   dialog.data = { ...(data || {}) }
   dialog.modalType = type
   visible.value = true;
 }
 
-// 重新加载表格数据
+ /**
+ * 重新加载表格数据
+ */
 const refresh = () => {
   tableRef.value.reload()
 }
 
-// 搜索事件
+ /**
+ * 搜索事件
+ * @param params 传入参数
+ */
 const onSearch = (params: any[]) => {
   const newParams = (params as any[])?.map((item) => {
     let arr: any[] = []
@@ -132,7 +141,10 @@ const onSearch = (params: any[]) => {
   queryParams.value = { terms: newParams || [] }
 }
 
-// 修改用户状态
+ /**
+ * 修改用户状态
+ * @param {id, status} 参数对象 {用户id， 用户当前状态}
+ */
 const changeStatus = ({ id, status }: any) => {
   const params = {
     status: status === 0 ? 1 : 0,
@@ -144,7 +156,11 @@ const changeStatus = ({ id, status }: any) => {
   })
 }
 
-// 删除用户
+// 
+ /**
+ * 删除用户
+ * @param id 用户id
+ */
 const deleteUser = (id: string) => {
   deleteUser_api(id).then(() => {
     onlyMessage('操作成功', 'success')
