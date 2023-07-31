@@ -1,19 +1,21 @@
 <template>
   <div class="upload">
-    <j-upload :drag="uploadInfo.drag"
+    <j-upload @change="change"
+            :drag="uploadInfo.drag"
             name="file"
             :headers="uploadInfo.headers"
             :accept="accept" 
-            :beforeUpload="beforeUpload ? beforeUpload : true"
+            :beforeUpload="beforeUpload"
             :showUploadList="uploadInfo.showUploadList"
-            @change="change"
             :action="uploadInfo.action">
         <div class="upload-div" :style="`width: ${width};`">
-            <img v-if="!loading" id="upload-img" :style="`height: ${height};`" :src="imgSrc" alt="上传图片">
-            <div v-if="loading">
-              <AIcon type="LoadingOutlined" />
-            </div>
-            <div v-else class="upload-mask" :style="`height: ${height};`">点击修改</div>
+          <div v-if="loading">
+            <AIcon type="LoadingOutlined" />
+          </div>
+          <template v-else>
+            <img id="upload-img" :style="`height: ${height};`" :src="imgSrc" alt="上传图片">
+            <div class="upload-mask" :style="`height: ${height};`">点击修改</div>
+          </template>
         </div>
         <div v-for="item in messages" :key="item" class="uploadTip">{{item}}</div>
     </j-upload>
@@ -126,20 +128,11 @@ const uploadInfo: UploadInfoType = {
   imageType: ['.jpg', '.png', '.jfif', '.pjp', '.pjpeg', '.jpeg'].toString(),
   icoType: ['image/x-icon'].toString(),
 
-  //验证图片是否小于4M
-  isImageLess4M: (file: File) => {
-    const isLess = 1.0 * file.size / 1024 / 1024 < 4
+  //验证图片是否在范围内
+  isImageLessSize: (file: File, size: number) => {
+    const isLess = 1.0 * file.size / 1024 / 1024 < size
     if (!isLess) {
-      onlyMessage('支持4M以内的图片','error')
-    }
-    return isLess
-  },
-
-  //验证图片大小是否小于1M
-  isImageLess1M: (file: File) => {
-    const isLess = 1.0 *  file.size / 1024 / 1024 < 1
-    if (!isLess) {
-      onlyMessage("支持1M以内的图片","error")
+      onlyMessage('支持' + size + 'M以内的图片','error')
     }
     return isLess
   },
@@ -191,17 +184,17 @@ const uploadInfo: UploadInfoType = {
 
   // logo 上传验证
   isLogoImage: (file: File) => {
-    return uploadInfo.isImageType(file) && uploadInfo.isImageLess4M(file) 
+    return uploadInfo.isImageType(file) && uploadInfo.isImageLessSize(file, 4) 
   },
 
   // icon 上传验证
   isIcoImage: (file: File) => {
-    return uploadInfo.isIcoType(file) && uploadInfo.isImageLess1M(file) 
+    return uploadInfo.isIcoType(file) && uploadInfo.isImageLessSize(file, 1) 
   },
 
   // 背景图片上传验证
   isBackground: (file: File) => {
-    return uploadInfo.isImageType(file) && uploadInfo.isImageLess4M(file)
+    return uploadInfo.isImageType(file) && uploadInfo.isImageLessSize(file, 4)
   }
 }
 

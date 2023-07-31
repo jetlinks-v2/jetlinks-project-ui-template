@@ -75,7 +75,7 @@ import { ref, reactive } from 'vue';
 import { onlyMessage } from '@jetlinks/utils';
 import { FormDataType } from '@/views/system/User/components/UserDialog/typing'
 import { OptionType, DictType, ModalType } from '@/views/system/User/typing'
-import { passwordRegEx } from '@/utils/validate'
+// import { passwordRegEx } from '@/utils/validate'
 import {
   getUser_api,
   validateField_api,
@@ -193,7 +193,7 @@ const formRules = {
                 if(!value) return reject('请输入密码')
                 else if(value.length < 8) return reject('密码不能少于8位')
                 else if (value.length > 64) return reject('最多可输入64个字符')
-                else if (!passwordRegEx(value)) return reject('密码必须包含大小写英文和数字')
+                // else if (!passwordRegEx(value)) return reject('密码必须包含大小写英文和数字')
                 validateField_api('password', value).then((resp: any) => {
                     resp.result.passed ? resolve('') : reject(resp.result.reason)
                 })

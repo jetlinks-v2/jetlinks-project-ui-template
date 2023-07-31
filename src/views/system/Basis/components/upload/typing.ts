@@ -15,11 +15,8 @@ export interface UploadInfoType {
     imageType: string,
     icoType: string,
   
-    //验证图片是否小于4M
-    isImageLess4M(file: File): boolean,
-  
-    //验证图片大小是否小于1M
-    isImageLess1M(file: File): boolean,
+    //验证图片是否在范围内
+    isImageLessSize(file: File, size: number): boolean,
   
     // 验证是否是图片类型
     isImageType(file: File): boolean,

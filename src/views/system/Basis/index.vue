@@ -1,23 +1,23 @@
 <template>
   <page-container>
     <FullPage>
-      <div class="basis-container">
+      <div>
         <j-form
           layout="vertical"
           ref="formRef"
-          :rules="rulesFrom"
-          :model="formValue"
+          :rules="formRules"
+          :model="formData"
         >
-          <j-row :span="24" :gutter="24">
-            <j-col :span="10">
+          <j-row class="form-container">
+            <j-col :span="10" class="form-left">
               <j-form-item label="系统名称" name="title">
                 <j-input
-                  v-model:value="formValue.title"
+                  v-model:value="formData.title"
                   placeholder="请输入系统名称"
                 />
               </j-form-item>
               <j-form-item label="主题色" name="headerTheme">
-                <j-select v-model:value="formValue.headerTheme">
+                <j-select v-model:value="formData.headerTheme">
                   <j-select-option value="light"> 白色 </j-select-option>
                   <j-select-option value="dark"> 黑色 </j-select-option>
                 </j-select>
@@ -74,18 +74,19 @@
             <j-for-item>
               <PermissionButton @click="submit" type="primary" html-type="submit" hasPermission="system/Basis:update">保存</PermissionButton>
             </j-for-item>
-          </j-col>
-          <!-- 表单右侧部分 -->
-          <j-col :span="14" class="form-right">
-            <div class="form-right-background">
-              <j-form-item label="登录背景图" name="background">
-                <Upload uploadType="background" v-model:img-src="formData.background" height="400px" width="550px"/>
-              </j-form-item>
-            </div>
-          </j-col>
-        </j-row>
-      </FullPage>
-    </j-form>
+            </j-col>
+            <!-- 表单右侧部分 -->
+            <j-col :span="14" class="form-right">
+              <div class="form-right-background">
+                <j-form-item label="登录背景图" name="background">
+                  <Upload uploadType="background" v-model:img-src="formData.background" height="400px" width="550px"/>
+                </j-form-item>
+              </div>
+            </j-col>
+          </j-row>
+        </j-form>
+      </div>
+    </FullPage>
   </page-container>
 </template>
 <script setup name="Basis" lang="ts">
