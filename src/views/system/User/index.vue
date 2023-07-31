@@ -32,12 +32,12 @@
               <!-- 状态修改按钮 -->
               <!-- 状态为正常时显示 -->
               <PermissionButton v-if="slotProps.status" :hasPermission="`${permission}:action`" type="link" 
-                                :tooltip="{title: '禁用'}" :popConfirm="{title: '确认禁用吗？', onConfirm: () => changeStatus(slotProps)}">
+                                :tooltip="{title: '禁用'}" :popConfirm="{title: '确定禁用吗？', onConfirm: () => changeStatus(slotProps)}">
                 <AIcon type="StopOutlined" />
               </PermissionButton>
               <!-- 状态为禁用时显示 -->
               <PermissionButton v-else :hasPermission="`${permission}:action`" type="link" 
-                                :tooltip="{title: '启用'}" :popConfirm="{title: '确认启用吗？', onConfirm: () => changeStatus(slotProps)}">
+                                :tooltip="{title: '启用'}" :popConfirm="{title: '确定启用吗？', onConfirm: () => changeStatus(slotProps)}">
                 <AIcon type="PlayCircleOutlined" />
               </PermissionButton>
               <!-- 重置密码按钮 -->
@@ -47,7 +47,7 @@
               <!-- 删除按钮 -->
               <PermissionButton :hasPermission="`${permission}:delete`" type="link"  danger
                                 :tooltip="{title: slotProps.status ? '请先禁用，再删除' : '删除'}"
-                                :popConfirm="{title: '确认删除', onConfirm: () => deleteUser(slotProps.id)}"
+                                :popConfirm="{title: '确定删除', onConfirm: () => deleteUser(slotProps.id)}"
                                 :disabled="slotProps.status">
                 <AIcon type="DeleteOutlined" />
               </PermissionButton>
@@ -88,7 +88,6 @@ const dialog = reactive({
 
 //显示对话框
 const showModal = (type: ModalType, data?: any) => {
-  console.log("data", data)
   dialog.data = { ...(data || {}) }
   dialog.modalType = type
   visible.value = true;
@@ -96,7 +95,6 @@ const showModal = (type: ModalType, data?: any) => {
 
 // 重新加载表格数据
 const refresh = () => {
-  console.log("重新加载表格")
   tableRef.value.reload()
 }
 

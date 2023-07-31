@@ -14,7 +14,7 @@ const userTypes = () =>
                   })),
               )
             } else {
-              message.error('获取用户类型失败')
+              resolve([])
             }
         })
     })
