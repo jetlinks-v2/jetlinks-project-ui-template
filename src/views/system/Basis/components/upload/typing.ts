@@ -28,7 +28,7 @@ export interface UploadInfoType {
     isIcoType(file: File): boolean,
   
     // 上传change事件
-    changUpload(info: any, loading: string, image: string, msg: string): void,
+    changUpload(info: any, msg: string): void,
   
     // logo上传change事件
     changeLogoUpload(info): void,

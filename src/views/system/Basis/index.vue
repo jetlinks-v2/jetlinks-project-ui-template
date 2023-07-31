@@ -97,7 +97,6 @@ import { useSystemStore } from '@/store';
 import Upload from '@/views/system/Basis/components/upload/upload.vue'
 import { onlyMessage } from '@jetlinks/utils';
 
-
 // 表单数据
 const formData = reactive<formDataType>({
   title: "",  // 系统名称

@@ -26,6 +26,7 @@ import { TOKEN_KEY, BASE_API } from '@jetlinks/constants'
 import { getToken } from '@jetlinks/utils'
 import { onlyMessage } from '@jetlinks/utils'
 import { defineProps, ref } from 'vue'
+import { FileStatic } from '@/api/comm.ts'
 
 
 const emit = defineEmits(['update:imgSrc'])
@@ -115,7 +116,7 @@ const uploadInfo: UploadInfoType = {
   icoTip: ['推荐尺寸64*64', '支持ico格式'],
   backgroundTip: ['支持4M以内的图片: 支持jpg,png,jfif,pjp,pjpeg,jpeg', '建议尺寸1400x1080'],
   // 上传的地址
-  action: `${BASE_API}/file/static`,
+  action: `${BASE_API}${FileStatic}`,
   headers: { [TOKEN_KEY]: getToken() },
   // 是否展示uplaodList
   showUploadList: false,
