@@ -28,7 +28,7 @@ import { TOKEN_KEY, BASE_API } from '@jetlinks/constants'
 import { getToken } from '@jetlinks/utils'
 import { onlyMessage } from '@jetlinks/utils'
 import { defineProps, ref } from 'vue'
-import { FileStatic } from '@/api/comm.ts'
+import { FileStatic } from '@/api/comm'
 
 
 const emit = defineEmits(['update:imgSrc'])
@@ -45,7 +45,7 @@ const props = defineProps({
   },
   height: {
     type: String,
-    defalut: '160px'
+    default: '160px'
   },
   width: {
     type: String,
