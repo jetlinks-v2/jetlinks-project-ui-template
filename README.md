@@ -11,7 +11,7 @@ VITE_PUBLIC_PATH = /
 VITE_APP_BASE_API = /api
 
 # 代理配置
-VITE_PROXY = [["/api","http://120.77.179.54:8844"]]
+VITE_PROXY = [["/api","http://192.168.33.46:8844"]]
 
 # 配置多个代理
 # VITE_PROXY = [
