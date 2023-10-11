@@ -22,7 +22,7 @@ export const addDictionary = (data:any) => request.patch('/dictionary',data)
 /**
  * 删除字典
  */
-export const deleteDictionary =(id:string) => request.delete(`/dictionary/${id}`)
+export const deleteDictionary =(id:string) => request.remove(`/dictionary/${id}`)
 
 /**
  * 查询字典项
@@ -37,7 +37,7 @@ export const saveDicItem = (data:any) => request.patch('/dictionary-item',data)
 /**
  * 删除字典项
  */
-export const deleteDicItem = (id:string) => request.delete(`/dictionary-item/${id}`)
+export const deleteDicItem = (id:string) => request.remove(`/dictionary-item/${id}`)
 
 /**
  * 校验字典项value唯一
