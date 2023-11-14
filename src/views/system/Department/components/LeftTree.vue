@@ -132,7 +132,7 @@ const getTree = (cb?: Function) => {
 
   getTreeData_api(params)
     .then((resp: any) => {
-      selectedKeys.value = [resp.result[0].id]
+      selectedKeys.value = resp.result[0] ? [resp.result[0].id] : []
       sourceTree.value = resp.result.sort((a: any, b: any) =>
         a.sortIndex === b.sortIndex
           ? b.createTime - a.createTime
