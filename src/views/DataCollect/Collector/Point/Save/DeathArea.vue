@@ -202,7 +202,7 @@ const handlePercent = (e: any) => {
 
 const handlePercentProps = (arr: any) => {
     const obj = arr.find((item: any) => item.termType === 'lt')
-    const val = obj.column.split('*')[1].split('/')[0]
+    const val = obj?.column.split('*')[1].split('/')[0]
     percentValue.value = val !== 'init' ? val : undefined
 }
 
