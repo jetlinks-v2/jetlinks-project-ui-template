@@ -30,7 +30,17 @@
                                 /></template>
                                 新增点位
                             </PermissionButton>
-
+                            <PermissionButton
+                                v-if="['MODBUS_TCP', 'COLLECTOR_GATEWAY','snap7'].includes(data?.provider)"
+                                type="primary"
+                                @click="handleImport"
+                                hasPermission="DataCollect/Collector:add"
+                            >
+                                <!-- <template #icon
+                                    ><AIcon type="PlusOutlined"
+                                /></template> -->
+                                批量导入
+                            </PermissionButton>
                             <PermissionButton
                                 v-if="data?.provider === 'OPC_UA'"
                                 type="primary"
@@ -315,6 +325,7 @@
         />
         <SaveS7 v-if="visible.saveS7"  :data="current" @change="saveChange"/>
         <Scan v-if="visible.scan" :data="current" @change="saveChange" />
+        <Import v-if="visible.import" :data="current" @close-import="closeImport"/>
     </j-spin>
 </template>
 <script lang="ts" setup name="PointPage">
@@ -340,7 +351,7 @@ import { map } from 'rxjs/operators';
 import dayjs from 'dayjs';
 import { responsiveArray } from 'ant-design-vue/lib/_util/responsiveObserve';
 import SaveS7 from './Save/SaveS7.vue';
-
+import Import from './components/Import/index.vue'
 const props = defineProps({
     data: {
         type: Object,
@@ -674,6 +685,16 @@ const onCheckAllChange = (e: any) => {
         checkAll.value = false;
     }
 };
+
+const handleImport = () =>{
+    visible.import = true
+    current.value = cloneDeep(props.data)
+}
+
+const closeImport = () =>{
+    visible.import = false
+    tableRef.value.reload()
+}
 
 watch(
     () => tableRef?.value?._dataSource,

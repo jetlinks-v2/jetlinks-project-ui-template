@@ -18,16 +18,16 @@
                 </div>
             </div>
             <div class="importing-status" v-if="importStatus == 'importing'">
-                    <loading-outlined />
+                <AIcon  type="LoadingOutlined"/>
                 正在导入
             </div>
             <div class="column" v-if="importStatus != 'wait'">
                 <p>
-                    <check-outlined style="color: #00a4ff" />导入成功 总数量
+                    <AIcon  type="CheckOutlined" style="color: #00a4ff"/>导入成功 总数量
                     {{ successNumber }}
                 </p>
                 <span v-if="failNumber">
-                    <close-outlined style="color: #e50012" />导入失败 总数量
+                    <AIcon  type="CloseOutlined" style="color: #00a4ff"/>导入失败 总数量
                     {{ failNumber }}
                 </span>
             </div>
