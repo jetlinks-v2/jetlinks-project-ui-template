@@ -67,3 +67,5 @@ export const getStates = () => request.get('/dictionary/running-state/items')
 export const getSnapTypes = () => request.get('/s7/client/s7codecs/list')
 
 export const getArea = () => request.get('/s7/client/s7area/list')
+
+export const exportTemplate = (provider: string, format: string) =>request.get(`/data-collect/point/${provider}/template.${format}`, {}, {responseType: 'blob'})

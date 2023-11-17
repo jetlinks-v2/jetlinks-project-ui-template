@@ -116,6 +116,9 @@
                     <j-checkbox value="changedOnly">只推送变化的数据</j-checkbox>
                 </j-checkbox-group>
             </j-form-item>
+            <j-form-item label="说明" name="description">
+                <j-textarea placeholder="请输入说明" v-model:value="form.description" :maxlength="200" :rows="3" showCount />
+            </j-form-item>
         </j-form>
         <j-modal title="采集频率" :visible="intervalRef.visible" @cancel="handleCancelInterval" @ok="handleInterval">
             <j-form ref="formRef2" name="virtual-form" layout="vertical" :model="intervalRef">
@@ -296,7 +299,9 @@ const handleCancel = () => {
 
 const Area = (_: any, value: any): Promise<any> =>
     new Promise(async (resolve, reject) => {
-        console.log('value',value)
+        if(!value){
+            return resolve('')
+        }
         if(value.length === 0){
             return resolve('')
         }else if(value.length === 1){
