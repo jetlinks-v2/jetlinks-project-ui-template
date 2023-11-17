@@ -4,7 +4,7 @@
             <div class="column">
                 <p>上传文件</p>
                 <div class="import">
-                    <a-upload-dragger v-model:fileList="fileList" name="file" :action="`${fileUpload}?options=tempFile`"
+                    <a-upload-dragger v-model:fileList="fileList" name="file" :action="`${BASE_API}${FileStatic}?options=tempFile`"
                         :headers="{
                             'X-Access-Token': LocalStore.get(TOKEN_KEY),
                         }" :limit="1" :showUploadList="false" @change="uploadChange" :accept="['xlsx', 'xls', 'csv']"
@@ -49,7 +49,7 @@ import {
     CloseOutlined,
     LoadingOutlined,
 } from '@ant-design/icons-vue';
-import { fileUpload } from '@/api/comm';
+import {FileStatic, fileUpload} from '@/api/comm';
 import { TOKEN_KEY , BASE_API} from '@jetlinks/constants'
 import {
     exportTemplate
