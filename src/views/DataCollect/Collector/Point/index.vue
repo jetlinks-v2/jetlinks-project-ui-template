@@ -485,7 +485,7 @@ const handlAdd = () => {
         current.value = {
             collectorId: props.data?.id,
             provider: props.data?.provider,
-            deviceType:props.data?.configuration.type,
+            deviceType:props.data?.configuration?.type,
         }
     }else{
         visible.saveModBus = true;
@@ -506,7 +506,7 @@ const handlEdit = (data: any) => {
     }
     current.value = cloneDeep({
         ...data,
-        deviceType:props.data?.configuration.type,
+        deviceType:props.data?.configuration?.type,
     });
 };
 
