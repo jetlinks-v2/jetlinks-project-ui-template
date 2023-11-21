@@ -1,7 +1,7 @@
 import { h } from 'vue'
-import {initRequest, initWebSocket} from '@jetlinks/core'
-import {getGlobalConfig, getToken} from '@jetlinks/utils'
-import { TOKEN_KEY, BASE_API } from '@jetlinks/constants'
+import {initRequest, initWebSocket} from '@jetlinks-web/core'
+import {getGlobalConfig, getToken} from '@jetlinks-web/utils'
+import { TOKEN_KEY, BASE_API } from '@jetlinks-web/constants'
 import { Modal } from 'jetlinks-ui-components'
 
 const LicenseModal = () => {

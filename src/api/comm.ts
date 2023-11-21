@@ -1,4 +1,4 @@
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 
 export const FileStatic = '/file/static'
 export const fileUpload = (data: any) => request.post(FileStatic, data)

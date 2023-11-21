@@ -141,7 +141,7 @@
     </page-container>
 </template>
 <script lang="ts" setup name="DataCollectPage">
-import { getImage, onlyMessage } from '@jetlinks/utils';
+import { getImage, onlyMessage } from '@jetlinks-web/utils';
 import { query, remove, update ,getProviders} from '@/api/data-collect/channel';
 import { StatusColorEnum, updateStatus } from './data';
 import { useMenuStore } from '@/store';

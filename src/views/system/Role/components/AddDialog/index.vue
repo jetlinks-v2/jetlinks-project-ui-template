@@ -15,10 +15,10 @@
 import { saveRole_api } from '@/api/role'
 import { useMenuStore } from '@/store/menu'
 import { useRoute } from 'vue-router'
-import { useRequest } from '@jetlinks/hooks'
+import { useRequest } from '@jetlinks-web/hooks'
 import EditBaseInfo from '../EditBaseInfo/index.vue'
 import { RoleItem } from '../../typings'
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 
 const route = useRoute()
 const { jumpPage } = useMenuStore()

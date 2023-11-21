@@ -90,11 +90,11 @@
 <script setup name="Basis" lang="ts">
 import { ref, reactive } from 'vue'
 import { formDataType } from '@/views/system/Basis/typing'
-import { useRequest } from '@jetlinks/hooks';
+import { useRequest } from '@jetlinks-web/hooks';
 import { save_api } from '@/api/basis';
 import { useSystemStore } from '@/store';
 import Upload from '@/views/system/Basis/components/upload/upload.vue'
-import { onlyMessage } from '@jetlinks/utils';
+import { onlyMessage } from '@jetlinks-web/utils';
 
 // 表单数据
 const formData = reactive<formDataType>({
@@ -112,7 +112,7 @@ const formRef = ref()
 // 表单验证规则
 const formRules = {
   // 系统名称输入框验证规则
-  title: [ 
+  title: [
     {
       required: true,
       message: '请输入系统名称',

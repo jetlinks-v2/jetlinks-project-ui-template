@@ -10,11 +10,10 @@
     style='padding-top: 18px; padding-bottom: 18px;'
     @search='searchSubmit'
   />
-</template> 
+</template>
 
 <script setup lang='ts' name='ProSearch'>
 import { PropType } from 'vue'
-import { JColumnsProps } from 'components/Table/types'
 import { saveSearchHistory, getSearchHistory, deleteSearchHistory } from '@/api/comm'
 
 interface Emit {
@@ -23,7 +22,7 @@ interface Emit {
 
 const props = defineProps({
   columns: {
-    type: Array as PropType<JColumnsProps[]>,
+    type: Array as PropType<any[]>,
     default: () => [],
     required: true
   },

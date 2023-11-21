@@ -1,10 +1,10 @@
 <template>
-  <j-modal 
-    :title="type==='add'?'新增字典':'编辑字典'" 
-    visible 
+  <j-modal
+    :title="type==='add'?'新增字典':'编辑字典'"
+    visible
     @cancel="closeModal"
-    @ok="submitData"  
-    width="650px" 
+    @ok="submitData"
+    width="650px"
     :maskClosable="false"
     :confirmLoading="loading"
   >
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { regular , onlyMessage } from '@jetlinks/utils';
+import { regular , onlyMessage } from '@jetlinks-web/utils';
 import type { Rule } from 'ant-design-vue/es/form';
 import { verifyId,addDictionary } from '@/api/dictionary'
 const props = defineProps({

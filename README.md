@@ -44,7 +44,7 @@ pnpm dev
 
 ## 依赖包
 
-### @jetlinks/vite
+### @jetlinks-web/vite
 
 vite相关配置
 在项目根目录 vite.config.ts 文件
@@ -52,11 +52,11 @@ vite相关配置
 #### createViteConfig
 
 
-### @jetlinks/tsconfig
+### @jetlinks-web/tsconfig
 
 tsconfig相关配置
 
-### @jetlinks/components
+### @jetlinks-web/components
 
 通用业务组件在`main.ts`中已经全局注册，无需引入，直接使用
 
@@ -292,7 +292,7 @@ const onChange = (e: string) => {
 
 
 
-### @jetlinks/constants
+### @jetlinks-web/constants
 
 常量
 
@@ -311,7 +311,7 @@ const onChange = (e: string) => {
 
 #### 使用
 ``` javascript
-import { TOKEN_KEY, BASE_API, ContentTypeEnum } from '@jetlinks/constants'
+import { TOKEN_KEY, BASE_API, ContentTypeEnum } from '@jetlinks-web/constants'
 
 console.log(TOKEN_KEY, BASE_API); //X-Access-Token, /api 
 console.log(ContentTypeEnum); 
@@ -324,7 +324,7 @@ console.log(ContentTypeEnum);
 
 
 
-### @jetlinks/core
+### @jetlinks-web/core
 
 基本核心库，包含 axios，websocket
 
@@ -338,7 +338,7 @@ console.log(ContentTypeEnum);
 ##### 使用
 ###### get
 ``` javascript
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 /**
  * 发送 GET 请求
  * @param url 请求的 URL 地址
@@ -350,7 +350,7 @@ export const logout = () => request.get('/user-token/reset')
 ```
 ###### post
 ``` javascript
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 /**
  * 发送 POST 请求
  * @param url 请求的 URL 地址
@@ -363,7 +363,7 @@ export const login = (data: any) => request.post('/authorize/login', data)
 
 ###### postParams
 ``` javascript
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 /**
  * 发送带有参数的 POST 请求
  * @param url 请求的 URL 地址
@@ -390,7 +390,7 @@ export const user = (data: any, params:any) =>
 ```
 ###### put
 ``` javascript
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 
 /**
  * 发送 PUT 请求
@@ -412,7 +412,7 @@ export const userPatch = (data: any) => request.patch('/user/patch', data)
 ```
 ###### remove
 ``` javascript
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 /**
  * 发送 DELETE 请求
  * @param url 请求的 URL 地址
@@ -424,7 +424,7 @@ export const userRemove = (data: any) => request.remove('/user/remove', data)
 ```
 ###### getStream
 ``` javascript
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 /**
  * 获取流式数据的 GET 请求
  * @param url 请求的 URL 地址
@@ -436,7 +436,7 @@ export const userGetStream = (params: any) => request.getStream('/user/get/strea
 ```
 ###### postStream
 ``` javascript
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 /**
  * 发送包含流式数据的 POST 请求
  * @param url 请求的 URL 地址
@@ -461,7 +461,7 @@ export const userPostStream = (data: any, params: any) =>
 
 ##### 使用
 ``` javascript
-import { initWebSocket, getWebSocket } from '@jetlinks/core'
+import { initWebSocket, getWebSocket } from '@jetlinks-web/core'
 import { map } from 'rxjs/operators';
 import { ref } from 'vue'
 
@@ -499,7 +499,7 @@ wsRef.value?.unsubscribe?.() // 取消订阅
 ```
 > 官方协议topic主题说明 https://hanta.yuque.com/px7kg1/yfac2l/sr0metyagzmhbtm7
 
-### @jetlinks/hooks
+### @jetlinks-web/hooks
 
 包含常用的 `useRequest` `useRouterParams` `useWebSocket`
 
@@ -519,8 +519,8 @@ wsRef.value?.unsubscribe?.() // 取消订阅
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRequest } from '@jetlinks/hooks'
-import { request } from '@jetlinks/core';
+import { useRequest } from '@jetlinks-web/hooks'
+import { request } from '@jetlinks-web/core';
 
 interface Item {
   id: number;
@@ -593,7 +593,7 @@ const { data: _data } = useRequest(fetchData)
 提供两个方法 `userRouterParams()`返回当前路由参数`{ params }` 和 `setParamsValue(code, name)` 设置当前路由参数
 ###### useRouterParams
 ``` javascript
-import { useRouterParams } from '@jetlinks/hooks'
+import { useRouterParams } from '@jetlinks-web/hooks'
 import { useMenuStore } from '@/store/menu'
 
 const { jumpPage } = useMenuStore()
@@ -611,8 +611,8 @@ console.log(routerParams.params.value.id) // 123
 ###### setParamsValue
 setParamsValue在jumpPage跳转页面时使用
 ``` javascript
-import { router } from '@jetlinks/router'
-import { setParamsValue } from '@jetlinks/hooks'
+import { router } from '@jetlinks-web/router'
+import { setParamsValue } from '@jetlinks-web/hooks'
 
 /**
  * 页面跳转
@@ -631,7 +631,7 @@ const jumpPage = (name: string, { params, query }: { params?: Record<string, any
 ```
 
 
-### @jetlinks/router
+### @jetlinks-web/router
 
 通用路由配置
 
@@ -645,7 +645,7 @@ const jumpPage = (name: string, { params, query }: { params?: Record<string, any
 ``` javascript
 import { createApp } from 'vue'
 import App from './App.vue'
-import { initRoute } from '@jetlinks/router'
+import { initRoute } from '@jetlinks-web/router'
 import './style.css'
 
 (async () => {
@@ -661,7 +661,7 @@ import './style.css'
 #### jumpLogin
 跳转登录页，常用于退出登录或者token失效
 ``` javascript
-import { jumpLogin } from '@jetlinks/router'
+import { jumpLogin } from '@jetlinks-web/router'
 
 // 在需要跳转到登录页的地方调用 jumpLogin 函数
 jumpLogin();
@@ -671,7 +671,7 @@ jumpLogin();
 在`router\guard.ts`文件中使用
 
 ``` javascript
-import { createAuthRoute, initRouteAssignStore } from '@jetlinks/router'
+import { createAuthRoute, initRouteAssignStore } from '@jetlinks-web/router'
 import { useUserStore } from '@/store/user'
 import { useMenuStore } from '@/store/menu'
 import { useSystemStore } from '@/store/system'
@@ -694,7 +694,7 @@ export { setupRouter }
 ##### initRouteAssignStore
 获取子项目中的store，在`router\guard.ts`文件中使用
 ``` javascript
-import { initRouteAssignStore } from '@jetlinks/router'
+import { initRouteAssignStore } from '@jetlinks-web/router'
 
 
 // 在需要初始化子项目中的 store 的地方调用 initRouteAssignStore 函数
@@ -709,7 +709,7 @@ initRouteAssignStore(store);
 ```
 
 
-### @jetlinks/utils
+### @jetlinks-web/utils
 
 通用工具函数
 
@@ -717,7 +717,7 @@ initRouteAssignStore(store);
 动态加载高德地图UI库
 
 ``` javascript
-import { getAMapUiPromise } from '@jetlinks/utils'
+import { getAMapUiPromise } from '@jetlinks-web/utils'
 
 /**
  * 获取高德地图UI库的Promise
@@ -779,7 +779,7 @@ downloadFileByUrl('https://example.com/file.pdf', 'myFile', 'pdf');
 #### encrypt
 使用公钥对文本进行加密
 ``` javascript
-import { encrypt } from '@jetlinks/utils'
+import { encrypt } from '@jetlinks-web/utils'
 
 /**
  * 使用公钥对文本进行加密
@@ -815,7 +815,7 @@ console.log(encryptedText) // 输出加密后的文本
 - `isEmail`: 用于校验邮箱地址，匹配方法为 isEmail(value: string): boolean。
 - `isPassword`: 用于校验密码强度，必须至少包含大小写英文和数字，匹配方法为 isPassword(value: string): boolean。
 ``` javascript
-import { regular } from '@jetlinks/utils'
+import { regular } from '@jetlinks-web/utils'
 
 regular.isEmail('123@qq.com')
 ```
@@ -824,7 +824,7 @@ regular.isEmail('123@qq.com')
 静态图片资源处理
 
 ``` javascript
-import { getImage } from '@jetlinks/utils'
+import { getImage } from '@jetlinks-web/utils'
 
 /**
  * 静态图片资源处理
@@ -837,7 +837,7 @@ console.log(imageUrl); // 输出完整的图片 URL
 #### onlyMessage
 单个message提示
 ``` javascript
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 
 /**
  * 单个message提示，根据类型只提示一次
@@ -853,7 +853,7 @@ onlyMessage(errorMessage, 'error'); // 显示类型为 'error' 的消息提示
 #### getSlot
 获取插槽内容
 ``` javascript
-import { getSlot } from '@jetlinks/utils'
+import { getSlot } from '@jetlinks-web/utils'
 
 /**
  * 获取插槽内容
@@ -879,7 +879,7 @@ console.log(falseSlotContent); // 输出 false，因为指定的插槽被设置�
 #### getSlotVNode
 获取插槽内容的 VNode
 ``` javascript
-import { getSlotVNode } from '@jetlinks/utils'
+import { getSlotVNode } from '@jetlinks-web/utils'
 
 /**
  * 获取插槽内容的 VNode
@@ -904,7 +904,7 @@ console.log(falseSlotVNode); // 输出 false，因为指定的插槽被设置为
 #### randomString
 生成指定长度的随机字符串
 ``` javascript
-import { randomString } from '@jetlinks/utils'
+import { randomString } from '@jetlinks-web/utils'
 
 /**
  * 生成指定长度的随机字符串
@@ -917,7 +917,7 @@ console.log(randomStr); // 输出一个长度为 10 的随机字符串
 #### getBase64ByImg
 将图片转换为 base64 格式
 ``` javascript
-import { getBase64ByImg, onlyMessage } from '@jetlinks/utils'
+import { getBase64ByImg, onlyMessage } from '@jetlinks-web/utils'
 /**
  * 将图片转换为 base64 格式
  * @param img 图片文件

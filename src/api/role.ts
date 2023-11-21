@@ -1,4 +1,4 @@
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 
 // 获取角色列表
 export const getRoleList_api = (data: any): Promise<any> => request.post(`/role/_query/`, data);

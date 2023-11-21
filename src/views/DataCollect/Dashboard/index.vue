@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import TopCard from './components/TopCard.vue';
 import Card from './components/Card.vue';
-import { getImage } from '@jetlinks/utils';
+import { getImage } from '@jetlinks-web/utils';
 import { queryCount } from '@/api/data-collect/dashboard';
 import { defaultParams, statusData } from './tool';
 import { useMenuStore } from '@/store';

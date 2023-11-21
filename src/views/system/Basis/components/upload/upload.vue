@@ -4,7 +4,7 @@
             :drag="uploadInfo.drag"
             name="file"
             :headers="uploadInfo.headers"
-            :accept="accept" 
+            :accept="accept"
             :beforeUpload="beforeUpload"
             :showUploadList="uploadInfo.showUploadList"
             :action="uploadInfo.action">
@@ -24,9 +24,9 @@
 
 <script setup lang="ts">
 import { UploadInfoType } from '@/views/system/Basis/components/upload/typing'
-import { TOKEN_KEY, BASE_API } from '@jetlinks/constants'
-import { getToken } from '@jetlinks/utils'
-import { onlyMessage } from '@jetlinks/utils'
+import { TOKEN_KEY, BASE_API } from '@jetlinks-web/constants'
+import { getToken } from '@jetlinks-web/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 import { defineProps, ref } from 'vue'
 import { FileStatic } from '@/api/comm'
 
@@ -226,7 +226,7 @@ const uploadInfo: UploadInfoType = {
  * @param file 上传文件
  */
   isIcoImage: (file: File) => {
-    return uploadInfo.isIcoType(file) && uploadInfo.isImageLessSize(file, 1) 
+    return uploadInfo.isIcoType(file) && uploadInfo.isImageLessSize(file, 1)
   },
 
 /**

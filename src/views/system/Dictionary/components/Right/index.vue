@@ -45,7 +45,7 @@
 import { queryDicItem, deleteDicItem } from '@/api/dictionary'
 import Save from './Save/index.vue'
 import type { ActionsType } from './typings';
-import { onlyMessage } from '@jetlinks/utils';
+import { onlyMessage } from '@jetlinks-web/utils';
 import { cloneDeep } from 'lodash-es';
 import dayjs from 'dayjs';
 const props = defineProps({
@@ -211,7 +211,7 @@ const queryItem = async (_params: any) => {
 }
 watch(() => props?.data?.id, () => {
     tableRef.value.reload()
-})  
+})
 </script>
 <style lang="less" scoped>
 .des_head {

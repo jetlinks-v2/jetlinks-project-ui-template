@@ -1,18 +1,31 @@
 {
-  "extends": "@jetlinks/tsconfig/base.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "baseUrl": ".",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowJs": true,
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@LowCode/*": ["./src/*"],
+      "components/*": ["./src/components/*"],
+      "layouts/*": ["./src/layouts/*"],
+      "store/*": ["./src/store/*"],
+      "style/*": ["./src/style/*"],
+      "jetlinks-ui-components/es": ["./node_modules/jetlinks-ui-components/es/*"]
     },
-    "lib": ["dom", "esnext"],
-    "types": [
-      "vite/client",
-      "@jetlinks/constants",
-      "@jetlinks/types/shims"
-    ]
+    "types": ["ant-design-vue/typings/global", "vite/client"],
+    "suppressImplicitAnyIndexErrors": true
   },
-  "include": ["src", "vite.config.ts", "../../node_modules/.pnpm/vue@3.2.45/node_modules/vue/macros-global.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "references": [{ "path": "./tsconfig.node.json" }],
 }

@@ -30,8 +30,8 @@
 
 <script setup lang="ts">
 import { getUserByRole_api, bindUser_api } from '@/api/role'
-import { useRequest } from '@jetlinks/hooks'
-import { onlyMessage } from '@jetlinks/utils'
+import { useRequest } from '@jetlinks-web/hooks'
+import { onlyMessage } from '@jetlinks-web/utils'
 
 const emits = defineEmits(['close', 'save'])
 const props = defineProps({

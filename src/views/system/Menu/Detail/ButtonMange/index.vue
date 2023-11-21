@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { updateMenu } from '@/api/menu'
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 import ButtonAddDialog from '../../components/ButtonAddDialog.vue'
 
 const columns = [

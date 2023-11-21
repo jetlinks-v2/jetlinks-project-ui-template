@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 import PermissionChoose from './PermissionChoose.vue'
 import { updateMenu } from '@/api/menu'
 

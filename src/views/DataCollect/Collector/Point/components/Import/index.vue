@@ -44,17 +44,12 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    CheckOutlined,
-    CloseOutlined,
-    LoadingOutlined,
-} from '@ant-design/icons-vue';
-import {FileStatic, fileUpload} from '@/api/comm';
-import { TOKEN_KEY , BASE_API} from '@jetlinks/constants'
+import {FileStatic} from '@/api/comm';
+import { TOKEN_KEY , BASE_API} from '@jetlinks-web/constants'
 import {
     exportTemplate
 } from '@/api/data-collect/collector';
-import { onlyMessage , downloadFileByUrl ,LocalStore , getToken} from '@jetlinks/utils';
+import { onlyMessage , downloadFileByUrl ,LocalStore , getToken} from '@jetlinks-web/utils';
 
 const props = defineProps({
     data: {

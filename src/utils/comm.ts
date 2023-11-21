@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { downloadFileByUrl } from '@jetlinks/utils'
+import { downloadFileByUrl } from '@jetlinks-web/utils'
 
 export const downloadJson = (record: Record<string, any>, fileName: string, format?: string) => {
     const _time = dayjs(new Date()).format(format || 'YYYY_MM_DD')

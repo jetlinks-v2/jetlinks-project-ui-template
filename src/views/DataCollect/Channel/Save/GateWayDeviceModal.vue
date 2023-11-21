@@ -81,7 +81,7 @@
 </template>
 
 <script name="GateWayDevice" setup>
-import { getImage } from '@jetlinks/utils'
+import { getImage } from '@jetlinks-web/utils'
 import {query} from "@/api/device/instance";
 
 const props = defineProps({

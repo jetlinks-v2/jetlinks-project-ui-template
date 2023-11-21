@@ -1,4 +1,4 @@
-import {RouteRecordItem} from "@jetlinks/types";
+import {RouteRecordItem} from "@jetlinks-web/types";
 
 export const USER_CENTER_ROUTE: RouteRecordItem = {
   path: '/account',
@@ -41,4 +41,14 @@ export const USER_CENTER_ROUTE: RouteRecordItem = {
       component: () => import('@/views/login/index.vue'),
     },
   ]
+}
+
+export const LOGIN_ROUTE: RouteRecordItem = {
+  path: '/login',
+  name: 'Login',
+  // @ts-ignore
+  component: () => import('@/views/login/index.vue'),
+  meta: {
+    title: '登录页'
+  }
 }

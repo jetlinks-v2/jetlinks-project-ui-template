@@ -147,7 +147,7 @@ import {
     remove,
 } from '@/api/data-collect/collector';
 import Save from './Save/index.vue';
-import { onlyMessage } from '@jetlinks/utils';
+import { onlyMessage } from '@jetlinks-web/utils';
 import _ from 'lodash-es';
 import { colorMap } from '../data';
 

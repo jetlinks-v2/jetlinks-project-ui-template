@@ -72,7 +72,7 @@
 
 <script setup lang="ts" name="UserDialog">
 import { ref, reactive } from 'vue';
-import { onlyMessage } from '@jetlinks/utils';
+import { onlyMessage } from '@jetlinks-web/utils';
 import { FormDataType } from '@/views/system/User/components/UserDialog/typing'
 import { OptionType, DictType, ModalType } from '@/views/system/User/typing'
 // import { passwordRegEx } from '@/utils/validate'
@@ -85,7 +85,7 @@ import {
   updateUser_api,
   updatePassword_api,
 } from '@/api/user'
-import { useRequest } from '@jetlinks/hooks';
+import { useRequest } from '@jetlinks-web/hooks';
 
 // 表单实例
 const fromRef = ref<any>()
@@ -152,7 +152,7 @@ const formRef = ref<any>()
 // 表单验证规则
 const formRules = {
   // 姓名验证规则
-  name: [ 
+  name: [
     {
       required: true,
       message: '请输入姓名',
@@ -165,7 +165,7 @@ const formRules = {
   ],
   // 用户名验证规则
   username: [
-    { 
+    {
         required: true,
         message: ""
     },
@@ -191,7 +191,7 @@ const formRules = {
         message: "",
     },
     {
-        validator: (_rulw: any, value: string): Promise<any> => 
+        validator: (_rulw: any, value: string): Promise<any> =>
             new Promise((resolve, reject) => {
                 if(!value) {
                   return reject('请输入密码')
@@ -213,7 +213,7 @@ const formRules = {
         message: ""
     },
     {
-        validator: (_rulw: any, value: string): Promise<any> => 
+        validator: (_rulw: any, value: string): Promise<any> =>
             new Promise((resolve, reject) => {
                 if(!value) {
                   return reject('请输入确认密码')

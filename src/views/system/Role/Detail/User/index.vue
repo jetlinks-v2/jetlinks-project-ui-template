@@ -71,7 +71,7 @@ import { getUserByRole_api, unbindUser_api } from '@/api/role'
 import dayjs from 'dayjs'
 import { useRoute } from 'vue-router'
 import { userColumns } from '../../util'
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 
 const roleId = useRoute().params.id as string
 

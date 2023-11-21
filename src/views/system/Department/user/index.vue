@@ -82,7 +82,7 @@
 import AddBindUserDialog from './components/AddBindUserDialog.vue'
 import { unBindUser_api } from '@/api/department'
 import { columns, requestFun } from '../util'
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 
 const permission = 'system/Department'
 

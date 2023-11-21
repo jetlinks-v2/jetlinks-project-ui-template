@@ -149,7 +149,7 @@ import {
 } from '@/api/data-collect/collector';
 import type { FormInstance } from 'ant-design-vue';
 import DeathArea from './DeathArea.vue';
-import { randomString } from '@jetlinks/utils';
+import { randomString } from '@jetlinks-web/utils';
 
 const props = defineProps({
     data: {

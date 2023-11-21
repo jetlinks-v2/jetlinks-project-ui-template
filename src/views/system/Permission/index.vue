@@ -132,9 +132,9 @@ import {
   delPermission_api,
   exportPermission_api,
 } from '@/api/permission'
-import { usePermission } from '@jetlinks/components/src/PermissionButton/hooks'
+import { usePermission } from '@jetlinks-web/components/src/PermissionButton/hooks'
 import { PermissionItem } from './typings'
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 import { downloadJson } from '@/utils/comm'
 import { columns } from './util'
 

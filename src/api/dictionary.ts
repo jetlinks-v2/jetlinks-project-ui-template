@@ -1,4 +1,4 @@
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 
 /**
  * 查询字典列表

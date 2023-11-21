@@ -1,4 +1,4 @@
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 
 /**
  * 获取用户基本信息

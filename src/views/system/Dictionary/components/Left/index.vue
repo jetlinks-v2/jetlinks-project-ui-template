@@ -62,9 +62,9 @@
 <script lang="ts" setup>
 import { getDicList, deleteDictionary, addDictionary } from '@/api/dictionary';
 import Save from './save/index.vue'
-import { onlyMessage } from '@jetlinks/utils';
+import { onlyMessage } from '@jetlinks-web/utils';
 import Export from './Export/index.vue'
-import { usePermission } from '@jetlinks/components/src/PermissionButton/hooks'
+import { usePermission } from '@jetlinks-web/components/src/PermissionButton/hooks'
 const emit = defineEmits(['selectData'])
 const saveShow = ref(false)
 const addType = ref('add')
@@ -113,7 +113,7 @@ const saveSuccess = () => {
     reload()
 }
 /**
- * 
+ *
  * @param id 字典id
  * 删除字典
  */

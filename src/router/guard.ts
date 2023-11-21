@@ -1,4 +1,4 @@
-import { createAuthRoute, initRouteAssignStore } from '@jetlinks/router'
+import { createAuthRoute, initRouteAssignStore } from '@jetlinks-web/router'
 import { useUserStore } from '@/store/user'
 import { useMenuStore } from '@/store/menu'
 import { useSystemStore } from '@/store/system'

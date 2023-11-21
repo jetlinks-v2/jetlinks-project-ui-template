@@ -22,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from '@jetlinks/router'
+import { useRoute } from '@jetlinks-web/router'
 import Info from './Info.vue'
 import Permission from './Permission.vue'
 import { addMenu, updateMenu } from '@/api/menu'
-import { useRequest } from '@jetlinks/hooks'
-import { onlyMessage } from '@jetlinks/utils'
+import { useRequest } from '@jetlinks-web/hooks'
+import { onlyMessage } from '@jetlinks-web/utils'
 import { useMenuStore } from '@/store/menu'
 
 const permission = 'system/Menu'

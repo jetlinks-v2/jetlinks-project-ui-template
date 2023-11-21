@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import { getImage } from '@jetlinks/utils'
+import { getImage } from '@jetlinks-web/utils'
 import { settingDetail } from '@/api/system'
 
 interface LayoutType {

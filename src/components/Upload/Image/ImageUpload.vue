@@ -42,8 +42,8 @@
 </template>
 
 <script setup lang="ts" name="ImageUpload">
-import { getToken, onlyMessage, getBase64ByImg } from "@jetlinks/utils";
-import { TOKEN_KEY } from '@jetlinks/constants'
+import { getToken, onlyMessage, getBase64ByImg } from "@jetlinks-web/utils";
+import { TOKEN_KEY } from '@jetlinks-web/constants'
 import type { CSSProperties, PropType } from "vue";
 import type { UploadChangeParam } from 'ant-design-vue';
 import CropperModal from "./CropperModal";

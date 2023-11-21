@@ -31,12 +31,12 @@
               </PermissionButton>
               <!-- 状态修改按钮 -->
               <!-- 状态为正常时显示 -->
-              <PermissionButton v-if="slotProps.status" :hasPermission="`${permission}:action`" type="link" 
+              <PermissionButton v-if="slotProps.status" :hasPermission="`${permission}:action`" type="link"
                                 :tooltip="{title: '禁用'}" :popConfirm="{title: '确定禁用吗？', onConfirm: () => changeStatus(slotProps)}">
                 <AIcon type="StopOutlined" />
               </PermissionButton>
               <!-- 状态为禁用时显示 -->
-              <PermissionButton v-else :hasPermission="`${permission}:action`" type="link" 
+              <PermissionButton v-else :hasPermission="`${permission}:action`" type="link"
                                 :tooltip="{title: '启用'}" :popConfirm="{title: '确定启用吗？', onConfirm: () => changeStatus(slotProps)}">
                 <AIcon type="PlayCircleOutlined" />
               </PermissionButton>
@@ -66,7 +66,7 @@ import { ModalType } from './typing'
 import { ref, reactive } from 'vue';
 import UserDialog from './components/UserDialog/UserDialog.vue';
 import { getUserList_api, changeUserStatus_api, deleteUser_api } from '@/api/user';
-import { onlyMessage } from '@jetlinks/utils';
+import { onlyMessage } from '@jetlinks-web/utils';
 
 // 权限
 const permission = 'system/User'
@@ -156,7 +156,7 @@ const changeStatus = ({ id, status }: any) => {
   })
 }
 
-// 
+//
  /**
  * 删除用户
  * @param id 用户id

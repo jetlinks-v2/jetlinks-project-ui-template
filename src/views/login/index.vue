@@ -14,9 +14,9 @@
   </j-spin>
 </template>
 <script setup name="Login" lang="ts">
-import { useRequest } from '@jetlinks/hooks'
+import { useRequest } from '@jetlinks-web/hooks'
 import { login, encryptionConfig } from '@/api/login'
-import { getImage, setToken, encrypt } from '@jetlinks/utils'
+import { getImage, setToken, encrypt } from '@jetlinks-web/utils'
 // import { systemVersion, settingDetail } from '@/api/system'
 import { useUserStore } from '@/store/user'
 import { useSystemStore } from '@/store/system'
@@ -87,7 +87,7 @@ systemStore.queryInfo()
   .right {
     min-width: 400px;
     width: 27%;
-    display: flex;  
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
   }

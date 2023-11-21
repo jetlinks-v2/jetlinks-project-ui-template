@@ -99,8 +99,8 @@ import {
   editPermission_api,
   addPermission_api,
 } from '@/api/permission'
-import { useRequest } from '@jetlinks/hooks'
-import { onlyMessage } from '@jetlinks/utils'
+import { useRequest } from '@jetlinks-web/hooks'
+import { onlyMessage } from '@jetlinks-web/utils'
 import { editColumns, defaultAction } from '../util'
 
 const emits = defineEmits(['save', 'close'])

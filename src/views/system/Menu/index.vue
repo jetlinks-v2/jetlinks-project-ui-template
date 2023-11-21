@@ -75,7 +75,7 @@
 import { getMenuTree, delMenu } from '@/api/menu'
 import dayjs from 'dayjs'
 import { useMenuStore } from '@/store/menu'
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 
 const permission = 'system/Menu'
 

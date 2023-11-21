@@ -1,4 +1,4 @@
-import { initStore } from '@jetlinks/stores'
+import { initStore } from '@jetlinks-web/stores'
 import { useUserStore } from '@/store/user'
 import { useMenuStore } from '@/store/menu'
 import { useSystemStore } from '@/store/system'

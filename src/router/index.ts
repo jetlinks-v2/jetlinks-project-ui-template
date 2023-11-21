@@ -1,1 +1,1 @@
-export * from '@jetlinks/router'
+export * from '@jetlinks-web/router'

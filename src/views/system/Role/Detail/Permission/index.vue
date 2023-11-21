@@ -33,7 +33,7 @@ import {
 import { useRoute } from 'vue-router'
 import { RoleType } from '../../typings'
 import { flattenArray } from '../../util'
-import { onlyMessage } from '@jetlinks/utils'
+import { onlyMessage } from '@jetlinks-web/utils'
 
 const route = useRoute()
 const roleId = route.params.id as string

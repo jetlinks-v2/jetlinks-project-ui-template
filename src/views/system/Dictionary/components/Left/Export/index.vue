@@ -1,9 +1,9 @@
 <template>
-    <j-modal visible title="下载" @cancel="close" @ok="downLoad" :maskClosable="false" 
+    <j-modal visible title="下载" @cancel="close" @ok="downLoad" :maskClosable="false"
         :confirmLoading="loading" :width="900">
-        <JProTable 
-            :columns="columns" 
-            model="CARD" 
+        <JProTable
+            :columns="columns"
+            model="CARD"
             :request="getDic_page"
             :gridColumn="2"
             :defaultParams="{sorts: [{ name: 'createTime', order: 'desc' }]}"
@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import { getDic_page , downDic} from '@/api/dictionary';
-import { onlyMessage , downloadFileByUrl } from '@jetlinks/utils';
+import { onlyMessage , downloadFileByUrl } from '@jetlinks-web/utils';
 import dayjs from 'dayjs';
 const emit = defineEmits(['closeDown'])
 const loading = ref(false)
@@ -48,7 +48,7 @@ const columns = [ {
     {
         title: 'name',
         dataIndex: 'name',
-        key: 'name', 
+        key: 'name',
         ellipsis: true,
     }]
 const _selectedRowKeys:any = ref([])

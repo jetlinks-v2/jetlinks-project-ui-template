@@ -337,7 +337,7 @@ import {
     getProviders,
     getStates
 } from '@/api/data-collect/collector';
-import { onlyMessage, getImage } from '@jetlinks/utils';
+import { onlyMessage, getImage } from '@jetlinks-web/utils';
 import PointCardBox from './components/PointCardBox/index.vue';
 import WritePoint from './components/WritePoint/index.vue';
 import BatchUpdate from './components/BatchUpdate/index.vue';
@@ -346,7 +346,7 @@ import SaveOPCUA from './Save/SaveOPCUA.vue';
 import Scan from './Scan/index.vue';
 import { colorMap } from '../data';
 import { cloneDeep, isBoolean, isNumber, throttle } from 'lodash-es';
-import { getWebSocket } from '@jetlinks/core';
+import { getWebSocket } from '@jetlinks-web/core';
 import { map } from 'rxjs/operators';
 import dayjs from 'dayjs';
 import { responsiveArray } from 'ant-design-vue/lib/_util/responsiveObserve';

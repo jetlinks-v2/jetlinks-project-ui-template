@@ -1,4 +1,4 @@
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 
 export const query = (data: any) =>
     request.post(`/data-collect/channel/_query`, data);

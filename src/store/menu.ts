@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import { router } from '@jetlinks/router'
+import { router } from '@jetlinks-web/router'
 import { cloneDeep } from 'lodash-es'
-import { setParamsValue } from '@jetlinks/hooks'
-import { onlyMessage } from '@jetlinks/utils'
+import { setParamsValue } from '@jetlinks-web/hooks'
+import { onlyMessage } from '@jetlinks-web/utils'
 import {handleMenus, handleMenusMap, handleSiderMenu} from '@/utils'
 import { getOwnMenuThree } from '@/api/menu'
 import { getGlobModules } from '@/router/globModules'
@@ -59,7 +59,7 @@ export const useMenuStore = defineStore('menu', () => {
         } else {
             onlyMessage('暂无权限，请联系管理员', 'error')
             console.warn(`没有找到对应的页面: ${name}`)
-        } 
+        }
     }
 
     const handleMenusMapById = (item: { name: string, path: string}) => {

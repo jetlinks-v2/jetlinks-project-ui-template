@@ -1,4 +1,4 @@
-import { request } from '@jetlinks/core'
+import { request } from '@jetlinks-web/core'
 
 export const queryCollector = (data: any) =>
   request.post(`/data-collect/collector/_query/no-paging?paging=false`, data);

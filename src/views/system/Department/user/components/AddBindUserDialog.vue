@@ -33,8 +33,8 @@
 
 <script setup lang="ts">
 import { bindUser_api } from '@/api/department'
-import { useRequest } from '@jetlinks/hooks'
-import { onlyMessage } from '@jetlinks/utils'
+import { useRequest } from '@jetlinks-web/hooks'
+import { onlyMessage } from '@jetlinks-web/utils'
 import { bindUserColumns, requestFun } from '../../util'
 
 const emits = defineEmits(['save', 'close'])

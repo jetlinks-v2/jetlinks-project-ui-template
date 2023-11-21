@@ -17,7 +17,7 @@
 
 <script setup lang="ts" name="Notice">
 import { ref } from 'vue'
-import { useWebSocket } from '@jetlinks/hooks'
+import { useWebSocket } from '@jetlinks-web/hooks'
 
 const visible = ref(false)
 const total = ref(0)
