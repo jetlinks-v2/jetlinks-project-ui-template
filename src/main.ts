@@ -7,6 +7,7 @@ import { setupRouter } from '@/router/guard'
 import { initStoreBus } from '@/store'
 import globalComponents from '@jetlinks-web/components'
 import components from './components'
+import 'ant-design-vue/dist/antd.variable.min.css'
 import './style.css'
 import {LOGIN_ROUTE} from "@/router/basic";
 

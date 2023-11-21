@@ -442,8 +442,8 @@ watchEffect(() => {
     .bt {
       width: 32px;
       height: 32px;
-      border: 1px solid #1d39c4;
-      color: #1d39c4;
+      border: 1px solid @primary-color;
+      color: @primary-color;
       display: flex;
       align-items: center;
       justify-content: center;

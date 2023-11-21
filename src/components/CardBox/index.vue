@@ -164,7 +164,7 @@ const handleClick = () => {
 .card {
     width: 100%;
     background-color: #fff;
-    
+
     .checked-icon {
         position: absolute;
         right: -22px;
@@ -173,8 +173,7 @@ const handleClick = () => {
         width: 44px;
         height: 44px;
         color: #fff;
-        background-color: red;
-        background-color: #2f54eb;
+        background-color: @primary-color;
         transform: rotate(-45deg);
 
         > div {
@@ -211,7 +210,7 @@ const handleClick = () => {
 
         &.active {
             position: relative;
-            border: 1px solid #2f54eb;
+            border: 1px solid @primary-color;
         }
 
         .card-type {
@@ -377,14 +376,14 @@ const handleClick = () => {
 
     &.item-active {
         position: relative;
-        color: #2f54eb;
+        color: @primary-color;
 
         .checked-icon {
             display: block;
         }
 
         .card-warp {
-            border: 1px solid #2f54eb;
+            border: 1px solid @primary-color;
         }
     }
 
@@ -406,7 +405,7 @@ const handleClick = () => {
                 border-radius: 0;
                 background: #f6f6f6;
                 border: 1px solid #e6e6e6;
-                color: #2f54eb;
+                color: @primary-color;
 
                 &:hover {
                     background-color: @primary-color-hover;
