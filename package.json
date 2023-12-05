@@ -28,7 +28,8 @@
     "rxjs": "^7.8.1",
     "vue": "^3.3.4",
     "vue-cropper": "^1.0.9",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.2",
+    "vue3-json-viewer": "^2.2.2"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.11",

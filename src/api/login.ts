@@ -28,3 +28,17 @@ export const encryptionConfig = () => request.get(`/authorize/login/configs`)
  * @returns
  */
 export const captchaConfig = () => request.get(`/authorize/captcha/config`)
+
+
+/**
+ * 登录
+ * @returns 
+ */
+export const authLogin = (data: any) => request.post(`/authorize/login`, data)
+
+/**
+ * 获取当前登录用户信息
+ */
+export const userDetail = () => request.get<any>('/user/detail')
+
+

@@ -4,7 +4,7 @@ export const USER_CENTER_ROUTE: RouteRecordItem = {
   path: '/account',
   name: 'Account',
   redirect: '/account/center',
-  component: () => import('@/views/login/index.vue'),
+  component: () => import('@/layout/BasicLayoutPage.vue'),
   meta: {
     title: '个人中心',
     hideInMenu: true
@@ -18,7 +18,7 @@ export const USER_CENTER_ROUTE: RouteRecordItem = {
         icon: '',
         hideInMenu: false
       },
-      component: () => import('@/views/login/index.vue'),
+      component: () => import('@/views/account/center/index.vue'),
     },
     {
       path: '/account/NotificationSubscription',
