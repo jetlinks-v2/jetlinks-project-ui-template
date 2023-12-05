@@ -34,9 +34,9 @@
                             >编辑资料</j-button
                         >
                         <j-button
-                            v-if="permission"
+                            v-if="hasPerm"
                             @click="editPasswordVisible = true"
-                        >   {{ `${USER_CENTER_MENU_CODE}:${USER_CENTER_MENU_BUTTON_CODE}` }}
+                        >  
                             修改密码
                         </j-button>
                     </j-space>
@@ -60,7 +60,7 @@
         <Detail v-if="visible" @close="visible = false" />
         <EditInfo
             v-if="editInfoVisible"
-            :data="user.userInfos"
+            :data="user.userInfo"
             @close="editInfoVisible = false"
             @save="onSave"
         />
@@ -136,7 +136,7 @@ const visible = ref<boolean>(false);
 const editInfoVisible = ref<boolean>(false);
 const editPasswordVisible = ref<boolean>(false);
 
-const permission = usePermission(
+const { hasPerm } = usePermission(
     `${USER_CENTER_MENU_CODE}:${USER_CENTER_MENU_BUTTON_CODE}`,
 );
 

@@ -1,7 +1,7 @@
 <template>
   <j-dropdown placement="bottomRight">
     <div class="user-info">
-      <j-avatar :size="28" src="" />
+      <j-avatar :size="28" :src="userStore.userInfo?.avatar" />
       <span class="name">{{ userName }}</span>
     </div>
     <template #overlay>

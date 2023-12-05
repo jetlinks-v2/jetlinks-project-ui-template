@@ -9,7 +9,11 @@ type UserInfo = {
 export const useUserStore = defineStore('user', () => {
     const userInfo = ref<Partial<UserInfo>>({})
     const isAdmin = ref(false)
-
+    const tabKey = ref('HomeView') // 个人中心的tabKey,
+    const other =  {
+        tabKey: '' // 站内信的tabkey
+    }
+    const  alarmUpdateCount= ref(0)
     /**
      * 设置用户信息
      * @param data
@@ -28,10 +32,16 @@ export const useUserStore = defineStore('user', () => {
           isAdmin.value = resp.result.username === 'admin'
         }
     }
-
+    const updateAlarm = () =>{
+        alarmUpdateCount.value += 1
+    }
     return {
+        tabKey,
+        other,
         userInfo,
+        alarmUpdateCount,
         getUserInfo,
-        setUserInfo
+        setUserInfo,
+        updateAlarm
     }
 })

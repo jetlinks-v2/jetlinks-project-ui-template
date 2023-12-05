@@ -130,11 +130,11 @@ import { Form } from 'ant-design-vue'
 
 import { applicationInfo, bindAccount } from '@/api/bind'
 import { codeUrl, authLogin, userDetail , encryptionConfig} from '@/api/login'
-import { useSystem } from '@/store/system'
+import { useSystemStore } from '@/store/system'
 
 
 const useForm = Form.useForm;
-const systemStore = useSystem();
+const systemStore = useSystemStore();
 
 interface formData {
   username: string;

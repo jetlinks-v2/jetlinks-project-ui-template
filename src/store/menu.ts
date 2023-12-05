@@ -61,7 +61,12 @@ export const useMenuStore = defineStore('menu', () => {
             console.warn(`没有找到对应的页面: ${name}`)
         }
     }
-
+    const routerPush = (name: string, { params, query }: { params?: Record<string, any>, query?: Record<string, any>}) => {
+      router.push({
+        name, params, query, state: { params }
+      })
+      setParamsValue(name, params)
+    }
     const handleMenusMapById = (item: { name: string, path: string}) => {
       const { name, path } = item
       menusMap.value.set(name, { path })
@@ -96,6 +101,7 @@ export const useMenuStore = defineStore('menu', () => {
         hasRouteMenu,
         hasMenu,
         jumpPage,
+        routerPush,
         queryMenus
     }
 })

@@ -2,11 +2,11 @@
     <j-modal visible @cancel="emit('close')" :closable="false">
         <div style="padding: 30px;">
             <div style="display: flex; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid #E4E7F6">
-                <j-avatar :size="100" :src="userInfos.avatar"></j-avatar>
+                <j-avatar :size="100" :src="userInfo.avatar"></j-avatar>
                 <div style="margin-left: 24px;  max-width: 280px;" >
-                    <div class="name"><j-ellipsis>{{ userInfos.name }}</j-ellipsis></div>
-                    <div class="subTitle"><j-ellipsis>用户名: {{ userInfos?.username }}</j-ellipsis></div>
-                    <!-- <div class="subTitle">账号ID: {{ userInfos?.id }}</div> -->
+                    <div class="name"><j-ellipsis>{{ userInfo.name }}</j-ellipsis></div>
+                    <div class="subTitle"><j-ellipsis>用户名: {{ userInfo?.username }}</j-ellipsis></div>
+                    <!-- <div class="subTitle">账号ID: {{ userInfo?.id }}</div> -->
                 </div>
             </div>
             <j-descriptions
@@ -31,12 +31,12 @@
                 </j-descriptions-item>
                 <j-descriptions-item label="手机号">
                     <j-ellipsis :lineClamp="2">
-                        {{ userInfos?.telephone }}
+                        {{ userInfo?.telephone }}
                     </j-ellipsis>
                 </j-descriptions-item>
                 <j-descriptions-item label="邮箱">
                     <j-ellipsis :lineClamp="2">
-                        {{ userInfos?.email }}
+                        {{ userInfo?.email }}
                     </j-ellipsis>
                 </j-descriptions-item>
             </j-descriptions>

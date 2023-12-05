@@ -16,7 +16,7 @@
 
     <template #rightContentRender>
       <div class="right-content">
-        <Notice />
+        <Notice style="margin: 0 24px" />
         <User />
       </div>
     </template>

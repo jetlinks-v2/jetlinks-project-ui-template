@@ -56,7 +56,7 @@
         </div>
         <EditInfo
             v-if="editInfoVisible"
-            :data="user.userInfos"
+            :data="user.userInfo"
             @close="editInfoVisible = false"
             @save="onSave"
         />
