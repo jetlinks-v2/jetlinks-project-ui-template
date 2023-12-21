@@ -107,6 +107,10 @@ watchEffect(() => {
     state.openKeys = paths.map(item => item.path)
     console.log(paths) //
   }
+  // if (route.query?.layout === 'false' || self.frameElement?.tagName === 'IFRAME') {
+  if (route.query?.layout === 'false') {
+    state.pure = true
+  }
 })
 
 </script>
