@@ -1,6 +1,5 @@
 import { DictType } from "./typing"
-import { getUserType_api } from "@/api/user"
-import { message } from 'jetlinks-ui-components'
+import { getUserType_api } from "@/api/system/user"
 
 // 获取用户类型
 const userTypes = () =>

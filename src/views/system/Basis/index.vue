@@ -44,7 +44,7 @@
                 <j-input v-model:value="formData.apiWebKey" placeholder="请输入高德Web Key"></j-input>
               </j-form-item>
               <!-- base-path输入框 -->
-              <j-form-item name="basePath">
+              <j-form-item name="base-path">
                 <template #label>
                   <j-space>
                     <span>base-path</span>
@@ -62,7 +62,7 @@
                     </j-tooltip>
                   </j-space>
                 </template>
-                <j-input v-model:value="formData.basePath" placeholder="请输入 base-path"></j-input>
+                <j-input v-model:value="formData['base-path']" placeholder="请输入 base-path"></j-input>
               </j-form-item>
               <!-- 系统logo 和 浏览器标签 -->
               <j-row :gutter="24">
@@ -109,6 +109,7 @@ import {save_api} from '@/api/system/basis';
 import {useSystemStore} from '@/store';
 import Upload from '@/views/system/Basis/components/upload/upload.vue'
 import {onlyMessage} from '@jetlinks-web/utils';
+import {omit} from "lodash-es";
 
 const system = useSystemStore()
 // 表单数据
@@ -117,7 +118,7 @@ const formData = reactive<formDataType>({
   headerTheme: "light",  // 主题色
   apiKey: "",  // 高德API Key
   apiWebKey: "", // 高德web key
-  basePath: `${window.location.origin}/api`,  // base-path
+  'base-path': `${window.location.origin}/api`,  // base-path
   logo: "/images/login/logo.png",  // 系统logo
   ico: "/favicon.ico",  // 浏览器页签
   background: "/images/login/login.png"  // 登录背景图
@@ -145,7 +146,7 @@ const formRules = {
       required: true,
     }
   ],
-  basePath: [
+  'base-path': [
     {
       required: true,
       message: "base-path为必填项",
@@ -169,10 +170,10 @@ const getDetails = async () => {
     headerTheme: system.theme,
     logo: system.layout?.logo || '/images/login/logo.png',
     ico: system.systemInfo?.ico || '/favicon.ico',
-    background: system.systemInfo?.background || '/images/login/login.png',
-    apiKey: system.systemInfo?.apiKey,
-    webAmapKey: system.systemInfo?.webAmapKey,
-    basePath: system.systemInfo?.basePath || `${window.location.origin}/api`,
+    background: system.systemInfo?.front?.background || '/images/login/login.png',
+    apiKey: system.systemInfo?.amap?.apiKey,
+    apiWebKey: system.systemInfo?.amap?.apiWebKey,
+    'base-path': system.systemInfo?.paths?.['base-path'] || `${window.location.origin}/api`,
   })
 }
 
@@ -198,22 +199,19 @@ const submit = () => {
     const params = [
       {
         scope: 'front',
-        properties: {
-          ...formData,
-          apiKey: '',
-          'basePath': '',
-        },
+        properties: omit(formData, ['apiKey', 'apiWebKey', 'base-path'])
       },
       {
         scope: 'amap',
         properties: {
           apiKey: formData.apiKey,
+          apiWebKey: formData.apiWebKey
         },
       },
       {
         scope: 'paths',
         properties: {
-          'basePath': formData.basePath,
+          'base-path': formData['base-path'],
         },
       },
     ]
