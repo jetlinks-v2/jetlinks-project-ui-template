@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { updateMenu } from '@/api/menu'
+import { updateMenu } from '@/api/system/menu'
 import { onlyMessage } from '@jetlinks-web/utils'
 import ButtonAddDialog from '../../components/ButtonAddDialog.vue'
 

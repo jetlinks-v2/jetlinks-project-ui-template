@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 // 获取角色列表
 export const getRoleList_api = (data: any): Promise<any> => request.post(`/role/_query/`, data);

@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts" name="Menu">
-import { getMenuTree, delMenu } from '@/api/menu'
+import { getMenuTree, delMenu } from '@/api/system/menu'
 import dayjs from 'dayjs'
 import { useMenuStore } from '@/store/menu'
 import { onlyMessage } from '@jetlinks-web/utils'

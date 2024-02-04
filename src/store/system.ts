@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
-import { getImage } from '@jetlinks-web/utils'
-import { settingDetail } from '@/api/system'
+import {getDetails_api, settingDetail} from "@/api/system/basis";
 
 interface LayoutType {
   siderWidth: number
@@ -12,17 +11,15 @@ interface LayoutType {
 }
 export const useSystemStore = defineStore('system', () => {
   const theme = ref<string>('light') // 主题色
-  const title = ref<string>('Jetlinks') // 浏览器标签页title
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
   const systemInfo = ref<Record<string, any>>({})
-  const amapKey = ref('')
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,
     headerHeight: 48,
     collapsedWidth: 48,
-    title: '物联网平台',
-    logo: getImage('/login/logo.png'),
+    title: '物联网平台', // 浏览器标签页title和系统名称
+    logo: '/images/login/logo.png',
     layout: 'mix'
   })
 
@@ -57,40 +54,60 @@ export const useSystemStore = defineStore('system', () => {
     document.title = value
   }
 
-  const queryAmap = async () => {
-    const resp = await settingDetail('amap')
-    if (resp.success) {
-      const { apiKey } = resp.result
-      amapKey.value = apiKey
-      systemInfo.value.apiKey = apiKey
+  const setDocumentTitle = () => {
+    const _data = systemInfo.value['front']
+    if (_data) {
+      const ico: any = document.querySelector('link[rel="icon"]');
+      ico.href = _data.ico;
+      document.title = _data.title || '';
     }
+  }
+
+  const handleFront = (_value: any) => {
+    layout.title = _value.title
+    layout.logo = _value.logo
+    theme.value = _value.headerTheme
+    changeIco(_value.ico)
+    setDocumentTitle()
+    changeTitle(_value.title)
   }
 
   const queryInfo = async () => {
-    const resp = await settingDetail('front')
+    const _keys = ['front', 'amap', 'paths']
+    const resp = await getDetails_api(_keys)
     if (resp.success) {
-      const { ico, title, headerTheme, logo } = resp.result
-      changeIco(ico)
-      changeTitle(title)
-      systemInfo.value = resp.result
-      layout.title = title
-      layout.logo = logo
-      theme.value = headerTheme
+      _keys.forEach((key: string) => {
+        const _value = resp.result.find((item: any) => item.scope === key)?.properties
+        systemInfo.value[key] = _value ?? {}
+        if (key === 'front') {
+          handleFront(_value)
+        }
+      })
     }
-    await queryAmap()
   }
 
+  const querySingleInfo = async (__keys: string) => {
+    if(!__keys) return
+    const resp =  await settingDetail(__keys)
+    if (resp.success) {
+      const _value = resp.result
+      systemInfo.value[__keys] = _value ?? {}
+      if (__keys === 'front') {
+        handleFront(_value)
+      }
+    }
+  }
 
   return {
     systemInfo,
     theme,
-    title,
     ico,
     layout,
     changeTheme,
     changeLayout,
     changeIco,
     changeTitle,
-    queryInfo
+    queryInfo,
+    querySingleInfo
   }
 })

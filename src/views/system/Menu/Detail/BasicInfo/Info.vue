@@ -146,7 +146,7 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
 import ChooseIconDialog from '../../components/ChooseIconDialog.vue'
-import { validMenuCode } from '@/api/menu'
+import { validMenuCode } from '@/api/system/menu'
 
 const route = useRoute()
 const formRef = ref<any>()

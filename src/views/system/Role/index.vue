@@ -66,7 +66,7 @@
 
 <script setup lang="ts" name="Role">
 import AddDialog from './components/AddDialog/index.vue'
-import { getRoleList_api, delRole_api } from '@/api/role'
+import { getRoleList_api, delRole_api } from '@/api/system/role'
 import { useMenuStore } from '@/store/menu'
 import { useRoute } from 'vue-router'
 import { columns } from './util'

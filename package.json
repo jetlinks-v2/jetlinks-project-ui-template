@@ -19,6 +19,7 @@
     "@jetlinks-web/utils": "^1.0.2",
     "@vuemap/vue-amap": "^2.0.13",
     "@vueuse/core": "^10.6.1",
+    "axios": "^1.6.7",
     "dayjs": "^1.11.8",
     "echarts": "^5.4.3",
     "jetlinks-ui-components": "1.0.34-8",

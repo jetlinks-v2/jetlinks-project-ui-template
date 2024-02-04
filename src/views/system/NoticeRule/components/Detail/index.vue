@@ -48,7 +48,7 @@
 import ConfigApi from '@/api/notice/config';
 import TemplateApi from '@/api/notice/template';
 import { queryConfigVariables } from '@/api/system/noticeRule';
-import { getRoleList_api } from '@/api/user';
+import { getRoleList_api } from '@/api/system/user';
 
 const props = defineProps({
     data: {

@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 // 获取权限列表
 export const getPermission_api = (data: any) => request.post(`/permission/_query/`, data);

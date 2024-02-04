@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 // 获取记录列表
 export const getList_api = (data: any): any => request.post(`/notifications/_query`, data)

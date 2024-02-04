@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 // 获取通知订阅列表
 export const getNoticeList_api = () => request.post(`/notifications/subscriptions/_query/`,{});

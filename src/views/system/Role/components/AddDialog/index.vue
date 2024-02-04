@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { saveRole_api } from '@/api/role'
+import { saveRole_api } from '@/api/system/role'
 import { useMenuStore } from '@/store/menu'
 import { useRoute } from 'vue-router'
 import { useRequest } from '@jetlinks-web/hooks'

@@ -128,7 +128,7 @@ import { onlyMessage , LocalStore , getImage , encrypt} from "@jetlinks-web/util
 import { TOKEN_KEY} from '@jetlinks-web/constants'
 import { Form } from 'ant-design-vue'
 
-import { applicationInfo, bindAccount } from '@/api/bind'
+import { applicationInfo, bindAccount } from '@/api/system/bind'
 import { codeUrl, authLogin, userDetail , encryptionConfig} from '@/api/login'
 import { useSystemStore } from '@/store/system'
 

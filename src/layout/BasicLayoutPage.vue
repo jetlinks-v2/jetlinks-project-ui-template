@@ -105,7 +105,7 @@ watchEffect(() => {
     const paths = router.currentRoute.value.matched
     state.selectedKeys = paths.map(item => item.path)
     state.openKeys = paths.map(item => item.path)
-    console.log(paths) //
+    // console.log(paths) //
   }
   // if (route.query?.layout === 'false' || self.frameElement?.tagName === 'IFRAME') {
   if (route.query?.layout === 'false') {

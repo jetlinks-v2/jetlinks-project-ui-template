@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash-es'
 import { setParamsValue } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import {handleMenus, handleMenusMap, handleSiderMenu} from '@/utils'
-import { getOwnMenuThree } from '@/api/menu'
+import { getOwnMenuThree } from '@/api/system/menu'
 import { getGlobModules } from '@/router/globModules'
 import { extraMenu } from '@/router/extraMenu'
 import { USER_CENTER_ROUTE } from "@/router/basic";
@@ -89,6 +89,7 @@ export const useMenuStore = defineStore('menu', () => {
             routes.push(USER_CENTER_ROUTE) // 添加个人中心
             authStore.handlePermission(resp.result) // 处理按钮权限
             menu.value = routes
+            console.log(routes)
             handleMenusMap(routes, handleMenusMapById)
             siderMenus.value = handleSiderMenu(cloneDeep(resp.result)) // 处理菜单
         }

@@ -46,16 +46,16 @@
               </PermissionButton>
               <!-- 删除按钮 -->
               <PermissionButton :hasPermission="`${permission}:delete`" type="link"  danger
-                                :tooltip="{title: slotProps.status ? '请先禁用，再删除' : '删除'}"
+                                :tooltip="{title: !!slotProps.status ? '请先禁用，再删除' : '删除'}"
                                 :popConfirm="{title: '确定删除', onConfirm: () => deleteUser(slotProps.id)}"
-                                :disabled="slotProps.status">
+                                :disabled="!!slotProps.status">
                 <AIcon type="DeleteOutlined" />
               </PermissionButton>
             </j-space>
           </template>
         </j-pro-table>
       </FullPage>
-      <UserDialog v-model:visible="visible" :data="dialog.data" :modalType="dialog.modalType" @handle-ok="refresh"/>
+      <UserDialog v-if="visible" :data="dialog.data" :modalType="dialog.modalType" @cancel="visible = false" @save="refresh"/>
     </div>
   </page-container>
 </template>
@@ -65,7 +65,7 @@ import columns from './columns'
 import { ModalType } from './typing'
 import { ref, reactive } from 'vue';
 import UserDialog from './components/UserDialog/UserDialog.vue';
-import { getUserList_api, changeUserStatus_api, deleteUser_api } from '@/api/user';
+import { getUserList_api, changeUserStatus_api, deleteUser_api } from '@/api/system/user';
 import { onlyMessage } from '@jetlinks-web/utils';
 
 // 权限
@@ -101,6 +101,7 @@ const showModal = (type: ModalType, data?: any) => {
  * 重新加载表格数据
  */
 const refresh = () => {
+  visible.value = false
   tableRef.value.reload()
 }
 

@@ -16,7 +16,7 @@
     "allowJs": true,
     "baseUrl": "./",
     "paths": {
-      "@LowCode/*": ["./src/*"],
+      "@/*": ["./src/*"],
       "components/*": ["./src/components/*"],
       "layouts/*": ["./src/layouts/*"],
       "store/*": ["./src/store/*"],

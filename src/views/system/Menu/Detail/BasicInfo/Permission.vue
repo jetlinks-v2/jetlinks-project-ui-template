@@ -87,7 +87,7 @@
 
 <script lang="ts" setup>
 import PermissionChoose from '../../components/PermissionChoose.vue'
-import { getAssetsType, getMenuTree } from '@/api/menu'
+import { getAssetsType, getMenuTree } from '@/api/system/menu'
 
 const props = defineProps({
   value: {

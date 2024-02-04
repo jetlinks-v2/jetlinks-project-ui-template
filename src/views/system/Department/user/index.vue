@@ -80,7 +80,7 @@
 
 <script setup lang="ts" name="user">
 import AddBindUserDialog from './components/AddBindUserDialog.vue'
-import { unBindUser_api } from '@/api/department'
+import { unBindUser_api } from '@/api/system/department'
 import { columns, requestFun } from '../util'
 import { onlyMessage } from '@jetlinks-web/utils'
 

@@ -2,13 +2,13 @@
   <j-spin :spinning='loading' :delay='300'>
     <div class='container'>
       <div class='left'>
-        <img :src='systemInfo?.backgroud || bgImage' alt=''>
+        <img :src='systemInfo?.front?.background || bgImage' alt=''>
         <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" rel="noopener noreferrer" class="records">
           备案：渝ICP备19017719号-1
         </a>
       </div>
       <div class='right'>
-        <Right :logo="systemInfo?.logo" :title="systemInfo?.title" :loading="loading" @submit="submit" />
+        <Right :logo="systemInfo?.front?.logo" :title="layout?.title" :loading="loading" @submit="submit" />
       </div>
     </div>
   </j-spin>
@@ -17,7 +17,6 @@
 import { useRequest } from '@jetlinks-web/hooks'
 import { login, encryptionConfig } from '@/api/login'
 import { getImage, setToken, encrypt } from '@jetlinks-web/utils'
-// import { systemVersion, settingDetail } from '@/api/system'
 import { useUserStore } from '@/store/user'
 import { useSystemStore } from '@/store/system'
 import { storeToRefs } from 'pinia'
@@ -26,7 +25,7 @@ import { cloneDeep } from "lodash-es";
 
 const userStore = useUserStore()
 const systemStore = useSystemStore()
-const { systemInfo } = storeToRefs(systemStore)
+const { systemInfo, layout } = storeToRefs(systemStore)
 
 // const { data: sysVersion } = useRequest<any, { version: string}>(systemVersion)
 
@@ -56,8 +55,7 @@ const submit = (data: any) => {
   run(copyData)
 }
 
-systemStore.queryInfo()
-
+systemStore.querySingleInfo('front')
 </script>
 
 <style scoped lang="less">

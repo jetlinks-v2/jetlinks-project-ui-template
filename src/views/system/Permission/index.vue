@@ -131,7 +131,7 @@ import {
   editPermission_api,
   delPermission_api,
   exportPermission_api,
-} from '@/api/permission'
+} from '@/api/system/permission'
 import { usePermission } from '@jetlinks-web/components/src/PermissionButton/hooks'
 import { PermissionItem } from './typings'
 import { onlyMessage } from '@jetlinks-web/utils'

@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 export const queryCount = (type: string, data: any) =>
   request.post(`/data-collect/${type}/_count`, data);
