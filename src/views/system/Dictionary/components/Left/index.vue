@@ -56,7 +56,6 @@
     </div>
     <Save v-if="saveShow" :type="addType" @close-save="saveShow = false" @success="saveSuccess" :data="editData" />
     <Export v-if="downVisible" @closeDown="closeDown" />
-    <Import />
 </template>
 
 <script lang="ts" setup>

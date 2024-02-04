@@ -55,7 +55,7 @@ const formRef = ref()
  */
 const validateInput = async (_rule: Rule, value: string) => {
     if (value) {
-        if (!regular.isInput(value)) {
+        if (!regular.isInputReg(value)) {
             return Promise.reject('请输入英文或者数字或者-或者_');
         }
     } else {

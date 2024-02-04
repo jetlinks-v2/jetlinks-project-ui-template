@@ -44,7 +44,6 @@
 <script lang="ts" setup>
 import { queryDicItem, deleteDicItem } from '@/api/dictionary'
 import Save from './Save/index.vue'
-import type { ActionsType } from './typings';
 import { onlyMessage } from '@jetlinks-web/utils';
 import { cloneDeep } from 'lodash-es';
 import dayjs from 'dayjs';
@@ -111,7 +110,7 @@ const columns = [
 const getActions = (
     data: Partial<Record<string, any>>,
     type: 'card' | 'table',
-): ActionsType[] => {
+ ) => {
     if (!data) return [];
     const actions = [
         {
@@ -149,7 +148,7 @@ const getActions = (
         },
     ];
     if (type === 'card')
-        return actions.filter((i: ActionsType) => i.key !== 'view');
+        return actions.filter((i) => i.key !== 'view');
     return actions;
 };
 const add = () => {
