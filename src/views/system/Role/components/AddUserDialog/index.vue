@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { getUserByRole_api, bindUser_api } from '@/api/role'
+import { getUserByRole_api, bindUser_api } from '@/api/system/role'
 import { useRequest } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 

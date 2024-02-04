@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
-import { getImage } from '@jetlinks-web/utils'
-import { settingDetail } from '@/api/system'
+import {settingDetail} from "@/api/system/basis";
 
 interface LayoutType {
   siderWidth: number
@@ -16,13 +15,14 @@ export const useSystemStore = defineStore('system', () => {
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
   const systemInfo = ref<Record<string, any>>({})
   const amapKey = ref('')
+  const webAmapKey = ref('')
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,
     headerHeight: 48,
     collapsedWidth: 48,
     title: '物联网平台',
-    logo: getImage('/login/logo.png'),
+    logo: '/images/login/logo.png',
     layout: 'mix'
   })
 
@@ -60,9 +60,11 @@ export const useSystemStore = defineStore('system', () => {
   const queryAmap = async () => {
     const resp = await settingDetail('amap')
     if (resp.success) {
-      const { apiKey } = resp.result
+      const { apiKey, apiWebKey } = resp.result
       amapKey.value = apiKey
+      webAmapKey.value = apiWebKey
       systemInfo.value.apiKey = apiKey
+      systemInfo.value.webAmapKey = webAmapKey
     }
   }
 

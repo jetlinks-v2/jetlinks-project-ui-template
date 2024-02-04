@@ -67,7 +67,7 @@
 
 <script setup lang="ts" name="RoleUser">
 import AddUserDialog from '../../components/AddUserDialog/index.vue'
-import { getUserByRole_api, unbindUser_api } from '@/api/role'
+import { getUserByRole_api, unbindUser_api } from '@/api/system/role'
 import dayjs from 'dayjs'
 import { useRoute } from 'vue-router'
 import { userColumns } from '../../util'

@@ -25,7 +25,7 @@
 import { useRoute } from '@jetlinks-web/router'
 import Info from './Info.vue'
 import Permission from './Permission.vue'
-import { addMenu, updateMenu } from '@/api/menu'
+import { addMenu, updateMenu } from '@/api/system/menu'
 import { useRequest } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { useMenuStore } from '@/store/menu'

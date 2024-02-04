@@ -84,7 +84,7 @@ import {
   addUser_api,
   updateUser_api,
   updatePassword_api,
-} from '@/api/user'
+} from '@/api/system/user'
 import { useRequest } from '@jetlinks-web/hooks';
 
 // 表单实例

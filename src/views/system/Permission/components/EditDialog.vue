@@ -98,7 +98,7 @@ import {
   checkId_api,
   editPermission_api,
   addPermission_api,
-} from '@/api/permission'
+} from '@/api/system/permission'
 import { useRequest } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { editColumns, defaultAction } from '../util'

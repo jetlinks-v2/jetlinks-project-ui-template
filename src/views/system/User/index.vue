@@ -65,7 +65,7 @@ import columns from './columns'
 import { ModalType } from './typing'
 import { ref, reactive } from 'vue';
 import UserDialog from './components/UserDialog/UserDialog.vue';
-import { getUserList_api, changeUserStatus_api, deleteUser_api } from '@/api/user';
+import { getUserList_api, changeUserStatus_api, deleteUser_api } from '@/api/system/user';
 import { onlyMessage } from '@jetlinks-web/utils';
 
 // 权限

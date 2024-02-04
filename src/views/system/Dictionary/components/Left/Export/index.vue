@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getDic_page , downDic} from '@/api/dictionary';
+import { getDic_page , downDic} from '@/api/system/dictionary';
 import { onlyMessage , downloadFileByUrl } from '@jetlinks-web/utils';
 import dayjs from 'dayjs';
 const emit = defineEmits(['closeDown'])
