@@ -17,7 +17,7 @@
 import { useRoute } from 'vue-router'
 import BasicInfo from './BasicInfo/index.vue'
 import ButtonMange from './ButtonMange/index.vue'
-import { getMenuInfo } from '@/api/menu'
+import { getMenuInfo } from '@/api/system/menu'
 
 const route = useRoute()
 const activeKey = ref('basic')

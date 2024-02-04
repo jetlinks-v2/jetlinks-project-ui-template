@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import { regular , onlyMessage } from '@jetlinks-web/utils';
 import type { Rule } from 'ant-design-vue/es/form';
-import { verifyId,addDictionary } from '@/api/dictionary'
+import { verifyId,addDictionary } from '@/api/system/dictionary'
 const props = defineProps({
     type:{
         type:String,

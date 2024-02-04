@@ -1,4 +1,5 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
+
 export default {
     // 列表
     list: (data: any) => request.post(`/notifier/config/_query`, data),

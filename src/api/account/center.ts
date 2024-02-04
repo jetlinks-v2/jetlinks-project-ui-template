@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 export const getSsoBinds_api = (): any =>request.get(`/application/sso/me/bindings`)
 

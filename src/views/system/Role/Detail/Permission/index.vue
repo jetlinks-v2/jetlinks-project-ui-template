@@ -29,7 +29,7 @@ import {
   updateRole_api,
   updatePermissionTree_api,
   getPermissionTree_api,
-} from '@/api/role'
+} from '@/api/system/role'
 import { useRoute } from 'vue-router'
 import { RoleType } from '../../typings'
 import { flattenArray } from '../../util'

@@ -1,5 +1,5 @@
 <template>
-  <j-modal width="675px" :visible="visible" @ok="handleOk" @cancel="handleCancel" :title="title" :confirmLoading="loading">
+  <j-modal width="675px" visible @ok="handleOk" @cancel="handleCancel" :title="title" :confirmLoading="loading">
     <!-- 新增用户表单 -->
     <j-form layout="vertical" :model="form.formData" :rules="formRules" ref="formRef" class="user-dialog-form">
         <j-row v-if="!isReset">
@@ -75,7 +75,6 @@ import { ref, reactive } from 'vue';
 import { onlyMessage } from '@jetlinks-web/utils';
 import { FormDataType } from '@/views/system/User/components/UserDialog/typing'
 import { OptionType, DictType, ModalType } from '@/views/system/User/typing'
-// import { passwordRegEx } from '@/utils/validate'
 import {
   getUser_api,
   validateField_api,
@@ -84,11 +83,8 @@ import {
   addUser_api,
   updateUser_api,
   updatePassword_api,
-} from '@/api/user'
+} from '@/api/system/user'
 import { useRequest } from '@jetlinks-web/hooks';
-
-// 表单实例
-const fromRef = ref<any>()
 
 // 传入参数
 const props = defineProps({
@@ -102,11 +98,6 @@ const props = defineProps({
     type: Object as PropType<FormDataType>,
     default: { }
   },
-  // 是否显示对话框
-  visible: {
-    type: Boolean,
-    default: false
-  }
 })
 
 // 表单相关数据
@@ -243,7 +234,7 @@ const formRules = {
   ]
 }
 
-const emit = defineEmits(['handleOk', 'update:visible'])
+const emit = defineEmits(['save', 'cancel'])
 
 // 获取角色列表
 const { run: runGetRoleList} = useRequest(getRoleList_api, {
@@ -294,9 +285,11 @@ const { run: runGetUser} = useRequest(getUser_api, {
 const getUserInfo = () => {
   const id = props.data.id || ''
 
-  if (props.modalType === 'add') form.formData = {} as FormDataType
-  else if (props.modalType === 'reset') form.formData = { id } as FormDataType
-  else if (props.modalType === 'edit') {
+  if (props.modalType === 'add') {
+    form.formData = {} as FormDataType
+  } else if (props.modalType === 'reset') {
+    form.formData = { id } as FormDataType
+  } else if (props.modalType === 'edit') {
     runGetUser(id);
   }
 }
@@ -324,8 +317,7 @@ const {loading: addLoading, run: runAdd} = useRequest(addUser_api, {
   onSuccess(res) {
     if (res.success) {
       onlyMessage('添加用户成功', 'success')
-      emit('handleOk')
-      emit('update:visible', false)
+      emit('save')
     }
   }
 })
@@ -336,8 +328,7 @@ const {loading: editLoading, run: runEdit} = useRequest(updateUser_api, {
   onSuccess(res) {
     if (res.success) {
       onlyMessage('修改用户信息成功', 'success')
-      emit('handleOk')
-      emit('update:visible', false)
+      emit('save')
     }
   }
 })
@@ -348,8 +339,7 @@ const {loading: resetLoading, run: runReset} = useRequest(updatePassword_api, {
   onSuccess(res) {
     if (res.success) {
       onlyMessage('修改密码成功', 'success')
-      emit('handleOk')
-      emit('update:visible', false)
+      emit('save')
     }
   }
 })
@@ -406,8 +396,8 @@ const handleOk = () => {
  /**
  * 点击取消按钮事件
  */
-const handleCancel = (e: any) => {
-    emit('update:visible', false)
+const handleCancel = () => {
+    emit('cancel')
 }
 
  /**
@@ -422,10 +412,13 @@ const init = () => {
  /**
  * 如果对话框显示，执行初始化函数
  */
-watchEffect(() => {
-  if (props.visible) {
-    init()
-  }
+// watchEffect(() => {
+//   if (props.visible) {
+//     init()
+//   }
+// })
+onMounted(() => {
+  init()
 })
 </script>
 

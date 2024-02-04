@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { getTreeData_api, delDepartment_api } from '@/api/department'
+import { getTreeData_api, delDepartment_api } from '@/api/system/department'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { debounce, cloneDeep, omit } from 'lodash-es'
 import Save from './Save.vue'

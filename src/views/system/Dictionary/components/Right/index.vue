@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { queryDicItem, deleteDicItem } from '@/api/dictionary'
+import { queryDicItem, deleteDicItem } from '@/api/system/dictionary'
 import Save from './Save/index.vue'
 import { onlyMessage } from '@jetlinks-web/utils';
 import { cloneDeep } from 'lodash-es';

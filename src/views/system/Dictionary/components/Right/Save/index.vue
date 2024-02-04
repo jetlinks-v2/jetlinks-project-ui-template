@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import type { Rule } from 'ant-design-vue/es/form';
-import { saveDicItem, verifyValue } from '@/api/dictionary';
+import { saveDicItem, verifyValue } from '@/api/system/dictionary';
 import {regular, onlyMessage } from '@jetlinks-web/utils';
 import { cloneDeep } from 'lodash-es';
 const props = defineProps({

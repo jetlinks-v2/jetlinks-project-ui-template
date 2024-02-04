@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { exportPermission_api } from '@/api/permission'
+import { exportPermission_api } from '@/api/system/permission'
 
 type PermissionType = {
   id: string

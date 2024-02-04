@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { onlyMessage } from '@jetlinks-web/utils'
 import PermissionChoose from './PermissionChoose.vue'
-import { updateMenu } from '@/api/menu'
+import { updateMenu } from '@/api/system/menu'
 
 const emits = defineEmits(['save', 'close'])
 const props = defineProps({

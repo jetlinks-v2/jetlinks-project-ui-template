@@ -20,26 +20,6 @@ export const USER_CENTER_ROUTE: RouteRecordItem = {
       },
       component: () => import('@/views/account/center/index.vue'),
     },
-    {
-      path: '/account/NotificationSubscription',
-      name: 'account/NotificationSubscription',
-      meta: {
-        title: '通知订阅',
-        icon: '',
-        hideInMenu: false
-      },
-      component: () => import('@/views/login/index.vue'),
-    },
-    {
-      path: '/account/NotificationRecord',
-      name: 'account/NotificationRecord',
-      meta: {
-        title: '通知记录',
-        icon: '',
-        hideInMenu: false
-      },
-      component: () => import('@/views/login/index.vue'),
-    },
   ]
 }
 

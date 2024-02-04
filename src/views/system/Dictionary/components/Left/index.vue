@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getDicList, deleteDictionary, addDictionary } from '@/api/dictionary';
+import { getDicList, deleteDictionary, addDictionary } from '@/api/system/dictionary';
 import Save from './save/index.vue'
 import { onlyMessage } from '@jetlinks-web/utils';
 import Export from './Export/index.vue'

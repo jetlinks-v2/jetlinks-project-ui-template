@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { cloneDeep } from 'lodash-es'
-import { addDepartment_api, updateDepartment_api } from '@/api/department'
+import { addDepartment_api, updateDepartment_api } from '@/api/system/department'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { useRequest } from '@jetlinks-web/hooks'
 import { FormType, TreeType } from '../typings';

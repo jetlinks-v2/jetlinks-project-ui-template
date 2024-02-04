@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 // 获取部门数据
 export const getTreeData_api = (data: any) => request.post(`/organization/_all/tree`, data);
