@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 // 保存
 export const save_api = (data: any) => request.post(`/system/config/scope/_save`, data)

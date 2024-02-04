@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@/utils/axios'
 
 export const query = (data: any) =>
     request.post(`/data-collect/channel/_query`, data);
