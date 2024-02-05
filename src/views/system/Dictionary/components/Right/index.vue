@@ -12,7 +12,7 @@
             }}</span></div>
         </div>
         <div class="contain">
-            <pro-search :columns="columns" @search="handleSearch" target="system_dictionary" />
+            <pro-search :columns="columns" @search="handleSearch" target="system_dictionary" style="margin: 0;"/>
             <JProTable :columns="columns" model="TABLE" :request="queryItem" :params="params" ref="tableRef">
                 <template #headerTitle>
                     <PermissionButton type="primary" @click="add" hasPermission="system/Dictionary:add">
@@ -41,7 +41,7 @@
         @refresh="refresh" />
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="DictionaryItem">
 import { queryDicItem, deleteDicItem } from '@/api/system/dictionary'
 import Save from './Save/index.vue'
 import { onlyMessage } from '@jetlinks-web/utils';
@@ -60,11 +60,6 @@ const sort = ref(0)
 const modalType = ref('add')
 const current = ref()
 const columns = [
-    {
-        title: '序号',
-        dataIndex: 'ordinal',
-        key: 'ordinal',
-    },
     {
         title: '检索码',
         dataIndex: 'searchCode',
