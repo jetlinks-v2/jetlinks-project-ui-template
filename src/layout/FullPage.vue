@@ -1,27 +1,31 @@
 <template>
-  <div ref='fullPage' :style="{ minHeight: MinHeight}" class='full-page-warp' >
-    <div class="full-page-warp-content">
-      <slot></slot>
-    </div>
+  <div ref='fullPage' :style="{ height: MinHeight}" :class="{ 'full-page-warp': true, 'scroll': showScroll }" >
+    <slot></slot>
   </div>
 </template>
 
-<script setup lang='ts' name='FullPage'>
-import { useElementBounding } from '@vueuse/core'
+<script setup name='FullPage'>
 
 const props = defineProps({
   extraHeight: {
     type: Number,
     default: 0
+  },
+  showScroll: {
+    type: Boolean,
+    default: false
   }
 })
 
 const fullPage = ref(null)
-const { y } = useElementBounding(fullPage)
+const MinHeight = ref(`0`)
 
-const MinHeight = computed(() => {
-  const _y = (y.value < 0 ? 0 : y.value) + props.extraHeight
-  return `calc(100vh - ${_y + 24}px)`
+onMounted(() => {
+  setTimeout(() => {
+    const top = fullPage.value.getBoundingClientRect().top
+    const _y = top < 0 ? 0 : top
+    MinHeight.value = `calc(100vh - ${_y + props.extraHeight + 24}px)`
+  }, 10)
 })
 
 </script>
@@ -29,9 +33,9 @@ const MinHeight = computed(() => {
 <style scoped lang="less">
 .full-page-warp {
   background: #fff;
-  display: flex;
-  .full-page-warp-content {
-    width: 100%;
+
+  &.scroll {
+    overflow-y: auto;
   }
 }
 
