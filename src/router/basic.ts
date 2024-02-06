@@ -1,5 +1,6 @@
 import {RouteRecordItem} from "@jetlinks-web/types";
 
+
 export const USER_CENTER_ROUTE: RouteRecordItem = {
   path: '/account',
   name: 'Account',
