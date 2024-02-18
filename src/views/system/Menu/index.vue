@@ -27,7 +27,9 @@
             </PermissionButton>
           </template>
           <template #createTime="slotProps">
-            {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+            <span v-time-format="'YYYY-MM-DD HH:mm:ss'">
+              {{ slotProps.createTime }}
+            </span>
           </template>
           <template #action="slotProps">
             <j-space :size="16">

@@ -10,6 +10,7 @@ import components from './components'
 import 'ant-design-vue/dist/antd.variable.min.css'
 import './style.css'
 import {LOGIN_ROUTE} from "@/router/basic";
+import directive from '@/directive'
 
 (async () => {
     const app = createApp(App)
@@ -22,6 +23,7 @@ import {LOGIN_ROUTE} from "@/router/basic";
 
     app.use(router)
 
+    app.use(directive)
     await initStoreBus()
     await setupRouter()
 
