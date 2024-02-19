@@ -37,7 +37,7 @@
         @refresh="refresh" />
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="DictionaryItem">
 import { queryDicItem, deleteDicItem } from '@/api/system/dictionary'
 import Save from './Save/index.vue'
 import { onlyMessage } from '@jetlinks-web/utils';
@@ -55,11 +55,6 @@ const sort = ref(0)
 const modalType = ref('add')
 const current = ref()
 const columns = [
-    {
-        title: '序号',
-        dataIndex: 'ordinal',
-        key: 'ordinal',
-    },
     {
         title: '检索码',
         dataIndex: 'searchCode',
@@ -114,7 +109,6 @@ const getActions = (
             tooltip: {
                 title: '编辑',
             },
-            icon: 'EditOutlined',
             onClick: () => {
                 saveVisible.value = true;
                 modalType.value = 'edit';

@@ -10,10 +10,10 @@
   >
     <j-form layout="vertical" :rules="rules" ref="formRef" :model="form">
         <j-form-item label="字典ID" name="id">
-            <j-input v-model:value="form.id" :disabled="type ==='edit'"></j-input>
+            <j-input v-model:value="form.id" :disabled="type ==='edit'" placeholder="请输入字典ID"></j-input>
         </j-form-item>
         <j-form-item label="字典名称" name="name">
-            <j-input v-model:value="form.name"></j-input>
+            <j-input v-model:value="form.name" placeholder="请输入字典名称"></j-input>
         </j-form-item>
         <j-form-item label="状态" name="status">
             <j-radio-group v-model:value="form.status">
@@ -22,13 +22,13 @@
             </j-radio-group>
         </j-form-item>
         <j-form-item label="说明" name="describe">
-            <j-textarea :rows="4" :maxlength="200" v-model:value="form.describe"></j-textarea>
+            <j-textarea :rows="4" :maxlength="200" v-model:value="form.describe" placeholder="请输入"></j-textarea>
         </j-form-item>
     </j-form>
   </j-modal>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="DictionaryEdit">
 import { regular , onlyMessage } from '@jetlinks-web/utils';
 import type { Rule } from 'ant-design-vue/es/form';
 import { verifyId,addDictionary } from '@/api/system/dictionary'
@@ -56,7 +56,7 @@ const form = reactive({
  */
  const validateInput = async (_rule: Rule, value: string) => {
     if (value) {
-        if (!regular.isInput(value)) {
+        if (!regular.isInputReg(value)) {
             return Promise.reject('请输入英文或者数字或者-或者_');
         } else {
             if (props.type === 'add') {

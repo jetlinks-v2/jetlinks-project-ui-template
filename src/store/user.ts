@@ -41,6 +41,7 @@ export const useUserStore = defineStore('user', () => {
         other,
         userInfo,
         alarmUpdateCount,
+        isAdmin,
         getUserInfo,
         setUserInfo,
         updateAlarm

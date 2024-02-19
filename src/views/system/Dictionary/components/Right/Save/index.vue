@@ -3,19 +3,19 @@
         :confirmLoading="loading">
         <j-form :model="form" layout="vertical" :rules="rules" ref="formRef">
             <j-form-item label="name" name="name">
-                <j-input placeholder="con_type" v-model:value="form.name"></j-input>
+                <j-input placeholder="请输入name" v-model:value="form.name"></j-input>
             </j-form-item>
             <j-form-item label="value" name="value">
-                <j-input placeholder="con_type" v-model:value="form.value"></j-input>
+                <j-input placeholder="请输入value" v-model:value="form.value"></j-input>
             </j-form-item>
             <j-form-item label="text" name="text">
-                <j-input placeholder="连接失败" v-model:value="form.text"></j-input>
+                <j-input placeholder="请输入text" v-model:value="form.text"></j-input>
             </j-form-item>
         </j-form>
     </j-modal>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="DictionaryItemEdit">
 import type { Rule } from 'ant-design-vue/es/form';
 import { saveDicItem, verifyValue } from '@/api/system/dictionary';
 import {regular, onlyMessage } from '@jetlinks-web/utils';
@@ -55,7 +55,7 @@ const formRef = ref()
  */
 const validateInput = async (_rule: Rule, value: string) => {
     if (value) {
-        if (!regular.isInput(value)) {
+        if (!regular.isInputReg(value)) {
             return Promise.reject('请输入英文或者数字或者-或者_');
         }
     } else {

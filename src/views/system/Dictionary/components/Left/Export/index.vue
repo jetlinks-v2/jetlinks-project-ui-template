@@ -33,7 +33,7 @@
     </j-modal>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="DictionaryExport">
 import { getDic_page , downDic} from '@/api/system/dictionary';
 import { onlyMessage , downloadFileByUrl } from '@jetlinks-web/utils';
 import dayjs from 'dayjs';

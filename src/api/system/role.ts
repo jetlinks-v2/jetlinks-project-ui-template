@@ -23,3 +23,10 @@ export const getUserByRole_api = (data: any): Promise<any> => request.post(`/use
 export const bindUser_api = (roleId:string, data: string[]): Promise<any> => request.post(`/role/${roleId}/users/_bind`, data);
 // 将用户与角色解绑
 export const unbindUser_api = (roleId:string, data: string[]): Promise<any> => request.post(`/role/${roleId}/users/_unbind`, data);
+//查询分组
+export const queryRoleGroup = (data:any) => request.post('/role/group/_query/no-paging',data)
+//保存分组
+export const saveRoleGroup = (data:any) => request.patch('/role/group',data)
+//删除分组
+export const deleteRoleGroup = (id:string) => request.remove(`/role/group/${id}`)
+
