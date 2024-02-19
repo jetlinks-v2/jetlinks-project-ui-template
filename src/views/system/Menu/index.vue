@@ -29,7 +29,9 @@
               </PermissionButton>
             </template>
             <template #createTime="slotProps">
-              {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+            <span v-time-format="'YYYY-MM-DD HH:mm:ss'">
+              {{ slotProps.createTime }}
+            </span>
             </template>
             <template #action="slotProps">
               <j-space :size="16">
@@ -76,7 +78,6 @@
 
 <script setup lang="ts" name="Menu">
 import { getMenuTree, delMenu } from '@/api/system/menu'
-import dayjs from 'dayjs'
 import { useMenuStore } from '@/store/menu'
 import { onlyMessage } from '@jetlinks-web/utils'
 
