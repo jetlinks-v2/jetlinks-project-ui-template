@@ -1,5 +1,5 @@
 <template>
-  <FullPage>
+  <div style="height: 100%;">
     <j-input
       v-model:value="searchValue"
       @change="onSearch"
@@ -18,70 +18,71 @@
     >
       新增
     </PermissionButton>
-    <div class="tree">
-      <j-spin :spinning="loading">
-        <j-tree
-          v-if="treeData.length > 0"
-          :tree-data="treeData"
-          v-model:selected-keys="selectedKeys"
-          v-model:expandedKeys="expandedKeys"
-          :fieldNames="{ key: 'id' }"
-          height="100%"
-        >
-          <template #title="{ name, data }">
-            <div class="department-tree-item-content">
-              <div class="title">
-                <j-ellipsis>
-                  {{ name }}
-                </j-ellipsis>
-              </div>
-              <div class="func-btn" @click="(e) => e.stopPropagation()">
-                <PermissionButton
-                  :hasPermission="`${permission}:update`"
-                  type="link"
-                  :tooltip="{
+    <div class="tree" style="height: calc(100% - 76px)">
+      <div style="overflow-y: auto; height: 100%">
+        <j-spin :spinning="loading">
+          <j-tree
+              v-if="treeData.length > 0"
+              :tree-data="treeData"
+              v-model:selected-keys="selectedKeys"
+              v-model:expandedKeys="expandedKeys"
+              :fieldNames="{ key: 'id' }"
+          >
+            <template #title="{ name, data }">
+              <div class="department-tree-item-content">
+                <div class="title">
+                  <j-ellipsis>
+                    {{ name }}
+                  </j-ellipsis>
+                </div>
+                <div class="func-btn" @click="(e) => e.stopPropagation()">
+                  <PermissionButton
+                      :hasPermission="`${permission}:update`"
+                      type="link"
+                      :tooltip="{
                     title: '编辑',
                   }"
-                  style="padding: 0"
-                  @click="openDialog(data)"
-                >
-                  <AIcon type="EditOutlined" />
-                </PermissionButton>
-                <PermissionButton
-                  :hasPermission="`${permission}:add`"
-                  type="link"
-                  :tooltip="{
+                      style="padding: 0"
+                      @click="openDialog(data)"
+                  >
+                    <AIcon type="EditOutlined" />
+                  </PermissionButton>
+                  <PermissionButton
+                      :hasPermission="`${permission}:add`"
+                      type="link"
+                      :tooltip="{
                     title: '新增子组织',
                   }"
-                  @click="
+                      @click="
                     openDialog({
                       ...data,
                       id: '',
                       parentId: data.id,
                     })
                   "
-                >
-                  <AIcon type="PlusCircleOutlined" />
-                </PermissionButton>
-                <PermissionButton
-                  type="link"
-                  :hasPermission="`${permission}:delete`"
-                  :tooltip="{ title: '删除' }"
-                  style="padding: 0"
-                  danger
-                  :popConfirm="{
+                  >
+                    <AIcon type="PlusCircleOutlined" />
+                  </PermissionButton>
+                  <PermissionButton
+                      type="link"
+                      :hasPermission="`${permission}:delete`"
+                      :tooltip="{ title: '删除' }"
+                      style="padding: 0"
+                      danger
+                      :popConfirm="{
                     title: `确定要删除吗`,
                     onConfirm: () => delDepartment(data.id),
                   }"
-                >
-                  <AIcon type="DeleteOutlined" />
-                </PermissionButton>
+                  >
+                    <AIcon type="DeleteOutlined" />
+                  </PermissionButton>
+                </div>
               </div>
-            </div>
-          </template>
-        </j-tree>
-        <j-empty v-else />
-      </j-spin>
+            </template>
+          </j-tree>
+          <j-empty v-else />
+        </j-spin>
+      </div>
     </div>
     <!-- 编辑弹窗 -->
     <Save
@@ -91,10 +92,10 @@
       @save="onSave"
       @close="visible = false"
     />
-  </FullPage>
+  </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="LeftTree">
 import { getTreeData_api, delDepartment_api } from '@/api/system/department'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { debounce, cloneDeep, omit } from 'lodash-es'

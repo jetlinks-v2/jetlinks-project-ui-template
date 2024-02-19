@@ -12,6 +12,7 @@
         :request="getPermission_api"
         model="TABLE"
         :params="params"
+        :scroll="{ y: 'calc(100vh - 440px)' }"
         :defaultParams="{
           sorts: [{ name: 'id', order: 'asc' }],
         }"
@@ -87,7 +88,7 @@
               :hasPermission="`${permission}:action`"
               type="link"
               :popConfirm="{
-                title: `确定要${slotProps.status ? '禁用' : '启用'}吗？`,
+                title: `确定要${!!slotProps.status ? '禁用' : '启用'}吗？`,
                 onConfirm: () => changeStatus(slotProps),
               }"
               style="padding: 0"
@@ -103,7 +104,7 @@
               :hasPermission="`${permission}:delete`"
               type="link"
               :tooltip="{
-                title: slotProps.status ? '请先禁用，再删除' : '删除',
+                title: !!slotProps.status ? '请先禁用，再删除' : '删除',
               }"
               danger
               :popConfirm="{
@@ -111,7 +112,7 @@
                 onConfirm: () => clickDel(slotProps),
               }"
               style="padding: 0"
-              :disabled="slotProps.status"
+              :disabled="!!slotProps.status"
             >
               <AIcon type="DeleteOutlined" />
             </PermissionButton>
@@ -124,7 +125,7 @@
   </page-container>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="Permission">
 import EditDialog from './components/EditDialog.vue'
 import {
   getPermission_api,
