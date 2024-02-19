@@ -13,7 +13,7 @@
     </page-container>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="Dictionary">
 import Left from './components/Left/index.vue'
 import Right from './components/Right/index.vue'
 const data = ref()

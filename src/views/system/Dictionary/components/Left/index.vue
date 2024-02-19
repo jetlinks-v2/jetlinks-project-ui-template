@@ -37,15 +37,19 @@
                                 <j-switch :checked="item.status" :disabled="!usePermission('system/Dictionary:action').hasPerm.value"
                                     :checkedValue="1" :unCheckedValue="0"></j-switch>
                             </j-tooltip>
-                            <PermissionButton type="text" hasPermission="system/Dictionary:delete" :popConfirm="{
+                            <PermissionButton type="link" hasPermission="system/Dictionary:delete" :popConfirm="{
                                 title: `确定要删除？`,
                                 onConfirm: () => deleteDic(item.id),
                             }">
-                                删除
+                                <template #icon>
+                                    <AIcon type="EditOutlined"/>
+                                </template>
                             </PermissionButton>
-                            <PermissionButton type="text" hasPermission="system/Dictionary:update"
-                                @click="showEdit(item.data)">
-                                编辑
+                            <PermissionButton type="link" hasPermission="system/Dictionary:update"
+                                @click="showEdit(item.data)" :danger="true">
+                                <template #icon>
+                                    <AIcon type="DeleteOutlined"/>
+                                </template>
                             </PermissionButton>
                         </div>
                     </div>
@@ -56,10 +60,9 @@
     </div>
     <Save v-if="saveShow" :type="addType" @close-save="saveShow = false" @success="saveSuccess" :data="editData" />
     <Export v-if="downVisible" @closeDown="closeDown" />
-    <Import />
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="DictionaryLeft">
 import { getDicList, deleteDictionary, addDictionary } from '@/api/system/dictionary';
 import Save from './save/index.vue'
 import { onlyMessage } from '@jetlinks-web/utils';

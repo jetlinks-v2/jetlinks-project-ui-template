@@ -9,7 +9,7 @@
     </page-container>
 </template>
 
-<script setup lang="ts" name="Detail">
+<script setup lang="ts" name="RoleDetail">
 import Permission from './Permission/index.vue';
 import User from './User/index.vue';
 
