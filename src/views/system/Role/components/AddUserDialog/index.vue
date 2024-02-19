@@ -28,7 +28,7 @@
   </j-modal>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="AddUserDialog">
 import { getUserByRole_api, bindUser_api } from '@/api/system/role'
 import { useRequest } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'

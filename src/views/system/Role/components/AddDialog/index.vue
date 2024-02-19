@@ -11,7 +11,7 @@
   </j-modal>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="AddDialog">
 import { saveRole_api } from '@/api/system/role'
 import { useMenuStore } from '@/store/menu'
 import { useRoute } from 'vue-router'

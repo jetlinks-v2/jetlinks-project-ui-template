@@ -86,9 +86,8 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
-.card {
-  margin-bottom: 24px;
-  background-color: #fff;
-  padding: 24px;
-}
+//.card {
+//  background-color: #fff;
+//  padding: 24px;
+//}
 </style>

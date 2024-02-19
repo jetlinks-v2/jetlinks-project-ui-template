@@ -1,13 +1,12 @@
 <template>
-  <div>
+  <div style="overflow-y: auto;">
     <j-search
-      :columns="columns"
-      target="category-user"
-      @search="handleParams"
-      style="margin: 0"
+        :columns="columns"
+        target="category-user"
+        @search="handleParams"
+        style="margin: 0;"
     />
-    <FullPage>
-      <j-pro-table
+    <j-pro-table
         ref="tableRef"
         :columns="columns"
         :request="handleSearch"
@@ -19,70 +18,72 @@
           onSelectNone: cancelSelect,
         }"
         model="TABLE"
-      >
-        <template #headerTitle>
-          <j-space>
-            <PermissionButton
+        :scroll="{y: 'calc(100vh - 450px)'}"
+    >
+      <template #headerTitle>
+        <j-space>
+          <PermissionButton
               type="primary"
               :hasPermission="`${permission}:bind-user`"
               @click="dialogVisible = true"
               style="margin-right: 15px"
               :disabled="isShow"
-            >
-              <AIcon type="PlusOutlined" />绑定用户
-            </PermissionButton>
-            <PermissionButton
+          >
+            <AIcon type="PlusOutlined"/>
+            绑定用户
+          </PermissionButton>
+          <PermissionButton
               :hasPermission="`${permission}:bind`"
               :popConfirm="{
                 title: `是否解除绑定`,
                 onConfirm: () => unBind(),
               }"
-            >
-              <AIcon type="DisconnectOutlined" />批量解绑
-            </PermissionButton>
-          </j-space>
-        </template>
-        <template #status="slotProps">
-          <BadgeStatus
+          >
+            <AIcon type="DisconnectOutlined"/>
+            批量解绑
+          </PermissionButton>
+        </j-space>
+      </template>
+      <template #status="slotProps">
+        <BadgeStatus
             :status="slotProps.status"
             :text="slotProps.status ? '正常' : '禁用'"
             :statusNames="{
               1: 'success',
               0: 'error',
             }"
-          ></BadgeStatus>
-        </template>
-        <template #action="slotProps">
-          <j-space :size="16">
-            <PermissionButton
+        ></BadgeStatus>
+      </template>
+      <template #action="slotProps">
+        <j-space :size="16">
+          <PermissionButton
               type="link"
               :hasPermission="`${permission}:bind`"
               :popConfirm="{
                 title: `是否解除绑定`,
                 onConfirm: () => unBind(slotProps),
               }"
-            >
-              <AIcon type="DisconnectOutlined" />
-            </PermissionButton>
-          </j-space>
-        </template>
-      </j-pro-table>
-    </FullPage>
+          >
+            <AIcon type="DisconnectOutlined"/>
+          </PermissionButton>
+        </j-space>
+      </template>
+    </j-pro-table>
 
     <AddBindUserDialog
-      v-if="dialogVisible"
-      :parent-id="props.parentId"
-      @save="onSave"
-      @close="dialogVisible = false"
+        v-if="dialogVisible"
+        :parent-id="props.parentId"
+        @save="onSave"
+        @close="dialogVisible = false"
     />
   </div>
 </template>
 
 <script setup lang="ts" name="user">
 import AddBindUserDialog from './components/AddBindUserDialog.vue'
-import { unBindUser_api } from '@/api/system/department'
-import { columns, requestFun } from '../util'
-import { onlyMessage } from '@jetlinks-web/utils'
+import {unBindUser_api} from '@/api/system/department'
+import {columns, requestFun} from '../util'
+import {onlyMessage} from '@jetlinks-web/utils'
 
 const permission = 'system/Department'
 
@@ -106,7 +107,7 @@ const _selectedRowKeys = ref<string[]>([])
 
 // 刷新列表
 const refresh = () => {
-  tableRef.value.reload()
+  tableRef.value?.reload()
 }
 
 const onSave = () => {
@@ -163,16 +164,16 @@ const handleParams = (e: any) => {
 
 // 请求数据
 const handleSearch = (oParams: any) =>
-  requestFun(props.parentId, oParams, [
-    {
-      terms: [
-        {
-          column: 'id$in-dimension$org',
-          value: props.parentId,
-        },
-      ],
-    },
-  ])
+    requestFun(props.parentId, oParams, [
+      {
+        terms: [
+          {
+            column: 'id$in-dimension$org',
+            value: props.parentId,
+          },
+        ],
+      },
+    ])
 
 // 取消绑定
 const unBind = (row?: any) => {
@@ -188,9 +189,9 @@ const unBind = (row?: any) => {
 }
 
 watch(
-  () => props.parentId,
-  () => {
-    refresh()
-  },
+    () => props.parentId,
+    () => {
+      refresh()
+    },
 )
 </script>

@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <j-table
       :columns="permissionColumns"
       :data-source="dataSource"
       :pagination="false"
       :rowKey="'id'"
-      :scroll="{ y: '500px' }"
+      :scroll="{ y: 'calc(100vh - 620px)' }"
       ref="treeRef"
     >
       <!-- 表头 -->
@@ -89,7 +89,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="PermissionTree">
 import { cloneDeep, uniqBy } from 'lodash-es'
 import { permissionColumns } from '../../util'
 import MCheckBox from '../MCheckBox/index.vue'

@@ -93,7 +93,7 @@
   </j-modal>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="EditDialog">
 import {
   checkId_api,
   editPermission_api,
@@ -152,7 +152,7 @@ const clickAdd = () => {
 
 // 保存数据
 const { loading, run } = useRequest(
-  props.data.id ? editPermission_api : addPermission_api,
+  props.data?.id ? editPermission_api : addPermission_api,
   {
     immediate: false,
     onSuccess(res) {
@@ -178,7 +178,7 @@ const confirm = () => {
 // 初始化
 watchEffect(() => {
   Object.assign(modelRef, props.data)
-  modelRef.actions = props.data.id
+  modelRef.actions = props.data?.id
     ? [...props.data.actions]
     : [...defaultAction]
 })
@@ -187,7 +187,7 @@ watchEffect(() => {
 <style lang="less" scoped>
 .m-table {
   :deep(.ant-form-item) {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 }
 </style>

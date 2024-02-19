@@ -14,6 +14,7 @@
             { name: 'id', order: 'desc' },
           ],
         }"
+        :scroll="{y: 'calc(100vh - 440px)'}"
       >
         <template #headerTitle>
           <PermissionButton

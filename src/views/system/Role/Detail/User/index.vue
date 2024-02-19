@@ -1,5 +1,5 @@
 <template>
-  <j-search :columns="userColumns" target="category" @search="onSearch" />
+  <j-search :columns="userColumns" target="category" @search="onSearch" style="margin: 0; padding: 0" />
   <j-pro-table
     ref="tableRef"
     :columns="userColumns"
@@ -12,6 +12,7 @@
       onSelectAll: onSelectAll,
       onSelectNone: cancelSelect,
     }"
+    :scroll="{ y: 'calc(100vh - 500px)' }"
   >
     <template #headerTitle>
       <j-space>

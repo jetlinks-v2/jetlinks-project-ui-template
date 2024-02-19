@@ -8,64 +8,67 @@
         @search="handleSearch"
       />
       <FullPage>
-        <j-pro-table
-          ref="tableRef"
-          :columns="columns"
-          :request="getList"
-          model="TABLE"
-          :params="queryParams"
-          noPagination
-          v-model:expandedRowKeys="expandedRowKeys"
-        >
-          <template #headerTitle>
-            <PermissionButton
-              type="primary"
-              :hasPermission="`${permission}:add`"
-              @click="toDetails({})"
-            >
-              <AIcon type="PlusOutlined" />新增
-            </PermissionButton>
-          </template>
-          <template #createTime="slotProps">
-            {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}
-          </template>
-          <template #action="slotProps">
-            <j-space :size="16">
+        <div>
+          <j-pro-table
+              ref="tableRef"
+              :columns="columns"
+              :request="getList"
+              model="TABLE"
+              :params="queryParams"
+              noPagination
+              v-model:expandedRowKeys="expandedRowKeys"
+              :scroll="{ y: 'calc(100vh - 460px)' }"
+          >
+            <template #headerTitle>
               <PermissionButton
-                type="link"
-                :hasPermission="`${permission}:add`"
-                @click="toDetails(slotProps)"
-                style="padding: 0"
-                :tooltip="{ title: '编辑' }"
+                  type="primary"
+                  :hasPermission="`${permission}:add`"
+                  @click="toDetails({})"
               >
-                <AIcon type="EditOutlined" />
+                <AIcon type="PlusOutlined" />新增
               </PermissionButton>
+            </template>
+            <template #createTime="slotProps">
+              {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+            </template>
+            <template #action="slotProps">
+              <j-space :size="16">
+                <PermissionButton
+                    type="link"
+                    :hasPermission="`${permission}:add`"
+                    @click="toDetails(slotProps)"
+                    style="padding: 0"
+                    :tooltip="{ title: '编辑' }"
+                >
+                  <AIcon type="EditOutlined" />
+                </PermissionButton>
 
-              <PermissionButton
-                type="link"
-                :hasPermission="`${permission}:add`"
-                :tooltip="{ title: '新增子菜单' }"
-                style="padding: 0"
-                @click="addChildren(slotProps)"
-              >
-                <AIcon type="PlusCircleOutlined" />
-              </PermissionButton>
-              <PermissionButton
-                type="link"
-                :hasPermission="`${permission}:delete`"
-                :tooltip="{ title: '删除' }"
-                danger
-                style="padding: 0"
-                :popConfirm="{
+                <PermissionButton
+                    type="link"
+                    :hasPermission="`${permission}:add`"
+                    :tooltip="{ title: '新增子菜单' }"
+                    style="padding: 0"
+                    @click="addChildren(slotProps)"
+                >
+                  <AIcon type="PlusCircleOutlined" />
+                </PermissionButton>
+                <PermissionButton
+                    type="link"
+                    :hasPermission="`${permission}:delete`"
+                    :tooltip="{ title: '删除' }"
+                    danger
+                    style="padding: 0"
+                    :popConfirm="{
                   title: `是否删除该菜单`,
                   onConfirm: () => clickDel(slotProps),
                 }"
-              >
-                <AIcon type="DeleteOutlined" />
-              </PermissionButton>
-            </j-space>
-          </template>
-        </j-pro-table>
+                >
+                  <AIcon type="DeleteOutlined" />
+                </PermissionButton>
+              </j-space>
+            </template>
+          </j-pro-table>
+        </div>
       </FullPage>
     </div>
   </page-container>

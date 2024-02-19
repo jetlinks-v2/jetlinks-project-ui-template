@@ -26,7 +26,7 @@
   </j-form>
 </template>
   
-<script setup lang="ts">
+<script setup lang="ts" name="EditBaseInfo">
 import { watchEffect } from "vue";
 import { RoleItem } from "../../typings";
 

@@ -7,7 +7,7 @@
   ></j-checkbox>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="MCheckBox">
 import { getChecked, getIndeterminate } from '../util';
 
 const props = defineProps({

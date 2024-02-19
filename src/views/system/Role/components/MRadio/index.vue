@@ -13,7 +13,7 @@
   </j-radio-group>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="MRadio">
 import { PropType } from "vue"
 
 const props = defineProps({
