@@ -7,7 +7,7 @@
         <!-- 用户管理表格 -->
         <j-pro-table :columns="columns" model="TABLE" ref="tableRef"
                      :request="getUserList_api"
-                     :params = "queryParams">
+                     :params = "queryParams" :scroll="{y: 'calc(100vh - 465px)'}">
           <!-- 新增用户按钮 -->
           <template #headerTitle>
             <PermissionButton :hasPermission="`${permission}:add`" type="primary" @click="showModal('add')" >
@@ -60,7 +60,7 @@
   </page-container>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="User">
 import columns from './columns'
 import { ModalType } from './typing'
 import { ref, reactive } from 'vue';

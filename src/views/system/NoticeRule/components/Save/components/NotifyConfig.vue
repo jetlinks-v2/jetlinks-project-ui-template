@@ -2,7 +2,6 @@
     <div class="header">
         <pro-search
             :columns="columns"
-            type="simple"
             target="action-notice-config"
             @search="handleSearch"
             class="action-search"

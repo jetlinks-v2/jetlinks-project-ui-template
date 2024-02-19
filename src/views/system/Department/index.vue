@@ -29,13 +29,16 @@ const onChange = (id: string) => {
   display: flex;
   padding: 24px;
   gap: 12px;
+  height: 100%;
 
   .left {
     width: 300px;
+    height: 100%;
   }
 
   .right {
     flex: 1;
+    height: 100%;
   }
 }
 </style>

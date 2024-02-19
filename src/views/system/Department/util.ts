@@ -1,4 +1,4 @@
-import { getBindUserList_api } from "@/api/department"
+import { getBindUserList_api } from "@/api/system/department"
 import { TreeType } from "./typings"
 
 export const ArrayToTree = (list: any[]): any[] => {
