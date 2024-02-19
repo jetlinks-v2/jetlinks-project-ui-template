@@ -3,17 +3,13 @@
         <div class="des_head">
             <div>字典ID：<span>{{ data.id }}</span></div>
             <div>说明：<span>{{ data.describe }}</span></div>
-            <div>创建日期：<span> {{
-                dayjs(
-                    data?.createTime,
-                ).format(
-                    'YYYY-MM-DD HH:mm:ss',
-                )
-            }}</span></div>
+            <div>创建日期：<span v-time-format="'YYYY-MM-DD HH:mm:ss'"> {{data?.createTime}}</span></div>
         </div>
         <div class="contain">
-            <pro-search :columns="columns" @search="handleSearch" target="system_dictionary" />
-            <JProTable :columns="columns" model="TABLE" :request="queryItem" :params="params" ref="tableRef">
+            <pro-search style="padding: 18px 0 0 0" :columns="columns" @search="handleSearch" target="system_dictionary" />
+            <JProTable :bodyStyle="{
+                padding: 0,
+            }" :scroll="{ y: 'calc(100vh - 500px)' }" :columns="columns" model="TABLE" :request="queryItem" :params="params" ref="tableRef">
                 <template #headerTitle>
                     <PermissionButton type="primary" @click="add" hasPermission="system/Dictionary:add">
                         新增
@@ -44,10 +40,8 @@
 <script lang="ts" setup>
 import { queryDicItem, deleteDicItem } from '@/api/system/dictionary'
 import Save from './Save/index.vue'
-import type { ActionsType } from './typings';
 import { onlyMessage } from '@jetlinks-web/utils';
 import { cloneDeep } from 'lodash-es';
-import dayjs from 'dayjs';
 const props = defineProps({
     data: {
         type: Object,
@@ -111,7 +105,7 @@ const columns = [
 const getActions = (
     data: Partial<Record<string, any>>,
     type: 'card' | 'table',
-): ActionsType[] => {
+): any[] => {
     if (!data) return [];
     const actions = [
         {
@@ -149,7 +143,7 @@ const getActions = (
         },
     ];
     if (type === 'card')
-        return actions.filter((i: ActionsType) => i.key !== 'view');
+        return actions.filter((i: any) => i.key !== 'view');
     return actions;
 };
 const add = () => {
@@ -214,6 +208,10 @@ watch(() => props?.data?.id, () => {
 })
 </script>
 <style lang="less" scoped>
+.des {
+  height: 100%;
+  overflow-y: auto;
+}
 .des_head {
     padding: 10px 20px;
     background-color: rgb(242, 242, 242);

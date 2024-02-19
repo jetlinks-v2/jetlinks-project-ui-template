@@ -12,6 +12,7 @@
         :request="getPermission_api"
         model="TABLE"
         :params="params"
+        :scroll="{ y: 'calc(100vh - 440px)' }"
         :defaultParams="{
           sorts: [{ name: 'id', order: 'asc' }],
         }"
