@@ -151,6 +151,9 @@ onMounted(() => {
 })
 </script>
 <style lang="less" scoped>
+.left-contain{
+    height: 100%;
+}
 .controls {
     margin: 10px 0;
 }
@@ -167,5 +170,7 @@ onMounted(() => {
 
 .listBox {
     margin: 10px 0;
+    height: calc(100% - 110px);
+    overflow-y: auto;
 }
 </style>

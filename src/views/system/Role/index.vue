@@ -35,6 +35,7 @@
      height:100%
  }
  .dictionary_right{
-     flex:4
+     flex:4;
+     height:100%
  }
  </style>
