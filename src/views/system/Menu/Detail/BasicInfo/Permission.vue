@@ -1,59 +1,59 @@
 <template>
   <div>
-    <j-form
+    <a-form
       ref="formRef"
       :model="formModel"
       layout="vertical"
       class="basic-form permission-form"
     >
-      <j-form-item name="accessSupport" required>
+      <a-form-item name="accessSupport" required>
         <template #label>
           <span style="margin-right: 3px">数据权限控制</span>
-          <j-tooltip title="此菜单页面数据所对应的资产类型">
+          <a-tooltip title="此菜单页面数据所对应的资产类型">
             <AIcon
               type="QuestionCircleOutlined"
               class="img-style"
               style="color: #a6a6a6"
             />
-          </j-tooltip>
+          </a-tooltip>
         </template>
-        <j-radio-group
+        <a-radio-group
           v-model:value="formModel.accessSupport"
           name="radioGroup"
         >
-          <j-radio value="unsupported">不支持</j-radio>
-          <j-radio value="support">支持</j-radio>
-          <j-radio value="indirect">
+          <a-radio value="unsupported">不支持</a-radio>
+          <a-radio value="support">支持</a-radio>
+          <a-radio value="indirect">
             <span style="margin-right: 3px">间接控制</span>
-            <j-tooltip title="此菜单内的数据基于其他菜单的数据权限控制">
+            <a-tooltip title="此菜单内的数据基于其他菜单的数据权限控制">
               <AIcon type="QuestionCircleFilled" class="img-style" />
-            </j-tooltip>
-          </j-radio>
-        </j-radio-group>
+            </a-tooltip>
+          </a-radio>
+        </a-radio-group>
 
-        <j-form-item
+        <a-form-item
           name="assetType"
           v-if="formModel.accessSupport === 'support'"
           :rules="[{ required: true, message: '请选择资产类型' }]"
           style="margin-top: 24px; margin-bottom: 0"
         >
-          <j-select
+          <a-select
             v-model:value="formModel.assetType"
             style="width: 500px"
             placeholder="请选择资产类型"
             show-search
             :options="assetsType"
           >
-          </j-select>
-        </j-form-item>
+          </a-select>
+        </a-form-item>
 
-        <j-form-item
+        <a-form-item
           name="indirectMenus"
           v-if="formModel.accessSupport === 'indirect'"
           :rules="[{ required: true, message: '请选择关联菜单' }]"
           style="margin-top: 24px; margin-bottom: 0"
         >
-          <j-tree-select
+          <a-tree-select
             v-model:value="formModel.indirectMenus"
             style="width: 400px"
             :dropdown-style="{
@@ -70,18 +70,18 @@
               value: 'id',
             }"
           >
-          </j-tree-select>
-        </j-form-item>
-      </j-form-item>
-      <j-form-item label="权限" name="permissions">
+          </a-tree-select>
+        </a-form-item>
+      </a-form-item>
+      <a-form-item label="权限" name="permissions">
         <PermissionChoose
           :first-width="3"
           max-height="350px"
           v-model:value="formModel.permissions"
           :key="formModel.id || ''"
         />
-      </j-form-item>
-    </j-form>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 

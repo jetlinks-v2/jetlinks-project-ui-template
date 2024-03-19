@@ -1,5 +1,5 @@
 <template>
-  <j-modal
+  <a-modal
     visible
     :title="props.mode"
     width="660px"
@@ -8,8 +8,8 @@
     :maskClosable="false"
     :confirmLoading="loading"
   >
-    <j-form :model="formModel" class="basic-form" ref="formRef">
-      <j-form-item
+    <a-form :model="formModel" class="basic-form" ref="formRef">
+      <a-form-item
         label="编码"
         name="id"
         :rules="[
@@ -17,7 +17,7 @@
           { max: 64, message: '最多可输入64个字符' },
         ]"
       >
-        <j-auto-complete
+        <a-auto-complete
           v-model:value="formModel.id"
           :options="codeOptions"
           placeholder="请输入编码"
@@ -27,9 +27,9 @@
             {{ val }}
             <span class="message">{{ message }}</span>
           </template>
-        </j-auto-complete>
-      </j-form-item>
-      <j-form-item
+        </a-auto-complete>
+      </a-form-item>
+      <a-form-item
         label="名称"
         name="name"
         :rules="[
@@ -37,13 +37,13 @@
           { max: 64, message: '最多可输入64个字符' },
         ]"
       >
-        <j-input
+        <a-input
           v-model:value="formModel.name"
           :disabled="props.mode === '查看'"
           placeholder="请输入名称"
         />
-      </j-form-item>
-      <j-form-item
+      </a-form-item>
+      <a-form-item
         label="权限"
         name="permissions"
         :rules="[
@@ -61,17 +61,17 @@
           :disabled="props.mode === '查看'"
           :key="formModel.id || ''"
         />
-      </j-form-item>
-      <j-form-item label="说明" name="describe">
-        <j-textarea
+      </a-form-item>
+      <a-form-item label="说明" name="describe">
+        <a-textarea
           v-model:value="formModel.describe"
           :rows="4"
           placeholder="请输入说明"
           :disabled="props.mode === '查看'"
         />
-      </j-form-item>
-    </j-form>
-  </j-modal>
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script setup lang="ts">

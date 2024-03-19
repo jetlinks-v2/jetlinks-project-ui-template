@@ -1,27 +1,21 @@
 <template>
-  <j-button
-      v-if="!value"
-      style="width: 100%"
-      @click="showModal"
-  >
+  <a-button v-if="!value" style="width: 100%" @click="showModal">
     选择网关设备
-  </j-button>
+  </a-button>
   <div v-else class="gateway-form-item">
     <span>
       <j-ellipsis>
         {{ name }}
       </j-ellipsis>
     </span>
-    <j-button type="link" @click="showModal">
-      重新选择
-    </j-button>
+    <a-button type="link" @click="showModal"> 重新选择</a-button>
   </div>
   <DeviceModal
-      v-if="visible"
-      :name="name"
-      :value="value"
-      @cancel="cancel"
-      @confirm="confirm"
+    v-if="visible"
+    :name="name"
+    :value="value"
+    @cancel="cancel"
+    @confirm="confirm"
   />
 </template>
 
@@ -31,19 +25,19 @@ import DeviceModal from './GateWayDeviceModal.vue'
 const props = defineProps({
   value: {
     type: String,
-    default: undefined
+    default: undefined,
   },
   name: {
     type: String,
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 
 const emit = defineEmits(['update:value', 'update:name'])
 
 const visible = ref(false)
 
-const showModal = () =>{
+const showModal = () => {
   visible.value = true
 }
 
@@ -57,13 +51,13 @@ const confirm = (select) => {
   emit('update:name', select.name)
   cancel()
 }
-
 </script>
 
 <style lang="less" scoped>
 .gateway-form-item {
   display: flex;
-  >span {
+
+  > span {
     line-height: 32px;
     max-width: calc(100% - 88px);
   }

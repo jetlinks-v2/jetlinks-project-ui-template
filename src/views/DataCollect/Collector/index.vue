@@ -5,10 +5,10 @@
                 <Tree @change="changeTree" />
             </div>
             <div class="right">
-                <j-spin :spinning="spinning">
+                <a-spin :spinning="spinning">
                     <Point v-if="data || data === undefined" :data="data" />
                     <j-empty style="margin-top: 20%" v-else />
-                </j-spin>
+                </a-spin>
             </div>
         </div>
     </page-container>

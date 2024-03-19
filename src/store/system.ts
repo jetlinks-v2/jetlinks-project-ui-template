@@ -1,5 +1,5 @@
-import {defineStore} from "pinia";
-import {getDetails_api, settingDetail} from "@/api/system/basis";
+import { defineStore } from "pinia";
+import { getDetails_api, settingDetail } from "@/api/system/basis";
 
 interface LayoutType {
   siderWidth: number
@@ -9,6 +9,7 @@ interface LayoutType {
   logo: string
   layout: 'mix' | 'side' | 'top'
 }
+
 export const useSystemStore = defineStore('system', () => {
   const theme = ref<string>('light') // 主题色
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
@@ -87,8 +88,8 @@ export const useSystemStore = defineStore('system', () => {
   }
 
   const querySingleInfo = async (__keys: string) => {
-    if(!__keys) return
-    const resp =  await settingDetail(__keys)
+    if (!__keys) return
+    const resp = await settingDetail(__keys)
     if (resp.success) {
       const _value = resp.result
       systemInfo.value[__keys] = _value ?? {}

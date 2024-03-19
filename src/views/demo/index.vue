@@ -24,14 +24,14 @@
         button
       </template>
     </permission-button>
-    <j-table-card
+    <a-table-card
       name="卡片标题"
       width="400px"
     >
       <template #content>
         中间内容
       </template>
-    </j-table-card>
+    </a-table-card>
   </page-container>
   <div style="width: 100%; height: 300px">
     <init-Amap

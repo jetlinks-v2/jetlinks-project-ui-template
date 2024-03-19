@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div class="content-collapse">
-                    <j-collapse :bordered="false" v-model:activeKey="activeKey" expand-icon-position="right">
+                    <a-collapse :bordered="false" v-model:activeKey="activeKey" expand-icon-position="right">
                         <template #expandIcon="{ isActive }">
                             <AIcon
                                 type="CaretRightOutlined"
@@ -20,7 +20,7 @@
                                 }"
                             />
                         </template>
-                        <j-collapse-panel
+                        <a-collapse-panel
                             v-for="item in tabs"
                             :key="item.provider"
                         >
@@ -43,8 +43,8 @@
                                     />
                                 </template>
                             </div>
-                        </j-collapse-panel>
-                    </j-collapse>
+                        </a-collapse-panel>
+                    </a-collapse>
                 </div>
             </div>
         </FullPage>

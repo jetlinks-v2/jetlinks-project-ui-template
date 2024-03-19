@@ -3,7 +3,7 @@
     <FullPage>
       <div style="height: 100%;">
         <div style="overflow-y: auto; height: 100%; padding: 24px;">
-          <j-form
+          <a-form
               layout="vertical"
               ref="formRef"
               :rules="formRules"
@@ -11,45 +11,45 @@
           >
             <div class="form-container">
               <div class="form-left">
-                <j-form-item label="系统名称" name="title">
-                  <j-input
+                <a-form-item label="系统名称" name="title">
+                  <a-input
                       v-model:value="formData.title"
                       placeholder="请输入系统名称"
                   />
-                </j-form-item>
-                <j-form-item label="主题色" name="headerTheme">
-                  <j-select v-model:value="formData.headerTheme" :options="headerThemeAreas">
-                  </j-select>
-                </j-form-item>
+                </a-form-item>
+                <a-form-item label="主题色" name="headerTheme">
+                  <a-select v-model:value="formData.headerTheme" :options="headerThemeAreas">
+                  </a-select>
+                </a-form-item>
                 <!-- 高德地图API Key输入框 <AIcon type="QuestionCircleOutlined" /> -->
-                <j-form-item name="apiKey">
+                <a-form-item name="apiKey">
                   <template #label>
-                    <j-space>
+                    <a-space>
                       <span>高德API Key</span>
-                      <j-tooltip title="配置后平台可调用高德地图GIS服务">
+                      <a-tooltip title="配置后平台可调用高德地图GIS服务">
                         <AIcon type="QuestionCircleOutlined"/>
-                      </j-tooltip>
-                    </j-space>
+                      </a-tooltip>
+                    </a-space>
                   </template>
-                  <j-input v-model:value="formData.apiKey" placeholder="请输入高德API Key"></j-input>
-                </j-form-item>
-                <j-form-item name="webKey">
+                  <a-input v-model:value="formData.apiKey" placeholder="请输入高德API Key"></a-input>
+                </a-form-item>
+                <a-form-item name="webKey">
                   <template #label>
-                    <j-space>
+                    <a-space>
                       <span>高德Web Key</span>
-                      <j-tooltip title="配置后平台可调用高德地图的地理数据服务">
+                      <a-tooltip title="配置后平台可调用高德地图的地理数据服务">
                         <AIcon type="QuestionCircleOutlined"/>
-                      </j-tooltip>
-                    </j-space>
+                      </a-tooltip>
+                    </a-space>
                   </template>
-                  <j-input v-model:value="formData.apiWebKey" placeholder="请输入高德Web Key"></j-input>
-                </j-form-item>
+                  <a-input v-model:value="formData.apiWebKey" placeholder="请输入高德Web Key"></a-input>
+                </a-form-item>
                 <!-- base-path输入框 -->
-                <j-form-item name="base-path">
+                <a-form-item name="base-path">
                   <template #label>
-                    <j-space>
+                    <a-space>
                       <span>base-path</span>
-                      <j-tooltip>
+                      <a-tooltip>
                         <template #title>
                           <div style="word-break: break-all">
                             <div>系统后台访问的url。</div>
@@ -60,43 +60,43 @@
                           </div>
                         </template>
                         <AIcon type="QuestionCircleOutlined"/>
-                      </j-tooltip>
-                    </j-space>
+                      </a-tooltip>
+                    </a-space>
                   </template>
-                  <j-input v-model:value="formData['base-path']" placeholder="请输入 base-path"></j-input>
-                </j-form-item>
+                  <a-input v-model:value="formData['base-path']" placeholder="请输入 base-path"></a-input>
+                </a-form-item>
                 <!-- 系统logo 和 浏览器标签 -->
-                <j-row :gutter="24">
+                <a-row :gutter="24">
                   <!-- 系统logo -->
-                  <j-col :span="12">
-                    <j-form-item label="系统logo">
+                  <a-col :span="12">
+                    <a-form-item label="系统logo">
                       <Upload uploadType="logo" v-model:img-src="formData.logo"/>
-                    </j-form-item>
-                  </j-col>
+                    </a-form-item>
+                  </a-col>
                   <!-- 浏览器页签icon -->
-                  <j-col :span="12">
-                    <j-form-item label="浏览器页签">
+                  <a-col :span="12">
+                    <a-form-item label="浏览器页签">
                       <Upload uploadType="ico" v-model:img-src="formData.ico"/>
-                    </j-form-item>
-                  </j-col>
-                </j-row>
+                    </a-form-item>
+                  </a-col>
+                </a-row>
                 <!-- 保存按钮 -->
-                <j-form-item>
-                  <PermissionButton @click="submit" type="primary" html-type="submit" hasPermission="system/Basis:update">
+                <a-form-item>
+                  <j-permission-button @click="submit" type="primary" html-type="submit" hasPermission="system/Basis:update">
                     保存
-                  </PermissionButton>
-                </j-form-item>
+                  </j-permission-button>
+                </a-form-item>
               </div>
               <!-- 表单右侧部分 -->
               <div class="form-right">
                 <div class="form-right-background">
-                  <j-form-item label="登录背景图" name="background">
+                  <a-form-item label="登录背景图" name="background">
                     <Upload uploadType="background" v-model:img-src="formData.background" height="400px" width="550px"/>
-                  </j-form-item>
+                  </a-form-item>
                 </div>
               </div>
             </div>
-          </j-form>
+          </a-form>
         </div>
       </div>
     </FullPage>
@@ -106,9 +106,9 @@
 <script setup name="Basis" lang="ts">
 import {ref, reactive} from 'vue'
 import {formDataType} from '@/views/system/Basis/typing'
-import {useRequest} from '@jetlinks-web/hooks';
+import {useRequest} from '@/hooks';
 import {save_api} from '@/api/system/basis';
-import {useSystemStore} from '@/store';
+import {useSystemStore} from '@/store/system';
 import Upload from '@/views/system/Basis/components/upload/upload.vue'
 import {onlyMessage} from '@jetlinks-web/utils';
 import {omit} from "lodash-es";

@@ -28,7 +28,7 @@
 </template>
 
 <script setup name="BasicLayoutPage" lang="ts">
-import { useRouter, useRoute } from '@jetlinks-web/router'
+import { useRouter, useRoute } from '@/router'
 import { reactive, computed, watchEffect } from 'vue'
 import { useSystemStore } from '@/store/system'
 import { useMenuStore } from '@/store/menu'

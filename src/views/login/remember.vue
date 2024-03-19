@@ -1,5 +1,5 @@
 <template>
-    <j-checkbox :checked="checked" @change="change" >记住我</j-checkbox>
+    <a-checkbox :checked="checked" @change="change" >记住我</a-checkbox>
 </template>
 <script setup name="Remember" lang="ts">
 const emit = defineEmits(['update:value', 'update:expires'])

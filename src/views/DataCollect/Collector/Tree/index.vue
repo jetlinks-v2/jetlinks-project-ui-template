@@ -1,6 +1,6 @@
 <template>
     <div class="tree-container">
-        <j-input-search
+        <a-input-search
             v-model:value="searchValue"
             style="margin-bottom: 8px"
             placeholder="请输入"
@@ -9,7 +9,7 @@
         />
 
         <div class="add-btn">
-            <PermissionButton
+            <j-permission-button
                 class="add-btn"
                 type="primary"
                 @click="handlAdd()"
@@ -17,10 +17,10 @@
             >
                 <template #icon><AIcon type="PlusOutlined" /></template>
                 新增采集器
-            </PermissionButton>
+            </j-permission-button>
         </div>
-        <j-spin :spinning="spinning">
-            <j-tree
+        <a-spin :spinning="spinning">
+            <a-tree
                 :tree-data="defualtDataSource"
                 :selected-keys="selectedKeys"
                 :fieldNames="{ key: 'id' }"
@@ -35,10 +35,10 @@
                 :show-icon="true"
             >
                 <template #title="{ name, data }">
-                    <Ellipsis class="tree-left-title">
+                    <j-ellipsis class="tree-left-title">
                         {{ name }}
-                    </Ellipsis>
-<!--                    <j-tag-->
+                    </j-ellipsis>
+<!--                    <a-tag-->
 <!--                        class="tree-left-tag"-->
 <!--                        v-if="data.id !== '*'"-->
 <!--                        :color="-->
@@ -50,15 +50,15 @@
 <!--                        data?.uniformState?.value === 'normal' || data?.state?.value === 'disabled' ?-->
 <!--                            data?.runningState?.text :-->
 <!--                            data?.uniformState?.text-->
-<!--                      }}</j-tag-->
+<!--                      }}</a-tag-->
 <!--                    >-->
-                    <j-tag
+                    <a-tag
                         class="tree-left-tag"
                         v-if="data.id !== '*'"
                         :color="colorMap.get(data?.uniformState?.value)"
-                    >{{ data?.uniformState?.text }}</j-tag
+                    >{{ data?.uniformState?.text }}</a-tag
                     >
-                    <j-tag
+                    <a-tag
                         class="tree-left-tag2"
                         v-if="data.id !== '*'"
                         :color="
@@ -69,14 +69,14 @@
                       {{
                        data?.state?.value === 'disabled' ? data?.state?.text : data?.runningState?.text
                       }}
-                    </j-tag
+                    </a-tag
                     >
                     <span
                         v-if="data.id !== '*'"
                         class="func-btns"
                         @click="(e) => e.stopPropagation()"
                     >
-                        <PermissionButton
+                        <j-permission-button
                             type="link"
                             :tooltip="{
                                 title: '编辑',
@@ -85,8 +85,8 @@
                             hasPermission="DataCollect/Collector:update"
                         >
                             <AIcon type="EditOutlined" />
-                        </PermissionButton>
-                        <PermissionButton
+                        </j-permission-button>
+                        <j-permission-button
                             type="link"
                             :tooltip="{
                                 title:
@@ -111,8 +111,8 @@
                                         : 'StopOutlined'
                                 "
                             />
-                        </PermissionButton>
-                        <PermissionButton
+                        </j-permission-button>
+                        <j-permission-button
                             type="link"
                             :disabled="data?.state?.value !== 'disabled'"
                             :tooltip="{
@@ -129,12 +129,12 @@
                             }"
                         >
                             <AIcon type="DeleteOutlined" />
-                        </PermissionButton>
+                        </j-permission-button>
                     </span>
                 </template>
-            </j-tree>
+            </a-tree>
             <j-empty v-else description="暂无数据" />
-        </j-spin>
+        </a-spin>
         <Save :channelListAll="channelListAll" v-if="visible" :data="current" @change="saveChange" />
     </div>
 </template>

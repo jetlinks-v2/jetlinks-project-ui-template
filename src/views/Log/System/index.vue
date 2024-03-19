@@ -1,6 +1,6 @@
 <template>
     <div>
-        <pro-search :columns="columns" target="search-system" @search="handleSearch" />
+        <j-pro-search :columns="columns" target="search-system" @search="handleSearch" />
         <j-pro-table
             ref="tableRef"
             model="TABLE"
@@ -12,7 +12,7 @@
             :params="params"
         >
             <template #level="slotProps">
-                <j-tag
+                <a-tag
                     :color="
                         slotProps.level === 'WARN'
                             ? 'orange'
@@ -24,7 +24,7 @@
                     "
                 >
                     {{ slotProps.level }}
-                </j-tag>
+                </a-tag>
             </template>
             <template #createTime="slotProps">
                 <span v-time-format="'YYYY-MM-DD HH:mm:ss'">{{ slotProps.createTime }}</span>
@@ -34,39 +34,39 @@
             </template>
 
             <template #action="slotProps">
-                <j-space :size="16">
-                    <j-tooltip
+                <a-space :size="16">
+                    <a-tooltip
                         v-for="i in getActions(slotProps)"
                         :key="i.key"
                         v-bind="i.tooltip"
                     >
-                        <j-popconfirm v-if="i.popConfirm" v-bind="i.popConfirm">
-                            <j-button
+                        <a-popconfirm v-if="i.popConfirm" v-bind="i.popConfirm">
+                            <a-button
                                 :disabled="i.disabled"
                                 style="padding: 0"
                                 type="link"
                                 ><AIcon :type="i.icon"
-                            /></j-button>
-                        </j-popconfirm>
-                        <j-button
+                            /></a-button>
+                        </a-popconfirm>
+                        <a-button
                             style="padding: 0"
                             type="link"
                             v-else
                             @click="i.onClick && i.onClick(slotProps)"
                         >
-                            <j-button
+                            <a-button
                                 :disabled="i.disabled"
                                 style="padding: 0"
                                 type="link"
                                 ><AIcon :type="i.icon"
-                            /></j-button>
-                        </j-button>
-                    </j-tooltip>
-                </j-space>
+                            /></a-button>
+                        </a-button>
+                    </a-tooltip>
+                </a-space>
             </template>
         </j-pro-table>
     </div>
-    <j-modal :width="1100" v-model:visible="visible" title="详情">
+    <a-modal :width="1100" v-model:visible="visible" title="详情">
         <div>
             <span class="mr-10">[{{ descriptionsData?.threadName }}]</span>
             <span class="mr-10" v-time-format="'YYYY-MM-DD HH:mm:ss'">{{
@@ -75,7 +75,7 @@
             <span>{{ descriptionsData?.className }}</span>
         </div>
         <div class="mb-10">
-            <j-tag
+            <a-tag
                 :color="
                     descriptionsData?.level === 'WARN'
                         ? 'orange'
@@ -87,18 +87,18 @@
                 "
             >
                 {{ descriptionsData?.level }}
-            </j-tag>
+            </a-tag>
             <span>{{ descriptionsData?.message }}</span>
         </div>
-        <j-textarea
+        <a-textarea
             v-model:value="descriptionsData.exceptionStack"
             placeholder="暂无数据"
             :auto-size="{ minRows: 24, maxRows: 28 }"
         />
         <template #footer>
-            <j-button type="primary" @click="handleOk">关闭</j-button>
+            <a-button type="primary" @click="handleOk">关闭</a-button>
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 <script lang="ts" setup name="SystemLog">
 import type { ActionsType } from '@/components/Table/index';

@@ -1,5 +1,5 @@
 <template>
-    <j-modal :width="644" visible title="配置详情" @cancel="emit('close')">
+    <a-modal :width="644" visible title="配置详情" @cancel="emit('close')">
         <div class="detail">
             <div class="item">
                 <div class="label">通知方式</div>
@@ -39,9 +39,9 @@
             </div>
         </div>
         <template #footer>
-            <j-button type="primary" @click="emit('close')">确定</j-button>
+            <a-button type="primary" @click="emit('close')">确定</a-button>
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 
 <script lang="ts" setup>

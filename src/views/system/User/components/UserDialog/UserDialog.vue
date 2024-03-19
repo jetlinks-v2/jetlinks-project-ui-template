@@ -1,73 +1,73 @@
 <template>
-  <j-modal width="675px" visible @ok="handleOk" @cancel="handleCancel" :title="title" :confirmLoading="loading">
+  <a-modal width="675px" visible @ok="handleOk" @cancel="handleCancel" :title="title" :confirmLoading="loading">
     <!-- 新增用户表单 -->
-    <j-form layout="vertical" :model="form.formData" :rules="formRules" ref="formRef" class="user-dialog-form">
-        <j-row v-if="!isReset">
+    <a-form layout="vertical" :model="form.formData" :rules="formRules" ref="formRef" class="user-dialog-form">
+        <a-row v-if="!isReset">
             <!-- 姓名输入框 -->
-            <j-col :span="12">
-                <j-form-item label="姓名" name="name" class="userDialog-form-item-left">
-                    <j-input v-model:value="form.formData.name" placeholder="请输入姓名"></j-input>
-                </j-form-item>
-            </j-col>
+            <a-col :span="12">
+                <a-form-item label="姓名" name="name" class="userDialog-form-item-left">
+                    <a-input v-model:value="form.formData.name" placeholder="请输入姓名"></a-input>
+                </a-form-item>
+            </a-col>
             <!-- 用户名输入框 -->
-            <j-col :span="12">
-                <j-form-item label="用户名" name="username" class="userDialog-form-item-right">
-                    <j-input v-model:value="form.formData.username" placeholder="请输入用户名" :disabled="props.modalType === 'edit'"></j-input>
-                </j-form-item>
-            </j-col>
-        </j-row>
-        <j-row v-if="!isEdit">
+            <a-col :span="12">
+                <a-form-item label="用户名" name="username" class="userDialog-form-item-right">
+                    <a-input v-model:value="form.formData.username" placeholder="请输入用户名" :disabled="props.modalType === 'edit'"></a-input>
+                </a-form-item>
+            </a-col>
+        </a-row>
+        <a-row v-if="!isEdit">
             <!-- 密码输入框 -->
-            <j-col :span="24">
-                <j-form-item label="密码" name="password">
-                    <j-input-password v-model:value="form.formData.password" placeholder="请输入密码"></j-input-password>
-                </j-form-item>
-            </j-col>
-        </j-row>
-        <j-row v-if="!isEdit">
+            <a-col :span="24">
+                <a-form-item label="密码" name="password">
+                    <a-input-password v-model:value="form.formData.password" placeholder="请输入密码"></a-input-password>
+                </a-form-item>
+            </a-col>
+        </a-row>
+        <a-row v-if="!isEdit">
             <!-- 确认密码输入框 -->
-            <j-col :span="24">
-                <j-form-item label="确认密码" name="confirmPassword">
-                    <j-input-password v-model:value="form.formData.confirmPassword" placeholder="请再次输入密码"></j-input-password>
-                </j-form-item>
-            </j-col>
-        </j-row>
-        <j-row v-if="!isReset">
+            <a-col :span="24">
+                <a-form-item label="确认密码" name="confirmPassword">
+                    <a-input-password v-model:value="form.formData.confirmPassword" placeholder="请再次输入密码"></a-input-password>
+                </a-form-item>
+            </a-col>
+        </a-row>
+        <a-row v-if="!isReset">
             <!-- 角色选择框 -->
-            <j-col :span="12">
-                <j-form-item name="roleIdList" label="角色" class="userDialog-form-item-left flex" >
-                    <j-select v-model:value="form.formData.roleIdList" :options="form.roleOptions" mode="multiple" placeholder="请选择角色"></j-select>
+            <a-col :span="12">
+                <a-form-item name="roleIdList" label="角色" class="userDialog-form-item-left flex" >
+                    <a-select v-model:value="form.formData.roleIdList" :options="form.roleOptions" mode="multiple" placeholder="请选择角色"></a-select>
                     <!-- 新增角色按钮 -->
-                    <PermissionButton :hasPermission="`${rolePermission}:add`" @click="clickAddItem('roleIdList', 'Role')" class="bt">
+                    <j-permission-button :hasPermission="`${rolePermission}:add`" @click="clickAddItem('roleIdList', 'Role')" class="bt">
                         <AIcon type="PlusOutlined" />
-                    </PermissionButton>
-                </j-form-item>
-            </j-col>
+                    </j-permission-button>
+                </a-form-item>
+            </a-col>
             <!-- 组织选择框 -->
-            <j-col :span="12">
-                <j-form-item name="orgIdList" label="组织" class="userDialog-form-item-right flex">
-                    <j-select v-model:value="form.formData.orgIdList" :options="form.departmentOptions" mode="multiple" placeholder="请选择组织"></j-select>
+            <a-col :span="12">
+                <a-form-item name="orgIdList" label="组织" class="userDialog-form-item-right flex">
+                    <a-select v-model:value="form.formData.orgIdList" :options="form.departmentOptions" mode="multiple" placeholder="请选择组织"></a-select>
                     <!-- 新增组织按钮 -->
-                    <PermissionButton :hasPermission="`${deptPermission}:add`" @click="clickAddItem('orgIdList', 'Department')" class="bt">
+                    <j-permission-button :hasPermission="`${deptPermission}:add`" @click="clickAddItem('orgIdList', 'Department')" class="bt">
                         <AIcon type="PlusOutlined" />
-                    </PermissionButton>
-                </j-form-item>
-            </j-col>
-        </j-row>
-        <j-row v-if="!isReset">
-            <j-col :span="12">
-                <j-form-item label="手机号" name="telephone" class="userDialog-form-item-left">
-                    <j-input v-model:value="form.formData.telephone" placeholder="请输入邮箱"></j-input>
-                </j-form-item>
-            </j-col>
-            <j-col :span="12">
-                <j-form-item label="邮箱" name="email" class="userDialog-form-item-right">
-                    <j-input v-model:value="form.formData.email" placeholder="请输入邮箱"></j-input>
-                </j-form-item>
-            </j-col>
-        </j-row>
-    </j-form>
-  </j-modal>
+                    </j-permission-button>
+                </a-form-item>
+            </a-col>
+        </a-row>
+        <a-row v-if="!isReset">
+            <a-col :span="12">
+                <a-form-item label="手机号" name="telephone" class="userDialog-form-item-left">
+                    <a-input v-model:value="form.formData.telephone" placeholder="请输入邮箱"></a-input>
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-form-item label="邮箱" name="email" class="userDialog-form-item-right">
+                    <a-input v-model:value="form.formData.email" placeholder="请输入邮箱"></a-input>
+                </a-form-item>
+            </a-col>
+        </a-row>
+    </a-form>
+  </a-modal>
 </template>
 
 <script setup lang="ts" name="UserDialog">
@@ -84,7 +84,7 @@ import {
   updateUser_api,
   updatePassword_api,
 } from '@/api/system/user'
-import { useRequest } from '@jetlinks-web/hooks';
+import { useRequest } from '@/hooks';
 
 // 传入参数
 const props = defineProps({

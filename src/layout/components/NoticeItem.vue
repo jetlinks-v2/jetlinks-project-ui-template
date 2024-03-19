@@ -28,9 +28,9 @@
                 </j-ellipsis>
             </div>
             <div class="list-item-right">
-                <j-button style="margin-bottom: 5px;" class="btn" @click.stop="detail">查看详情</j-button>
-                <j-button class="btn" v-if="state === 'unread'" @click.stop="read('_read')">标为已读</j-button>
-                <j-button class="btn" v-else @click.stop="read('_unread')">标为未读</j-button>
+                <a-button style="margin-bottom: 5px;" class="btn" @click.stop="detail">查看详情</a-button>
+                <a-button class="btn" v-if="state === 'unread'" @click.stop="read('_read')">标为已读</a-button>
+                <a-button class="btn" v-else @click.stop="read('_unread')">标为未读</a-button>
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <j-modal
+  <a-modal
       :title="title"
       visible
       :width="400"
@@ -18,7 +18,7 @@
           outputType="jpg"
       ></vue-cropper>
     </div>
-  </j-modal>
+  </a-modal>
 </template>
 
 <script setup lang="ts" name="UploadCropper">

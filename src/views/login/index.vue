@@ -1,5 +1,5 @@
 <template>
-  <j-spin :spinning='loading' :delay='300'>
+  <a-spin :spinning='loading' :delay='300'>
     <div class='container'>
       <div class='left'>
         <img :src='systemInfo?.front?.background || bgImage' alt=''>
@@ -11,10 +11,10 @@
         <Right :logo="systemInfo?.front?.logo" :title="layout?.title" :loading="loading" @submit="submit" />
       </div>
     </div>
-  </j-spin>
+  </a-spin>
 </template>
 <script setup name="Login" lang="ts">
-import { useRequest } from '@jetlinks-web/hooks'
+import { useRequest } from '@/hooks'
 import { login, encryptionConfig } from '@/api/login'
 import { getImage, setToken, encrypt } from '@jetlinks-web/utils'
 import { useUserStore } from '@/store/user'

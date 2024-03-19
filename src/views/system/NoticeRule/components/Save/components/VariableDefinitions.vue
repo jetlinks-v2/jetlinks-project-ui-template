@@ -1,12 +1,12 @@
 <template>
     <div style="padding: 50px 200px">
-        <j-form
+        <a-form
             v-if="variableDefinitions.length"
             :layout="'vertical'"
             ref="formRef"
             :model="modelRef"
         >
-            <j-form-item
+            <a-form-item
                 :name="`${item?.id}`"
                 :label="item?.name"
                 v-for="item in variableDefinitions"
@@ -29,7 +29,7 @@
                     v-else-if="getType(item) === 'file'"
                     v-model:value="modelRef[item.id]"
                 />
-                <j-input
+                <a-input
                     v-else-if="getType(item) === 'link'"
                     v-model:value="modelRef[item.id]"
                 />
@@ -39,8 +39,8 @@
                     :providerId="props.notify?.providerId"
                     v-model:value="modelRef[item.id]"
                 />
-            </j-form-item>
-        </j-form>
+            </a-form-item>
+        </a-form>
         <j-empty v-else style="margin: 20px 0" description="当前模版暂无变量" />
     </div>
 </template>

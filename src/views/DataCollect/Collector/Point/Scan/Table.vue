@@ -1,6 +1,6 @@
 <template>
-    <j-form class="table" ref="formTableRef" :model="modelRef">
-        <j-table
+    <a-form class="table" ref="formTableRef" :model="modelRef">
+        <a-table
             v-if="modelRef.dataSource.length !== 0"
             :dataSource="modelRef.dataSource"
             :columns="FormTableColumns"
@@ -20,7 +20,7 @@
             </template>
             <template #bodyCell="{ column: { dataIndex }, record, index }">
                 <template v-if="dataIndex === 'name'">
-                    <j-form-item
+                    <a-form-item
                         :name="['dataSource', index, 'name']"
                         :rules="[
                             {
@@ -33,24 +33,24 @@
                             },
                         ]"
                     >
-                        <j-input
+                        <a-input
                             v-model:value="record[dataIndex]"
                             placeholder="请输入"
                             allowClear
-                        ></j-input>
-                    </j-form-item>
+                        ></a-input>
+                    </a-form-item>
                 </template>
                 <template v-if="dataIndex === 'id'">
-                    <j-form-item
+                    <a-form-item
                         v-show="false"
                         :name="['dataSource', index, 'id']"
                     >
-                        <j-input
+                        <a-input
                             v-model:value="record[dataIndex]"
                             disabled
                             :bordered="false"
-                        ></j-input>
-                    </j-form-item>
+                        ></a-input>
+                    </a-form-item>
                     <div
                         style="
                             margin: -24px 0 0 10px;
@@ -59,14 +59,14 @@
                             text-overflow: ellipsis;
                         "
                     >
-                        <j-tooltip>
+                        <a-tooltip>
                             <template #title>{{ record[dataIndex] }}</template>
                             {{ record[dataIndex] }}
-                        </j-tooltip>
+                        </a-tooltip>
                     </div>
                 </template>
                 <template v-if="dataIndex === 'accessModes'">
-                    <j-form-item
+                    <a-form-item
                         class="form-item"
                         :name="['dataSource', index, 'accessModes', 'value']"
                         :rules="[
@@ -76,7 +76,7 @@
                             },
                         ]"
                     >
-                        <j-select
+                        <a-select
                             style="width: 75%"
                             v-model:value="record[dataIndex].value"
                             placeholder="请选择"
@@ -91,18 +91,18 @@
                             :disabled="index !== 0 && record[dataIndex].check"
                             @change="changeValue(index, dataIndex)"
                         >
-                        </j-select>
-                        <j-checkbox
+                        </a-select>
+                        <a-checkbox
                             style="margin-left: 5px"
                             v-if="index !== 0"
                             v-model:checked="record[dataIndex].check"
                             @click="changeCheckbox(index, dataIndex)"
-                            >同上</j-checkbox
+                            >同上</a-checkbox
                         >
-                    </j-form-item>
+                    </a-form-item>
                 </template>
                 <template v-if="dataIndex === 'interval'">
-                    <j-form-item
+                    <a-form-item
                         class="form-item"
                         :name="[
                             'dataSource',
@@ -122,7 +122,7 @@
                             },
                         ]"
                     >
-                        <j-input-number
+                        <a-input-number
                             style="width: 60%"
                             v-model:value="
                                 record.configuration[dataIndex].value
@@ -137,20 +137,20 @@
                                 record.configuration[dataIndex].check
                             "
                             @blur="changeValue(index, dataIndex)"
-                        ></j-input-number>
-                        <j-checkbox
+                        ></a-input-number>
+                        <a-checkbox
                             style="margin-left: 5px; margin-top: 5px"
                             v-show="index !== 0"
                             v-model:checked="
                                 record.configuration[dataIndex].check
                             "
                             @click="changeCheckbox(index, dataIndex)"
-                            >同上</j-checkbox
+                            >同上</a-checkbox
                         >
-                    </j-form-item>
+                    </a-form-item>
                 </template>
                 <template v-if="dataIndex === 'features'">
-                    <j-form-item
+                    <a-form-item
                         class="form-item"
                         :name="['dataSource', index, 'features', 'value']"
                         :rules="[
@@ -160,7 +160,7 @@
                             },
                         ]"
                     >
-                        <j-select
+                        <a-select
                             style="width: 40%"
                             v-model:value="record[dataIndex].value"
                             placeholder="请选择"
@@ -179,34 +179,34 @@
                             :disabled="index !== 0 && record[dataIndex].check"
                             @change="changeValue(index, dataIndex)"
                         >
-                        </j-select>
+                        </a-select>
 
-                        <j-checkbox
+                        <a-checkbox
                             style="margin-left: 5px"
                             v-show="index !== 0"
                             v-model:checked="record[dataIndex].check"
                             @click="changeCheckbox(index, dataIndex)"
-                            >同上</j-checkbox
+                            >同上</a-checkbox
                         >
-                    </j-form-item>
+                    </a-form-item>
                 </template>
 
                 <template v-if="dataIndex === 'action'">
-                    <j-tooltip title="删除">
-                        <j-popconfirm
+                    <a-tooltip title="删除">
+                        <a-popconfirm
                             title="确认删除"
                             @confirm="clickDelete(record.id)"
                         >
                             <a style="color: red"
                                 ><AIcon type="DeleteOutlined"
                             /></a>
-                        </j-popconfirm>
-                    </j-tooltip>
+                        </a-popconfirm>
+                    </a-tooltip>
                 </template>
             </template>
-        </j-table>
+        </a-table>
         <j-empty v-else style="margin-top: 10%" />
-    </j-form>
+    </a-form>
 </template>
 
 <script lang="ts" setup>

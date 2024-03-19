@@ -1,5 +1,5 @@
 <template>
-  <j-modal
+  <a-modal
     title="绑定"
     :width="900"
     visible
@@ -28,12 +28,12 @@
         :scroll="{ y: 500 }"
       />
     </div>
-  </j-modal>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
 import { bindUser_api } from '@/api/system/department'
-import { useRequest } from '@jetlinks-web/hooks'
+import { useRequest } from '@/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { bindUserColumns, requestFun } from '../../util'
 

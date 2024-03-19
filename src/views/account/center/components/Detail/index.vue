@@ -1,15 +1,15 @@
 <template>
-    <j-modal visible @cancel="emit('close')" :closable="false">
+    <a-modal visible @cancel="emit('close')" :closable="false">
         <div style="padding: 30px;">
             <div style="display: flex; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid #E4E7F6">
-                <j-avatar :size="100" :src="userInfo.avatar"></j-avatar>
+                <a-avatar :size="100" :src="userInfo.avatar"></a-avatar>
                 <div style="margin-left: 24px;  max-width: 280px;" >
                     <div class="name"><j-ellipsis>{{ userInfo.name }}</j-ellipsis></div>
                     <div class="subTitle"><j-ellipsis>用户名: {{ userInfo?.username }}</j-ellipsis></div>
                     <!-- <div class="subTitle">账号ID: {{ userInfo?.id }}</div> -->
                 </div>
             </div>
-            <j-descriptions
+            <a-descriptions
                 :column="1"
                 :labelStyle="{
                     color: 'rgba(0, 0, 0, 0.6)',
@@ -19,32 +19,32 @@
                     color: '#333333',
                 }"
             >
-                <j-descriptions-item label="角色">
+                <a-descriptions-item label="角色">
                     <j-ellipsis :lineClamp="2">
                         {{ role }}
                     </j-ellipsis>
-                </j-descriptions-item>
-                <j-descriptions-item label="组织">
+                </a-descriptions-item>
+                <a-descriptions-item label="组织">
                     <j-ellipsis :lineClamp="2">
                         {{ org }}
                     </j-ellipsis>
-                </j-descriptions-item>
-                <j-descriptions-item label="手机号">
+                </a-descriptions-item>
+                <a-descriptions-item label="手机号">
                     <j-ellipsis :lineClamp="2">
                         {{ userInfo?.telephone }}
                     </j-ellipsis>
-                </j-descriptions-item>
-                <j-descriptions-item label="邮箱">
+                </a-descriptions-item>
+                <a-descriptions-item label="邮箱">
                     <j-ellipsis :lineClamp="2">
                         {{ userInfo?.email }}
                     </j-ellipsis>
-                </j-descriptions-item>
-            </j-descriptions>
+                </a-descriptions-item>
+            </a-descriptions>
         </div>
         <template #footer>
-            <j-button type="primary" @click="emit('close')">关闭</j-button>
+            <a-button type="primary" @click="emit('close')">关闭</a-button>
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 
 <script lang="ts" setup>

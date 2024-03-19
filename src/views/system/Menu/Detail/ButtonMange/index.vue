@@ -8,17 +8,17 @@
       noPagination
     >
       <template #headerTitle>
-        <PermissionButton
+        <j-permission-button
           type="primary"
           :hasPermission="`${permission}:update`"
           @click="openDialog('新增', {})"
         >
           <AIcon type="PlusOutlined" />新增
-        </PermissionButton>
+        </j-permission-button>
       </template>
       <template #action="slotProps">
-        <j-space :size="16">
-          <PermissionButton
+        <a-space :size="16">
+          <j-permission-button
             type="link"
             :hasPermission="`${permission}:update`"
             :tooltip="{ title: '编辑' }"
@@ -26,8 +26,8 @@
             @click="openDialog('编辑', slotProps)"
           >
             <AIcon type="EditOutlined" />
-          </PermissionButton>
-          <PermissionButton
+          </j-permission-button>
+          <j-permission-button
             type="link"
             :hasPermission="`${permission}:view`"
             :tooltip="{ title: '查看' }"
@@ -35,8 +35,8 @@
             @click="openDialog('查看', slotProps)"
           >
             <AIcon type="SearchOutlined" />
-          </PermissionButton>
-          <PermissionButton
+          </j-permission-button>
+          <j-permission-button
             type="link"
             :tooltip="{ title: '删除' }"
             style="padding: 0"
@@ -47,8 +47,8 @@
             }"
           >
             <AIcon type="DeleteOutlined" />
-          </PermissionButton>
-        </j-space>
+          </j-permission-button>
+        </a-space>
       </template>
     </j-pro-table>
 

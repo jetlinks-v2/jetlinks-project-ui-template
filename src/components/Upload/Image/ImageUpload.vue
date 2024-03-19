@@ -1,7 +1,7 @@
 <template>
   <div class="upload-image-warp" >
     <div class="upload-image-border" :style="borderStyle">
-      <j-upload
+      <a-upload
         list-type="picture-card"
         class="avatar-uploader"
         :name="name || 'file'"
@@ -24,7 +24,7 @@
             />
           </slot>
         </div>
-      </j-upload>
+      </a-upload>
       <div class="upload-loading-mask" v-if="disabled"></div>
       <div class="upload-loading-mask" v-if="imageUrl && loading">
         <AIcon type="LoadingOutlined" style="font-size: 20px" />

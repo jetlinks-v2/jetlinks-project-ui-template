@@ -1,6 +1,6 @@
 <template>
   <div class="role-container">
-    <pro-search
+    <j-pro-search
       :columns="columns"
       target="system-role"
       @search="handelSearch"
@@ -20,19 +20,19 @@
         }"
       >
         <template #headerTitle>
-          <PermissionButton
+          <j-permission-button
             type="primary"
             :hasPermission="`${permission}:add`"
             @click="addRole"
           >
             <AIcon type="PlusOutlined" />新增
-          </PermissionButton>
+          </j-permission-button>
         </template>
 
         <template #action="slotProps">
-          <j-space>
+          <a-space>
             <template v-for="i in getActions(slotProps, 'table')" :key="i.key">
-              <PermissionButton
+              <j-permission-button
                 :disabled="i.disabled"
                 :popConfirm="i.popConfirm"
                 :tooltip="{
@@ -47,9 +47,9 @@
                 <template #icon>
                   <AIcon :type="i.icon" />
                 </template>
-              </PermissionButton>
+              </j-permission-button>
             </template>
-          </j-space>
+          </a-space>
         </template>
       </j-pro-table>
     </FullPage>

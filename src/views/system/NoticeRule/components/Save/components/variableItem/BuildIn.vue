@@ -1,6 +1,6 @@
 <template>
-    <j-input-group compact>
-        <j-select
+    <a-input-group compact>
+        <a-select
             :options="[
                 { label: '手动输入', value: 'fixed' },
                 { label: '内置参数', value: 'upper' },
@@ -10,7 +10,7 @@
             @change="sourceChange"
         />
         <template v-if="source === 'upper'">
-            <j-tree-select
+            <a-tree-select
                 v-model:value="upperKey"
                 :treeData="builtInList"
                 placeholder="请选择参数"
@@ -18,10 +18,10 @@
                 :fieldNames="{ label: 'name', value: 'id' }"
                 @change="(val) => itemOnChange(undefined, val)"
             >
-            </j-tree-select>
+            </a-tree-select>
         </template>
         <template v-else>
-            <j-date-picker
+            <a-date-picker
                 :value="value.value"
                 allowClear
                 valueFormat='YYYY-MM-DD HH:mm:ss'
@@ -30,7 +30,7 @@
                 v-if="item.type === 'date'"
                 @change="(_, dateString) => itemOnChange(dateString)"
             />
-            <j-input-number
+            <a-input-number
                 :value="value.value"
                 allowClear
                 style="width: calc(100% - 120px)"
@@ -38,7 +38,7 @@
                 :placeholder="`请输入${item.name}`"
                 @change="itemOnChange"
             />
-            <j-input
+            <a-input
                 :value="value.value"
                 allowClear
                 style="width: calc(100% - 120px)"
@@ -47,7 +47,7 @@
                 @change="(e) => itemOnChange(e.target.value)"
             />
         </template>
-    </j-input-group>
+    </a-input-group>
 </template>
 
 <script lang="ts" setup name='NotifyBuildIn'>

@@ -1,8 +1,8 @@
 import { defineComponent } from "vue";
 import type { CSSProperties, PropType } from "vue";
-import { Modal } from 'jetlinks-ui-components'
+import { Modal } from 'ant-design-vue'
 import { VueCropper } from 'vue-cropper';
-import { useRequest } from '@jetlinks-web/hooks'
+import { useRequest } from '@/hooks'
 import { fileUpload } from '@/api/comm'
 import 'vue-cropper/dist/index.css'
 

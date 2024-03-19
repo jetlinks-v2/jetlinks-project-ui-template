@@ -4,19 +4,15 @@ import ImageUpload from "./Upload/Image/ImageUpload.vue";
 import CardBox from './CardBox/index.vue';
 import Search from './Search'
 import { BasicLayoutPage, BlankLayoutPage, FullPage } from '@/layout'
-import { PageContainer, AIcon, Ellipsis } from 'jetlinks-ui-components'
 
-export default  {
+export default {
     install(app: App) {
         app.component('TitleComponent', TitleComponent)
-          .component('ImageUpload', ImageUpload)
-          .component('CardBox', CardBox)
-          .component('ProSearch', Search)
-          .component('BasicLayoutPage', BasicLayoutPage)
-          .component('BlankLayoutPage', BlankLayoutPage)
-          .component('FullPage', FullPage)
-          .component('PageContainer', PageContainer)
-          .component('AIcon', AIcon)
-          .component('Ellipsis', Ellipsis)
+            .component('ImageUpload', ImageUpload)
+            .component('CardBox', CardBox)
+            .component('ProSearch', Search)
+            .component('BasicLayoutPage', BasicLayoutPage)
+            .component('BlankLayoutPage', BlankLayoutPage)
+            .component('FullPage', FullPage)
     }
 }

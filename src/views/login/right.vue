@@ -10,15 +10,15 @@
                 <p class="desc">{{ title }}</p>
             </div>
             <div class="main">
-                <j-form layout="vertical" :model="formData" :rules="rules" @finish="submit">
-                    <j-form-item label="账号" name="username">
-                        <j-input v-model:value="formData.username" placeholder="请输入账号" :maxlength="64" autocomplete="off" />
-                    </j-form-item>
-                    <j-form-item label="密码" name="password">
-                        <j-input-password v-model:value="formData.password" placeholder="请输入密码" :maxlength="64" autocomplete="off" />
-                    </j-form-item>
-                    <j-form-item v-if="showCode" label="验证码" name="verifyCode">
-                        <j-input
+                <a-form layout="vertical" :model="formData" :rules="rules" @finish="submit">
+                    <a-form-item label="账号" name="username">
+                        <a-input v-model:value="formData.username" placeholder="请输入账号" :maxlength="64" autocomplete="off" />
+                    </a-form-item>
+                    <a-form-item label="密码" name="password">
+                        <a-input-password v-model:value="formData.password" placeholder="请输入密码" :maxlength="64" autocomplete="off" />
+                    </a-form-item>
+                    <a-form-item v-if="showCode" label="验证码" name="verifyCode">
+                        <a-input
                             v-model:value="formData.verifyCode"
                             autocomplete="off"
                             :maxlength="64"
@@ -30,16 +30,16 @@
                                     @click="getCode"
                                 />
                             </template>
-                        </j-input>
-                    </j-form-item>
-                    <j-form-item>
+                        </a-input>
+                    </a-form-item>
+                    <a-form-item>
                         <Remember
                             v-model:value="formData.remember"
                             v-model:expires="formData.expires"
                         />
-                    </j-form-item>
-                    <j-form-item>
-                        <j-button
+                    </a-form-item>
+                    <a-form-item>
+                        <a-button
                             :loading="loading"
                             type="primary"
                             html-type="submit"
@@ -47,9 +47,9 @@
                             block
                         >
                             登录
-                        </j-button>
-                    </j-form-item>
-                </j-form>
+                        </a-button>
+                    </a-form-item>
+                </a-form>
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
 <script setup name="LoginRight" lang="ts">
 import Remember from './remember.vue'
 import { getImage } from '@jetlinks-web/utils'
-import { useRequest } from '@jetlinks-web/hooks'
+import { useRequest } from '@/hooks'
 import {captchaConfig, codeUrl} from '@/api/login'
 import { rules } from './util'
 

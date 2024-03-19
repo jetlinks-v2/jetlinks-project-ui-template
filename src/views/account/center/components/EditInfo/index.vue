@@ -1,5 +1,5 @@
 <template>
-    <j-modal
+    <a-modal
         visible
         title="编辑"
         @ok="handleOk"
@@ -9,10 +9,10 @@
         :zIndex="1100"
         :maskClosable='false'
     >
-        <j-form :model="form" layout="vertical" ref="formRef">
-            <j-row :gutter="24">
-                <j-col :span="12">
-                    <j-form-item
+        <a-form :model="form" layout="vertical" ref="formRef">
+            <a-row :gutter="24">
+                <a-col :span="12">
+                    <a-form-item
                         label="姓名"
                         name="name"
                         :rules="[
@@ -20,49 +20,49 @@
                             { max: 64, message: '最多可输入64个字符' },
                         ]"
                     >
-                        <j-input
+                        <a-input
                             v-model:value="form.name"
                             placeholder="请输入姓名"
                         />
-                    </j-form-item>
-                </j-col>
-                <j-col :span="12">
-                    <j-form-item label="用户名">
-                        <j-input
+                    </a-form-item>
+                </a-col>
+                <a-col :span="12">
+                    <a-form-item label="用户名">
+                        <a-input
                             v-model:value="form.username"
                             placeholder="请输入用户名"
                             disabled
                         />
-                    </j-form-item>
-                </j-col>
-            </j-row>
-            <j-row :gutter="24">
-                <j-col :span="12">
-                    <j-form-item label="角色">
-                        <j-input
+                    </a-form-item>
+                </a-col>
+            </a-row>
+            <a-row :gutter="24">
+                <a-col :span="12">
+                    <a-form-item label="角色">
+                        <a-input
                             :value="
                                 form.roleList.map((item) => item.name).join(',')
                             "
                             placeholder="请选择角色"
                             disabled
                         />
-                    </j-form-item>
-                </j-col>
-                <j-col :span="12">
-                    <j-form-item label="组织">
-                        <j-input
+                    </a-form-item>
+                </a-col>
+                <a-col :span="12">
+                    <a-form-item label="组织">
+                        <a-input
                             :value="
                                 form.orgList.map((item) => item.name).join(',')
                             "
                             placeholder="请选择组织"
                             disabled
                         />
-                    </j-form-item>
-                </j-col>
-            </j-row>
-            <j-row :gutter="24">
-                <j-col :span="12">
-                    <j-form-item
+                    </a-form-item>
+                </a-col>
+            </a-row>
+            <a-row :gutter="24">
+                <a-col :span="12">
+                    <a-form-item
                         label="手机号"
                         name="telephone"
                         :rules="[
@@ -72,14 +72,14 @@
                             },
                         ]"
                     >
-                        <j-input
+                        <a-input
                             v-model:value="form.telephone"
                             placeholder="请输入手机号"
                         />
-                    </j-form-item>
-                </j-col>
-                <j-col :span="12">
-                    <j-form-item
+                    </a-form-item>
+                </a-col>
+                <a-col :span="12">
+                    <a-form-item
                         label="邮箱"
                         name="email"
                         :rules="[
@@ -89,15 +89,15 @@
                             },
                         ]"
                     >
-                        <j-input
+                        <a-input
                             v-model:value="form.email"
                             placeholder="请输入邮箱"
                         />
-                    </j-form-item>
-                </j-col>
-            </j-row>
-        </j-form>
-    </j-modal>
+                    </a-form-item>
+                </a-col>
+            </a-row>
+        </a-form>
+    </a-modal>
 </template>
 
 <script setup lang="ts">

@@ -1,22 +1,22 @@
 <template>
-    <j-modal
+    <a-modal
         visible
         title="菜单图标"
         width="800px"
         @cancel="emits('close')"
         @ok="confirm"
     >
-        <j-radio-group v-model:value="selected" class="radio">
-            <j-radio-button
+        <a-radio-group v-model:value="selected" class="radio">
+            <a-radio-button
                 v-for="typeStr in iconKeys"
                 :value="typeStr"
                 :key="typeStr"
                 :class="{ active: selected === typeStr }"
             >
                 <AIcon :type="typeStr" />
-            </j-radio-button>
-        </j-radio-group>
-    </j-modal>
+            </a-radio-button>
+        </a-radio-group>
+    </a-modal>
 </template>
 
 <script setup lang="ts">

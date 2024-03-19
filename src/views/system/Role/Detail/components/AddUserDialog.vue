@@ -1,6 +1,6 @@
 <template>
-    <j-modal visible title="新增" width="1000px" @ok="confirm" @cancel="emits('update:visible', false)">
-        <pro-search :columns="columns" target="simple" @search="(params: any) => queryParams = { ...params }" />
+    <a-modal visible title="新增" width="1000px" @ok="confirm" @cancel="emits('update:visible', false)">
+        <j-pro-search :columns="columns" target="simple" @search="(params: any) => queryParams = { ...params }" />
 
         <j-pro-table ref="tableRef" :columns="columns" :request="getUserList" model="TABLE" :params="queryParams"
             :rowSelection="{
@@ -10,7 +10,7 @@
                 onSelectNone: ()=>selectedRowKeys = []
             }">
         </j-pro-table>
-    </j-modal>
+    </a-modal>
 </template>
 
 <script setup lang="ts" name="RoleAddUser">

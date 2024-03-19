@@ -1,5 +1,5 @@
 <template>
-    <j-modal
+    <a-modal
         visible
         title="重置密码"
         width="615px"
@@ -11,13 +11,13 @@
     >
         <div>
             <div style="background-color: #f8f9fc; padding: 24px">
-                <j-steps
+                <a-steps
                     :current="current"
                     size="small"
                     progress-dot
                     @change="onChange"
                 >
-                    <j-step
+                    <a-step
                         :title="item"
                         v-for="(item, index) in list"
                         :key="item"
@@ -27,12 +27,12 @@
                             <span v-if="current < index">未开始</span>
                             <span v-if="current > index">已完成</span>
                         </template>
-                    </j-step>
-                </j-steps>
+                    </a-step>
+                </a-steps>
             </div>
             <div class="content">
-                <j-form :model="form" layout="vertical" ref="formRef">
-                    <j-form-item
+                <a-form :model="form" layout="vertical" ref="formRef">
+                    <a-form-item
                         label="当前密码"
                         name="oldPassword"
                         v-show="current === 0"
@@ -41,12 +41,12 @@
                             { validator: checkMethods.old, trigger: 'blur' },
                         ]"
                     >
-                        <j-input
+                        <a-input
                             v-model:value="form.oldPassword"
                             placeholder="请输入当前密码"
                         />
-                    </j-form-item>
-                    <j-form-item
+                    </a-form-item>
+                    <a-form-item
                         label="新密码"
                         name="newPassword"
                         v-show="current === 1"
@@ -55,12 +55,12 @@
                             { validator: checkMethods.new, trigger: 'blur' },
                         ]"
                     >
-                        <j-input-password
+                        <a-input-password
                             v-model:value="form.newPassword"
                             placeholder="请输入新密码"
                         />
-                    </j-form-item>
-                    <j-form-item
+                    </a-form-item>
+                    <a-form-item
                         label="确认新密码"
                         v-show="current === 2"
                         name="confirmPassword"
@@ -72,25 +72,25 @@
                             },
                         ]"
                     >
-                        <j-input
+                        <a-input
                             v-model:value="form.confirmPassword"
                             placeholder="请确认新密码"
                         />
-                    </j-form-item>
-                </j-form>
+                    </a-form-item>
+                </a-form>
             </div>
         </div>
         <template #footer>
-            <j-button v-if="current === 0" @click="emits('close')"
-                >取消</j-button
+            <a-button v-if="current === 0" @click="emits('close')"
+                >取消</a-button
             >
-            <j-button v-if="current === 2" @click="onPrev">上一步</j-button>
-            <j-button type="primary" v-else @click="onNext">下一步</j-button>
-            <j-button v-if="current === 2" type="primary" @click="handleOk"
-                >完成</j-button
+            <a-button v-if="current === 2" @click="onPrev">上一步</a-button>
+            <a-button type="primary" v-else @click="onNext">下一步</a-button>
+            <a-button v-if="current === 2" type="primary" @click="handleOk"
+                >完成</a-button
             >
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -100,7 +100,7 @@ import {
     validateField_api,
 } from '@/api/account/center';
 import { onlyMessage } from "@jetlinks-web/utils";
-import { Modal } from 'jetlinks-ui-components';
+import { Modal } from 'ant-design-vue';
 
 type formType = {
     oldPassword: string;

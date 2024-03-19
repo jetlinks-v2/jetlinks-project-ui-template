@@ -1,31 +1,31 @@
 <template>
-    <j-spin :spinning="spinning">
+    <a-spin :spinning="spinning">
         <div class="child-item">
             <div class="child-item-left">
                 <div style="color: #333333">
                     {{ data?.name }}
                 </div>
                 <div>
-                    <j-tooltip :title="!action ? '暂无权限，请联系管理员' : ''">
-                        <j-switch
+                    <a-tooltip :title="!action ? '暂无权限，请联系管理员' : ''">
+                        <a-switch
                             :disabled="!action"
                             @change="onSwitchChange"
                             :checked="checked"
                         />
-                    </j-tooltip>
+                    </a-tooltip>
                 </div>
                 <div
                     class="child-item-left-auth"
                     :class="{ disabled: !checked }"
                 >
-                    <j-tooltip>
+                    <a-tooltip>
                         <template #title>
                             <span v-if="!update">暂无权限，请联系管理员</span>
                             <div v-else>
                                 通过角色控制【{{ data.name }}】的所有的通知方式可被哪些用户订阅。
                             </div>
                         </template>
-                        <j-button
+                        <a-button
                             :disabled="!update || !checked"
                             type="text"
                             @click="onAuth"
@@ -41,8 +41,8 @@
                             <span class="child-item-left-auth-text"
                                 >权限控制</span
                             >
-                        </j-button>
-                    </j-tooltip>
+                        </a-button>
+                    </a-tooltip>
                 </div>
             </div>
             <div class="child-item-right" :class="{ disabled: !checked }">
@@ -67,18 +67,18 @@
                                         'inside-mail'
                                     "
                                 >
-                                    <j-menu mode="">
-                                        <j-menu-item>
-                                            <PermissionButton
+                                    <a-menu mode="">
+                                        <a-menu-item>
+                                            <j-permission-button
                                                 @click="onView(slotProps)"
                                                 type="link"
                                                 :hasPermission="true"
                                             >
                                                 查看
-                                            </PermissionButton>
-                                        </j-menu-item>
-                                        <j-menu-item>
-                                            <PermissionButton
+                                            </j-permission-button>
+                                        </a-menu-item>
+                                        <a-menu-item>
+                                            <j-permission-button
                                                 @click="onEdit(slotProps)"
                                                 type="link"
                                                 :hasPermission="[
@@ -86,10 +86,10 @@
                                                 ]"
                                             >
                                                 编辑
-                                            </PermissionButton>
-                                        </j-menu-item>
-                                        <j-menu-item>
-                                            <PermissionButton
+                                            </j-permission-button>
+                                        </a-menu-item>
+                                        <a-menu-item>
+                                            <j-permission-button
                                                 @click="onDelete(slotProps.id)"
                                                 danger
                                                 type="link"
@@ -98,9 +98,9 @@
                                                 ]"
                                             >
                                                 删除
-                                            </PermissionButton>
-                                        </j-menu-item>
-                                    </j-menu>
+                                            </j-permission-button>
+                                        </a-menu-item>
+                                    </a-menu>
                                 </template>
                             </j-dropdown>
                             <div class="box-item-text">
@@ -110,18 +110,18 @@
                     </template>
                 </MCarousel>
 
-                <j-tooltip :title="!add ? '暂无权限，请联系管理员' : ''">
-                    <j-button
+                <a-tooltip :title="!add ? '暂无权限，请联系管理员' : ''">
+                    <a-button
                         class="box-item-add"
                         :disabled="!add"
                         @click="onAdd"
                     >
                         <AIcon type="PlusOutlined" />
-                    </j-button>
-                </j-tooltip>
+                    </a-button>
+                </a-tooltip>
             </div>
         </div>
-    </j-spin>
+    </a-spin>
     <Save
         :data="current"
         v-if="visible"
@@ -159,8 +159,8 @@ import {
     editChannelConfig,
     updateChannelConfig,
 } from '@/api/system/noticeRule';
-import { Modal, Checkbox } from 'jetlinks-ui-components';
-import { usePermission } from '@jetlinks-web/components/src/PermissionButton/hooks'
+import { Modal, Checkbox } from 'ant-design-vue';
+import { usePermission } from '@jetlinks-web/hooks'
 import { LocalStore } from '@jetlinks-web/utils';
 import { useUserStore } from '@/store/user'
 

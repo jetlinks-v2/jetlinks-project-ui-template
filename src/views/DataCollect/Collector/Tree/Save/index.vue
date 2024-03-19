@@ -1,11 +1,11 @@
 <template lang="">
-    <j-modal
+    <a-modal
         :title="data.id ? '编辑' : '新增'"
         :visible="true"
         width="700px"
         @cancel="handleCancel"
     >
-        <j-form
+        <a-form
             class="form"
             layout="vertical"
             :model="formData"
@@ -13,12 +13,12 @@
             autocomplete="off"
             ref="formRef"
         >
-            <j-form-item
+            <a-form-item
                 label="所属通道"
                 name="channelId"
                 :rules="LeftTreeRules.channelId"
             >
-                <j-select
+                <a-select
                     style="width: 100%"
                     v-model:value="formData.channelId"
                     :options="channelList"
@@ -29,51 +29,51 @@
                     :disabled="!!id"
                     @select="channelSelect"
                 />
-            </j-form-item>
-            <j-form-item
+            </a-form-item>
+            <a-form-item
                 label="采集器名称"
                 name="name"
                 :rules="LeftTreeRules.name"
             >
-                <j-input
+                <a-input
                     placeholder="请输入采集器名称"
                     v-model:value="formData.name"
                 />
 
-            </j-form-item>
-            <j-form-item  v-if="provider === 'snap7'" label="IP" :name="['configuration', 'host']" :rules="LeftTreeRules.host" >
-              <j-input v-model:value="formData.configuration.host" autocomplete="off" placeholder="请输入通道IP" :disabled="false"/>
-            </j-form-item>
-            <j-form-item v-if="provider === 'snap7'" label="端口" :name="['configuration', 'port']" :rules="LeftTreeRules.port">
-              <j-input-number style="width: 100%" v-model:value="formData.configuration.port" :precision="0" autocomplete="off" placeholder="请输入通道端口"/>
-            </j-form-item>
-            <j-form-item v-if="provider === 'snap7'" label="机架号" :name="['configuration', 'rack']" :rules="LeftTreeRules.rack">
-              <j-input-number style="width: 100%" v-model:value="formData.configuration.rack" autocomplete="off" placeholder="请输入机架号" :maxlength="64" />
-            </j-form-item>
-            <j-form-item v-if="provider === 'snap7'" label="型号" :name="['configuration', 'type']" :rules="LeftTreeRules.type">
-              <j-select v-model:value="formData.configuration.type" placeholder="请选择型号" @change="typeChange">
-                <j-select-option v-for="item in typeOptions" :key="item.value" :value="item.value">{{ item.label }}</j-select-option>
-              </j-select>
-            </j-form-item>
-            <j-form-item v-if="provider === 'snap7'" label="槽位" :name="['configuration', 'slot']" :rules="LeftTreeRules.slot">
-              <j-input-number style="width: 100%" v-model:value="formData.configuration.slot" autocomplete="off" placeholder="请输入槽位" :maxlength="64" :disabled="formData.configuration.type == 'S200' || formData.configuration.type == 'S1200'"/>
-            </j-form-item>
-            <j-form-item v-if="provider === 'snap7'" label="超时时间（毫秒）" :name="['configuration', 'timeout']" :rules="LeftTreeRules.timeout">
-              <j-input-number style="width: 100%" v-model:value="formData.configuration.timeout" autocomplete="off" placeholder="请输入超时时间" :maxlength="64" />
-            </j-form-item>
-            <j-form-item v-if="provider === 'snap7'" label="数据读取方式" :name="['configuration', 'serializable']">
-              <j-radio-group v-model:value="formData.configuration.serializable">
-                <j-radio-button :value="false">并行</j-radio-button>
-                <j-radio-button :value="true">串行</j-radio-button>
-              </j-radio-group>
-            </j-form-item>
-            <j-form-item
+            </a-form-item>
+            <a-form-item  v-if="provider === 'snap7'" label="IP" :name="['configuration', 'host']" :rules="LeftTreeRules.host" >
+              <a-input v-model:value="formData.configuration.host" autocomplete="off" placeholder="请输入通道IP" :disabled="false"/>
+            </a-form-item>
+            <a-form-item v-if="provider === 'snap7'" label="端口" :name="['configuration', 'port']" :rules="LeftTreeRules.port">
+              <a-input-number style="width: 100%" v-model:value="formData.configuration.port" :precision="0" autocomplete="off" placeholder="请输入通道端口"/>
+            </a-form-item>
+            <a-form-item v-if="provider === 'snap7'" label="机架号" :name="['configuration', 'rack']" :rules="LeftTreeRules.rack">
+              <a-input-number style="width: 100%" v-model:value="formData.configuration.rack" autocomplete="off" placeholder="请输入机架号" :maxlength="64" />
+            </a-form-item>
+            <a-form-item v-if="provider === 'snap7'" label="型号" :name="['configuration', 'type']" :rules="LeftTreeRules.type">
+              <a-select v-model:value="formData.configuration.type" placeholder="请选择型号" @change="typeChange">
+                <a-select-option v-for="item in typeOptions" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item v-if="provider === 'snap7'" label="槽位" :name="['configuration', 'slot']" :rules="LeftTreeRules.slot">
+              <a-input-number style="width: 100%" v-model:value="formData.configuration.slot" autocomplete="off" placeholder="请输入槽位" :maxlength="64" :disabled="formData.configuration.type == 'S200' || formData.configuration.type == 'S1200'"/>
+            </a-form-item>
+            <a-form-item v-if="provider === 'snap7'" label="超时时间（毫秒）" :name="['configuration', 'timeout']" :rules="LeftTreeRules.timeout">
+              <a-input-number style="width: 100%" v-model:value="formData.configuration.timeout" autocomplete="off" placeholder="请输入超时时间" :maxlength="64" />
+            </a-form-item>
+            <a-form-item v-if="provider === 'snap7'" label="数据读取方式" :name="['configuration', 'serializable']">
+              <a-radio-group v-model:value="formData.configuration.serializable">
+                <a-radio-button :value="false">并行</a-radio-button>
+                <a-radio-button :value="true">串行</a-radio-button>
+              </a-radio-group>
+            </a-form-item>
+            <a-form-item
                 v-if="provider === 'COLLECTOR_GATEWAY'"
                 label="通讯协议"
                 :name="['collectorProvider']"
                 :rules="[{ required: true, message: '请选择通讯协议' }]"
             >
-              <j-select
+              <a-select
                   style="width: 100%"
                   v-model:value="formData.collectorProvider"
                   :options="providerListItems"
@@ -83,22 +83,22 @@
                   :filter-option="filterOption"
                   :disabled="!!id"
               />
-            </j-form-item>
-            <j-form-item
+            </a-form-item>
+            <a-form-item
                 v-if="visibleUnitId"
                 :name="['configuration', 'unitId']"
                 :rules="LeftTreeRules.unitId"
                 label="从机地址"
             >
-              <j-input-number
+              <a-input-number
                   style="width: 100%"
                   placeholder="请输入从机地址"
                   v-model:value="formData.configuration.unitId"
                   :min="0"
                   :max="255"
               />
-            </j-form-item>
-            <j-form-item
+            </a-form-item>
+            <a-form-item
                 v-if="provider !== 'COLLECTOR_GATEWAY'"
                 :name="['configuration', 'inheritBreakerSpec', 'type']"
                 :rules="LeftTreeRules.type"
@@ -114,11 +114,11 @@
                                   ]"
                   @change="changeCardSelectType"
               />
-            </j-form-item>
+            </a-form-item>
             <p style="color: #616161" v-if="provider !== 'COLLECTOR_GATEWAY'">
               {{ getTypeTooltip(formData.configuration.inheritBreakerSpec.type) }}
             </p>
-            <j-form-item
+            <a-form-item
                 v-if="visibleEndian"
                 :name="['configuration', 'endian']"
                 :rules="LeftTreeRules.endian"
@@ -134,8 +134,8 @@
                 @change="changeCardSelectEndian"
                 :column="2"
             />
-            </j-form-item>
-            <j-form-item
+            </a-form-item>
+            <a-form-item
                 v-if="visibleEndian"
                 :name="['configuration', 'endianIn']"
                 :rules="LeftTreeRules.endianIn"
@@ -151,7 +151,7 @@
                 @change="changeCardSelectEndianIn"
                 :column="2"
             />
-            </j-form-item>
+            </a-form-item>
             <div v-if="visibleEndian" style="color: #616161">
             <p>当前内存布局: {{ endianData }}</p>
             <p>
@@ -159,12 +159,12 @@
               具有4种内存布局，其它只有ABCD、DCBA两种内存布局(以双字配置为准)
             </p>
             </div>
-            <j-form-item
+            <a-form-item
                 v-if="provider !== 'snap7'"
                 :name="['configuration', 'requestTimeout']"
                 :rules="LeftTreeRules.requestTimeout"
             >
-                <j-input-number
+                <a-input-number
                     style="width: 100%"
                     placeholder="请输入请求超时时间配置"
                     v-model:value="formData.configuration.requestTimeout"
@@ -172,20 +172,20 @@
                     :max="60000"
                     :min="2000"
                 />
-            </j-form-item>
-            <j-form-item label="说明" name="description">
-                <j-textarea
+            </a-form-item>
+            <a-form-item label="说明" name="description">
+                <a-textarea
                     placeholder="请输入说明"
                     v-model:value="formData.description"
                     :maxlength="200"
                     :rows="3"
                     showCount
                 />
-            </j-form-item>
-        </j-form>
+            </a-form-item>
+        </a-form>
         <template #footer>
-            <j-button key="back" @click="handleCancel">取消</j-button>
-            <PermissionButton
+            <a-button key="back" @click="handleCancel">取消</a-button>
+            <j-permission-button
                 key="submit"
                 type="primary"
                 :loading="loading"
@@ -196,9 +196,9 @@
                 }`"
             >
                 确认
-            </PermissionButton>
+            </j-permission-button>
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 <script lang="ts" name="CollectorTreeSave" setup>
 import { save, update, getProviders } from '@/api/data-collect/collector';

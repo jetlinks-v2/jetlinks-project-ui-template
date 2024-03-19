@@ -1,5 +1,5 @@
 <template>
-  <j-modal
+  <a-modal
     visible
     :title="dialogTitle"
     width="1000px"
@@ -8,8 +8,8 @@
     :confirmLoading="loading"
     class="edit-dialog-container"
   >
-    <j-form ref="formRef" :model="modelRef" layout="vertical">
-      <j-form-item
+    <a-form ref="formRef" :model="modelRef" layout="vertical">
+      <a-form-item
         name="id"
         :rules="[
           { required: true, message: '请输入标识' },
@@ -18,17 +18,17 @@
       >
         <template #label>
           <span style="margin-right: 5px">标识</span>
-          <j-tooltip title="标识ID需与代码中的标识ID一致">
+          <a-tooltip title="标识ID需与代码中的标识ID一致">
             <AIcon type="QuestionCircleOutlined" />
-          </j-tooltip>
+          </a-tooltip>
         </template>
-        <j-input
+        <a-input
           v-model:value="modelRef.id"
           placeholder="请输入标识(ID)"
           :disabled="props.data.id"
         />
-      </j-form-item>
-      <j-form-item
+      </a-form-item>
+      <a-form-item
         name="name"
         label="名称"
         :rules="[
@@ -39,10 +39,10 @@
           },
         ]"
       >
-        <j-input v-model:value="modelRef.name" placeholder="请输入名称" />
-      </j-form-item>
+        <a-input v-model:value="modelRef.name" placeholder="请输入名称" />
+      </a-form-item>
       <!-- 操作权限列表 -->
-      <j-table
+      <a-table
         :columns="editColumns"
         :data-source="modelRef.actions"
         :pagination="false"
@@ -54,17 +54,17 @@
             {{ `#${index + 1}.` }}
           </template>
           <template v-else-if="column.key === 'actions'">
-            <j-button
+            <a-button
               style="padding: 0"
               type="link"
               danger
               @click="clickRemove(index)"
             >
               <AIcon type="DeleteOutlined" />
-            </j-button>
+            </a-button>
           </template>
           <template v-else>
-            <j-form-item
+            <a-form-item
               :name="['actions', index, column.key]"
               :rules="[
                 {
@@ -77,20 +77,20 @@
                 },
               ]"
             >
-              <j-input v-model:value="record[column.key]" />
-            </j-form-item>
+              <a-input v-model:value="record[column.key]" />
+            </a-form-item>
           </template>
         </template>
-      </j-table>
-    </j-form>
-    <j-button
+      </a-table>
+    </a-form>
+    <a-button
       type="dashed"
       style="width: 100%; margin-top: 5px"
       @click="clickAdd"
     >
       <AIcon type="PlusOutlined" /> 添加
-    </j-button>
-  </j-modal>
+    </a-button>
+  </a-modal>
 </template>
 
 <script setup lang="ts" name="EditDialog">
@@ -99,7 +99,7 @@ import {
   editPermission_api,
   addPermission_api,
 } from '@/api/system/permission'
-import { useRequest } from '@jetlinks-web/hooks'
+import { useRequest } from '@/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { editColumns, defaultAction } from '../util'
 

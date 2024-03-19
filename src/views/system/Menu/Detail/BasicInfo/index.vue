@@ -7,7 +7,7 @@
     <div class="card">
       <TitleComponent data="权限配置" />
       <Permission ref="permissionFormRef" :value="value" />
-      <PermissionButton
+      <j-permission-button
         :hasPermission="`${permission}:${
           route.params.id === ':id' ? 'add' : 'update'
         }`"
@@ -16,17 +16,17 @@
         @click="onSave"
       >
         保存
-      </PermissionButton>
+      </j-permission-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from '@jetlinks-web/router'
+import { useRoute } from '@/router'
 import Info from './Info.vue'
 import Permission from './Permission.vue'
 import { addMenu, updateMenu } from '@/api/system/menu'
-import { useRequest } from '@jetlinks-web/hooks'
+import { useRequest } from '@/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { useMenuStore } from '@/store/menu'
 
