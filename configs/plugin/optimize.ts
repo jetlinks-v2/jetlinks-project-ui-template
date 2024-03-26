@@ -34,7 +34,6 @@ export function optimizeDeps() {
     configResolved: async (config) => {
       const components = [
         ...optimizeComponents("ant-design-vue"),
-        ...optimizeComponents("jetlinks-ui-components"),
       ];
       let concat = config.optimizeDeps.include.concat(components);
       config.optimizeDeps.include = Array.from(new Set(concat));
