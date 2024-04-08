@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { bindUser_api } from '@/api/system/department'
-import { useRequest } from '@/hooks'
+import { useRequest } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { bindUserColumns, requestFun } from '../../util'
 

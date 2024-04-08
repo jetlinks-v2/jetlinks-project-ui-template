@@ -57,7 +57,7 @@
 <script setup name="LoginRight" lang="ts">
 import Remember from './remember.vue'
 import { getImage } from '@jetlinks-web/utils'
-import { useRequest } from '@/hooks'
+import { useRequest } from '@jetlinks-web/hooks'
 import {captchaConfig, codeUrl} from '@/api/login'
 import { rules } from './util'
 

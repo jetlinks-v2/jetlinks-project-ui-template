@@ -14,7 +14,7 @@
   </a-spin>
 </template>
 <script setup name="Login" lang="ts">
-import { useRequest } from '@/hooks'
+import { useRequest } from '@jetlinks-web/hooks'
 import { login, encryptionConfig } from '@/api/login'
 import { getImage, setToken, encrypt } from '@jetlinks-web/utils'
 import { useUserStore } from '@/store/user'

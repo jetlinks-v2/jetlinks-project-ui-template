@@ -84,7 +84,7 @@ import {
   updateUser_api,
   updatePassword_api,
 } from '@/api/system/user'
-import { useRequest } from '@/hooks';
+import { useRequest } from '@jetlinks-web/hooks';
 
 // 传入参数
 const props = defineProps({

@@ -99,7 +99,7 @@ import {
   editPermission_api,
   addPermission_api,
 } from '@/api/system/permission'
-import { useRequest } from '@/hooks'
+import { useRequest } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { editColumns, defaultAction } from '../util'
 

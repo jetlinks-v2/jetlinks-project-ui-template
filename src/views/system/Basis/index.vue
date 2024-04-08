@@ -106,7 +106,7 @@
 <script setup name="Basis" lang="ts">
 import {ref, reactive} from 'vue'
 import {formDataType} from '@/views/system/Basis/typing'
-import {useRequest} from '@/hooks';
+import {useRequest} from '@jetlinks-web/hooks';
 import {save_api} from '@/api/system/basis';
 import {useSystemStore} from '@/store/system';
 import Upload from '@/views/system/Basis/components/upload/upload.vue'
