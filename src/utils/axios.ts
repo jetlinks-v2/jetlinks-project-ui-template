@@ -1,5 +1,5 @@
 import { TOKEN_KEY, BASE_API } from '@jetlinks-web/constants'
-import { getToken, removeToken } from '@jetlinks-web/utils'
+import { getToken } from '@jetlinks-web/utils'
 import axios from 'axios'
 import type {
     AxiosInstance,
@@ -9,8 +9,7 @@ import type {
 } from 'axios'
 import { notification as Notification } from 'ant-design-vue'
 import type { AxiosResponseRewrite } from '@jetlinks-web/types'
-import { router } from '@/router'
-import { LOGIN_ROUTE } from "@/router/basic";
+import { jumpLogin } from '@/router'
 
 const SUCCESS_CODE = 200 // 成功代码
 const filterUrl: string[] = []
@@ -21,10 +20,6 @@ const instance: AxiosInstance = axios.create({
     baseURL: BASE_API
 })
 
-const jumpLogin = () => {
-    removeToken()
-    router.push(LOGIN_ROUTE.path)
-}
 
 const showNotification = (description: string, key?: string | number, show: boolean = true) => {
     if (show) {

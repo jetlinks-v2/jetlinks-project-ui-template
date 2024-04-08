@@ -21,7 +21,7 @@
 
 <script setup lang="ts" name="HeaderUser">
 import { computed } from "vue";
-import { jumpLogin, useRouter } from '@/router'
+import { jumpLogin } from '@/router'
 import { useUserStore } from '@/store/user'
 import { logout } from '@/api/login'
 

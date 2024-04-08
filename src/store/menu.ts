@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { router } from '@/router'
+import router from '@/router'
 import { cloneDeep } from 'lodash-es'
 import { setParamsValue } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'

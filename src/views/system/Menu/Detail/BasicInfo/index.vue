@@ -22,7 +22,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from '@/router'
 import Info from './Info.vue'
 import Permission from './Permission.vue'
 import { addMenu, updateMenu } from '@/api/system/menu'

@@ -1,92 +1,41 @@
 import {
   createRouter,
   createWebHashHistory,
-  useRouter,
-  useRoute,
 } from 'vue-router'
-import type { Router } from 'vue-router'
 import { getToken, removeToken } from '@jetlinks-web/utils'
-import { NOT_FIND_ROUTE } from './basic'
-import { assign } from 'lodash-es'
-import { RouteRecordItem } from '@jetlinks-web/types'
-
-export let router: Router
-
-export { useRouter, useRoute }
-
-let LOGIN_ROUTE_ITEM: any
-
-interface Store {
-  UserInfoStore?: any
-  MenuStore?: any
-  SystemStore?: any
-  AuthStore?: any
-}
-
-interface RouteOptions {
-  Login: RouteRecordItem
-  base?: RouteRecordItem[]
-  tokenFilter?: string[]
-  /**
-   * 刷新页面不需要请求菜单
-   */
-  filterPath?: string[]
-}
-
-export const store: Store = {}
+import { NOT_FIND_ROUTE, LOGIN_ROUTE } from './basic'
+import {useUserStore} from "@/store/user";
+import {useSystemStore} from "@/store/system";
+import {useMenuStore} from "@/store/menu";
 
 let TokenFilterRoute: string[] = []
 
 let FilterPath: string[] = []
 
-export const initRoute = (options?: RouteOptions): Router => {
-  LOGIN_ROUTE_ITEM = options?.Login
-  const baseRoute = [...( options?.base || [] ), LOGIN_ROUTE_ITEM]
-  router = createRouter({
-    history: createWebHashHistory(),
-    routes: baseRoute,
-    scrollBehavior(to, form, savedPosition) {
-      return savedPosition || {top: 0}
-    },
-  })
-
-  TokenFilterRoute = options?.tokenFilter || []
-  FilterPath = options?.filterPath || []
-  return router
-}
-
-export const jumpLogin = () => {
-  setTimeout(() => {
-    removeToken()
-    if (router) {
-      router.replace({
-        path: LOGIN_ROUTE_ITEM?.path,
-      })
-    } else {
-      location.href = LOGIN_ROUTE_ITEM?.path
-    }
-  })
-}
-
-/**
- * 获取子项目中的store
- * @param s {Store}
- */
-export const initRouteAssignStore = (s: Store) => {
-  assign(store, s)
-}
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: [
+    LOGIN_ROUTE
+  ],
+  scrollBehavior(to, form, savedPosition) {
+    return savedPosition || {top: 0}
+  },
+})
 
 const NoTokenJump = (to: any, next: any, isLogin: boolean) => {
   // 登录页，不需要token 的页面直接放行，否则跳转登录页
   if (isLogin || TokenFilterRoute.includes(to.path)) {
     next()
   } else {
-    next({path: LOGIN_ROUTE_ITEM?.path})
+    next({path: LOGIN_ROUTE.path})
   }
 }
 
 const getRoutesByServer = async (to: any, next: any) => {
-  const {UserInfoStore, SystemStore, MenuStore} = store
+
+  const UserInfoStore = useUserStore()
+  const SystemStore = useSystemStore()
+  const MenuStore = useMenuStore()
 
   if (!Object.keys(UserInfoStore.userInfo).length) {
     // 是否有用户信息
@@ -114,22 +63,27 @@ const getRoutesByServer = async (to: any, next: any) => {
   }
 }
 
-/**
- * 创建动态菜单
- */
-export const createAuthRoute = (beforeEachFn?: Function) => {
-  router.beforeEach((to, from, next) => {
-    const token = getToken()
-    const isLogin = to.path === LOGIN_ROUTE_ITEM?.path
-    beforeEachFn?.(to, from, next)
-    if (token) {
-      if (isLogin) {
-        next({path: '/'})
-      } else {
-        getRoutesByServer(to, next)
-      }
+router.beforeEach((to, from, next) => {
+  const token = getToken()
+  const isLogin = to.path === LOGIN_ROUTE.path
+  if (token) {
+    if (isLogin) {
+      next({path: '/'})
     } else {
-      NoTokenJump(to, next, isLogin)
+      getRoutesByServer(to, next)
     }
+  } else {
+    NoTokenJump(to, next, isLogin)
+  }
+})
+
+export const jumpLogin = () => {
+  setTimeout(() => {
+    removeToken()
+    router.replace({
+      path: LOGIN_ROUTE.path,
+    })
   })
 }
+
+export default router
