@@ -14,9 +14,9 @@
 import { defineComponent, ref } from 'vue';
 import AccessLog from './Access/index.vue';
 import SystemLog from './System/index.vue';
-import { userRouterParams } from '@jetlinks-web/hooks';
+import { useRouterParams } from '@jetlinks-web/hooks';
 
-const routerParams = userRouterParams();
+const routerParams = useRouterParams();
 const activeKey = ref('1');
 
 const list = [

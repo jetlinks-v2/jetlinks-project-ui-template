@@ -18,11 +18,11 @@
 import NotificationRecord from './components/NotificationRecord/index.vue'
 import { getInitData } from '../data'
 import { getAllNotice } from '@/api/account/center'
-import { userRouterParams } from '@jetlinks-web/hooks'
+import { useRouterParams } from '@jetlinks-web/hooks'
 import { useUserStore } from '@/store/user'
 
 const tabs = ref<any[]>([])
-const router = userRouterParams()
+const router = useRouterParams()
 const user = useUserStore()
 let initData: any[]
 const queryTypeList = () => {

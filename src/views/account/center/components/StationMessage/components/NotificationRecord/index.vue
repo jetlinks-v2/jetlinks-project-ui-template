@@ -79,7 +79,7 @@ import ViewDialog from './components/ViewDialog.vue'
 import { getList_api, changeStatus_api } from '@/api/account/notificationRecord'
 import dayjs from 'dayjs'
 import { useUserStore } from '@/store/user'
-import { userRouterParams } from '@jetlinks-web/hooks'
+import { useRouterParams } from '@jetlinks-web/hooks'
 import { getTypeList_api } from '@/api/account/notificationSubscription'
 import { onlyMessage } from '@jetlinks-web/utils'
 
@@ -197,7 +197,7 @@ const columns = [
 const viewVisible = ref<boolean>(false)
 const viewItem = ref<any>({})
 
-const routerParams = userRouterParams()
+const routerParams = useRouterParams()
 
 const defaultParams = {
   sorts: [{ name: 'notifyTime', order: 'desc' }],

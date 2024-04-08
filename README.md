@@ -797,7 +797,7 @@ const { data: _data } = useRequest(fetchData)
 
 ##### useRouterParams
 
-提供两个方法 `userRouterParams()`返回当前路由参数`{ params }` 和 `setParamsValue(code, name)`
+提供两个方法 `useRouterParams()`返回当前路由参数`{ params }` 和 `setParamsValue(code, name)`
 设置当前路由参数
 
 ###### useRouterParams

@@ -72,7 +72,7 @@ import { useUserStore } from '@/store/user'
 import UploadAvatar from './components/UploadAvatar/index.vue'
 import { updateMeInfo_api } from '@/api/account/center'
 import { onlyMessage } from '@jetlinks-web/utils'
-import { userRouterParams } from '@jetlinks-web/hooks'
+import { useRouterParams } from '@jetlinks-web/hooks'
 import {
   USER_CENTER_MENU_BUTTON_CODE,
   USER_CENTER_MENU_CODE,
@@ -99,7 +99,7 @@ const tabs = {
   StationMessage,
 }
 
-const router = userRouterParams()
+const router = useRouterParams()
 
 const visible = ref<boolean>(false)
 const editInfoVisible = ref<boolean>(false)
