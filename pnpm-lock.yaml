@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@jetlinks-web/components':
-        specifier: 2.0.2-9
-        version: 2.0.2-9(@types/lodash-es@4.17.11)(lodash@4.17.21)(vue-router@4.2.2)(vue@3.3.4)
+        specifier: 2.0.3
+        version: 2.0.3(@types/lodash-es@4.17.11)(lodash@4.17.21)(vue-router@4.2.2)(vue@3.3.4)
       '@jetlinks-web/constants':
         specifier: ^1.0.2
         version: 1.0.2
@@ -720,8 +720,8 @@ packages:
     engines: {node: '>= 16'}
     dev: false
 
-  /@jetlinks-web/components@2.0.2-9(@types/lodash-es@4.17.11)(lodash@4.17.21)(vue-router@4.2.2)(vue@3.3.4):
-    resolution: {integrity: sha512-NN7ZOBaRz8jFsUdH+ZvqyR63xn58XCs5d72fTZzzqMeKFvvqdYS2ySDOCzo6QCosFTgv8pUDveqCaSLKdTUS0A==}
+  /@jetlinks-web/components@2.0.3(@types/lodash-es@4.17.11)(lodash@4.17.21)(vue-router@4.2.2)(vue@3.3.4):
+    resolution: {integrity: sha512-2xqWLyCbMbCYwZvdWPDfycgluCGFN7+d/uOwI8ENG0YwRAJIAFtui01hB3MwKiWrV8bntSaYKXxk3IEdSxh9Vw==}
     dependencies:
       '@ant-design/icons-vue': 7.0.1(vue@3.3.4)
       '@jetlinks-web/constants': 1.0.2
