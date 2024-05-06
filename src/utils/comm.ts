@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
-import { downloadFileByUrl } from '@jetlinks-web/utils'
+import { downloadFileByUrl, getImage } from '@jetlinks-web/utils'
+import {getFileUrlById} from "@/api/comm";
 
 export const downloadJson = (record: Record<string, any>, fileName: string, format?: string) => {
     const _time = dayjs(new Date()).format(format || 'YYYY_MM_DD')
@@ -28,3 +29,14 @@ export const downloadJson = (record: Record<string, any>, fileName: string, form
         });
         return e;
       };
+
+/**
+ * 为了区分是本地的图片还是线上的图片
+ * @param id
+ */
+export const getImageUrl = (id: string) => {
+    if(id.includes('localhost')){
+        return getImage(id.replace('localhost', ''))
+    }
+    return getFileUrlById(id)
+}

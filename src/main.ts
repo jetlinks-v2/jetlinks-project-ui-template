@@ -9,12 +9,25 @@ import components from './components'
 import 'ant-design-vue/dist/antd.variable.min.css'
 import './style.css'
 import directive from '@/directive'
+import { LocalStore, setToken } from "@jetlinks-web/utils";
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+dayjs.locale('zh-cn');
+
+(window as any).microApp?.addDataListener((data: any) => {
+    console.log(data)
+    if (data.token) {
+        setToken(data.token)
+    }
+
+    if (data.appId) {
+        LocalStore.set('appId', data.appId)
+    }
+}, true)
 
 const app = createApp(App)
-initPackages()
 
-app
-    .use(pinia)
+app.use(pinia)
     .use(router)
     .use(directive) // 注册自定义指令
     .use(i18n)

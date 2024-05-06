@@ -14,6 +14,7 @@ export const useSystemStore = defineStore('system', () => {
   const theme = ref<string>('light') // 主题色
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
   const systemInfo = ref<Record<string, any>>({})
+  const microApp = ref<Record<string, any>>({})
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,
@@ -99,6 +100,12 @@ export const useSystemStore = defineStore('system', () => {
     }
   }
 
+  const setMircoData = () => {
+    if ((window as any).__MICRO_APP_ENVIRONMENT__) {
+      microApp.value = (window as any).microApp.getData() // 获取主应用下发的数据
+    }
+  }
+
   return {
     systemInfo,
     theme,
@@ -109,6 +116,7 @@ export const useSystemStore = defineStore('system', () => {
     changeIco,
     changeTitle,
     queryInfo,
-    querySingleInfo
+    querySingleInfo,
+    setMircoData
   }
 })

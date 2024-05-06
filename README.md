@@ -343,9 +343,9 @@ const value = ref();
 
 ```html
 
-<j-aIcon type="UpCircleOutlined"/>
-<j-aIcon type="UpCircleFilled"/>
-<j-aIcon type="UpCircleTwoTone"/>
+<AIcon type="UpCircleOutlined"/>
+<AIcon type="UpCircleFilled"/>
+<AIcon type="UpCircleTwoTone"/>
 ```
 
 ##### API
@@ -364,8 +364,8 @@ const value = ref();
 > 自定义图标，需要需要传入`scriptUrl`,默认地址`'//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js'`
 
 ```jsx
-<j-aIcon type="icon-xiazai" scriptUrl="/public/iconfont.js"/>
-<j-aIcon type="icon-dianzan"/>
+<AIcon type="icon-xiazai" scriptUrl="/public/iconfont.js"/>
+<AIcon type="icon-dianzan"/>
 ```
 
 #### PermissionButton(权限按钮)

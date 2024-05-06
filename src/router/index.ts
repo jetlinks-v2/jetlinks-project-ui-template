@@ -42,6 +42,7 @@ const getRoutesByServer = async (to: any, next: any) => {
     await UserInfoStore.getUserInfo()
     //
     await SystemStore.queryInfo()
+    await SystemStore.setMircoData()
   }
 
   // 没有菜单的情况下获取菜单

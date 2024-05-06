@@ -13,6 +13,9 @@ export const initPackages = () => {
    */
   const _initWs = () => {
     const token = getToken();
+
+    if (!token) return
+
     const protocol = window.location.protocol === "https" ? "wss://" : "ws://";
     const host = document.location.host;
     const url = `${protocol}${host}${BASE_API}/messaging/${token}?:${TOKEN_KEY}=${token}`;
