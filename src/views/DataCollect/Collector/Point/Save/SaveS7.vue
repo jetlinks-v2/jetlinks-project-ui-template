@@ -1,77 +1,77 @@
 <template >
-    <j-modal :title="data.id ? '编辑' : '新增'" :visible="true" width="700px" @cancel="handleCancel">
-        <j-form :model="form" layout="vertical" ref="formRef">
-            <j-form-item label="点位名称" name="name">
-                <j-input placeholder="请输入点位名称" v-model:value="form.name" />
-            </j-form-item>
-            <j-form-item label="地址区域" :name="['configuration', 'daveArea']" :rules="{
+    <a-modal :title="data.id ? '编辑' : '新增'" :visible="true" width="700px" @cancel="handleCancel">
+        <a-form :model="form" layout="vertical" ref="formRef">
+            <a-form-item label="点位名称" name="name">
+                <a-input placeholder="请输入点位名称" v-model:value="form.name" />
+            </a-form-item>
+            <a-form-item label="地址区域" :name="['configuration', 'daveArea']" :rules="{
                 required: true,
                 message: '请选择地址区域',
                 trigger: 'change',
             }">
-                <j-select v-model:value="form.configuration.daveArea" show-search placeholder="请选择地址区域"
+                <a-select v-model:value="form.configuration.daveArea" show-search placeholder="请选择地址区域"
                     @change="daveAreaChange">
-                    <j-select-option v-for="item in dataAreaFilterList" :key="item.id" :value="item.id">{{
-                        item.name }}</j-select-option>
-                </j-select>
-            </j-form-item>
-            <j-form-item label="地址编号" :name="['configuration', 'areaNumber']" v-show="form.configuration.daveArea == 'DB'"
+                    <a-select-option v-for="item in dataAreaFilterList" :key="item.id" :value="item.id">{{
+                        item.name }}</a-select-option>
+                </a-select>
+            </a-form-item>
+            <a-form-item label="地址编号" :name="['configuration', 'areaNumber']" v-show="form.configuration.daveArea == 'DB'"
                 :rules="{
                     required: true,
                     message: '请输入地址编号',
                     trigger: 'blur',
                 }">
-                <j-input-number v-model:value="form.configuration.areaNumber" :maxlength="64" style="width: 100%"
+                <a-input-number v-model:value="form.configuration.areaNumber" :maxlength="64" style="width: 100%"
                     :max="65535" autocomplete="off" :disabled="form.configuration.daveArea == 'DB' && deviceType == 'S200'"
                     placeholder="请输入地址编号" />
-            </j-form-item>
-            <j-form-item label="数据类型" :name="['configuration', 'type']" :rules="{
+            </a-form-item>
+            <a-form-item label="数据类型" :name="['configuration', 'type']" :rules="{
                 required: true,
                 message: '请选择数据类型',
                 trigger: 'change',
             }">
-                <j-select v-model:value="form.configuration.type" show-search placeholder="请选择数据类型"
+                <a-select v-model:value="form.configuration.type" show-search placeholder="请选择数据类型"
                     @change="chooseS7DataType">
-                    <j-select-option v-for="item in dataTypesList" :key="item.id" :value="item.id">{{
-                        item.name }}</j-select-option>
-                </j-select>
-            </j-form-item>
+                    <a-select-option v-for="item in dataTypesList" :key="item.id" :value="item.id">{{
+                        item.name }}</a-select-option>
+                </a-select>
+            </a-form-item>
 
-            <j-form-item v-if="!disabled" label="字符串长度（byte）" :name="['configuration', 'bytes']" :rules="{
+            <a-form-item v-if="!disabled" label="字符串长度（byte）" :name="['configuration', 'bytes']" :rules="{
                 required: true,
                 message: '请输入0~65535之间的正整数',
                 trigger: 'blur',
             }">
-                <j-input-number type="number" style="width: 100%" addon-after="字节" v-model:value="form.configuration.bytes"
+                <a-input-number type="number" style="width: 100%" addon-after="字节" v-model:value="form.configuration.bytes"
                     placeholder="请输入字符串长度" :precision="0" :controls="false" :maxlength="64" :disabled="disabled" />
-            </j-form-item>
+            </a-form-item>
 
-            <j-form-item v-if="form.configuration.type == 'Bool'" label="位偏移量（bit）" :name="['configuration', 'bits']" :rules="{
+            <a-form-item v-if="form.configuration.type == 'Bool'" label="位偏移量（bit）" :name="['configuration', 'bits']" :rules="{
                 required: true,
                 message: '请输入0~7之间的正整数',
                 trigger: 'blur',
             }">
-                <j-input-number type="number" style="width: 100%" addon-after="位" v-model:value="form.configuration.bits"
+                <a-input-number type="number" style="width: 100%" addon-after="位" v-model:value="form.configuration.bits"
                     placeholder="请输入位偏移量" :precision="0" :min="0" :max="7" :controls="false" :maxlength="2" />
-            </j-form-item>
+            </a-form-item>
 
-            <j-form-item label="偏移量" :name="['configuration', 'offset']" :rules="{
+            <a-form-item label="偏移量" :name="['configuration', 'offset']" :rules="{
                 required: true,
                 message: '请输入0~65535之间的正整数',
                 trigger: 'blur',
             }">
-                <j-input-number type="number" style="width: 100%" v-model:value="form.configuration.offset"
+                <a-input-number type="number" style="width: 100%" v-model:value="form.configuration.offset"
                     placeholder="请输入偏移量" :precision="0" :min="0" :max="65535" :controls="false" :maxlength="64" />
-            </j-form-item>
-            <j-form-item label="缩放因子" :name="['configuration', 'scaleFactor']">
-                <j-input-number type="number" style="width: 100%" v-model:value="form.configuration.scaleFactor"
+            </a-form-item>
+            <a-form-item label="缩放因子" :name="['configuration', 'scaleFactor']">
+                <a-input-number type="number" style="width: 100%" v-model:value="form.configuration.scaleFactor"
                     placeholder="缩放因子" :min="0" :max="65535" :controls="false" :maxlength="64" />
-            </j-form-item>
-            <j-form-item label="小数保留位数" :name="['configuration', 'scale']">
-                <j-input-number type="number" style="width: 100%" v-model:value="form.configuration.scale"
+            </a-form-item>
+            <a-form-item label="小数保留位数" :name="['configuration', 'scale']">
+                <a-input-number type="number" style="width: 100%" v-model:value="form.configuration.scale"
                     placeholder="缩放因子" :precision="0" :min="1" :max="65535" :controls="false" :maxlength="64" />
-            </j-form-item>
-            <j-form-item label="访问类型" name="accessModes" :rules="{
+            </a-form-item>
+            <a-form-item label="访问类型" name="accessModes" :rules="{
                 required: true,
                 message: '请选择访问类型',
             }">
@@ -80,64 +80,64 @@
                     { label: '写', value: 'write' },
                 ]
                     " :column="2" />
-            </j-form-item>
-            <j-form-item :name="['configuration', 'terms']" :rules="[{
+            </a-form-item>
+            <a-form-item :name="['configuration', 'terms']" :rules="[{
                 validator: Area,
                 trigger: 'change',
             }]">
                 <template #label>
-                    <j-space>
+                    <a-space>
                         <span>点位死区</span><span class="explain">点位死区范围内的异常数据将被过滤（请勿配置非数值类型）</span>
-                    </j-space>
+                    </a-space>
                 </template>
                 <DeathArea v-model:value="form.configuration.terms" />
-            </j-form-item>
-            <j-form-item label="轮询任务" :name="['configuration', 'interval']">
+            </a-form-item>
+            <a-form-item label="轮询任务" :name="['configuration', 'interval']">
                 <p>
                     采集频率<span style="margin-left: 5px; color: #9d9ea1; font-size: 12px">采集频率为0时不执行轮询任务</span>
                 </p>
-                <j-radio-group v-model:value="form.configuration.interval">
-                    <j-space>
-                        <j-radio-button :value="3000">3000ms</j-radio-button>
-                        <j-radio-button :value="6000">6000ms</j-radio-button>
-                        <j-radio-button :value="9000">9000ms</j-radio-button>
-                        <j-radio-button :value="Number(form.configuration.interval)" @click="intervalRef.visible = true">
+                <a-radio-group v-model:value="form.configuration.interval">
+                    <a-space>
+                        <a-radio-button :value="3000">3000ms</a-radio-button>
+                        <a-radio-button :value="6000">6000ms</a-radio-button>
+                        <a-radio-button :value="9000">9000ms</a-radio-button>
+                        <a-radio-button :value="Number(form.configuration.interval)" @click="intervalRef.visible = true">
                             {{
                                 ![3000, 6000, 9000].includes(form.configuration.interval)
                                 ? form.configuration.interval + 'ms'
                                 : '自定义'
                             }}
-                        </j-radio-button>
-                    </j-space>
-                </j-radio-group>
-            </j-form-item>
-            <j-form-item name="features">
-                <j-checkbox-group v-model:value="form.features">
-                    <j-checkbox value="changedOnly">只推送变化的数据</j-checkbox>
-                </j-checkbox-group>
-            </j-form-item>
-            <j-form-item label="说明" name="description">
-                <j-textarea placeholder="请输入说明" v-model:value="form.description" :maxlength="200" :rows="3" showCount />
-            </j-form-item>
-        </j-form>
-        <j-modal title="采集频率" :visible="intervalRef.visible" @cancel="handleCancelInterval" @ok="handleInterval">
-            <j-form ref="formRef2" name="virtual-form" layout="vertical" :model="intervalRef">
-                <j-form-item label="采集频率" name="interval" :rules="[
+                        </a-radio-button>
+                    </a-space>
+                </a-radio-group>
+            </a-form-item>
+            <a-form-item name="features">
+                <a-checkbox-group v-model:value="form.features">
+                    <a-checkbox value="changedOnly">只推送变化的数据</a-checkbox>
+                </a-checkbox-group>
+            </a-form-item>
+            <a-form-item label="说明" name="description">
+                <a-textarea placeholder="请输入说明" v-model:value="form.description" :maxlength="200" :rows="3" showCount />
+            </a-form-item>
+        </a-form>
+        <a-modal title="采集频率" :visible="intervalRef.visible" @cancel="handleCancelInterval" @ok="handleInterval">
+            <a-form ref="formRef2" name="virtual-form" layout="vertical" :model="intervalRef">
+                <a-form-item label="采集频率" name="interval" :rules="[
                     { required: true, message: '请输入采集频率' },
                 ]">
-                    <j-input-number type="tel" addonAfter="ms" v-model:value="intervalRef.interval" placeholder="请输入采集频率"
+                    <a-input-number type="tel" addonAfter="ms" v-model:value="intervalRef.interval" placeholder="请输入采集频率"
                         :controls="false" :precision="0" :maxlength="64" />
-                </j-form-item>
-            </j-form>
-        </j-modal>
+                </a-form-item>
+            </a-form>
+        </a-modal>
         <template #footer>
-            <j-button key="back" @click="handleCancel">取消</j-button>
-            <PermissionButton key="submit" type="primary" :loading="loading" @click="handleOk" style="margin-left: 8px"
+            <a-button key="back" @click="handleCancel">取消</a-button>
+            <j-permission-button key="submit" type="primary" :loading="loading" @click="handleOk" style="margin-left: 8px"
                 :hasPermission="`DataCollect/Collector:${data.id ? 'update' : 'add'}`">
                 确认
-            </PermissionButton>
+            </j-permission-button>
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 <script lang="ts" setup>
 import {

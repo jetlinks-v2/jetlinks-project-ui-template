@@ -4,12 +4,12 @@
       <h5>权限分配</h5>
       <PermissionTree v-model:select-items="menus" />
 
-      <j-button
+      <a-button
         type="primary"
         :confirm-loading="loading"
         @click="clickSave"
         style="margin-top: 24px"
-        >保存</j-button
+        >保存</a-button
       >
     </section>
   </div>

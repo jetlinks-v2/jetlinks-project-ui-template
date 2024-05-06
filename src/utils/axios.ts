@@ -1,5 +1,5 @@
 import { TOKEN_KEY, BASE_API } from '@jetlinks-web/constants'
-import { getToken, removeToken } from '@jetlinks-web/utils'
+import { getToken } from '@jetlinks-web/utils'
 import axios from 'axios'
 import type {
     AxiosInstance,
@@ -7,10 +7,9 @@ import type {
     AxiosError,
     InternalAxiosRequestConfig,
 } from 'axios'
-import { notification as Notification } from 'jetlinks-ui-components'
+import { notification as Notification } from 'ant-design-vue'
 import type { AxiosResponseRewrite } from '@jetlinks-web/types'
-import { router } from '@jetlinks-web/router'
-import {LOGIN_ROUTE} from "@/router/basic";
+import { jumpLogin } from '@/router'
 
 const SUCCESS_CODE = 200 // 成功代码
 const filterUrl: string[] = []
@@ -21,10 +20,6 @@ const instance: AxiosInstance = axios.create({
     baseURL: BASE_API
 })
 
-const jumpLogin = () => {
-    removeToken()
-    router.push(LOGIN_ROUTE.path)
-}
 
 const showNotification = (description: string, key?: string | number, show: boolean = true) => {
     if (show) {
@@ -56,7 +51,7 @@ const responseFn = (response: AxiosResponse) => {
         return response
     }
 
-    const { status } = response.data
+    const {status} = response.data
 
     // 增加业务接口处理成功判断方式，只需要判断返回参数包含：success为true
     if (
@@ -71,8 +66,8 @@ const responseFn = (response: AxiosResponse) => {
 
 const errorHandler = (err: AxiosError<any>) => {
     if (err.response) {
-        const { data, status } = err.response
-        switch(status) {
+        const {data, status} = err.response
+        switch (status) {
             case 400:
             case 403:
             case 500:
@@ -156,9 +151,9 @@ export const request = {
         })
     },
     getStream(url: string, params?: any) {
-        return this.get(url, params, { responseType: 'arraybuffer' })
+        return this.get(url, params, {responseType: 'arraybuffer'})
     },
     postStream(url: string, data: any, params: any) {
-        return this.postParams(url, data, params, { responseType: 'arraybuffer' })
+        return this.postParams(url, data, params, {responseType: 'arraybuffer'})
     }
 }

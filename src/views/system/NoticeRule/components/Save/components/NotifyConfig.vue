@@ -1,19 +1,19 @@
 <template>
     <div class="header">
-        <pro-search
+        <j-pro-search
             :columns="columns"
             target="action-notice-config"
             @search="handleSearch"
             class="action-search"
             style="padding-bottom: 0"
         />
-        <PermissionButton
+        <j-permission-button
             @click="onAdd"
             type="primary"
             :hasPermission="['notice/Config:add']"
         >
             新增
-        </PermissionButton>
+        </j-permission-button>
     </div>
     <div class="alert">
         <AIcon type="InfoCircleOutlined" />
@@ -57,27 +57,27 @@
                         </slot>
                     </template>
                     <template #content>
-                        <Ellipsis style="width: calc(100% - 100px)">
+                        <j-ellipsis style="width: calc(100% - 100px)">
                             <span style="font-size: 16px; font-weight: 600">
                                 {{ slotProps.name }}
                             </span>
-                        </Ellipsis>
-                        <j-row>
-                            <j-col :span="12">
+                        </j-ellipsis>
+                        <a-row>
+                            <a-col :span="12">
                                 <div class="card-item-content-text">
                                     通知方式
                                 </div>
                                 <div>
                                     {{ getMethodTxt(slotProps.type) }}
                                 </div>
-                            </j-col>
-                            <j-col :span="12">
+                            </a-col>
+                            <a-col :span="12">
                                 <div class="card-item-content-text">说明</div>
-                                <Ellipsis>
+                                <j-ellipsis>
                                     {{ slotProps.description }}
-                                </Ellipsis>
-                            </j-col>
-                        </j-row>
+                                </j-ellipsis>
+                            </a-col>
+                        </a-row>
                     </template>
                 </CardBox>
             </template>

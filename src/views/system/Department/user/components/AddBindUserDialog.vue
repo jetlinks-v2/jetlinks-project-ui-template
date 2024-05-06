@@ -1,5 +1,5 @@
 <template>
-  <j-modal
+  <a-modal
     title="绑定"
     :width="900"
     visible
@@ -28,7 +28,7 @@
         :scroll="{ y: 500 }"
       />
     </div>
-  </j-modal>
+  </a-modal>
 </template>
 
 <script setup lang="ts">

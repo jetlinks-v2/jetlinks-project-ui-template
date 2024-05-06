@@ -1,19 +1,19 @@
 <template>
   <div class="notice-container">
-    <j-dropdown
+    <a-dropdown
       v-model:visible="visible"
       :trigger="['click']"
       @visible-change="visibleChange"
     >
-      <j-badge :count="total" :offset="[3, -3]">
+      <a-badge :count="total" :offset="[3, -3]">
         <AIcon type="BellOutlined" style="font-size: 16px" />
-      </j-badge>
+      </a-badge>
       <template #overlay>
         <div>
           <NoticeInfo :tabs="tabs" @action="handleRead" />
         </div>
       </template>
-    </j-dropdown>
+    </a-dropdown>
   </div>
 </template>
 
@@ -21,8 +21,8 @@
 import { getList_api , changeStatus_api } from '@/api/account/notificationRecord';
 import { ref } from 'vue'
 import NoticeInfo from './NoticeInfo.vue';
-import { useWebSocket } from '@jetlinks-web/hooks'
-import { notification, Button } from 'jetlinks-ui-components';
+import { useWebSocket } from '@/hooks'
+import { notification, Button } from 'ant-design-vue';
 import { useUserStore } from '@/store/user';
 import { useMenuStore } from '@/store/menu';
 import { getAllNotice } from '@/api/account/center';

@@ -1,6 +1,6 @@
 <template>
   <div class="role-user-container">
-    <pro-search
+    <j-pro-search
       :columns="columns"
       target="system-role-user"
       @search="(params:any)=>queryParams = {...params}"
@@ -19,30 +19,30 @@
       size="small"
     >
       <template #headerTitle>
-        <j-space>
-          <j-button type="primary" @click="dialogVisible = true">
+        <a-space>
+          <a-button type="primary" @click="dialogVisible = true">
             <AIcon type="PlusOutlined" />新增
-          </j-button>
-          <PermissionButton
+          </a-button>
+          <j-permission-button
             :popConfirm="{
               title: `是否批量解除绑定`,
               onConfirm: () => table.unbind(),
             }"
           >
             <AIcon type="DisconnectOutlined" />批量解绑
-          </PermissionButton>
-        </j-space>
+          </j-permission-button>
+        </a-space>
       </template>
 
       <template #status="slotProps">
-        <BadgeStatus
+        <j-badge-status
           :status="slotProps.status"
           :text="slotProps.status ? '正常' : '禁用'"
           :statusNames="{
             1: 'success',
             0: 'error',
           }"
-        ></BadgeStatus>
+        ></j-badge-status>
       </template>
       <template #createTime="slotProps">
         <span V-time-format="'YYYY-MM-DD HH:mm:ss'">
@@ -51,8 +51,8 @@
       </template>
 
       <template #action="slotProps">
-        <j-space :size="16">
-          <PermissionButton
+        <a-space :size="16">
+          <j-permission-button
             type="link"
             :tooltip="{ title: '解绑' }"
             :pop-confirm="{
@@ -61,8 +61,8 @@
             }"
           >
             <AIcon type="DisconnectOutlined" />
-          </PermissionButton>
-        </j-space>
+          </j-permission-button>
+        </a-space>
       </template>
     </j-pro-table>
 

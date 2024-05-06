@@ -1,5 +1,5 @@
 <template>
-    <j-select
+    <a-select
         style="width: 100%"
         v-model:value="keys"
         placeholder="请选择标签"

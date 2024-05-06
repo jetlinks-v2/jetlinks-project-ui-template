@@ -1,5 +1,5 @@
 <template>
-    <j-spin :spinning="loading">
+    <a-spin :spinning="loading">
         <div class="notify-type-warp">
             <div
                 :key="item.id"
@@ -14,7 +14,7 @@
                 <div class="notify-type-item-title">{{item.label}}</div>
             </div>
         </div>
-    </j-spin>
+    </a-spin>
 </template>
 
 <script lang="ts" setup>

@@ -6,6 +6,8 @@
     :selectedKeys="state.selectedKeys"
     :breadcrumb="{ routes: breadcrumb }"
     :pure="state.pure"
+    :layoutType="layoutType"
+    @backClick='routerBack'
   >
     <template #breadcrumbRender="slotProps">
       <a v-if="slotProps.route.index !== 0 && !slotProps.route.isLast" @click="() => jumpPage(slotProps.route)" >
@@ -28,13 +30,11 @@
 </template>
 
 <script setup name="BasicLayoutPage" lang="ts">
-import { useRouter, useRoute } from '@jetlinks-web/router'
 import { reactive, computed, watchEffect } from 'vue'
 import { useSystemStore } from '@/store/system'
 import { useMenuStore } from '@/store/menu'
 import { User, Notice } from './components'
 import { storeToRefs } from 'pinia'
-
 
 type StateType = {
   collapsed: boolean;
@@ -47,6 +47,7 @@ const router = useRouter();
 const route = useRoute();
 const systemStore = useSystemStore()
 const menuStore = useMenuStore()
+const layoutType = ref('list')
 
 const { theme, layout } = storeToRefs(systemStore)
 
@@ -96,6 +97,20 @@ const breadcrumb = computed(() =>
 const jumpPage = (route: { path: string}) => {
   router.push(route.path)
 }
+
+const routerBack = () => {
+  router.go(-1)
+}
+
+const init = () => {
+  (window as any).microApp?.addDataListener((data: any) => {
+    if (data.layoutType) {
+      layoutType.value = data.layoutType
+    }
+  }, true)
+}
+
+init()
 
 /**
  * 处理菜单选中，展开状态

@@ -7,38 +7,46 @@
       <template v-if='!!token'>
         <div class='info'>
           <div class='info-body'>
-              <j-avatar
-                :size="86"
-                style="margin-bottom: 16px;"
-                :src="
+            <a-avatar
+              :size="86"
+              :src="
                     user?.avatar ||
                     getImage('/bind/jetlinksLogo.png')
                 "
-              />
-              <div class="info-body-item"><span>账号：</span><j-ellipsis :lineClamp="2">{{ user?.username || '-' }}</j-ellipsis></div>
-              <div class="info-body-item"><span>用户名：</span><j-ellipsis :lineClamp="2">{{ user?.name || "-" }}</j-ellipsis></div>
+              style="margin-bottom: 16px;"
+            />
+            <div class="info-body-item"><span>账号：</span>
+              <j-ellipsis :lineClamp="2">{{ user?.username || '-' }}</j-ellipsis>
             </div>
-          <img :src="getImage('/bind/Vector.png')" />
+            <div class="info-body-item"><span>用户名：</span>
+              <j-ellipsis :lineClamp="2">{{ user?.name || "-" }}</j-ellipsis>
+            </div>
+          </div>
+          <img :src="getImage('/bind/Vector.png')"/>
           <div class='info-body'>
-              <j-avatar
-                :size="86"
-                shape="square"
-                style="margin-bottom: 16px;"
-                :src="
+            <a-avatar
+              :size="86"
+              :src="
                 bindUser.result?.avatar ||
                     iconMap.get(
                         bindUser?.applicationProvider,
                     ) || getImage('/apply/internal-standalone.png')
                 "
-              />
-              <div class="info-body-item"><span>账号：</span><j-ellipsis :lineClamp="2">{{ bindUser?.result?.userId || '' }}</j-ellipsis></div>
-              <div class="info-body-item"><span>用户名：</span><j-ellipsis :lineClamp="2">{{ bindUser?.result?.name || '' }}</j-ellipsis></div>
+              shape="square"
+              style="margin-bottom: 16px;"
+            />
+            <div class="info-body-item"><span>账号：</span>
+              <j-ellipsis :lineClamp="2">{{ bindUser?.result?.userId || '' }}</j-ellipsis>
             </div>
+            <div class="info-body-item"><span>用户名：</span>
+              <j-ellipsis :lineClamp="2">{{ bindUser?.result?.name || '' }}</j-ellipsis>
+            </div>
+          </div>
         </div>
         <div class='btn'>
-          <j-button type='primary' @click='handleBind'
+          <a-button type='primary' @click='handleBind'
           >立即绑定
-          </j-button
+          </a-button
           >
         </div>
       </template>
@@ -46,10 +54,10 @@
       <template v-else>
         <div class='not-login'>
           <div class='logo'>
-            <img :src="getImage('/bind/jetlinksLogo.png')" />
+            <img :src="getImage('/bind/jetlinksLogo.png')"/>
             <img
-              class='arrow'
               :src="getImage('/bind/Vector.png')"
+              class='arrow'
             />
             <img
               :src='bindUser?.avatar || iconMap.get(bindUser?.applicationProvider)'
@@ -61,61 +69,61 @@
             授权,完善以下登录信息即可以完成绑定
           </div>
           <div class='login-form'>
-            <j-form layout='vertical'>
-              <j-form-item
+            <a-form layout='vertical'>
+              <a-form-item
                 label='账户'
                 v-bind='validateInfos.username'
               >
-                <j-input
+                <a-input
                   v-model:value='formData.username'
                   placeholder='请输入账户'
                 />
-              </j-form-item>
-              <j-form-item
+              </a-form-item>
+              <a-form-item
                 label='密码'
                 v-bind='validateInfos.password'
               >
-                <j-input-password
+                <a-input-password
                   v-model:value='formData.password'
                   placeholder='请输入密码'
                 />
-              </j-form-item>
+              </a-form-item>
               <template v-if='captcha.base64'>
-                <j-form-item
-                  label='验证码'
-                  v-bind='validateInfos.verifyCode'
+                <a-form-item
                   :rules="[
                     {
                         required: true,
                         message: '请输入验证码',
                     },
                 ]"
+                  label='验证码'
+                  v-bind='validateInfos.verifyCode'
                 >
-                  <j-input
+                  <a-input
                     v-model:value='formData.verifyCode'
                     placeholder='请输入验证码'
                   >
                     <template #addonAfter>
                       <img
                         :src='captcha.base64'
-                        @click='getCode'
                         style='cursor: pointer'
+                        @click='getCode'
                       />
                     </template>
-                  </j-input>
-                </j-form-item>
+                  </a-input>
+                </a-form-item>
 
               </template>
-              <j-form-item>
-                <j-button
+              <a-form-item>
+                <a-button
+                  style='width: 100%'
                   type='primary'
                   @click='handleLoginBind'
-                  style='width: 100%'
                 >
                   登录并绑定账户
-                </j-button>
-              </j-form-item>
-            </j-form>
+                </a-button>
+              </a-form-item>
+            </a-form>
           </div>
         </div>
       </template>
@@ -123,13 +131,13 @@
   </div>
 </template>
 
-<script setup lang='ts' name='AccountBind'>
-import { onlyMessage , LocalStore , getImage , encrypt} from "@jetlinks-web/utils";
-import { TOKEN_KEY} from '@jetlinks-web/constants'
+<script lang='ts' name='AccountBind' setup>
+import { onlyMessage, LocalStore, getImage, encrypt } from "@jetlinks-web/utils";
+import { TOKEN_KEY } from '@jetlinks-web/constants'
 import { Form } from 'ant-design-vue'
 
 import { applicationInfo, bindAccount } from '@/api/system/bind'
-import { codeUrl, authLogin, userDetail , encryptionConfig} from '@/api/login'
+import { codeUrl, authLogin, userDetail, encryptionConfig } from '@/api/login'
 import { useSystemStore } from '@/store/system'
 
 
@@ -173,14 +181,14 @@ const getUrlCode = () => {
 /**
  * 三方应用信息
  */
-const bindUser = ref<any>({ appName: '' })
+const bindUser = ref<any>({appName: ''})
 const getAppInfo = async () => {
   const code = getUrlCode()
-  const { result,success } = await applicationInfo(code)
+  const {result, success} = await applicationInfo(code)
   bindUser.value = result || {}
 
-  if(success){
-      if (result?.applicationProvider === 'dingtalk-ent-app') {
+  if (success) {
+    if (result?.applicationProvider === 'dingtalk-ent-app') {
       bindUser.value.appName = '钉钉'
     } else if (result?.applicationProvider === 'wechat-webapp') {
       bindUser.value.appName = '微信'
@@ -224,7 +232,7 @@ const formRules = ref({
   ]
 })
 
-const { resetFields, validate, validateInfos } = useForm(
+const {resetFields, validate, validateInfos} = useForm(
   formData.value,
   formRules.value
 )
@@ -242,10 +250,10 @@ const getCode = async () => {
   captcha.value.key = res.result?.key
 }
 
-const  RsaConfig = reactive<any>({
-    enabled:false, //是否加密
-    publicKey:'', //rsa公钥,使用此公钥对密码进行加密
-    id:'' //密钥ID
+const RsaConfig = reactive<any>({
+  enabled: false, //是否加密
+  publicKey: '', //rsa公钥,使用此公钥对密码进行加密
+  id: '' //密钥ID
 })
 /**
  * 登录并绑定账户
@@ -259,13 +267,13 @@ const handleLoginBind = () => {
         bindCode: code,
         expires: 3600000
       }
-      const resq:any = await encryptionConfig()
-      if(resq.status === 200){
-          if(resq.result?.encrypt){
-              RsaConfig.enabled = resq.result?.encrypt.enabled
-              RsaConfig.publicKey = resq.result?.encrypt.publicKey
-              RsaConfig.id = resq.result?.encrypt.id
-          }
+      const resq: any = await encryptionConfig()
+      if (resq.status === 200) {
+        if (resq.result?.encrypt) {
+          RsaConfig.enabled = resq.result?.encrypt.enabled
+          RsaConfig.publicKey = resq.result?.encrypt.publicKey
+          RsaConfig.id = resq.result?.encrypt.id
+        }
       }
       if (captcha.value.base64) {
         params.verifyKey = captcha.value.key
@@ -273,9 +281,9 @@ const handleLoginBind = () => {
         delete params.verifyCode
       }
       const data = {
-            ...params,
-            password:RsaConfig.enabled?encrypt(params.password,RsaConfig.publicKey):params.password,
-            encryptId:RsaConfig.enabled?RsaConfig.id:undefined
+        ...params,
+        password: RsaConfig.enabled ? encrypt(params.password, RsaConfig.publicKey) : params.password,
+        encryptId: RsaConfig.enabled ? RsaConfig.id : undefined
       }
       const res = await authLogin(data)
       console.log('res: ', res)

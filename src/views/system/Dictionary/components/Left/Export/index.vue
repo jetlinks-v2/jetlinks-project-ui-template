@@ -1,5 +1,5 @@
 <template>
-    <j-modal visible title="下载" @cancel="close" @ok="downLoad" :maskClosable="false"
+    <a-modal visible title="下载" @cancel="close" @ok="downLoad" :maskClosable="false"
         :confirmLoading="loading" :width="900">
         <JProTable
             :columns="columns"
@@ -14,23 +14,23 @@
             <template #card="slotProps">
                 <CardBox :value="slotProps" :showStatus="false"  :active="_selectedRowKeys.includes(slotProps.id)" @click="onSelectChange">
                     <template #content>
-                        <j-row>
-                                <j-col :span="12">
-                                    <Ellipsis style="width: 100%">
+                        <a-row>
+                                <a-col :span="12">
+                                    <j-ellipsis style="width: 100%">
                                     <div>字典名称：{{ slotProps.name }}</div>
-                                    </Ellipsis>
-                                </j-col>
-                                <j-col :span="12">
-                                    <Ellipsis style="width: 100%">
+                                    </j-ellipsis>
+                                </a-col>
+                                <a-col :span="12">
+                                    <j-ellipsis style="width: 100%">
                                        字典ID：{{ slotProps.id }}
-                                    </Ellipsis>
-                                </j-col>
-                        </j-row>
+                                    </j-ellipsis>
+                                </a-col>
+                        </a-row>
                     </template>
                 </CardBox>
             </template>
         </JProTable>
-    </j-modal>
+    </a-modal>
 </template>
 
 <script lang="ts" setup name="DictionaryExport">

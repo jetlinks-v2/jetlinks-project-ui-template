@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;">
-    <j-input
+    <a-input
       v-model:value="searchValue"
       @change="onSearch"
       placeholder="请输入组织名称"
@@ -9,19 +9,19 @@
       <template #suffix>
         <AIcon type="SearchOutlined" />
       </template>
-    </j-input>
-    <PermissionButton
+    </a-input>
+    <j-permission-button
       type="primary"
       :hasPermission="`${permission}:add`"
       @click="openDialog()"
       style="width: 100%; margin: 12px 0"
     >
       新增
-    </PermissionButton>
+    </j-permission-button>
     <div class="tree" style="height: calc(100% - 76px)">
       <div style="overflow-y: auto; height: 100%">
-        <j-spin :spinning="loading">
-          <j-tree
+        <a-spin :spinning="loading">
+          <a-tree
               v-if="treeData.length > 0"
               :tree-data="treeData"
               v-model:selected-keys="selectedKeys"
@@ -36,7 +36,7 @@
                   </j-ellipsis>
                 </div>
                 <div class="func-btn" @click="(e) => e.stopPropagation()">
-                  <PermissionButton
+                  <j-permission-button
                       :hasPermission="`${permission}:update`"
                       type="link"
                       :tooltip="{
@@ -46,8 +46,8 @@
                       @click="openDialog(data)"
                   >
                     <AIcon type="EditOutlined" />
-                  </PermissionButton>
-                  <PermissionButton
+                  </j-permission-button>
+                  <j-permission-button
                       :hasPermission="`${permission}:add`"
                       type="link"
                       :tooltip="{
@@ -62,8 +62,8 @@
                   "
                   >
                     <AIcon type="PlusCircleOutlined" />
-                  </PermissionButton>
-                  <PermissionButton
+                  </j-permission-button>
+                  <j-permission-button
                       type="link"
                       :hasPermission="`${permission}:delete`"
                       :tooltip="{ title: '删除' }"
@@ -75,13 +75,13 @@
                   }"
                   >
                     <AIcon type="DeleteOutlined" />
-                  </PermissionButton>
+                  </j-permission-button>
                 </div>
               </div>
             </template>
-          </j-tree>
+          </a-tree>
           <j-empty v-else />
-        </j-spin>
+        </a-spin>
       </div>
     </div>
     <!-- 编辑弹窗 -->

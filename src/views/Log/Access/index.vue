@@ -1,6 +1,6 @@
 <template>
     <div>
-        <pro-search :columns="columns" target="search-access" @search="handleSearch" />
+        <j-pro-search :columns="columns" target="search-access" @search="handleSearch" />
         <j-pro-table
             ref="tableRef"
             model="TABLE"
@@ -22,57 +22,57 @@
                 {{ slotProps.action }}
             </template>
             <template #responseTime="slotProps">
-                <j-tag color="purple">
+                <a-tag color="purple">
                     {{ slotProps.responseTime - slotProps.requestTime }} ms
-                </j-tag>
+                </a-tag>
             </template>
             <template #username="slotProps">
                 
-                    <!-- <j-tag color="geekblue"> -->  
+                    <!-- <a-tag color="geekblue"> -->  
                     <div class="userName">
-                        <Ellipsis style="max-width: 100px;">
+                        <j-ellipsis style="max-width: 100px;">
                         {{ slotProps.context.userName }}
-                    </Ellipsis>
-                     <!-- </j-tag> -->
+                    </j-ellipsis>
+                     <!-- </a-tag> -->
                 </div>
             </template>
                    
                    
                
             <template #action="slotProps">
-                <j-space :size="16">
-                    <j-tooltip
+                <a-space :size="16">
+                    <a-tooltip
                         v-for="i in getActions(slotProps)"
                         :key="i.key"
                         v-bind="i.tooltip"
                     >
-                        <j-popconfirm v-if="i.popConfirm" v-bind="i.popConfirm">
-                            <j-button
+                        <a-popconfirm v-if="i.popConfirm" v-bind="i.popConfirm">
+                            <a-button
                                 :disabled="i.disabled"
                                 style="padding: 0"
                                 type="link"
                                 ><AIcon :type="i.icon"
-                            /></j-button>
-                        </j-popconfirm>
-                        <j-button
+                            /></a-button>
+                        </a-popconfirm>
+                        <a-button
                             style="padding: 0"
                             type="link"
                             v-else
                             @click="i.onClick && i.onClick(slotProps)"
                         >
-                            <j-button
+                            <a-button
                                 :disabled="i.disabled"
                                 style="padding: 0"
                                 type="link"
                                 ><AIcon :type="i.icon"
-                            /></j-button>
-                        </j-button>
-                    </j-tooltip>
-                </j-space>
+                            /></a-button>
+                        </a-button>
+                    </a-tooltip>
+                </a-space>
             </template>
         </j-pro-table>
     </div>
-    <j-modal :width="1100" v-model:visible="visible" title="详情">
+    <a-modal :width="1100" v-model:visible="visible" title="详情">
         <j-descriptions :data="descriptionsData" title="" bordered :column="2">
             <j-descriptions-item label="URL">
                 {{ descriptionsData?.url }}
@@ -113,7 +113,7 @@
                 {{ descriptionsData?.parameters }}
             </j-descriptions-item>
             <j-descriptions-item label="异常信息" :span="2">
-                <j-textarea
+                <a-textarea
                     v-model:value="descriptionsData.exception"
                     placeholder="暂无数据"
                     :auto-size="{ minRows: 3, maxRows: 20 }"
@@ -121,9 +121,9 @@
             </j-descriptions-item>
         </j-descriptions>
         <template #footer>
-            <j-button type="primary" @click="handleOk">关闭</j-button>
+            <a-button type="primary" @click="handleOk">关闭</a-button>
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 <script lang="ts" setup name="AccessLog">
 import type { ActionsType } from '@/components/Table/index';

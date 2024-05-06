@@ -1,18 +1,20 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div class="user-container">
       <!-- 搜索框 -->
-      <j-search :labelWidth="50" :columns="columns" target="category" @search="onSearch" />
+      <j-search :labelWidth="50" :columns="columns" target="category" @search="onSearch"/>
       <FullPage>
         <!-- 用户管理表格 -->
         <j-pro-table :columns="columns" model="TABLE" ref="tableRef"
                      :request="getUserList_api"
-                     :params = "queryParams" :scroll="{y: 'calc(100vh - 465px)'}">
+                     :params="queryParams" :scroll="{y: 'calc(100vh - 465px)'}">
           <!-- 新增用户按钮 -->
           <template #headerTitle>
-            <PermissionButton :hasPermission="`${permission}:add`" type="primary" @click="showModal('add')" >
-              <AIcon type="PlusOutlined" />新增
-            </PermissionButton>
+            <j-permission-button :hasPermission="`${permission}:add`" type="primary"
+                                 @click="showModal('add')">
+              <AIcon type="PlusOutlined"/>
+              新增
+            </j-permission-button>
           </template>
           <!-- 用户类型显示处理 -->
           <template #type="slotProps">
@@ -20,44 +22,52 @@
           </template>
           <!-- 状态显示处理 -->
           <template #status="slotProps">
-            <BadgeStatus :status="slotProps.status" :text="slotProps.status ? '正常' : '禁用'" :statusNames="{0: 'error', 1: 'success'}"></BadgeStatus>
+            <j-badge-status :status="slotProps.status" :text="slotProps.status ? '正常' : '禁用'"
+                            :statusNames="{0: 'error', 1: 'success'}"></j-badge-status>
           </template>
           <!-- 操作列 -->
           <template #action="slotProps">
-            <j-space :size="16">
+            <a-space :size="16">
               <!-- 编辑按钮 -->
-              <PermissionButton :hasPermission="`${permission}:update`" type="link" :tooltip="{title: '编辑'}" @click="showModal('edit', slotProps)">
-                <AIcon type="EditOutlined" />
-              </PermissionButton>
+              <j-permission-button :hasPermission="`${permission}:update`" type="link"
+                                   :tooltip="{title: '编辑'}" @click="showModal('edit', slotProps)">
+                <AIcon type="EditOutlined"/>
+              </j-permission-button>
               <!-- 状态修改按钮 -->
               <!-- 状态为正常时显示 -->
-              <PermissionButton v-if="slotProps.status" :hasPermission="`${permission}:action`" type="link"
-                                :tooltip="{title: '禁用'}" :popConfirm="{title: '确定禁用吗？', onConfirm: () => changeStatus(slotProps)}">
-                <AIcon type="StopOutlined" />
-              </PermissionButton>
+              <j-permission-button v-if="slotProps.status" :hasPermission="`${permission}:action`"
+                                   type="link"
+                                   :tooltip="{title: '禁用'}"
+                                   :popConfirm="{title: '确定禁用吗？', onConfirm: () => changeStatus(slotProps)}">
+                <AIcon type="StopOutlined"/>
+              </j-permission-button>
               <!-- 状态为禁用时显示 -->
-              <PermissionButton v-else :hasPermission="`${permission}:action`" type="link"
-                                :tooltip="{title: '启用'}" :popConfirm="{title: '确定启用吗？', onConfirm: () => changeStatus(slotProps)}">
-                <AIcon type="PlayCircleOutlined" />
-              </PermissionButton>
+              <j-permission-button v-else :hasPermission="`${permission}:action`" type="link"
+                                   :tooltip="{title: '启用'}"
+                                   :popConfirm="{title: '确定启用吗？', onConfirm: () => changeStatus(slotProps)}">
+                <AIcon type="PlayCircleOutlined"/>
+              </j-permission-button>
               <!-- 重置密码按钮 -->
-              <PermissionButton :hasPermission="`${permission}:update`" type="link" :tooltip="{title: '重置密码'}" @click="showModal('reset', slotProps)">
-                <AIcon type="icon-zhongzhimima" />
-              </PermissionButton>
+              <j-permission-button :hasPermission="`${permission}:update`" type="link"
+                                   :tooltip="{title: '重置密码'}"
+                                   @click="showModal('reset', slotProps)">
+                <AIcon type="icon-zhongzhimima"/>
+              </j-permission-button>
               <!-- 删除按钮 -->
-              <PermissionButton :hasPermission="`${permission}:delete`" type="link"  danger
-                                :tooltip="{title: !!slotProps.status ? '请先禁用，再删除' : '删除'}"
-                                :popConfirm="{title: '确定删除', onConfirm: () => deleteUser(slotProps.id)}"
-                                :disabled="!!slotProps.status">
-                <AIcon type="DeleteOutlined" />
-              </PermissionButton>
-            </j-space>
+              <j-permission-button :hasPermission="`${permission}:delete`" type="link" danger
+                                   :tooltip="{title: !!slotProps.status ? '请先禁用，再删除' : '删除'}"
+                                   :popConfirm="{title: '确定删除', onConfirm: () => deleteUser(slotProps.id)}"
+                                   :disabled="!!slotProps.status">
+                <AIcon type="DeleteOutlined"/>
+              </j-permission-button>
+            </a-space>
           </template>
         </j-pro-table>
       </FullPage>
-      <UserDialog v-if="visible" :data="dialog.data" :modalType="dialog.modalType" @cancel="visible = false" @save="refresh"/>
+      <UserDialog v-if="visible" :data="dialog.data" :modalType="dialog.modalType"
+                  @cancel="visible = false" @save="refresh"/>
     </div>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="User">
@@ -86,18 +96,18 @@ const dialog = reactive({
   modalType: '' as ModalType
 })
 
- /**
+/**
  * 显示对话框
  * @param type 对话框类型
  * @param [data] 向对话框传递的数据
  */
 const showModal = (type: ModalType, data?: any) => {
-  dialog.data = { ...(data || {}) }
+  dialog.data = { ...( data || {} ) }
   dialog.modalType = type
   visible.value = true;
 }
 
- /**
+/**
  * 重新加载表格数据
  */
 const refresh = () => {
@@ -105,12 +115,12 @@ const refresh = () => {
   tableRef.value.reload()
 }
 
- /**
+/**
  * 搜索事件
  * @param params 传入参数
  */
 const onSearch = (params: any[]) => {
-  const newParams = (params as any[])?.map((item) => {
+  const newParams = ( params as any[] )?.map((item) => {
     let arr: any[] = []
     if (['telephone', 'email'].includes(item.column)) {
       return {
@@ -142,7 +152,7 @@ const onSearch = (params: any[]) => {
   queryParams.value = { terms: newParams || [] }
 }
 
- /**
+/**
  * 修改用户状态
  * @param {id, status} 参数对象 {用户id， 用户当前状态}
  */
@@ -158,7 +168,7 @@ const changeStatus = ({ id, status }: any) => {
 }
 
 //
- /**
+/**
  * 删除用户
  * @param id 用户id
  */

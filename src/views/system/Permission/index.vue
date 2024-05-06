@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <j-search
       :columns="columns"
       target="system-permission"
@@ -18,20 +18,20 @@
         }"
       >
         <template #headerTitle>
-          <j-space>
-            <PermissionButton
+          <a-space>
+            <j-permission-button
               type="primary"
               :hasPermission="`${permission}:add`"
               @click="openDialog()"
             >
               <AIcon type="PlusOutlined" />新增
-            </PermissionButton>
+            </j-permission-button>
             <j-dropdown trigger="hover">
-              <j-button>批量操作</j-button>
+              <a-button>批量操作</a-button>
               <template #overlay>
-                <j-menu>
-                  <j-menu-item>
-                    <j-upload
+                <a-menu>
+                  <a-menu-item>
+                    <a-upload
                       name="file"
                       action="#"
                       accept=".json"
@@ -39,13 +39,13 @@
                       :before-upload="clickImport"
                       :disabled="!hasPerm"
                     >
-                      <PermissionButton :hasPermission="`${permission}:import`">
+                      <j-permission-button :hasPermission="`${permission}:import`">
                         导入
-                      </PermissionButton>
-                    </j-upload>
-                  </j-menu-item>
-                  <j-menu-item>
-                    <PermissionButton
+                      </j-permission-button>
+                    </a-upload>
+                  </a-menu-item>
+                  <a-menu-item>
+                    <j-permission-button
                       :hasPermission="`${permission}:export`"
                       :popConfirm="{
                         title: `确认导出？`,
@@ -53,26 +53,26 @@
                       }"
                     >
                       导出
-                    </PermissionButton>
-                  </j-menu-item>
-                </j-menu>
+                    </j-permission-button>
+                  </a-menu-item>
+                </a-menu>
               </template>
             </j-dropdown>
-          </j-space>
+          </a-space>
         </template>
         <template #status="slotProps">
-          <BadgeStatus
+          <j-badge-status
             :status="slotProps.status"
             :text="slotProps.status ? '启用' : '禁用'"
             :statusNames="{
               1: 'success',
               0: 'error',
             }"
-          ></BadgeStatus>
+          ></j-badge-status>
         </template>
         <template #action="slotProps">
-          <j-space :size="16">
-            <PermissionButton
+          <a-space :size="16">
+            <j-permission-button
               :hasPermission="`${permission}:update`"
               type="link"
               :tooltip="{
@@ -82,9 +82,9 @@
               @click="openDialog(slotProps)"
             >
               <AIcon type="EditOutlined" />
-            </PermissionButton>
+            </j-permission-button>
 
-            <PermissionButton
+            <j-permission-button
               :hasPermission="`${permission}:action`"
               type="link"
               :popConfirm="{
@@ -99,8 +99,8 @@
               <AIcon
                 :type="slotProps.status ? 'StopOutlined' : 'PlayCircleOutlined'"
               />
-            </PermissionButton>
-            <PermissionButton
+            </j-permission-button>
+            <j-permission-button
               :hasPermission="`${permission}:delete`"
               type="link"
               :tooltip="{
@@ -115,14 +115,14 @@
               :disabled="!!slotProps.status"
             >
               <AIcon type="DeleteOutlined" />
-            </PermissionButton>
-          </j-space>
+            </j-permission-button>
+          </a-space>
         </template>
       </j-pro-table>
     </FullPage>
     <!-- 编辑和新增 -->
     <EditDialog v-if="visible" :data="current" @close="visible = false" @save="onSave" />
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="Permission">
@@ -133,7 +133,7 @@ import {
   delPermission_api,
   exportPermission_api,
 } from '@/api/system/permission'
-import { usePermission } from '@jetlinks-web/components/src/PermissionButton/hooks'
+import { usePermission } from '@jetlinks-web/hooks'
 import { PermissionItem } from './typings'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { downloadJson } from '@/utils/comm'

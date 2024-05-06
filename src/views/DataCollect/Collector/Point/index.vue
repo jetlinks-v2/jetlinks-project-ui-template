@@ -1,6 +1,6 @@
 <template>
-    <j-spin :spinning="spinning">
-        <pro-search :columns="columns" target="search-point" @search="handleSearch" />
+    <a-spin :spinning="spinning">
+        <j-pro-search :columns="columns" target="search-point" @search="handleSearch" />
         <FullPage>
             <j-scrollbar height="680">
                 <j-pro-table
@@ -18,8 +18,8 @@
                     }"
                 >
                     <template #headerTitle>
-                        <j-space>
-                            <PermissionButton
+                        <a-space>
+                            <j-permission-button
                                 v-if="['MODBUS_TCP', 'COLLECTOR_GATEWAY','snap7'].includes(data?.provider)"
                                 type="primary"
                                 @click="handlAdd"
@@ -29,8 +29,8 @@
                                     ><AIcon type="PlusOutlined"
                                 /></template>
                                 新增点位
-                            </PermissionButton>
-                            <PermissionButton
+                            </j-permission-button>
+                            <j-permission-button
                                 v-if="['MODBUS_TCP', 'COLLECTOR_GATEWAY','snap7'].includes(data?.provider)"
                                 type="primary"
                                 @click="handleImport"
@@ -40,8 +40,8 @@
                                     ><AIcon type="PlusOutlined"
                                 /></template> -->
                                 批量导入
-                            </PermissionButton>
-                            <PermissionButton
+                            </j-permission-button>
+                            <j-permission-button
                                 v-if="data?.provider === 'OPC_UA'"
                                 type="primary"
                                 @click="handlScan"
@@ -51,18 +51,18 @@
                                     ><AIcon type="PlusOutlined"
                                 /></template>
                                 扫描
-                            </PermissionButton>
+                            </j-permission-button>
                             <j-dropdown
                                 v-if="data?.provider === 'OPC_UA'"
                                 :trigger="['click']"
                             >
-                                <j-button @click.prevent="clickBatch"
+                                <a-button @click.prevent="clickBatch"
                                     >批量操作 <AIcon type="DownOutlined"
-                                /></j-button>
+                                /></a-button>
                                 <template #overlay>
-                                    <j-menu v-if="showBatch">
-                                        <j-menu-item>
-                                            <PermissionButton
+                                    <a-menu v-if="showBatch">
+                                        <a-menu-item>
+                                            <j-permission-button
                                                 hasPermission="DataCollect/Collector:update"
                                                 @click="handlBatchUpdate()"
                                             >
@@ -70,10 +70,10 @@
                                                     ><AIcon type="FormOutlined"
                                                 /></template>
                                                 编辑
-                                            </PermissionButton>
-                                        </j-menu-item>
-                                        <j-menu-item>
-                                            <PermissionButton
+                                            </j-permission-button>
+                                        </a-menu-item>
+                                        <a-menu-item>
+                                            <j-permission-button
                                                 hasPermission="DataCollect/Collector:delete"
                                                 :popConfirm="{
                                                     title: `确定删除？`,
@@ -85,20 +85,20 @@
                                                     ><AIcon type="EditOutlined"
                                                 /></template>
                                                 删除
-                                            </PermissionButton>
-                                        </j-menu-item>
-                                    </j-menu>
+                                            </j-permission-button>
+                                        </a-menu-item>
+                                    </a-menu>
                                 </template>
                             </j-dropdown>
-                        </j-space>
+                        </a-space>
                         <div
                             v-if="data?.provider === 'OPC_UA'"
                             style="margin-top: 15px"
                         >
-                            <j-checkbox
+                            <a-checkbox
                                 v-model:checked="checkAll"
                                 @change="onCheckAllChange"
-                                >全选</j-checkbox
+                                >全选</a-checkbox
                             >
                         </div>
                     </template>
@@ -117,16 +117,16 @@
                         >
                             <template #title>
                                 <slot name="title">
-                                    <Ellipsis style="width: calc(100% - 10px)">
+                                    <j-ellipsis style="width: calc(100% - 10px)">
                                         <div class="card-box-title">
                                             {{ slotProps.name }}
                                         </div>
-                                    </Ellipsis>
+                                    </j-ellipsis>
                                 </slot>
                             </template>
                             <template #action>
                                 <div class="card-box-action">
-                                    <PermissionButton
+                                    <j-permission-button
                                         type="text"
                                         :tooltip="{
                                             title: '删除',
@@ -145,9 +145,9 @@
                                             "
                                             ><AIcon type="DeleteOutlined"
                                         /></a>
-                                    </PermissionButton>
+                                    </j-permission-button>
 
-                                    <PermissionButton
+                                    <j-permission-button
                                         class="add-btn"
                                         type="text"
                                         @click="handlEdit(slotProps)"
@@ -156,7 +156,7 @@
                                         <a style="font-size: 20px"
                                             ><AIcon type="FormOutlined"
                                         /></a>
-                                    </PermissionButton>
+                                    </j-permission-button>
                                 </div>
                             </template>
                             <template #img>
@@ -247,7 +247,7 @@
                                     </div>
 
                                     <div class="card-box-content-right">
-                                        <Ellipsis
+                                        <j-ellipsis
                                             style="
                                                 width: calc(100% - 10px);
                                                 margin-bottom: 10px;
@@ -271,8 +271,8 @@
                                                     }}
                                                 </span>
                                             </div>
-                                        </Ellipsis>
-                                        <Ellipsis
+                                        </j-ellipsis>
+                                        <j-ellipsis
                                             style="
                                                 width: calc(100% - 10px);
                                                 margin-bottom: 10px;
@@ -293,7 +293,7 @@
                                                     }}</span
                                                 >
                                             </div>
-                                        </Ellipsis>
+                                        </j-ellipsis>
                                     </div>
                                 </div>
                             </template>
@@ -326,7 +326,7 @@
         <SaveS7 v-if="visible.saveS7"  :data="current" @change="saveChange"/>
         <Scan v-if="visible.scan" :data="current" @change="saveChange" />
         <Import v-if="visible.import" :data="current" @close-import="closeImport"/>
-    </j-spin>
+    </a-spin>
 </template>
 <script lang="ts" setup name="PointPage">
 import {
@@ -346,7 +346,7 @@ import SaveOPCUA from './Save/SaveOPCUA.vue';
 import Scan from './Scan/index.vue';
 import { colorMap } from '../data';
 import { cloneDeep, isBoolean, isNumber, throttle } from 'lodash-es';
-import { getWebSocket } from '@jetlinks-web/core';
+import { getWebSocket } from '@/utils/websocket';
 import { map } from 'rxjs/operators';
 import dayjs from 'dayjs';
 import { responsiveArray } from 'ant-design-vue/lib/_util/responsiveObserve';

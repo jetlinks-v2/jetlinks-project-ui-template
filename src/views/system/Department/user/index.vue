@@ -21,8 +21,8 @@
         :scroll="{y: 'calc(100vh - 450px)'}"
     >
       <template #headerTitle>
-        <j-space>
-          <PermissionButton
+        <a-space>
+          <j-permission-button
               type="primary"
               :hasPermission="`${permission}:bind-user`"
               @click="dialogVisible = true"
@@ -31,8 +31,8 @@
           >
             <AIcon type="PlusOutlined"/>
             绑定用户
-          </PermissionButton>
-          <PermissionButton
+          </j-permission-button>
+          <j-permission-button
               :hasPermission="`${permission}:bind`"
               :popConfirm="{
                 title: `是否解除绑定`,
@@ -41,22 +41,22 @@
           >
             <AIcon type="DisconnectOutlined"/>
             批量解绑
-          </PermissionButton>
-        </j-space>
+          </j-permission-button>
+        </a-space>
       </template>
       <template #status="slotProps">
-        <BadgeStatus
+        <j-badge-status
             :status="slotProps.status"
             :text="slotProps.status ? '正常' : '禁用'"
             :statusNames="{
               1: 'success',
               0: 'error',
             }"
-        ></BadgeStatus>
+        ></j-badge-status>
       </template>
       <template #action="slotProps">
-        <j-space :size="16">
-          <PermissionButton
+        <a-space :size="16">
+          <j-permission-button
               type="link"
               :hasPermission="`${permission}:bind`"
               :popConfirm="{
@@ -65,8 +65,8 @@
               }"
           >
             <AIcon type="DisconnectOutlined"/>
-          </PermissionButton>
-        </j-space>
+          </j-permission-button>
+        </a-space>
       </template>
     </j-pro-table>
 

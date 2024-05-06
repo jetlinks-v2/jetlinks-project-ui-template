@@ -1,9 +1,9 @@
 <template>
   <div>
-    <j-form ref="formRef" :model="formModel" layout="vertical">
-      <j-row type="flex">
-        <j-col flex="186px">
-          <j-form-item
+    <a-form ref="formRef" :model="formModel" layout="vertical">
+      <a-row type="flex">
+        <a-col flex="186px">
+          <a-form-item
             label="菜单图标"
             name="icon"
             :rules="[
@@ -29,12 +29,12 @@
                 <p>点击选择图标</p>
               </span>
             </div>
-          </j-form-item>
-        </j-col>
-        <j-col flex="auto">
-          <j-row :gutter="24">
-            <j-col :span="12">
-              <j-form-item
+          </a-form-item>
+        </a-col>
+        <a-col flex="auto">
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item
                 label="名称"
                 name="name"
                 :rules="[
@@ -50,14 +50,14 @@
                   },
                 ]"
               >
-                <j-input
+                <a-input
                   v-model:value="formModel.name"
                   placeholder="请输入名称"
                 />
-              </j-form-item>
-            </j-col>
-            <j-col :span="12">
-              <j-form-item
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item
                 label="编码"
                 name="code"
                 :rules="[
@@ -77,14 +77,14 @@
                   },
                 ]"
               >
-                <j-input
+                <a-input
                   v-model:value="formModel.code"
                   placeholder="请输入编码"
                 />
-              </j-form-item>
-            </j-col>
-            <j-col :span="12">
-              <j-form-item
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item
                 label="页面地址"
                 name="url"
                 :rules="[
@@ -96,14 +96,14 @@
                   { pattern: /^\//, message: '请正确填写地址，以/开头' },
                 ]"
               >
-                <j-input
+                <a-input
                   v-model:value="formModel.url"
                   placeholder="请输入页面地址"
                 />
-              </j-form-item>
-            </j-col>
-            <j-col :span="12">
-              <j-form-item
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item
                 label="排序"
                 name="sortIndex"
                 :rules="[
@@ -113,27 +113,27 @@
                   },
                 ]"
               >
-                <j-input-number
+                <a-input-number
                   v-model:value="formModel.sortIndex"
                   placeholder="请输入排序"
                   style="width: 100%"
                 />
-              </j-form-item>
-            </j-col>
-          </j-row>
-        </j-col>
-      </j-row>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-col>
+      </a-row>
 
-      <j-form-item label="说明" name="describe">
-        <j-textarea
+      <a-form-item label="说明" name="describe">
+        <a-textarea
           v-model:value="formModel.describe"
           :rows="4"
           show-count
           :maxlength="200"
           placeholder="请输入说明"
         />
-      </j-form-item>
-    </j-form>
+      </a-form-item>
+    </a-form>
     <!-- 弹窗 -->
     <ChooseIconDialog
       @close="dialogVisible = false"

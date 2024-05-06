@@ -1,33 +1,33 @@
 <template>
-  <j-dropdown placement="bottomRight">
+  <a-dropdown placement="bottomRight">
     <div class="user-info">
-      <j-avatar :size="28" :src="userStore.userInfo?.avatar" />
+      <a-avatar :size="28" :src="userStore.userInfo?.avatar" />
       <span class="name">{{ userName }}</span>
     </div>
     <template #overlay>
-      <j-menu @click="click">
-        <j-menu-item key="userCenter">
+      <a-menu @click="click">
+        <a-menu-item key="userCenter">
           <AIcon type="UserOutlined" style="margin-right: 8px;" />
           <span>个人中心</span>
-        </j-menu-item>
-        <j-menu-item key="logout">
+        </a-menu-item>
+        <a-menu-item key="logout">
           <AIcon type="LogoutOutlined" style="margin-right: 8px;" />
           <span>退出登录</span>
-        </j-menu-item>
-      </j-menu>
+        </a-menu-item>
+      </a-menu>
     </template>
-  </j-dropdown>
+  </a-dropdown>
 </template>
 
 <script setup lang="ts" name="HeaderUser">
 import { computed } from "vue";
-import { jumpLogin, useRouter } from '@jetlinks-web/router'
+import { jumpLogin } from '@/router'
 import { useUserStore } from '@/store/user'
 import { logout } from '@/api/login'
 
 const userStore = useUserStore()
 const router = useRouter()
-const click = (e: {key: string}) => {
+const click = (e: { key: string }) => {
   switch (e.key) {
     case 'userCenter':
       router.push('/account/center')
@@ -40,7 +40,7 @@ const click = (e: {key: string}) => {
       })
       return;
     default:
-        return
+      return
   }
 }
 

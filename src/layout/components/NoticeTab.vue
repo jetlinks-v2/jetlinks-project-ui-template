@@ -1,12 +1,11 @@
 <template>
-    <j-badge :count="total" :offset="[3, -3]">
+    <a-badge :count="total" :offset="[3, -3]">
         {{ tab }}
-    </j-badge>
+    </a-badge>
 </template>
 
 <script setup lang="ts">
 import { getList_api } from '@/api/account/notificationRecord';
-import { PropType } from 'vue';
 
 const props = defineProps({
     tab: {

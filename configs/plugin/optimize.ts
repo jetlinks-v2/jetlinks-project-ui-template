@@ -7,11 +7,11 @@ function optimizeComponents(moduleName: string): string[] {
   const moduleESPath = `${moduleName}/es`;
   const nodeModulePath = `./node_modules/${moduleESPath}`;
   const includes: string[] = [moduleESPath];
-  console.log(rootPath, path.resolve(rootPath, nodeModulePath))
+  
   const folders = fs.readdirSync(path.resolve(rootPath, nodeModulePath));
 
   folders.map((name) => {
-    
+
     const folderName = path.resolve(rootPath, nodeModulePath, name);
     let stat = fs.lstatSync(folderName);
     if (stat.isDirectory()) {
@@ -34,7 +34,7 @@ export function optimizeDeps() {
     configResolved: async (config) => {
       const components = [
         ...optimizeComponents("ant-design-vue"),
-        ...optimizeComponents("jetlinks-ui-components"),
+        ...optimizeComponents("@jetlinks-web/components"),
       ];
       let concat = config.optimizeDeps.include.concat(components);
       config.optimizeDeps.include = Array.from(new Set(concat));

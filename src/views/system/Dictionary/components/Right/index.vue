@@ -6,19 +6,19 @@
             <div>创建日期：<span v-time-format="'YYYY-MM-DD HH:mm:ss'"> {{data?.createTime}}</span></div>
         </div>
         <div class="contain">
-            <pro-search style="padding: 18px 0 0 0" :columns="columns" @search="handleSearch" target="system_dictionary" />
+            <j-pro-search style="padding: 18px 0 0 0" :columns="columns" @search="handleSearch" target="system_dictionary" />
             <JProTable :bodyStyle="{
                 padding: 0,
             }" :scroll="{ y: 'calc(100vh - 500px)' }" :columns="columns" model="TABLE" :request="queryItem" :params="params" ref="tableRef">
                 <template #headerTitle>
-                    <PermissionButton type="primary" @click="add" hasPermission="system/Dictionary:add">
+                    <j-permission-button type="primary" @click="add" hasPermission="system/Dictionary:add">
                         新增
-                    </PermissionButton>
+                    </j-permission-button>
                 </template>
                 <template #action="slotProps">
-                    <j-space>
+                    <a-space>
                         <template v-for="i in getActions(slotProps, 'table')" :key="i.key">
-                            <PermissionButton :disabled="i.disabled" :popConfirm="i.popConfirm" :tooltip="{
+                            <j-permission-button :disabled="i.disabled" :popConfirm="i.popConfirm" :tooltip="{
                                 ...i.tooltip,
                             }" @click="i.onClick" type="link" style="padding: 0 5px" :danger="i.key === 'delete'"
                                 :hasPermission="'system/Dictionary:' + i.key
@@ -26,9 +26,9 @@
                                 <template #icon>
                                     <AIcon :type="i.icon" />
                                 </template>
-                            </PermissionButton>
+                            </j-permission-button>
                         </template>
-                    </j-space>
+                    </a-space>
                 </template>
             </JProTable>
         </div>

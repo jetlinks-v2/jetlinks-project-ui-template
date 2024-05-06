@@ -1,16 +1,16 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div class="menu-detail-container">
-      <j-tabs v-model:activeKey="activeKey">
-        <j-tab-pane key="basic" tab="基本信息">
+      <a-tabs v-model:activeKey="activeKey">
+        <a-tab-pane key="basic" tab="基本信息">
           <BasicInfo :value="initData" />
-        </j-tab-pane>
-        <j-tab-pane key="button" tab="按钮管理">
+        </a-tab-pane>
+        <a-tab-pane key="button" tab="按钮管理">
           <ButtonMange :value="initData" @refresh="onRefresh" />
-        </j-tab-pane>
-      </j-tabs>
+        </a-tab-pane>
+      </a-tabs>
     </div>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts">

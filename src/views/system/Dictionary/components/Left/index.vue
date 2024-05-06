@@ -1,26 +1,26 @@
 <template>
     <div class="left-contain">
-        <j-input placeholder="字典名称" v-model:value="searchValue" @pressEnter="search" @change="searchChange">
+        <a-input placeholder="字典名称" v-model:value="searchValue" @pressEnter="search" @change="searchChange">
             <template #suffix>
                 <AIcon type="SearchOutlined" @click="search" />
             </template>
-        </j-input>
+        </a-input>
         <div class="controls">
-            <PermissionButton type="primary" hasPermission="system/Dictionary:add" @click="showSave" style="width: 160px">
+            <j-permission-button type="primary" hasPermission="system/Dictionary:add" @click="showSave" style="width: 160px">
                 新增字典
-            </PermissionButton>
-            <PermissionButton type="text" hasPermission="system/Dictionary:down" @click="downVisible = true">
+            </j-permission-button>
+            <j-permission-button type="text" hasPermission="system/Dictionary:down" @click="downVisible = true">
                 下载
-            </PermissionButton>
-            <j-upload :before-upload="beforeUpload" accept=".json" :show-upload-list="false"
+            </j-permission-button>
+            <a-upload :before-upload="beforeUpload" accept=".json" :show-upload-list="false"
                 :disabled="!usePermission('system/Dictionary:import').hasPerm.value">
-                <PermissionButton type="text" hasPermission="system/Dictionary:import">
+                <j-permission-button type="text" hasPermission="system/Dictionary:import">
                     导入
-                </PermissionButton>
-            </j-upload>
+                </j-permission-button>
+            </a-upload>
         </div>
         <div class="tree">
-            <j-tree :tree-data="listData" v-if="listData.length" :fieldNames="{ title: 'name', key: 'id' }" blockNode
+            <a-tree :tree-data="listData" v-if="listData.length" :fieldNames="{ title: 'name', key: 'id' }" blockNode
                 :selectedKeys="selectedKeys">
                 <template #title="item">
                     <div class="treeItem" @click="() => selectDic(item.data)">
@@ -28,33 +28,33 @@
                             <j-ellipsis  style="width: calc(100%-100px)">{{ item.name }}</j-ellipsis>
                         </div>
                         <div @click="(e) => e.stopPropagation()">
-                            <j-popconfirm v-if="usePermission('system/Dictionary:action').hasPerm.value"
+                            <a-popconfirm v-if="usePermission('system/Dictionary:action').hasPerm.value"
                                 :title="item.data.status === 1 ? '确定禁用？' : '确定启用？'" @confirm="() => updateDic(item.data)">
-                                <j-switch :checked="item.status" :disabled="!usePermission('system/Dictionary:action').hasPerm.value"
-                                    :checkedValue="1" :unCheckedValue="0"></j-switch>
-                            </j-popconfirm>
-                            <j-tooltip v-else placement="top" title="暂无权限,请联系管理员">
-                                <j-switch :checked="item.status" :disabled="!usePermission('system/Dictionary:action').hasPerm.value"
-                                    :checkedValue="1" :unCheckedValue="0"></j-switch>
-                            </j-tooltip>
-                            <PermissionButton type="link" hasPermission="system/Dictionary:delete" :popConfirm="{
+                                <a-switch :checked="item.status" :disabled="!usePermission('system/Dictionary:action').hasPerm.value"
+                                    :checkedValue="1" :unCheckedValue="0"></a-switch>
+                            </a-popconfirm>
+                            <a-tooltip v-else placement="top" title="暂无权限,请联系管理员">
+                                <a-switch :checked="item.status" :disabled="!usePermission('system/Dictionary:action').hasPerm.value"
+                                    :checkedValue="1" :unCheckedValue="0"></a-switch>
+                            </a-tooltip>
+                            <j-permission-button type="link" hasPermission="system/Dictionary:delete" :popConfirm="{
                                 title: `确定要删除？`,
                                 onConfirm: () => deleteDic(item.id),
                             }">
                                 <template #icon>
                                     <AIcon type="EditOutlined"/>
                                 </template>
-                            </PermissionButton>
-                            <PermissionButton type="link" hasPermission="system/Dictionary:update"
+                            </j-permission-button>
+                            <j-permission-button type="link" hasPermission="system/Dictionary:update"
                                 @click="showEdit(item.data)" :danger="true">
                                 <template #icon>
                                     <AIcon type="DeleteOutlined"/>
                                 </template>
-                            </PermissionButton>
+                            </j-permission-button>
                         </div>
                     </div>
                 </template>
-            </j-tree>
+            </a-tree>
             <j-empty v-else style="margin-top: 100px;" />
         </div>
     </div>
@@ -67,7 +67,7 @@ import { getDicList, deleteDictionary, addDictionary } from '@/api/system/dictio
 import Save from './save/index.vue'
 import { onlyMessage } from '@jetlinks-web/utils';
 import Export from './Export/index.vue'
-import { usePermission } from '@jetlinks-web/components/src/PermissionButton/hooks'
+import { usePermission } from '@jetlinks-web/hooks'
 const emit = defineEmits(['selectData'])
 const saveShow = ref(false)
 const addType = ref('add')

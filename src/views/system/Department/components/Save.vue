@@ -1,5 +1,5 @@
 <template>
-  <j-modal
+  <a-modal
     visible
     :title="title"
     :maskClosable="false"
@@ -9,9 +9,9 @@
     class="edit-dialog-container"
     :confirmLoading="loading"
   >
-    <j-form ref="formRef" :model="formModel.data" layout="vertical">
-      <j-form-item name="parentId" label="上级组织">
-        <j-tree-select
+    <a-form ref="formRef" :model="formModel.data" layout="vertical">
+      <a-form-item name="parentId" label="上级组织">
+        <a-tree-select
           v-model:value="formModel.data.parentId"
           style="width: 100%"
           placeholder="请选择上级组织"
@@ -20,9 +20,9 @@
           @change="handleTreeSelectChange"
         >
           <template #title="{ name }"> {{ name }} </template>
-        </j-tree-select>
-      </j-form-item>
-      <j-form-item
+        </a-tree-select>
+      </a-form-item>
+      <a-form-item
         name="name"
         label="名称"
         :rules="[
@@ -30,23 +30,23 @@
           { max: 64, message: '最多可输入64个字符' },
         ]"
       >
-        <j-input v-model:value="formModel.data.name" placeholder="请输入名称" />
-      </j-form-item>
+        <a-input v-model:value="formModel.data.name" placeholder="请输入名称" />
+      </a-form-item>
 
-      <j-form-item
+      <a-form-item
         name="sortIndex"
         label="排序"
         :rules="[{ required: true, message: '请输入排序' }]"
       >
-        <j-input
+        <a-input
           v-model:value="formModel.data.sortIndex"
           placeholder="请输入排序"
           :maxlength="64"
           @blur="checkSort"
         />
-      </j-form-item>
-    </j-form>
-  </j-modal>
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script setup lang="ts">

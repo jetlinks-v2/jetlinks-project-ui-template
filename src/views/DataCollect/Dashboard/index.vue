@@ -1,7 +1,7 @@
 <template>
-    <page-container>
-        <j-row :gutter="24">
-            <j-col :span="8" v-for="item in StatusData" :key="item[0].type">
+    <j-page-container>
+        <a-row :gutter="24">
+            <a-col :span="8" v-for="item in StatusData" :key="item[0].type">
                 <TopCard
                     :title="item[0].label"
                     :img="
@@ -10,14 +10,14 @@
                     :footer="item"
                     :value="item[0].total"
                 />
-            </j-col>
-        </j-row>
-        <j-row :gutter="24" style="margin-top: 24px;">
-            <j-col :span="24">
+            </a-col>
+        </a-row>
+        <a-row :gutter="24" style="margin-top: 24px;">
+            <a-col :span="24">
                 <Card />
-            </j-col>
-        </j-row>
-    </page-container>
+            </a-col>
+        </a-row>
+    </j-page-container>
 </template>
 
 <script setup lang="ts">
@@ -26,7 +26,7 @@ import Card from './components/Card.vue';
 import { getImage } from '@jetlinks-web/utils';
 import { queryCount } from '@/api/data-collect/dashboard';
 import { defaultParams, statusData } from './tool';
-import { useMenuStore } from '@/store';
+import { useMenuStore } from '@/store/menu';
 
 const menuPermission = useMenuStore().hasMenu;
 

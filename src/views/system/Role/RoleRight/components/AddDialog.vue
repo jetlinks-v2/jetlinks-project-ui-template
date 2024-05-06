@@ -1,5 +1,5 @@
 <template>
-    <j-modal
+    <a-modal
         visible
         :title="modalType ==='add' ? '新增' : '编辑'"
         width="670px"
@@ -7,8 +7,8 @@
         @ok="confirm"
         :confirm-loading="loading"
     >
-        <j-form ref="formRef" :model="form" layout="vertical">
-            <j-form-item
+        <a-form ref="formRef" :model="form" layout="vertical">
+            <a-form-item
                 name="name"
                 label="名称"
                 :rules="[
@@ -16,36 +16,36 @@
                     { max: 64, message: '最多可输入64个字符' },
                 ]"
             >
-                <j-input
+                <a-input
                     v-model:value="form.name"
                     placeholder="请输入角色名称"
                     allow-clear
                 />
-            </j-form-item>
-            <j-form-item
+            </a-form-item>
+            <a-form-item
                 name="groupId"
                 label="分组"
                 :rules="[
                     { required: true, message: '请选择分组' },
                 ]"
             >
-                <j-select
+                <a-select
                     v-model:value="form.groupId"
                     placeholder="请选择分组"
                     :options="groupOptions"
                 />
-            </j-form-item>
-            <j-form-item name="name" label="说明">
-                <j-textarea
+            </a-form-item>
+            <a-form-item name="name" label="说明">
+                <a-textarea
                     v-model:value="form.description"
                     placeholder="请输入说明"
                     allow-clear
                     :maxlength="200"
                     show-count
                 />
-            </j-form-item>
-        </j-form>
-    </j-modal>
+            </a-form-item>
+        </a-form>
+    </a-modal>
 </template>
 
 <script setup lang="ts" name="RoleAddDialog">

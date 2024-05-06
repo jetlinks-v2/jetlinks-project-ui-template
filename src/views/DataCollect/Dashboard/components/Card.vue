@@ -1,5 +1,5 @@
 <template>
-    <j-spin :spinning="loading">
+    <a-spin :spinning="loading">
         <FullPage>
             <div class="dash-board">
                 <div class="header">
@@ -7,22 +7,22 @@
                         <h3 style="width: 100px">点位数据量</h3>
                     </div>
                     <div class="right">
-                        <j-radio-group
+                        <a-radio-group
                             button-style="solid"
                             style="margin-right: 10px"
                             v-model:value="data.time.type"
                         >
-                            <j-radio-button value="hour">
+                            <a-radio-button value="hour">
                                 最近1小时
-                            </j-radio-button>
-                            <j-radio-button value="today">
+                            </a-radio-button>
+                            <a-radio-button value="today">
                                 今日
-                            </j-radio-button>
-                            <j-radio-button value="week">
+                            </a-radio-button>
+                            <a-radio-button value="week">
                                 近一周
-                            </j-radio-button>
-                        </j-radio-group>
-                        <j-range-picker
+                            </a-radio-button>
+                        </a-radio-group>
+                        <a-range-picker
                             :allowClear="false"
                             :show-time="{ format: 'HH:mm:ss' }"
                             format="YYYY-MM-DD HH:mm:ss"
@@ -32,7 +32,7 @@
                             <template #suffixIcon
                                 ><AIcon type="CalendarOutlined"
                             /></template>
-                        </j-range-picker>
+                        </a-range-picker>
                     </div>
                 </div>
                 <div
@@ -41,7 +41,7 @@
                 ></div>
             </div>
         </FullPage>
-    </j-spin>
+    </a-spin>
 </template>
 
 <script lang="ts" setup>

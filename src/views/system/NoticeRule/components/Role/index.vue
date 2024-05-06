@@ -1,73 +1,73 @@
 <template>
     <div class="role">
         <template v-if="type !== 'add'">
-            <j-input-search
+            <a-input-search
                 allowClear
                 @search="onSearch"
                 placeholder="请输入名称"
             />
             <div class="role-alert">
-                <j-alert type="info">
+                <a-alert type="info">
                     <template #message>
                         <div class="header">
-                            <j-checkbox
+                            <a-checkbox
                                 :indeterminate="indeterminate"
                                 :checked="checked"
                                 @change="onSelectAll"
-                                >全选</j-checkbox
+                                >全选</a-checkbox
                             >
-                            <j-space v-if="_selectedRowKeys.length">
+                            <a-space v-if="_selectedRowKeys.length">
                                 <span
                                     >已选择{{ _selectedRowKeys.length }}项</span
                                 >
-                                <j-button
+                                <a-button
                                     style="padding: 0; height: 22px"
                                     type="link"
                                     @click="cancelSelect"
-                                    >取消选择</j-button
+                                    >取消选择</a-button
                                 >
-                            </j-space>
+                            </a-space>
                         </div>
                     </template>
-                </j-alert>
+                </a-alert>
             </div>
         </template>
         <template v-else>
             <div class="role-alert" style="margin-bottom: 10px;">
-                <j-alert type="info">
+                <a-alert type="info">
                     <template #message>
                         <div style="justify-content: space-between; display: flex; align-items: center;">
-                            <j-input-search
+                            <a-input-search
                                 allowClear
                                 @search="onSearch"
                                 placeholder="请输入名称"
                                 style="width: 300px"
                             />
-                            <j-space>
+                            <a-space>
                                 <template v-if="_selectedRowKeys.length">
                                     <span
                                         >已选择{{
                                             _selectedRowKeys.length
                                         }}项</span
                                     >
-                                    <j-button
+                                    <a-button
                                         style="padding: 0; height: 22px"
                                         type="link"
                                         @click="cancelSelect"
-                                        >取消选择</j-button
+                                        >取消选择</a-button
                                     >
                                 </template>
 
-                                <j-checkbox
+                                <a-checkbox
                                     :indeterminate="indeterminate"
                                     :checked="checked"
                                     @change="onSelectAll"
-                                    >全选</j-checkbox
+                                    >全选</a-checkbox
                                 >
-                            </j-space>
+                            </a-space>
                         </div>
                     </template>
-                </j-alert>
+                </a-alert>
             </div>
         </template>
         <j-scrollbar :height="gridColumn <= 2 ? '320px' : '250px'">
@@ -89,12 +89,12 @@
             >
                 <template #card="slotProps">
                     <div class="card">
-                        <j-checkbox
+                        <a-checkbox
                             :checked="_selectedRowKeys.includes(slotProps?.id)"
                             @change="(e) => onSelect(e, slotProps)"
                         >
                             <j-ellipsis>{{ slotProps.name }}</j-ellipsis>
-                        </j-checkbox>
+                        </a-checkbox>
                     </div>
                 </template>
             </j-pro-table>

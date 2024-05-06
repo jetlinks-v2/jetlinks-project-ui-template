@@ -1,12 +1,12 @@
 <template>
     <div class="notice-info-container">
-        <j-tabs
+        <a-tabs
             v-model:activeKey="activeKey"
             :destroyInactiveTabPane="true"
             @change="onChange"
             v-if="tabs.length"
         >
-            <j-tab-pane v-for="item in tabs" :key="item.key">
+            <a-tab-pane v-for="item in tabs" :key="item.key">
                 <template #tab>
                     <NoticeTab
                         :refresh="refreshObj[item.key]"
@@ -14,7 +14,7 @@
                         :type="item.type"
                     />
                 </template>
-                <j-spin :spinning="loading">
+                <a-spin :spinning="loading">
                     <div class="content">
                         <j-scrollbar class="list" :max-height="450" v-if="list.length">
                             <template v-for="(i,index) in list" :key="i.id">
@@ -40,14 +40,14 @@
                             <j-empty />
                         </div>
                         <div class="btns">
-                            <j-button type="link" @click="onMore(item.key)"
-                                >查看更多</j-button
+                            <a-button type="link" @click="onMore(item.key)"
+                                >查看更多</a-button
                             >
                         </div>
                     </div>
-                </j-spin>
-            </j-tab-pane>
-        </j-tabs>
+                </a-spin>
+            </a-tab-pane>
+        </a-tabs>
         <div class="no-data" v-else>
             <j-empty />
         </div>

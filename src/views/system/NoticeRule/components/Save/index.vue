@@ -1,5 +1,5 @@
 <template>
-    <j-modal
+    <a-modal
         :width="1056"
         visible
         title="配置通知方式"
@@ -7,11 +7,11 @@
         :bodyStyle="{ padding: 0 }"
     >
         <div style="background-color: #f8f9fc; padding: 25px 100px">
-            <j-steps :current="current" size="small" @change="onChange">
-                <j-step v-for="(item, index) in stepList" :key="item">
+            <a-steps :current="current" size="small" @change="onChange">
+                <a-step v-for="(item, index) in stepList" :key="item">
                     <template #title>
                         {{ item
-                        }}<j-tooltip v-if="index === 4">
+                        }}<a-tooltip v-if="index === 4">
                             <template #title>
                                 <span>
                                     通过角色控制【{{ name }}】下的【{{ showName }}通知】可被哪些用户订阅。<br />
@@ -19,15 +19,15 @@
                                 </span>
                             </template>
                             <AIcon type="QuestionCircleOutlined"
-                        /></j-tooltip>
+                        /></a-tooltip>
                     </template>
                     <template #description>
                         <span v-if="current === index">进行中</span>
                         <span v-if="current < index">未开始</span>
                         <span v-if="current > index">已完成</span>
                     </template>
-                </j-step>
-            </j-steps>
+                </a-step>
+            </a-steps>
         </div>
         <div style="margin: 20px">
             <template v-if="current === 0">
@@ -74,12 +74,12 @@
                         被分配了接收权限的用户将根据名称判断是否订阅该通知
                     </div>
                     <div style="margin: 50px 200px">
-                        <j-form
+                        <a-form
                             ref="formRef"
                             :model="formModel"
                             layout="vertical"
                         >
-                            <j-form-item
+                            <a-form-item
                                 name="name"
                                 label="名称"
                                 :rules="[
@@ -90,38 +90,38 @@
                                     },
                                 ]"
                             >
-                                <j-input
+                                <a-input
                                     v-model:value="formModel.name"
                                     placeholder="请输入名称"
                                 />
-                            </j-form-item>
-                        </j-form>
+                            </a-form-item>
+                        </a-form>
                     </div>
                 </div>
             </template>
         </div>
         <template #footer>
-            <j-space>
-                <j-button v-if="current === 0" @click="emit('close')"
-                    >取消</j-button
+            <a-space>
+                <a-button v-if="current === 0" @click="emit('close')"
+                    >取消</a-button
                 >
-                <j-button v-else @click="onPrev">上一步</j-button>
-                <j-button
+                <a-button v-else @click="onPrev">上一步</a-button>
+                <a-button
                     type="primary"
                     @click="onNext"
                     v-if="current !== stepList.length - 1"
-                    >下一步</j-button
+                    >下一步</a-button
                 >
-                <j-button
+                <a-button
                     :loading="loading"
                     type="primary"
                     @click="onSave"
                     v-else
-                    >确认</j-button
+                    >确认</a-button
                 >
-            </j-space>
+            </a-space>
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div class="menu-container">
       <j-search
         :labelWidth="56"
@@ -20,13 +20,13 @@
               :scroll="{ y: 'calc(100vh - 460px)' }"
           >
             <template #headerTitle>
-              <PermissionButton
+              <j-permission-button
                   type="primary"
                   :hasPermission="`${permission}:add`"
                   @click="toDetails({})"
               >
                 <AIcon type="PlusOutlined" />新增
-              </PermissionButton>
+              </j-permission-button>
             </template>
             <template #createTime="slotProps">
             <span v-time-format="'YYYY-MM-DD HH:mm:ss'">
@@ -34,8 +34,8 @@
             </span>
             </template>
             <template #action="slotProps">
-              <j-space :size="16">
-                <PermissionButton
+              <a-space :size="16">
+                <j-permission-button
                     type="link"
                     :hasPermission="`${permission}:add`"
                     @click="toDetails(slotProps)"
@@ -43,9 +43,9 @@
                     :tooltip="{ title: '编辑' }"
                 >
                   <AIcon type="EditOutlined" />
-                </PermissionButton>
+                </j-permission-button>
 
-                <PermissionButton
+                <j-permission-button
                     type="link"
                     :hasPermission="`${permission}:add`"
                     :tooltip="{ title: '新增子菜单' }"
@@ -53,8 +53,8 @@
                     @click="addChildren(slotProps)"
                 >
                   <AIcon type="PlusCircleOutlined" />
-                </PermissionButton>
-                <PermissionButton
+                </j-permission-button>
+                <j-permission-button
                     type="link"
                     :hasPermission="`${permission}:delete`"
                     :tooltip="{ title: '删除' }"
@@ -66,14 +66,14 @@
                 }"
                 >
                   <AIcon type="DeleteOutlined" />
-                </PermissionButton>
-              </j-space>
+                </j-permission-button>
+              </a-space>
             </template>
           </j-pro-table>
         </div>
       </FullPage>
     </div>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="Menu">

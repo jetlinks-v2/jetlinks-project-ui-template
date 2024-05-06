@@ -1,18 +1,18 @@
 <template>
-    <j-modal visible :title="type === 'add' ? '新增' : '编辑'" @cancel="close" @ok="submitData" :maskClosable="false"
+    <a-modal visible :title="type === 'add' ? '新增' : '编辑'" @cancel="close" @ok="submitData" :maskClosable="false"
         :confirmLoading="loading">
-        <j-form :model="form" layout="vertical" :rules="rules" ref="formRef">
-            <j-form-item label="name" name="name">
-                <j-input placeholder="请输入name" v-model:value="form.name"></j-input>
-            </j-form-item>
-            <j-form-item label="value" name="value">
-                <j-input placeholder="请输入value" v-model:value="form.value"></j-input>
-            </j-form-item>
-            <j-form-item label="text" name="text">
-                <j-input placeholder="请输入text" v-model:value="form.text"></j-input>
-            </j-form-item>
-        </j-form>
-    </j-modal>
+        <a-form :model="form" layout="vertical" :rules="rules" ref="formRef">
+            <a-form-item label="name" name="name">
+                <a-input placeholder="请输入name" v-model:value="form.name"></a-input>
+            </a-form-item>
+            <a-form-item label="value" name="value">
+                <a-input placeholder="请输入value" v-model:value="form.value"></a-input>
+            </a-form-item>
+            <a-form-item label="text" name="text">
+                <a-input placeholder="请输入text" v-model:value="form.text"></a-input>
+            </a-form-item>
+        </a-form>
+    </a-modal>
 </template>
 
 <script lang="ts" setup name="DictionaryItemEdit">

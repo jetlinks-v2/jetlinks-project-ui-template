@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div>
       {{ route.name }}
     </div>
@@ -24,15 +24,15 @@
         button
       </template>
     </permission-button>
-    <j-table-card
+    <a-table-card
       name="卡片标题"
       width="400px"
     >
       <template #content>
         中间内容
       </template>
-    </j-table-card>
-  </page-container>
+    </a-table-card>
+  </j-page-container>
   <div style="width: 100%; height: 300px">
     <init-Amap
       @dragstart="mapClick"

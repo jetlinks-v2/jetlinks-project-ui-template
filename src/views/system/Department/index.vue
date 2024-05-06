@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <FullPage>
       <div class="department-container">
         <div class="left">
@@ -10,7 +10,7 @@
         </div>
       </div>
     </FullPage>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="Department">

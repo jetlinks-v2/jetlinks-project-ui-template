@@ -1,6 +1,6 @@
 <template>
     <div class="permiss-tree-container">
-        <j-table
+        <a-table
             :columns="columns"
             :data-source="tableData"
             :pagination="false"
@@ -11,28 +11,28 @@
             <!-- 表头 -->
             <template #headerCell="{ column }">
                 <div v-if="column.key === 'menu'">
-                    <j-checkbox
+                    <a-checkbox
                         v-model:checked="selectedAll"
                         :indeterminate="indeterminate"
                         @change="selectAllChange"
-                        >菜单权限</j-checkbox
+                        >菜单权限</a-checkbox
                     >
                 </div>
                 <div v-else-if="column.key === 'data'">
                     <span style="">数据权限</span>
-                    <j-tooltip>
+                    <a-tooltip>
                         <template #title
                             >勾选任意数据权限均能看到自己创建的数据权限</template
                         >
                         <AIcon type="QuestionCircleOutlined" />
-                    </j-tooltip>
-                    <j-checkbox
+                    </a-tooltip>
+                    <a-checkbox
                         v-model:checked="bulkShow"
                         @change="bulkValue = ''"
                         style="margin-left: 10px"
-                        >批量设置</j-checkbox
+                        >批量设置</a-checkbox
                     >
-                    <j-select
+                    <a-select
                         v-show="bulkShow"
                         v-model:value="bulkValue"
                         :size="'middle'"
@@ -40,7 +40,7 @@
                         :options="bulkOptions"
                         @change="bulkChange"
                         placeholder="请选择"
-                    ></j-select>
+                    ></a-select>
                 </div>
                 <div v-else>
                     <span>{{ column.title }}</span>
@@ -50,23 +50,23 @@
             <template #bodyCell="{ column, record }">
                 <div :id="record.id"></div>
                 <div v-if="column.key === 'menu'">
-                    <j-checkbox
+                    <a-checkbox
                         v-model:checked="record.granted"
                         :indeterminate="record.indeterminate"
                         @change="menuChange(record, true)"
-                        >{{ record.name }}</j-checkbox
+                        >{{ record.name }}</a-checkbox
                     >
                     <!-- :disabled='record.code === USER_CENTER_MENU_CODE' -->
                 </div>
 
                 <div v-else-if="column.key === 'action'">
                     <div v-if="record.buttons && record.buttons.length > 0">
-                        <j-checkbox
+                        <a-checkbox
                             v-for="button in record.buttons"
                             v-model:checked="button.granted"
                             @change="actionChange(record)"
                             :key="button.id"
-                            >{{ button.name }}</j-checkbox
+                            >{{ button.name }}</a-checkbox
                         >
                         <!-- :disabled='[USER_CENTER_MENU_BUTTON_CODE].includes(button.id)' -->
                     </div>
@@ -77,17 +77,17 @@
                         不支持数据权限配置，默认可查看全部数据
                     </span>
                     <div v-else-if="record.accessSupport.value === 'support'">
-                        <j-radio-group
+                        <a-radio-group
                             v-model:value="record.selectAccesses"
                             @change="resetBulk"
                         >
-                            <j-radio
+                            <a-radio
                                 :value="asset.supportId"
                                 v-for="asset in record.assetAccesses"
                                 :key="asset.name"
-                                >{{ asset.name }}</j-radio
+                                >{{ asset.name }}</a-radio
                             >
-                        </j-radio-group>
+                        </a-radio-group>
                     </div>
                     <span
                         v-else-if="
@@ -98,7 +98,7 @@
                     >
                 </div>
             </template>
-        </j-table>
+        </a-table>
     </div>
 </template>
 

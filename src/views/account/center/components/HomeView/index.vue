@@ -2,13 +2,13 @@
     <div class="choose-view">
         <HomeView v-model:value="currentView" />
         <div class="btn">
-            <j-button type="primary" @click="confirm">保存修改</j-button>
+            <a-button type="primary" @click="confirm">保存修改</a-button>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { getMe_api, getView_api, setView_api } from '@/api/account/center.ts';
+import { getMe_api, getView_api, setView_api } from '@/api/account/center';
 import { onlyMessage } from "@jetlinks-web/utils";
 import HomeView from '@/components/HomeView/index.vue';
 

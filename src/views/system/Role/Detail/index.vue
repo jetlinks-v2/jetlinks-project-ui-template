@@ -1,14 +1,14 @@
 <template>
-    <page-container>
+    <j-page-container>
         <FullPage>
           <div class="details-container">
-            <j-tabs v-model:activeKey="activeKey" type="card">
-              <j-tab-pane key="1" tab="权限分配"><Permission /></j-tab-pane>
-              <j-tab-pane key="2" tab="用户管理"><User /></j-tab-pane>
-            </j-tabs>
+            <a-tabs v-model:activeKey="activeKey" type="card">
+              <a-tab-pane key="1" tab="权限分配"><Permission /></a-tab-pane>
+              <a-tab-pane key="2" tab="用户管理"><User /></a-tab-pane>
+            </a-tabs>
           </div>
         </FullPage>
-    </page-container>
+    </j-page-container>
 </template>
 
 <script setup lang="ts" name="RoleDetail">

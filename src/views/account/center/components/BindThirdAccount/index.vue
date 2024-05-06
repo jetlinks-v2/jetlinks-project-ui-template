@@ -17,9 +17,9 @@
                             style="height: 24px; width: 24px"
                             alt=""
                         />
-                        <Ellipsis style="max-width: 200px; color: #333; margin: 0 8px 0 6px">{{
+                        <j-ellipsis style="max-width: 200px; color: #333; margin: 0 8px 0 6px">{{
                             item?.name
-                        }}</Ellipsis>
+                        }}</j-ellipsis>
                         <div>
                             <span v-if="item.bound" style="color: #2BA245">已绑定</span>
                             <span v-else style="color: #999">未绑定</span>
@@ -29,19 +29,19 @@
                         </div>
                     </div>
                     <div class="content-item-right">
-                        <j-popconfirm
+                        <a-popconfirm
                             v-if="item.bound"
                             title="确认解除绑定嘛?"
                             @confirm="() => unBind(item.id)"
                         >
-                            <j-button>解除绑定</j-button>
-                        </j-popconfirm>
-                        <j-button
+                            <a-button>解除绑定</a-button>
+                        </a-popconfirm>
+                        <a-button
                             v-else
                             ghost
                             type="primary"
                             @click="clickBind(item.id)"
-                            >立即绑定</j-button
+                            >立即绑定</a-button
                         >
                     </div>
                 </div>
@@ -94,7 +94,7 @@ function getSsoBinds() {
             bindList.value = resp.result.filter((item: any) => {
                 return !item.features.includes('ssoUnsupportedRedirect')
             })
-        } 
+        }
     });
 }
 
@@ -135,7 +135,7 @@ onMounted(() => {
                     color: #fff;
                 }
             }
-            
+
         }
     }
 }

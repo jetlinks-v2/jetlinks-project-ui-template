@@ -1,6 +1,6 @@
 <template>
   <div class="permission-choose-container">
-    <j-input
+    <a-input
       v-model:value="searchValue"
       style="width: 300px"
       allowClear
@@ -10,36 +10,36 @@
     />
 
     <div class="permission-table">
-      <j-row :gutter="24" class="table-head">
-        <j-col :span="firstWidth">权限名称</j-col
-        ><j-col :span="24 - firstWidth">权限操作</j-col>
-      </j-row>
+      <a-row :gutter="24" class="table-head">
+        <a-col :span="firstWidth">权限名称</a-col
+        ><a-col :span="24 - firstWidth">权限操作</a-col>
+      </a-row>
       <div class="table-body" :style="{ 'max-height': maxHeight }">
-        <j-row
+        <a-row
           :gutter="24"
           class="row"
           v-for="rowItem in list"
           :key="rowItem.id"
         >
-          <j-col :span="firstWidth" class="item-name">
-            <j-checkbox
+          <a-col :span="firstWidth" class="item-name">
+            <a-checkbox
               v-model:checked="rowItem.checkAll"
               :indeterminate="rowItem.indeterminate"
               @change="(e) => selectAllOptions(e, rowItem)"
               :disabled="disabled"
             >
               {{ rowItem.name }}
-            </j-checkbox>
-          </j-col>
-          <j-col :span="24 - firstWidth">
-            <j-checkbox-group
+            </a-checkbox>
+          </a-col>
+          <a-col :span="24 - firstWidth">
+            <a-checkbox-group
               v-model:value="rowItem.checkedList"
               :options="rowItem.options"
               @change="((val:string[])=> selectOption(rowItem, val))"
               :disabled="disabled"
             />
-          </j-col>
-        </j-row>
+          </a-col>
+        </a-row>
       </div>
     </div>
   </div>

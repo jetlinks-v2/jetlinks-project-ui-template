@@ -1,34 +1,36 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import { setupPinia } from '@jetlinks-web/stores'
-import { initRoute } from '@jetlinks-web/router'
-import { initPackages } from './package'
-import { setupRouter } from '@/router/guard'
-import { initStoreBus } from '@/store'
-import globalComponents from '@jetlinks-web/components'
+import router from '@/router'
+import pinia from '@/store'
+import i18n from '@/locales'
+import JetlinksComponents from '@jetlinks-web/components'
 import components from './components'
 import 'ant-design-vue/dist/antd.variable.min.css'
+import '@jetlinks-web/components/es/style/index.css'
 import './style.css'
-import {LOGIN_ROUTE} from "@/router/basic";
 import directive from '@/directive'
+import { LocalStore, setToken } from "@jetlinks-web/utils";
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+dayjs.locale('zh-cn');
 
-(async () => {
-    const app = createApp(App)
+(window as any).microApp?.addDataListener((data: any) => {
+    console.log(data)
+    if (data.token) {
+        setToken(data.token)
+    }
 
-    setupPinia(app)
+    if (data.appId) {
+        LocalStore.set('appId', data.appId)
+    }
+}, true)
 
-    await initPackages()
+const app = createApp(App)
 
-    const router = initRoute({ Login: LOGIN_ROUTE})
-
-    app.use(router)
-
-    app.use(directive)
-    await initStoreBus()
-    await setupRouter()
-
-    app.use(globalComponents)
-    app.use(components)
-
-    app.mount('#app')
-})()
+app.use(pinia)
+    .use(router)
+    .use(directive) // 注册自定义指令
+    .use(i18n)
+    .use(JetlinksComponents) // 注册脚手架通用组件
+    .use(components) // 注册自定义通用组件
+    .mount('#app')

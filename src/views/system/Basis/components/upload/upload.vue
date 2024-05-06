@@ -1,6 +1,6 @@
 <template>
   <div class="upload">
-    <j-upload @change="change"
+    <a-upload @change="change"
             :drag="uploadInfo.drag"
             name="file"
             :headers="uploadInfo.headers"
@@ -18,7 +18,7 @@
           </template>
         </div>
         <div v-for="item in messages" :key="item" class="uploadTip">{{item}}</div>
-    </j-upload>
+    </a-upload>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
-import {defineStore} from "pinia";
-import {getDetails_api, settingDetail} from "@/api/system/basis";
+import { defineStore } from "pinia";
+import { getDetails_api, settingDetail } from "@/api/system/basis";
 
 interface LayoutType {
   siderWidth: number
@@ -9,10 +9,12 @@ interface LayoutType {
   logo: string
   layout: 'mix' | 'side' | 'top'
 }
+
 export const useSystemStore = defineStore('system', () => {
   const theme = ref<string>('light') // 主题色
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
   const systemInfo = ref<Record<string, any>>({})
+  const microApp = ref<Record<string, any>>({})
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,
@@ -87,14 +89,20 @@ export const useSystemStore = defineStore('system', () => {
   }
 
   const querySingleInfo = async (__keys: string) => {
-    if(!__keys) return
-    const resp =  await settingDetail(__keys)
+    if (!__keys) return
+    const resp = await settingDetail(__keys)
     if (resp.success) {
       const _value = resp.result
       systemInfo.value[__keys] = _value ?? {}
       if (__keys === 'front') {
         handleFront(_value)
       }
+    }
+  }
+
+  const setMircoData = () => {
+    if ((window as any).__MICRO_APP_ENVIRONMENT__) {
+      microApp.value = (window as any).microApp.getData() // 获取主应用下发的数据
     }
   }
 
@@ -108,6 +116,7 @@ export const useSystemStore = defineStore('system', () => {
     changeIco,
     changeTitle,
     queryInfo,
-    querySingleInfo
+    querySingleInfo,
+    setMircoData
   }
 })

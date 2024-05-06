@@ -1,5 +1,5 @@
 <template>
-  <j-modal
+  <a-modal
     :title="type==='add'?'新增字典':'编辑字典'"
     visible
     @cancel="closeModal"
@@ -8,24 +8,24 @@
     :maskClosable="false"
     :confirmLoading="loading"
   >
-    <j-form layout="vertical" :rules="rules" ref="formRef" :model="form">
-        <j-form-item label="字典ID" name="id">
-            <j-input v-model:value="form.id" :disabled="type ==='edit'" placeholder="请输入字典ID"></j-input>
-        </j-form-item>
-        <j-form-item label="字典名称" name="name">
-            <j-input v-model:value="form.name" placeholder="请输入字典名称"></j-input>
-        </j-form-item>
-        <j-form-item label="状态" name="status">
-            <j-radio-group v-model:value="form.status">
-                <j-radio-button :value="1">启用</j-radio-button>
-                <j-radio-button :value="0">禁用</j-radio-button>
-            </j-radio-group>
-        </j-form-item>
-        <j-form-item label="说明" name="describe">
-            <j-textarea :rows="4" :maxlength="200" v-model:value="form.describe" placeholder="请输入"></j-textarea>
-        </j-form-item>
-    </j-form>
-  </j-modal>
+    <a-form layout="vertical" :rules="rules" ref="formRef" :model="form">
+        <a-form-item label="字典ID" name="id">
+            <a-input v-model:value="form.id" :disabled="type ==='edit'" placeholder="请输入字典ID"></a-input>
+        </a-form-item>
+        <a-form-item label="字典名称" name="name">
+            <a-input v-model:value="form.name" placeholder="请输入字典名称"></a-input>
+        </a-form-item>
+        <a-form-item label="状态" name="status">
+            <a-radio-group v-model:value="form.status">
+                <a-radio-button :value="1">启用</a-radio-button>
+                <a-radio-button :value="0">禁用</a-radio-button>
+            </a-radio-group>
+        </a-form-item>
+        <a-form-item label="说明" name="describe">
+            <a-textarea :rows="4" :maxlength="200" v-model:value="form.describe" placeholder="请输入"></a-textarea>
+        </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script lang="ts" setup name="DictionaryEdit">

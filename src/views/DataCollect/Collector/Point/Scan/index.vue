@@ -1,5 +1,5 @@
 <template lang="">
-    <j-modal title="扫描" :visible="true" width="95%" @cancel="handleCancel">
+    <a-modal title="扫描" :visible="true" width="95%" @cancel="handleCancel">
         <div class="content">
             <Tree
                 :data="treeData"
@@ -15,8 +15,8 @@
             ></Table>
         </div>
         <template #footer>
-            <j-button key="back" @click="handleCancel">取消</j-button>
-            <PermissionButton
+            <a-button key="back" @click="handleCancel">取消</a-button>
+            <j-permission-button
                 key="submit"
                 type="primary"
                 :loading="loading"
@@ -25,9 +25,9 @@
                 :hasPermission="`DataCollect/Collector:update`"
             >
                 确认
-            </PermissionButton>
+            </j-permission-button>
         </template>
-    </j-modal>
+    </a-modal>
 </template>
 <script lang="ts" setup>
 import type { FormInstance } from 'ant-design-vue';
