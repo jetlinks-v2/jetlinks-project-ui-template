@@ -53,9 +53,9 @@ const handleChange = (info: any) => {
         loading.value = true;
     }
     if (info.file.status === 'done') {
-        info.file.url = info.file.response?.result;
+        info.file.url = info.file.response?.result.accessUrl;
         loading.value = false;
-        const result = info.file.response?.result;
+        const result = info.file.response?.result.accessUrl;
         emit('update:value', result);
     }
 };

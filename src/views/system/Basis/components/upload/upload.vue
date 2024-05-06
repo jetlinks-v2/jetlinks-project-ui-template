@@ -180,7 +180,7 @@ const uploadInfo: UploadInfoType = {
     if (info.file.status === 'uploading') {
       loading.value = true
     } else if (info.file.status === 'done') {
-      info.file.url = info.file.response?.result
+      info.file.url = info.file.response?.result.accessUrl
       loading.value = false
       emit('update:imgSrc', info.file.url)
     } else if (info.file.status === 'error') {
