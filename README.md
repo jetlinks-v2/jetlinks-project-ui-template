@@ -368,6 +368,16 @@ const value = ref();
 <AIcon type="icon-dianzan"/>
 ```
 
+#### ConfigProvider
+
+JConfigProvider组件新增 IconConfig和MapConfig，作为全局的配置
+
+```html
+<JConfigProvider :IconConfig="{ scriptUrl: '//at.alicdn.com/t/c/font_4035907_o5hxqjo7dq.js'}">
+  <AIcon type="icon-xiazai"/>
+</JConfigProvider>
+```
+
 #### PermissionButton(权限按钮)
 
 按钮权限组件支持antdv的[Button](https://www.antdv.com/components/button-cn#api)
