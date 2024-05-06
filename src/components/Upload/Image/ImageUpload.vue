@@ -130,9 +130,9 @@ const handleChange = (info: UploadChangeParam) => {
     loading.value = true;
   }
   if (info.file.status === 'done') {
-    imageUrl.value = info.file.response?.result;
+    imageUrl.value = info.file.response?.result.accessUrl;
     loading.value = false;
-    emit('update:value', info.file.response?.result);
+    emit('update:value', info.file.response?.result.accessUrl);
   }
   if (info.file.status === 'error') {
     loading.value = false;

@@ -2,7 +2,7 @@ import { request } from '@/utils/axios'
 import {getToken} from "@jetlinks-web/utils";
 
 const BASE_API_PATH = import.meta.env.VITE_APP_BASE_API
-export const FileStatic = '/file/static'
+export const FileStatic = '/file/upload'
 export const getFileUrlById = (id: string) => `${BASE_API_PATH}/file/${id}?:X_Access_Token=${getToken()}`
 export const fileUpload = (data: any) => request.post(FileStatic, data)
 

@@ -1,8 +1,8 @@
 <template>
   <j-page-container>
-    <FullPage>
-      <div style="height: 100%;">
-        <div style="overflow-y: auto; height: 100%; padding: 24px;">
+    <FullPage :extraHeight="24">
+      <div style="height: 100%; padding: 24px;">
+        <div style="overflow-y: auto; height: 100%; ">
           <a-form
               layout="vertical"
               ref="formRef"
@@ -69,19 +69,19 @@
                 <a-row :gutter="24">
                   <!-- 系统logo -->
                   <a-col :span="12">
-                    <a-form-item label="系统logo">
+                    <a-form-item label="系统logo" style="margin: 0">
                       <Upload uploadType="logo" v-model:img-src="formData.logo"/>
                     </a-form-item>
                   </a-col>
                   <!-- 浏览器页签icon -->
                   <a-col :span="12">
-                    <a-form-item label="浏览器页签">
+                    <a-form-item label="浏览器页签" style="margin: 0">
                       <Upload uploadType="ico" v-model:img-src="formData.ico"/>
                     </a-form-item>
                   </a-col>
                 </a-row>
                 <!-- 保存按钮 -->
-                <a-form-item>
+                <a-form-item style="margin: 0">
                   <j-permission-button @click="submit" type="primary" html-type="submit" hasPermission="system/Basis:update">
                     保存
                   </j-permission-button>
