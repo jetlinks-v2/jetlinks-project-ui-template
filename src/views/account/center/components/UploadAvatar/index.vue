@@ -106,10 +106,10 @@ const handleChange = (info: UploadChangeParam) => {
     loading.value = true
   }
   if (info.file.status === 'done') {
-    imageUrl.value = info.file.response?.result.accessUrl
+    imageUrl.value = info.file.response?.result
     loading.value = false
-    emit('update:modelValue', info.file.response?.result.accessUrl)
-    emit('change', info.file.response?.result.accessUrl)
+    emit('update:modelValue', info.file.response?.result)
+    emit('change', info.file.response?.result)
   }
   if (info.file.status === 'error') {
     loading.value = false
