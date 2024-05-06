@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <j-search
       :columns="columns"
       target="system-permission"
@@ -122,7 +122,7 @@
     </FullPage>
     <!-- 编辑和新增 -->
     <EditDialog v-if="visible" :data="current" @close="visible = false" @save="onSave" />
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="Permission">

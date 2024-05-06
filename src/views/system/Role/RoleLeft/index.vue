@@ -158,10 +158,9 @@ onMounted(() => {
 <style lang="less" scoped>
 .left-contain {
 	height: 100%;
-}
-
-.controls {
-	margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .treeItem {
@@ -175,8 +174,7 @@ onMounted(() => {
 }
 
 .listBox {
-	margin: 10px 0;
-	height: calc(100% - 110px);
+	flex: 1 auto;
 	overflow-y: auto;
 }
 </style>

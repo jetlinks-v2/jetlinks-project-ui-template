@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div>
       {{ route.name }}
     </div>
@@ -32,7 +32,7 @@
         中间内容
       </template>
     </a-table-card>
-  </page-container>
+  </j-page-container>
   <div style="width: 100%; height: 300px">
     <init-Amap
       @dragstart="mapClick"

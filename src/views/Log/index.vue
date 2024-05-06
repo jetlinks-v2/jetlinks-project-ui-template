@@ -1,5 +1,5 @@
 <template>
-    <page-container
+    <j-page-container
         :tabList="list"
         :tabActiveKey="activeKey"
         @tabChange="onTabChange"
@@ -8,7 +8,7 @@
             <AccessLog v-if="activeKey === '1'" />
             <SystemLog v-else />
         </FullPage>
-    </page-container>
+    </j-page-container>
 </template>
 <script lang="ts" setup name="LogPage">
 import { defineComponent, ref } from 'vue';

@@ -1,5 +1,5 @@
 <template>
-    <page-container>
+    <j-page-container>
         <div class="container">
             <div class="left">
                 <Tree @change="changeTree" />
@@ -11,7 +11,7 @@
                 </a-spin>
             </div>
         </div>
-    </page-container>
+    </j-page-container>
 </template>
 
 <script setup lang="ts" name="CollectorPage">

@@ -1,11 +1,11 @@
 <template>
-  <page-container>
+  <j-page-container>
     <iframe
       :src="iframeUrl"
       frameBorder="0"
       style="width: 100%; height: calc(100vh - 140px)"
     ></iframe>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup name="IframePage" lang="ts">

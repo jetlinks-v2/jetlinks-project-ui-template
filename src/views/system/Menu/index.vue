@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div class="menu-container">
       <j-search
         :labelWidth="56"
@@ -73,7 +73,7 @@
         </div>
       </FullPage>
     </div>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="Menu">

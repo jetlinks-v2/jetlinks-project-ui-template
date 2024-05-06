@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div class="user-container">
       <!-- 搜索框 -->
       <j-search :labelWidth="50" :columns="columns" target="category" @search="onSearch"/>
@@ -67,7 +67,7 @@
       <UserDialog v-if="visible" :data="dialog.data" :modalType="dialog.modalType"
                   @cancel="visible = false" @save="refresh"/>
     </div>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="User">

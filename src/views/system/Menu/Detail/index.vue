@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div class="menu-detail-container">
       <a-tabs v-model:activeKey="activeKey">
         <a-tab-pane key="basic" tab="基本信息">
@@ -10,7 +10,7 @@
         </a-tab-pane>
       </a-tabs>
     </div>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts">

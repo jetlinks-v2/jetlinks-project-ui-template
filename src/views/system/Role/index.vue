@@ -1,5 +1,5 @@
 <template>
-    <page-container>
+    <j-page-container>
          <FullPage>
              <div class="dictionary_contain">
                  <div class="dictionary_left">
@@ -10,9 +10,9 @@
                  </div>
              </div>
          </FullPage>
-    </page-container>
+    </j-page-container>
  </template>
- 
+
  <script lang="ts" setup name="Role">
  import Left from './RoleLeft/index.vue'
  import Right from './RoleRight/index.vue'

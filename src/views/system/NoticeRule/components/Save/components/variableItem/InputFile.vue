@@ -14,7 +14,7 @@
                 :headers="{
                     [TOKEN_KEY]: LocalStore.get(TOKEN_KEY),
                 }"
-                :action="`${BASE_API}/file/static`"
+                :action="`${BASE_API}${FileStatic}`"
                 @change="handleChange"
                 @beforeUpload="handleBeforeUpload"
             >
@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import { TOKEN_KEY, BASE_API } from '@jetlinks-web/constants'
 import { LocalStore, onlyMessage } from "@jetlinks-web/utils";
-
+import { FileStatic } from '@/api/comm'
 
 const props = defineProps({
     id: {

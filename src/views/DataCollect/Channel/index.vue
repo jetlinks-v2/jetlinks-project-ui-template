@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div>
       <j-pro-search
         :columns="columns"
@@ -127,7 +127,7 @@
       </FullPage>
       <Save v-if="visible" :data="current" @change="saveChange" />
     </div>
-  </page-container>
+  </j-page-container>
 </template>
 <script lang="ts" name="DataCollectPage" setup>
 import { getImage, onlyMessage } from '@jetlinks-web/utils'

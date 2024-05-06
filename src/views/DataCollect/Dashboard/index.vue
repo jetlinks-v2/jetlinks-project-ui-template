@@ -1,5 +1,5 @@
 <template>
-    <page-container>
+    <j-page-container>
         <a-row :gutter="24">
             <a-col :span="8" v-for="item in StatusData" :key="item[0].type">
                 <TopCard
@@ -17,7 +17,7 @@
                 <Card />
             </a-col>
         </a-row>
-    </page-container>
+    </j-page-container>
 </template>
 
 <script setup lang="ts">

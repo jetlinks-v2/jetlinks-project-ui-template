@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import { initPackages } from './package'
 import router from '@/router'
 import pinia from '@/store'
 import i18n from '@/locales'
 import JetlinksComponents from '@jetlinks-web/components'
 import components from './components'
 import 'ant-design-vue/dist/antd.variable.min.css'
+import '@jetlinks-web/components/es/style/index.css'
 import './style.css'
 import directive from '@/directive'
 import { LocalStore, setToken } from "@jetlinks-web/utils";

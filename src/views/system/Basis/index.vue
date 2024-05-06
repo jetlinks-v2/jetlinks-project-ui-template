@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <FullPage>
       <div style="height: 100%;">
         <div style="overflow-y: auto; height: 100%; padding: 24px;">
@@ -100,7 +100,7 @@
         </div>
       </div>
     </FullPage>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup name="Basis" lang="ts">

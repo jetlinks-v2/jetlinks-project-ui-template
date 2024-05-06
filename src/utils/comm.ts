@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { downloadFileByUrl, getImage } from '@jetlinks-web/utils'
+import { downloadFileByUrl, getImage, LocalStore } from '@jetlinks-web/utils'
 import {getFileUrlById} from "@/api/comm";
 
 export const downloadJson = (record: Record<string, any>, fileName: string, format?: string) => {
@@ -39,4 +39,12 @@ export const getImageUrl = (id: string) => {
         return getImage(id.replace('localhost', ''))
     }
     return getFileUrlById(id)
+}
+
+export const getAppId = () => {
+    return LocalStore.get('app_id')
+}
+
+export const setAppId = (id: string) => {
+    LocalStore.set('app_id', id)
 }

@@ -45,3 +45,9 @@ export const updateDictionaryItem = (id: string, data:any) => request.put(`/dict
  * @param data
  */
 export const queryDictionaryItemNoPaging = (data: any) => request.post('/dictionary-item/_query/no-paging',data)
+
+/**
+ * 删除字典项
+ * @param id
+ */
+export const delDictionaryItem = (id: string) => request.remove(`/dictionary-item/${id}`);
