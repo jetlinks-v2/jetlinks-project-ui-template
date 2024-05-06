@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@jetlinks-web/components':
-        specifier: 2.0.18
-        version: 2.0.18(vue-router@4.2.2)(vue@3.3.4)
+        specifier: 2.0.20
+        version: 2.0.20(vue-router@4.2.2)(vue@3.3.4)
       '@jetlinks-web/constants':
         specifier: ^1.0.2
         version: 1.0.2
@@ -732,8 +732,8 @@ packages:
     engines: {node: '>= 16'}
     dev: false
 
-  /@jetlinks-web/components@2.0.18(vue-router@4.2.2)(vue@3.3.4):
-    resolution: {integrity: sha512-SLA578PC83nlquEXaTlJcV6yq0lccwn/6Z3AhHAvOskH/JNAAVA+L/lhFea93jwPb851QNY+KeRdPZ+kh5ZZLw==}
+  /@jetlinks-web/components@2.0.20(vue-router@4.2.2)(vue@3.3.4):
+    resolution: {integrity: sha512-+vYfwP+YfEuc9vsUDKbGLlwJu/AUNlIDRphmLHH7s2wMrB3vnQHV74LN4S5vAo8ioX0jMZJbnY9Gs5Cy2MAEgw==}
     dependencies:
       '@ant-design/icons-vue': 7.0.1(vue@3.3.4)
       '@vuemap/vue-amap': 2.1.1(vue@3.3.4)

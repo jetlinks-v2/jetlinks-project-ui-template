@@ -93,10 +93,10 @@ const cropperVisible = ref(false)
 watch(
   () => props.modelValue,
   (newValue) => {
+
     imageUrl.value = newValue
   },
   {
-    deep: true,
     immediate: true,
   },
 )
@@ -106,10 +106,10 @@ const handleChange = (info: UploadChangeParam) => {
     loading.value = true
   }
   if (info.file.status === 'done') {
-    imageUrl.value = info.file.response?.result
+    imageUrl.value = info.file.response?.result.accessUrl
     loading.value = false
-    emit('update:modelValue', info.file.response?.result)
-    emit('change', info.file.response?.result)
+    emit('update:modelValue', info.file.response?.result.accessUrl)
+    emit('change', info.file.response?.result.accessUrl)
   }
   if (info.file.status === 'error') {
     loading.value = false

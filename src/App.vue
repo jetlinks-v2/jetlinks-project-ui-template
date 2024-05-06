@@ -21,7 +21,7 @@ ConfigProvider.config({
 
 // 为公共hooks提供权限校验方法
 const { hasPermission } = useAuthStore();
-provide(ComponentsEnum.Permission, hasPermission)
+provide(ComponentsEnum.Permission, { hasPermission })
 
 initPackages()
 

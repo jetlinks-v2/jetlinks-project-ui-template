@@ -116,7 +116,7 @@ const handleImport = async (file: any) => {
   event = new EventSource(
     `${BASE_API}/data-collect/point/${props.data?.collectorId}/${
       props.data?.provider
-    }/import?:X_Access_Token=${getToken()}&fileUrl=${file.result}`,
+    }/import?:X_Access_Token=${getToken()}&fileUrl=${file.result.accessUrl}`,
     { withCredentials: true },
   )
   event.onopen = (e) => {
