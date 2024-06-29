@@ -27,7 +27,7 @@ const loading = ref(false)
 const menus = ref([]) // USER_CENTER_MENU_DATA
 const clickSave = () => {
   updatePermissionTree_api(roleId, {
-    menus: menus,
+    menus: menus.value,
   }).then((res:any)=>{
     if(res.status === 200){
         onlyMessage('操作成功')
