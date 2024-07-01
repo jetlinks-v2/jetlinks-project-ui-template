@@ -43,7 +43,7 @@ const props = defineProps({
   },
 })
 
-const { loading, run } = useRequest(props.value?.id ? updateMenu : addMenu, {
+const { loading, run } = useRequest(route.query.id !== ':id' ? updateMenu : addMenu, {
   immediate: false,
   onSuccess(res: any) {
     if (res.success) {
