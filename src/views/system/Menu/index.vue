@@ -80,6 +80,7 @@
 import { getMenuTree, delMenu } from '@/api/system/menu'
 import { useMenuStore } from '@/store/menu'
 import { onlyMessage } from '@jetlinks-web/utils'
+import {OWNER_KEY} from "@/utils/consts";
 
 const permission = 'system/Menu'
 
@@ -185,7 +186,7 @@ const getList = async (_params: any) => {
           {
             column: 'owner',
             termType: 'eq',
-            value: 'iot',
+            value: OWNER_KEY,
           },
           {
             column: 'owner',

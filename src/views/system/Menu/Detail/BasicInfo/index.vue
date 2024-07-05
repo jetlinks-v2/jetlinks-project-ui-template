@@ -28,6 +28,7 @@ import { addMenu, updateMenu } from '@/api/system/menu'
 import { useRequest } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { useMenuStore } from '@/store/menu'
+import {OWNER_KEY} from "@/utils/consts";
 
 const permission = 'system/Menu'
 const menuStore = useMenuStore()
@@ -73,7 +74,7 @@ const onSave = async () => {
           ? '支持'
           : '间接控制',
     },
-    owner: 'iot',
+    owner: OWNER_KEY,
   }
   run(params)
 }

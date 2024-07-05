@@ -147,6 +147,7 @@
 import { useRoute } from 'vue-router'
 import ChooseIconDialog from '../../components/ChooseIconDialog.vue'
 import { validMenuCode } from '@/api/system/menu'
+import {OWNER_KEY} from "@/utils/consts";
 
 const route = useRoute()
 const formRef = ref<any>()
@@ -198,7 +199,7 @@ const checkCode = async (_rule: any, value: string): Promise<any> => {
   } else {
     const resp: any = await validMenuCode({
       code: value,
-      owner: 'iot',
+      owner: OWNER_KEY,
     })
     if (resp.result.passed) return Promise.resolve()
     else return Promise.reject('该编码重复')

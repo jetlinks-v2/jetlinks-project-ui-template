@@ -1,6 +1,6 @@
 <template>
     <j-page-container>
-         <FullPage>
+         <j-FullPage>
              <div class="dictionary_contain">
                  <div class="dictionary_left">
                      <Left @select-data="selectData"/>
@@ -9,7 +9,7 @@
                      <Right :groupId="groupId"/>
                  </div>
              </div>
-         </FullPage>
+         </j-FullPage>
     </j-page-container>
  </template>
 

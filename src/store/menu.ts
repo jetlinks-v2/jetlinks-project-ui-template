@@ -9,6 +9,7 @@ import { getGlobModules } from '@/router/globModules'
 import { extraMenu } from '@/router/extraMenu'
 import { USER_CENTER_ROUTE } from '@/router/basic'
 import { useAuthStore } from '@/store/auth'
+import {OWNER_KEY} from "@/utils/consts";
 
 const defaultOwnParams = [
   {
@@ -18,7 +19,7 @@ const defaultOwnParams = [
           {
             column: 'owner',
             termType: 'eq',
-            value: 'iot',
+            value: OWNER_KEY,
           },
           {
             column: 'owner',
