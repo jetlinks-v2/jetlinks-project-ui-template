@@ -103,9 +103,12 @@ const { data: url, run: getCode } = useRequest(codeUrl, {
 })
 
 useRequest(captchaConfig, {
-  onSuccess(resp) {
+ async onSuccess(resp) {
     if (resp.success && resp.result?.enabled) {
-      getCode()
+      await getCode()
+      if(url?.value?.key){
+        formData.verifyKey = url.value.key
+      }
     }
   }
 })
@@ -122,9 +125,6 @@ const submit = () => {
     emit('submit', formData)
 }
 
-watch(()=>url?.value,(val)=>{
-        val?.key && formData.verifyKey = val?.key
-})
 </script>
 <style lang="less" scoped>
 .content {
