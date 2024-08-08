@@ -63,68 +63,64 @@
   </div>
 </template>
 <script setup name="LoginRight" lang="ts">
-import Remember from './remember.vue'
-import { getImage } from '@jetlinks-web/utils'
-import { useRequest } from '@jetlinks-web/hooks'
-import {captchaConfig, codeUrl} from '@/api/login'
-import { rules } from './util'
+import Remember from "./remember.vue";
+import { getImage } from "@jetlinks-web/utils";
+import { useRequest } from "@jetlinks-web/hooks";
+import { captchaConfig, codeUrl } from "@/api/login";
+import { rules } from "./util";
 
-const logoImage = getImage('/login/logo.png')
+const logoImage = getImage("/login/logo.png");
 
 const props = defineProps({
-    loading: {
-        type: Boolean,
-        default: false
-    },
-    logo: {
-        type: String,
-        default: ''
-    },
-    title: {
-        type: String,
-        default: ''
-    },
-})
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  logo: {
+    type: String,
+    default: "",
+  },
+  title: {
+    type: String,
+    default: "",
+  },
+});
 
-
-const emit = defineEmits(['submit'])
+const emit = defineEmits(["submit"]);
 
 const formData = reactive({
-  username: '',
-  password: '',
+  username: "",
+  password: "",
   expires: 3600000,
   remember: false,
   verifyCode: undefined,
   verifyKey: undefined,
-})
+});
 
 const { data: url, run: getCode } = useRequest(codeUrl, {
-  immediate: false
-})
+  immediate: false,
+  onSuccess(resp) {
+    if (resp.result?.key) {
+      formData.verifyKey = resp.result?.key
+    }
+  },
+});
 
 useRequest(captchaConfig, {
- async onSuccess(resp) {
-    if (resp.success && resp.result?.enabled) {
-      await getCode()
-      if(url?.value?.key){
-        formData.verifyKey = url.value.key
-      }
+  onSuccess(resp) {
+    if (resp.result?.enabled) {
+      getCode();
     }
-  }
-})
-
-
+  },
+});
 
 const showCode = computed(() => {
-    return !!url?.value?.base64
-})
-
-
+  return !!url?.value?.base64;
+});
 
 const submit = () => {
-    emit('submit', formData)
-}
-
+  emit("submit", formData);
+};
 </script>
 <style lang="less" scoped>
 .content {
