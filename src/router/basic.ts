@@ -41,3 +41,12 @@ export const NOT_FIND_ROUTE: RouteRecordItem = {
     title: "404",
   },
 };
+
+export const INIT_HOME: RouteRecordItem = {
+  path: '/init-home',
+  name: 'init-home',
+  component: () => import("@/views/init-home/index.vue"),
+  meta: {
+    title: "初始化",
+  },
+}
