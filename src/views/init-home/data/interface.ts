@@ -1,13 +1,4 @@
-import type { Rule } from 'ant-design-vue/es/form';
 import type { UploadChangeParam, UploadProps } from 'ant-design-vue';
-/** 初始化数据提交表单 */
-export interface modalState  {
-  host: string; // 本地地址
-  port?: string; // 本地端口
-  publicHost?: string; // 公网地址
-  publicPort?: number | null; // 公网端口
-  
-}
 
 /**基本信息表单 */
 export interface formState  {
