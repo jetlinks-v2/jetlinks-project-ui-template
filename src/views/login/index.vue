@@ -15,7 +15,7 @@
 </template>
 <script setup name="Login" lang="ts">
 import { useRequest } from '@jetlinks-web/hooks'
-import { login, encryptionConfig } from '@/api/login'
+import { login, encryptionConfig, getInitSet } from '@/api/login'
 import { getImage, setToken, encrypt } from '@jetlinks-web/utils'
 import { useUserStore } from '@/store/user'
 import { useSystemStore } from '@/store/system'
@@ -31,10 +31,17 @@ const { systemInfo, layout } = storeToRefs(systemStore)
 
 const { loading, run } = useRequest(login, {
   immediate: false,
-  onSuccess(res) {
+  async onSuccess(res) {
     if (res.success) {
       setToken(res.result.token)
-      userStore.getUserInfo()
+      await userStore.getUserInfo()
+      if(userStore.isAdmin){
+        const initResp = await getInitSet()
+        if (initResp.success && !initResp.result?.length) {
+          window.location.href = '/#/init-home';
+          return;
+        }
+      }
       window.location.href = '/'
     }
   }
