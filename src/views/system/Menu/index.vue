@@ -227,7 +227,7 @@ const addChildren = (row: any) => {
       id: ':id',
     },
     query: {
-      pid: row.parentId,
+      pid: row.id,
       basePath: row.url || '',
       sortIndex: sortIndex + 1,
     },
@@ -240,7 +240,7 @@ const toDetails = (row: any) => {
       id: row.id || ':id',
     },
     query: {
-      pid: row.parentId,
+      pid: row.id,
       basePath: row.url || '',
       sortIndex: total.value,
     },
