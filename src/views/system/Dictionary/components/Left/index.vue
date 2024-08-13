@@ -6,7 +6,7 @@
             </template>
         </a-input>
         <div class="controls">
-            <j-permission-button type="primary" hasPermission="system/Dictionary:add" @click="showSave" style="width: 160px">
+            <j-permission-button type="primary" hasPermission="system/Dictionary:add" style="width: 160px" @click="showSave" >
                 新增字典
             </j-permission-button>
             <j-permission-button type="text" hasPermission="system/Dictionary:down" @click="downVisible = true">
@@ -25,31 +25,54 @@
                 <template #title="item">
                     <div class="treeItem" @click="() => selectDic(item.data)">
                         <div class="itemText">
-                            <j-ellipsis  style="width: calc(100%-100px)">{{ item.name }}</j-ellipsis>
+                            <j-ellipsis >{{ item.name }}</j-ellipsis>
                         </div>
                         <div @click="(e) => e.stopPropagation()">
-                            <a-popconfirm v-if="usePermission('system/Dictionary:action').hasPerm.value"
-                                :title="item.data.status === 1 ? '确定禁用？' : '确定启用？'" @confirm="() => updateDic(item.data)">
-                                <a-switch :checked="item.status" :disabled="!usePermission('system/Dictionary:action').hasPerm.value"
+                            <a-popconfirm
+                              v-if="permission.hasPerm.value && item.data.classified !== 'system'"
+                                :title="item.data.status === 1 ? '禁用后引用该字典的页面将受到影响，确认禁用？' : '确定启用？'"
+                              @confirm="() => updateDic(item.data)">
+                                <a-switch :checked="item.status" :disabled="!permission.hasPerm.value || item.data.classified === 'system'"
                                     :checkedValue="1" :unCheckedValue="0"></a-switch>
                             </a-popconfirm>
-                            <a-tooltip v-else placement="top" title="暂无权限,请联系管理员">
-                                <a-switch :checked="item.status" :disabled="!usePermission('system/Dictionary:action').hasPerm.value"
+                            <a-tooltip
+                              v-else
+                              placement="top"
+                              :title="!permission.hasPerm.value ? '暂无权限,请联系管理员' : '内置数据不支持修改'"
+                            >
+                                <a-switch :checked="item.status" :disabled="!permission.hasPerm.value || item.data.classified === 'system'"
                                     :checkedValue="1" :unCheckedValue="0"></a-switch>
                             </a-tooltip>
-                            <j-permission-button type="link" hasPermission="system/Dictionary:delete" :popConfirm="{
+                            <j-permission-button
+                              type="text"
+                              hasPermission="system/Dictionary:delete"
+                              :disabled="item.data.classified === 'system'"
+                              :popConfirm="{
                                 title: `确定要删除？`,
                                 onConfirm: () => deleteDic(item.id),
-                            }">
-                                <template #icon>
-                                    <AIcon type="EditOutlined"/>
-                                </template>
+                              }"
+                              :tooltip="
+                                    item.data.classified === 'system'
+                                        ? { title: '内置数据不支持修改' }
+                                        : null
+                                "
+                              style="padding: 0 10px"
+                            >
+                              删除
                             </j-permission-button>
-                            <j-permission-button type="link" hasPermission="system/Dictionary:update"
-                                @click="showEdit(item.data)" :danger="true">
-                                <template #icon>
-                                    <AIcon type="DeleteOutlined"/>
-                                </template>
+                            <j-permission-button
+                              type="text"
+                              hasPermission="system/Dictionary:update"
+                              :disabled="item.data.classified === 'system'"
+                              :tooltip="
+                                    item.data.classified === 'system'
+                                        ? { title: '内置数据不支持修改' }
+                                        : null
+                                "
+                              style="padding: 0 10px"
+                              @click="showEdit(item.data)"
+                            >
+                              编辑
                             </j-permission-button>
                         </div>
                     </div>
@@ -65,10 +88,12 @@
 <script lang="ts" setup name="DictionaryLeft">
 import { getDicList, deleteDictionary, addDictionary } from '@/api/system/dictionary';
 import Save from './save/index.vue'
-import { onlyMessage } from '@jetlinks-web/utils';
 import Export from './Export/index.vue'
+import { onlyMessage } from '@jetlinks-web/utils';
 import { usePermission } from '@jetlinks-web/hooks'
+
 const emit = defineEmits(['selectData'])
+
 const saveShow = ref(false)
 const addType = ref('add')
 const listData = ref<any[]>([])
@@ -80,6 +105,7 @@ const showSave = () => {
 }
 const downVisible = ref(false)
 const searchValue = ref()
+const permission = usePermission('system/Dictionary:action')
 const queryData = (first?: Boolean, searchName?: any) => {
     const params = searchName ? { paging:false ,sorts: [{ name: 'createTime', order: 'desc' }, { name: 'name', order: 'desc' }], terms: [{ terms: [{ value: '%' + searchName + '%', termType: 'like', column: 'name' }] }] } : { sorts: [{ name: 'createTime', order: 'desc' }, { name: 'name', order: 'desc' }], paging:false  }
     getDicList(params).then((res: any) => {
@@ -87,6 +113,10 @@ const queryData = (first?: Boolean, searchName?: any) => {
             listData.value = res.result
             if (first && res.result.length) {
                 selectDic(res.result[0])
+            }else if(selectedKeys.value){
+              selectDic(res.result.find(i=>{
+                return i.id === selectedKeys.value[0]
+              }))
             }
         }
     })
@@ -95,7 +125,6 @@ const search = () => {
     queryData(true, searchValue.value)
 }
 const searchChange = () => {
-    console.log(searchValue.value === '')
     if (searchValue.value === '') {
         queryData(true)
     }
@@ -214,7 +243,7 @@ onMounted(() => {
 
     .itemText {
         line-height: 32px;
-        max-width: 40%;
+        flex: 1 1 0;
     }
 }
 </style>

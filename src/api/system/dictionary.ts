@@ -30,6 +30,11 @@ export const deleteDictionary =(id:string) => request.remove(`/dictionary/${id}`
 export const queryDicItem = (data:any)=>request.post('/dictionary-item/_query',data)
 
 /**
+ * 查询字典项不分页
+ */
+export const queryDicItemNoPage = (data:any) => request.post('/dictionary-item/_query/no-paging',data)
+
+/**
  * 保存字典项
  */
 export const saveDicItem = (data:any) => request.patch('/dictionary-item',data)

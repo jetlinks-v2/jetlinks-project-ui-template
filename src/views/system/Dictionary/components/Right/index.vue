@@ -2,11 +2,11 @@
     <div class="des">
         <div class="des_head">
             <div>字典ID：<span>{{ data.id }}</span></div>
-            <div>说明：<span>{{ data.describe }}</span></div>
+          <div style="display: flex;">说明：<Ellipsis style="width: calc(100% - 200px);"><span>{{ data.describe }}</span></Ellipsis></div>
             <div>创建日期：<span v-time-format="'YYYY-MM-DD HH:mm:ss'"> {{data?.createTime}}</span></div>
         </div>
         <div class="contain">
-            <j-pro-search style="padding: 18px 0 0 0" :columns="columns" @search="handleSearch" target="system_dictionary" />
+            <pro-search style="padding: 18px 0 0 0" :columns="columns" @search="handleSearch" target="system_dictionary" />
             <JProTable :bodyStyle="{
                 padding: 0,
             }" :scroll="{ y: 'calc(100vh - 500px)' }" :columns="columns" model="TABLE" :request="queryItem" :params="params" ref="tableRef">
@@ -94,6 +94,7 @@ const columns = [
         dataIndex: 'action',
         key: 'action',
         scopedSlots: true,
+        width: 120
     }
 ];
 
@@ -109,6 +110,7 @@ const getActions = (
             tooltip: {
                 title: '编辑',
             },
+          icon: 'EditOutlined',
             onClick: () => {
                 saveVisible.value = true;
                 modalType.value = 'edit';
@@ -143,7 +145,18 @@ const getActions = (
 const add = () => {
     modalType.value = 'add'
     current.value = {}
-    saveVisible.value = true
+    queryDicItemNoPage({
+      paging: false,
+      sorts: [{ name: 'ordinal', order: 'desc' }],
+      terms: [{
+        column: 'dictId',
+        termType: 'eq',
+        value: props.data?.id
+      }]
+    }).then((res:any)=>{
+      sort.value = res.result?.length ?  res.result[0].ordinal + 1 : 1
+      saveVisible.value = true
+    })
 }
 
 const closeModal = () => {
@@ -171,12 +184,12 @@ const queryItem = async (_params: any) => {
             ],
         };
         const resp: any = await queryDicItem(params);
-        if (resp.status === 200) {
+        if (resp.success) {
             const arr = cloneDeep(resp.result.data)
             arr?.sort((a: any, b: any) => {
                 return b.ordinal - a.ordinal
             })
-            sort.value = arr.length ? arr[0].ordinal + 1 : 1
+
             return {
                 code: resp.status,
                 result: resp.result,
@@ -184,7 +197,7 @@ const queryItem = async (_params: any) => {
             };
         }
     } else {
-        sort.value = 1
+
         return {
             code: 200,
             result: {
