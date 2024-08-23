@@ -50,7 +50,12 @@ export default defineConfig(({ mode }) => {
             vue(),
             vueJsx(),
             VueSetupExtend(),
-            monacoEditorPlugin({}),
+            monacoEditorPlugin({
+                customWorkers: [{
+                    label: 'vue',
+                    entry: 'monaco-volar/dist/worker/vue.worker'
+                }]
+            }),
             optimizeDeps(),
             Components({
                 resolvers: [

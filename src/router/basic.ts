@@ -50,3 +50,9 @@ export const INIT_HOME: RouteRecordItem = {
     title: "初始化",
   },
 }
+
+export const PLUGIN_ROUTE: RouteRecordItem = {
+  path: '/plugin/editor',
+  name: 'plugin/editor',
+  component: () => import('@/views/Plugin/index.vue')
+}

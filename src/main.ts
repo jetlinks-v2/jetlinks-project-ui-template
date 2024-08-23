@@ -5,6 +5,8 @@ import pinia from '@/store'
 import i18n from '@/locales'
 import JetlinksComponents from '@jetlinks-web/components'
 import components from './components'
+import { crateAxios } from '@jetlinks-web/core'
+import Antdv from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.variable.min.css'
 import '@jetlinks-web/components/es/style/index.css'
 import './style.css'
@@ -27,10 +29,13 @@ dayjs.locale('zh-cn');
 
 const app = createApp(App)
 
+crateAxios()
+
 app.use(pinia)
     .use(router)
     .use(directive) // 注册自定义指令
     .use(i18n)
+    .use(Antdv) // 注册全部组件，插件需要
     .use(JetlinksComponents) // 注册脚手架通用组件
     .use(components) // 注册自定义通用组件
     .mount('#app')

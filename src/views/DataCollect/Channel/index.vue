@@ -18,7 +18,7 @@
           :request="query"
           model="CARD"
         >
-          <template #headerTitle>
+          <template #headerLeftRender>
             <j-permission-button
               hasPermission="DataCollect/Channel:add"
               type="primary"
@@ -69,32 +69,6 @@
                         </a-tooltip>
                       </div>
                     </a-col>
-                    <!-- <a-col :span="12">
-                        <div class="card-item-content-text">
-                            地址
-                        </div>
-                        <div class="card-item-content-text">
-                            <a-tooltip>
-                                <template #title>{{
-                                    slotProps.configuration
-                                        .host ||
-                                    slotProps.configuration
-                                        .endpoint
-                                }}</template>
-                                <span
-                                    class="details-text"
-                                    >{{
-                                        slotProps
-                                            .configuration
-                                            .host ||
-                                        slotProps
-                                            .configuration
-                                            .endpoint
-                                    }}</span
-                                >
-                            </a-tooltip>
-                        </div>
-                    </a-col> -->
                     <a-col :span="12">
                       <div class="card-item-content-text">说明</div>
                       <div class="card-item-content-text">

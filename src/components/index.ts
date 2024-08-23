@@ -4,6 +4,7 @@ import ImageUpload from "./Upload/Image/ImageUpload.vue";
 import CardBox from './CardBox/index.vue';
 import Search from './Search'
 import { BasicLayoutPage, BlankLayoutPage, FullPage } from '@/layout'
+import RenderComponents from './RenderComponents'
 
 export default {
     install(app: App) {
@@ -14,5 +15,6 @@ export default {
             .component('BasicLayoutPage', BasicLayoutPage)
             .component('BlankLayoutPage', BlankLayoutPage)
             .component('FullPage', FullPage)
+            .component('RenderComponents', RenderComponents)
     }
 }

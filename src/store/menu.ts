@@ -9,6 +9,7 @@ import { getGlobModules } from '@/router/globModules'
 import { extraMenu } from '@/router/extraMenu'
 import { USER_CENTER_ROUTE , INIT_HOME } from '@/router/basic'
 import { useAuthStore } from '@/store/auth'
+import { useUserStore } from '@/store/user'
 import {OWNER_KEY} from "@/utils/consts";
 
 const defaultOwnParams = [
@@ -39,6 +40,7 @@ export const useMenuStore = defineStore('menu', () => {
   const siderMenus = ref([])
 
   const authStore = useAuthStore()
+  const userStore = useUserStore()
 
   const hasRouteMenu = () => {
     return !!Object.keys(menu).length
@@ -89,6 +91,27 @@ export const useMenuStore = defineStore('menu', () => {
     })
     setParamsValue(name, params)
   }
+
+  const mergeExtraMenu = () => {
+    const pluginMenu = userStore.pluginMenu
+    const cloneMerger = Object.assign(cloneDeep(extraMenu), cloneDeep(pluginMenu))
+
+    Object.keys(cloneMerger).forEach(key => {
+      if (extraMenu[key]) {
+        const menuMap = new Map()
+        cloneMerger[key].forEach(item => {
+          menuMap.set(item.code, item)
+        })
+        extraMenu[key].forEach(item => {
+          menuMap.set(item.code, item)
+        })
+
+        cloneMerger[key] = [...menuMap.values()]
+      }
+    })
+
+    return cloneMerger
+  }
   const handleMenusMapById = (item: { name: string; path: string }) => {
     const {name, path} = item
     menusMap.value.set(name, {path})
@@ -102,8 +125,10 @@ export const useMenuStore = defineStore('menu', () => {
     const asyncRoutes = getGlobModules()
     menusMap.value.clear()
 
+    const mergeMenu = mergeExtraMenu()
+
     if (resp.success) {
-      const routes = handleMenus(cloneDeep(resp.result), extraMenu, asyncRoutes) // 处理路由
+      const routes = handleMenus(cloneDeep(resp.result), mergeMenu, asyncRoutes) // 处理路由
       if (routes.length) {
         routes.push({
           path: '/',
@@ -116,7 +141,7 @@ export const useMenuStore = defineStore('menu', () => {
       authStore.handlePermission(resp.result) // 处理按钮权限
       menu.value = routes
       handleMenusMap(routes, handleMenusMapById)
-      siderMenus.value = handleSiderMenu(cloneDeep(resp.result)) // 处理菜单
+      siderMenus.value = handleSiderMenu(cloneDeep(resp.result), userStore.pluginMenu) // 处理菜单
     }
   }
 

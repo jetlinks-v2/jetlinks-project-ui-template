@@ -10,6 +10,8 @@ type MenuItem = {
     url: string
     isShow?: boolean
     buttons?: Buttons
+    pluginPageCode?: string
+    parentCode?: string
 }
 
 const hasAppID = (item: { appId?: string, url?: string }): { isApp: boolean, appUrl: string } => {
@@ -29,6 +31,8 @@ const handleMeta = (item: MenuItem, isApp: boolean) => {
         title: item.name,
         hideInMenu: item.isShow === false,
         buttons: handleButtons(item.buttons),
+        pluginPageCode: item.pluginPageCode,
+        parentCode: item.parentCode,
         isApp
     }
 }
@@ -77,7 +81,7 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
                 children: item.children
             }
 
-            route.component = findComponents(item.code, level, isApp, components)
+            route.component = findComponents(item.component || item.code, level, isApp, components)
 
             const extraRoute = hasExtraChildren(item, extraMenus)
 
@@ -117,7 +121,7 @@ const hideInMenu = (code: string) => {
   return ['account-center', 'message-subscribe'].includes(code)
 }
 
-export const handleSiderMenu = (menuData: any) => {
+export const handleSiderMenu = (menuData: any, extraMenus: any) => {
   if (menuData && menuData.length) {
     return menuData.map(item => {
       const { isApp, appUrl } = hasAppID(item) // 是否为第三方程序
@@ -130,8 +134,14 @@ export const handleSiderMenu = (menuData: any) => {
         children: item.children
       }
 
+      const extraRoute = hasExtraChildren(item, extraMenus)
+
+        if (extraRoute && !isApp) { // 包含额外的子路由
+            route.children = route.children ? [...route.children, ...extraRoute] : extraRoute
+        }
+
       if (route.children && route.children.length) {
-        route.children = handleSiderMenu(route.children)
+        route.children = handleSiderMenu(route.children, extraMenus)
       }
 
       route.meta.hideInMenu = hideInMenu(item.code)

@@ -29,142 +29,144 @@
           :disabled="!!id"
         />
       </a-form-item>
-      <a-form-item
-        v-if="formData.provider === 'MODBUS_TCP'"
-        :name="['configuration', 'host']"
-        :rules="FormValidate.host"
-      >
-        <template #label>
-          Modbus主机IP
-          <a-tooltip title="支持ipv4、ipv6、域名">
-            <AIcon type="QuestionCircleOutlined" style="margin-left: 2px" />
-          </a-tooltip>
-        </template>
-        <a-input
-          placeholder="请输入Modbus主机IP"
-          v-model:value="formData.configuration.host"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="formData.provider === 'MODBUS_TCP'"
-        label="端口"
-        :name="['configuration', 'port']"
-        :rules="FormValidate.port"
-      >
-        <a-input-number
-          style="width: 100%"
-          placeholder="请输入端口"
-          v-model:value="formData.configuration.port"
-          :min="0"
-          :max="65535"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="formData.provider === 'OPC_UA'"
-        label="端点url"
-        :name="['configuration', 'endpoint']"
-        :rules="FormValidate.endpoint"
-      >
-        <a-input
-          placeholder="请输入端点url"
-          v-model:value="formData.configuration.endpoint"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="formData.provider === 'OPC_UA'"
-        label="安全策略"
-        :name="['configuration', 'securityPolicy']"
-        :rules="FormValidate.securityPolicy"
-      >
-        <a-select
-          style="width: 100%"
-          v-model:value="formData.configuration.securityPolicy"
-          :options="Options['security-policies']"
-          placeholder="请选择安全策略"
-          allowClear
-          show-search
-          :filter-option="filterOption"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="formData.provider === 'COLLECTOR_GATEWAY'"
-        :name="['configuration', 'deviceId']"
-        :rules="[{ required: true, message: '请选择网关设备' }]"
-        label="选择网关设备"
-      >
-        <GateWayFormItem
-          v-model:name="formData.configuration.deviceName"
-          v-model:value="formData.configuration.deviceId"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="formData.provider === 'OPC_UA'"
-        label="安全模式"
-        :name="['configuration', 'securityMode']"
-        :rules="FormValidate.securityMode"
-      >
-        <a-select
-          style="width: 100%"
-          v-model:value="formData.configuration.securityMode"
-          :options="Options['security-modes']"
-          placeholder="请选择安全模式"
-          allowClear
-          show-search
-          :filter-option="filterOption"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="isSecurityMode"
-        label="证书"
-        :name="['configuration', 'certId']"
-        :rules="FormValidate.certId"
-      >
-        <a-select
-          style="width: 100%"
-          v-model:value="formData.configuration.certId"
-          :options="certificateList"
-          placeholder="请选择证书"
-          allowClear
-          show-search
-          :filter-option="filterOption"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="formData.provider === 'OPC_UA'"
-        label="权限认证"
-        :name="['configuration', 'authType']"
-        :rules="FormValidate.authType"
-      >
-        <j-card-select
-          :showImage="false"
-          v-model:value="formData.configuration.authType"
-          :options="Options['auth-types']"
-          @change="changeAuthType"
-          :column="2"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="isAuthType"
-        label="用户名"
-        :name="['configuration', 'username']"
-        :rules="FormValidate.username"
-      >
-        <a-input
-          placeholder="请输入用户名"
-          v-model:value="formData.configuration.username"
-        />
-      </a-form-item>
-      <a-form-item
-        v-if="isAuthType"
-        label="密码"
-        :name="['configuration', 'password']"
-        :rules="FormValidate.password"
-      >
-        <a-input-password
-          placeholder="请输入密码"
-          v-model:value="formData.configuration.password"
-        />
-      </a-form-item>
+      <RenderComponents v-if="renderMap[formData.provider]" :value="renderMap[formData.provider]"/>
+
+<!--      <a-form-item-->
+<!--        v-if="formData.provider === 'MODBUS_TCP'"-->
+<!--        :name="['configuration', 'host']"-->
+<!--        :rules="FormValidate.host"-->
+<!--      >-->
+<!--        <template #label>-->
+<!--          Modbus主机IP-->
+<!--          <a-tooltip title="支持ipv4、ipv6、域名">-->
+<!--            <AIcon type="QuestionCircleOutlined" style="margin-left: 2px" />-->
+<!--          </a-tooltip>-->
+<!--        </template>-->
+<!--        <a-input-->
+<!--          placeholder="请输入Modbus主机IP"-->
+<!--          v-model:value="formData.configuration.host"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="formData.provider === 'MODBUS_TCP'"-->
+<!--        label="端口"-->
+<!--        :name="['configuration', 'port']"-->
+<!--        :rules="FormValidate.port"-->
+<!--      >-->
+<!--        <a-input-number-->
+<!--          style="width: 100%"-->
+<!--          placeholder="请输入端口"-->
+<!--          v-model:value="formData.configuration.port"-->
+<!--          :min="0"-->
+<!--          :max="65535"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="formData.provider === 'OPC_UA'"-->
+<!--        label="端点url"-->
+<!--        :name="['configuration', 'endpoint']"-->
+<!--        :rules="FormValidate.endpoint"-->
+<!--      >-->
+<!--        <a-input-->
+<!--          placeholder="请输入端点url"-->
+<!--          v-model:value="formData.configuration.endpoint"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="formData.provider === 'OPC_UA'"-->
+<!--        label="安全策略"-->
+<!--        :name="['configuration', 'securityPolicy']"-->
+<!--        :rules="FormValidate.securityPolicy"-->
+<!--      >-->
+<!--        <a-select-->
+<!--          style="width: 100%"-->
+<!--          v-model:value="formData.configuration.securityPolicy"-->
+<!--          :options="Options['security-policies']"-->
+<!--          placeholder="请选择安全策略"-->
+<!--          allowClear-->
+<!--          show-search-->
+<!--          :filter-option="filterOption"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="formData.provider === 'COLLECTOR_GATEWAY'"-->
+<!--        :name="['configuration', 'deviceId']"-->
+<!--        :rules="[{ required: true, message: '请选择网关设备' }]"-->
+<!--        label="选择网关设备"-->
+<!--      >-->
+<!--        <GateWayFormItem-->
+<!--          v-model:name="formData.configuration.deviceName"-->
+<!--          v-model:value="formData.configuration.deviceId"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="formData.provider === 'OPC_UA'"-->
+<!--        label="安全模式"-->
+<!--        :name="['configuration', 'securityMode']"-->
+<!--        :rules="FormValidate.securityMode"-->
+<!--      >-->
+<!--        <a-select-->
+<!--          style="width: 100%"-->
+<!--          v-model:value="formData.configuration.securityMode"-->
+<!--          :options="Options['security-modes']"-->
+<!--          placeholder="请选择安全模式"-->
+<!--          allowClear-->
+<!--          show-search-->
+<!--          :filter-option="filterOption"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="isSecurityMode"-->
+<!--        label="证书"-->
+<!--        :name="['configuration', 'certId']"-->
+<!--        :rules="FormValidate.certId"-->
+<!--      >-->
+<!--        <a-select-->
+<!--          style="width: 100%"-->
+<!--          v-model:value="formData.configuration.certId"-->
+<!--          :options="certificateList"-->
+<!--          placeholder="请选择证书"-->
+<!--          allowClear-->
+<!--          show-search-->
+<!--          :filter-option="filterOption"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="formData.provider === 'OPC_UA'"-->
+<!--        label="权限认证"-->
+<!--        :name="['configuration', 'authType']"-->
+<!--        :rules="FormValidate.authType"-->
+<!--      >-->
+<!--        <j-card-select-->
+<!--          :showImage="false"-->
+<!--          v-model:value="formData.configuration.authType"-->
+<!--          :options="Options['auth-types']"-->
+<!--          @change="changeAuthType"-->
+<!--          :column="2"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="isAuthType"-->
+<!--        label="用户名"-->
+<!--        :name="['configuration', 'username']"-->
+<!--        :rules="FormValidate.username"-->
+<!--      >-->
+<!--        <a-input-->
+<!--          placeholder="请输入用户名"-->
+<!--          v-model:value="formData.configuration.username"-->
+<!--        />-->
+<!--      </a-form-item>-->
+<!--      <a-form-item-->
+<!--        v-if="isAuthType"-->
+<!--        label="密码"-->
+<!--        :name="['configuration', 'password']"-->
+<!--        :rules="FormValidate.password"-->
+<!--      >-->
+<!--        <a-input-password-->
+<!--          placeholder="请输入密码"-->
+<!--          v-model:value="formData.configuration.password"-->
+<!--        />-->
+<!--      </a-form-item>-->
       <!-- <a-form-item
           v-if="formData.provider === 'snap7'"
           :name="['configuration', 'connect']"
@@ -209,7 +211,8 @@ import type { FormInstance } from 'ant-design-vue'
 import type { FormDataType } from '../type.d'
 import { cloneDeep, isArray } from 'lodash-es'
 import { protocolList } from '@/views/DataCollect/data'
-import GateWayFormItem from '@/views/DataCollect/Channel/Save/GateWayFormItem.vue'
+import { useUserStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps({
   data: {
@@ -230,8 +233,16 @@ const Options = ref({
   'security-modes': [],
   'security-policies': [],
 })
+const userStore = useUserStore()
+const { pluginContext } = storeToRefs(userStore)
 
 const formData = ref<FormDataType>(cloneDeep(FormState))
+
+provide('plugin-form', formData)
+
+const renderMap = computed(() => {
+  return pluginContext.value['DataCollect/Channel:add'] || {}
+})
 
 const handleOk = async () => {
   const params: any = await formRef.value?.validate()
@@ -322,8 +333,10 @@ const getProvidersList = async () => {
     }
   }
 }
+
 getProvidersList()
 getCertificateList()
+
 
 watch(
   () => props.data,

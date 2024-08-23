@@ -3,19 +3,20 @@ import {
   createWebHashHistory,
 } from 'vue-router'
 import { getToken, removeToken } from '@jetlinks-web/utils'
-import { NOT_FIND_ROUTE, LOGIN_ROUTE } from './basic'
+import {NOT_FIND_ROUTE, LOGIN_ROUTE, PLUGIN_ROUTE} from './basic'
 import {useUserStore} from "@/store/user";
 import {useSystemStore} from "@/store/system";
 import {useMenuStore} from "@/store/menu";
 
-let TokenFilterRoute: string[] = []
+let TokenFilterRoute: string[] = [ PLUGIN_ROUTE.path ]
 
 let FilterPath: string[] = []
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
-    LOGIN_ROUTE
+    LOGIN_ROUTE,
+    PLUGIN_ROUTE
   ],
   scrollBehavior(to, form, savedPosition) {
     return savedPosition || {top: 0}
@@ -40,6 +41,7 @@ const getRoutesByServer = async (to: any, next: any) => {
   if (!Object.keys(UserInfoStore.userInfo).length) {
     // 是否有用户信息
     await UserInfoStore.getUserInfo()
+    await UserInfoStore.getPluginPage()
     //
     await SystemStore.queryInfo()
     await SystemStore.setMircoData()
