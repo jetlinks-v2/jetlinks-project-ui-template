@@ -62,12 +62,13 @@
     </div>
   </div>
 </template>
-<script setup name="LoginRight" lang="ts">
+<script setup name="LoginRight">
 import Remember from "./remember.vue";
-import { getImage } from "@jetlinks-web/utils";
+import {encrypt, getImage, setToken} from "@jetlinks-web/utils";
 import { useRequest } from "@jetlinks-web/hooks";
-import { captchaConfig, codeUrl } from "@/api/login";
+import {captchaConfig, codeUrl, encryptionConfig, getInitSet, login} from "@/api/login";
 import { rules } from "./util";
+import {useUserStore} from "@/store";
 
 const logoImage = getImage("/login/logo.png");
 
@@ -86,7 +87,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["submit"]);
+const emit = defineEmits(["submit", 'update:loading']);
+
+const userStore = useUserStore()
 
 const formData = reactive({
   username: "",
@@ -95,32 +98,83 @@ const formData = reactive({
   remember: false,
   verifyCode: undefined,
   verifyKey: undefined,
+  encryptId: undefined
+});
+
+let timer = null
+
+const { data: encryption, run: reloadEncryption } = useRequest(encryptionConfig, {
+  onSuccess() {
+    if (timer) {
+      window.clearTimeout(timer)
+      timer = null
+    }
+
+    timer = setTimeout(() => {
+      reloadEncryption()
+    }, 3 * 60 * 1000)
+  }
+})
+
+const { data: config } = useRequest(captchaConfig, {
+  onSuccess(resp) {
+    if (resp.result?.enabled) {
+      getCode();
+    }
+    return resp.result?.enabled
+  },
 });
 
 const { data: url, run: getCode } = useRequest(codeUrl, {
   immediate: false,
   onSuccess(resp) {
-    if (resp.result?.key) {
+    if (config.value && resp.result?.key) {
       formData.verifyKey = resp.result?.key
     }
   },
 });
 
-useRequest(captchaConfig, {
-  onSuccess(resp) {
-    if (resp.result?.enabled) {
-      getCode();
+const { loading, run } = useRequest(login, {
+  immediate: false,
+  async onSuccess(res) {
+    if (res.success) {
+      setToken(res.result.token)
+      await userStore.getUserInfo()
+      if(userStore.isAdmin){
+        const initResp = await getInitSet()
+        if (initResp.success && !initResp.result?.length) {
+          window.location.href = '/#/init-home';
+          return;
+        }
+      }
+      window.location.href = '/'
     }
   },
-});
+  onError: () => {
+    form.verifyCode = undefined;
+    getCode()
+    reloadEncryption()
+  }
+})
 
 const showCode = computed(() => {
   return !!url?.value?.base64;
 });
 
-const submit = () => {
-  emit("submit", formData);
-};
+const submit = (data) => {
+  const _formData = {...toRaw(formData)}
+  if (encryption.value?.encrypt?.enabled) {
+    const _encrypt = encryption.value?.encrypt
+    _formData.password = encrypt(data.password, _encrypt.publicKey)
+    _formData.encryptId = _encrypt.id
+  }
+  run(_formData)
+}
+
+watch(() => loading.value, () => {
+  emit('update:loading', loading.value)
+})
+
 </script>
 <style lang="less" scoped>
 .content {
