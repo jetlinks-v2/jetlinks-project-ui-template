@@ -3,6 +3,7 @@ import {getToken, LocalStore, setToken} from "@jetlinks-web/utils";
 import {BASE_API, TOKEN_KEY} from "@jetlinks-web/constants";
 import {crateAxios} from '@jetlinks-web/core'
 import {jumpLogin} from '@/router'
+import { notification } from 'ant-design-vue'
 
 /**
  * 初始化package
@@ -33,11 +34,30 @@ export const initAxios = () => {
             tokenExpiration: () => {
                 jumpLogin()
             },
-            filter_url: [],
+            filter_url: [
+                '/system/version',
+                '/system/config/front',
+                '/authorize/captcha/config',
+                '/authorize/captcha/image',
+                '/application/sso/bind-code',
+                '/authorize/login',
+                '/application/',
+                '/application/sso/_all',
+            ],
             requestOptions: () => {
                 return {
                     lang: localStorage.getItem('lang')
                 }
+            },
+            handleError: (description, key, err) => {
+                notification.error({
+                    style: {
+                        zIndex: 1040
+                    },
+                    key: key as string,
+                    message: '',
+                    description
+                })
             }
         },
     )

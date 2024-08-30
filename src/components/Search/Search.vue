@@ -1,15 +1,17 @@
 <template>
-  <j-advanced-search
-    :target='target'
-    :type='type'
-    :request='(data) => saveSearchHistory(data, target)'
-    :historyRequest='() => getSearchHistory(target)'
-    :deleteRequest='(_target: string, id: string) => deleteSearchHistory(target, id)'
-    :columns='columns'
-    :class='props.class'
-    style='padding-top: 18px; padding-bottom: 18px;'
-    @search='searchSubmit'
-  />
+  <div :class="classNames">
+    <j-advanced-search
+      :target='target'
+      :type='type'
+      :request='(data) => saveSearchHistory(data, target)'
+      :historyRequest='() => getSearchHistory(target)'
+      :deleteRequest='(_target: string, id: string) => deleteSearchHistory(target, id)'
+      :columns='columns'
+      :class='props.class'
+      style='padding-top: 18px; padding-bottom: 18px;'
+      @search='searchSubmit'
+    />
+  </div>
 </template>
 
 <script setup lang='ts' name='ProSearch'>
@@ -38,10 +40,21 @@ const props = defineProps({
   class: {
     type: String,
     default: ''
+  },
+  noMargin: {
+    type: Boolean,
+    default: false
   }
 })
 
 const emit = defineEmits<Emit>()
+
+const classNames = computed(() => {
+  return {
+    'j-advanced-search-warp': true,
+    'no-margin': props.noMargin !== false
+  }
+})
 
 /**
  * 提交
@@ -53,5 +66,9 @@ const searchSubmit = (data: any) => {
 </script>
 
 <style scoped lang='less'>
-
+  .no-margin {
+    :deep(.JSearch-warp) {
+      margin: 0;
+    }
+  }
 </style>

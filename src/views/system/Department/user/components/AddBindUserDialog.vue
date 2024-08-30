@@ -7,10 +7,11 @@
     @ok="confirm"
     @cancel="emits('close')"
   >
-    <j-search :columns="bindUserColumns" target="category" @search="onSearch" />
+    <pro-search :columns="bindUserColumns" target="category" @search="onSearch" />
     <div class="table">
       <j-pro-table
         ref="tableRef"
+        mode="TABLE"
         :columns="bindUserColumns"
         :request="handleSearch"
         :params="queryParams"
@@ -21,7 +22,6 @@
           onSelectNone: cancelSelect,
         }"
         :bodyStyle="{ padding: '0 24px' }"
-        model="TABLE"
         :defaultParams="{
           sorts: [{ name: 'createTime', order: 'desc' }],
         }"

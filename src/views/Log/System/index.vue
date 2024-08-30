@@ -1,9 +1,9 @@
 <template>
     <div>
-        <j-pro-search :columns="columns" target="search-system" @search="handleSearch" />
+        <pro-search :columns="columns" target="search-system" @search="handleSearch" />
         <j-pro-table
             ref="tableRef"
-            model="TABLE"
+            mode="TABLE"
             :columns="columns"
             :request="querySystem"
             :defaultParams="{
@@ -101,7 +101,6 @@
     </a-modal>
 </template>
 <script lang="ts" setup name="SystemLog">
-import type { ActionsType } from '@/components/Table/index';
 import type { SystemLogItem } from '../typings';
 import { querySystem } from '@/api/link/log';
 import { modifySearchColumnValue } from '@/utils/comm';
@@ -210,7 +209,7 @@ const handleOk = (e: MouseEvent) => {
     visible.value = false;
 };
 
-const getActions = (data: Partial<Record<string, any>>): ActionsType[] => {
+const getActions = (data: Partial<Record<string, any>>): any[] => {
     if (!data) {
         return [];
     }

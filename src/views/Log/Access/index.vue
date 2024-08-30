@@ -1,9 +1,9 @@
 <template>
     <div>
-        <j-pro-search :columns="columns" target="search-access" @search="handleSearch" />
+        <pro-search :columns="columns" target="search-access" @search="handleSearch" />
         <j-pro-table
             ref="tableRef"
-            model="TABLE"
+            mode="TABLE"
             :columns="columns"
             :request="queryAccess"
             :defaultParams="{
@@ -27,8 +27,8 @@
                 </a-tag>
             </template>
             <template #username="slotProps">
-                
-                    <!-- <a-tag color="geekblue"> -->  
+
+                    <!-- <a-tag color="geekblue"> -->
                     <div class="userName">
                         <j-ellipsis style="max-width: 100px;">
                         {{ slotProps.context.userName }}
@@ -36,9 +36,9 @@
                      <!-- </a-tag> -->
                 </div>
             </template>
-                   
-                   
-               
+
+
+
             <template #action="slotProps">
                 <a-space :size="16">
                     <a-tooltip
@@ -126,7 +126,6 @@
     </a-modal>
 </template>
 <script lang="ts" setup name="AccessLog">
-import type { ActionsType } from '@/components/Table/index';
 import type { AccessLogItem } from '../typings';
 import { queryAccess } from '@/api/link/log';
 import { modifySearchColumnValue } from '@/utils/comm';
@@ -252,7 +251,7 @@ const handleOk = (e: MouseEvent) => {
     visible.value = false;
 };
 
-const getActions = (data: Partial<Record<string, any>>): ActionsType[] => {
+const getActions = (data: Partial<Record<string, any>>): any[] => {
     if (!data) {
         return [];
     }

@@ -1,8 +1,8 @@
 <template>
     <a-modal visible title="新增" width="1000px" @ok="confirm" @cancel="emits('update:visible', false)">
-        <j-pro-search :columns="columns" target="simple" @search="(params: any) => queryParams = { ...params }" />
+        <pro-search :columns="columns" target="simple" @search="(params) => queryParams = { ...params }" />
 
-        <j-pro-table ref="tableRef" :columns="columns" :request="getUserList" model="TABLE" :params="queryParams"
+        <j-pro-table ref="tableRef" :columns="columns" :request="getUserList" mode="TABLE" :params="queryParams"
             :rowSelection="{
                 selectedRowKeys: selectedRowKeys,
                 onSelect: changeSelect,
@@ -107,12 +107,12 @@ const selectAll = (selected: Boolean, selectedRows: any,changeRows:any) => {
             const arr = changeRows.map((item: any) => item.id)
             const _ids: string[] = [];
             selectedRowKeys.value.map((i: any) => {
-                if (!arr.includes(i)) {   
+                if (!arr.includes(i)) {
                     _ids.push(i)
                 }
             })
             selectedRowKeys.value = _ids
-            
-        }     
+
+        }
 }
 </script>

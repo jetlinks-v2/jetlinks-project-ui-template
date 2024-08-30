@@ -91,7 +91,6 @@
 
 <script setup lang="ts" name='CardBox'>
 import color, { getHexColor } from '@jetlinks-web/components/es/BadgeStatus/color';
-import type { ActionsType } from '@/components/Table';
 import { PropType } from 'vue';
 
 type EmitProps = {
@@ -99,7 +98,7 @@ type EmitProps = {
   (e: 'click', data: Record<string, any>): void;
 };
 
-type TableActionsType = Partial<ActionsType>;
+type TableActionsType = any;
 
 const emit = defineEmits<EmitProps>();
 const slots = useSlots();

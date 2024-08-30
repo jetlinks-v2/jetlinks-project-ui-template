@@ -2,14 +2,14 @@
     <div class="des">
         <div class="des_head">
             <div>字典ID：<span>{{ data.id }}</span></div>
-          <div style="display: flex;">说明：<Ellipsis style="width: calc(100% - 200px);"><span>{{ data.describe }}</span></Ellipsis></div>
+          <div style="display: flex;">说明：<j-ellipsis style="width: calc(100% - 200px);"><span>{{ data.describe }}</span></j-ellipsis></div>
             <div>创建日期：<span v-time-format="'YYYY-MM-DD HH:mm:ss'"> {{data?.createTime}}</span></div>
         </div>
         <div class="contain">
-            <pro-search style="padding: 18px 0 0 0" :columns="columns" @search="handleSearch" target="system_dictionary" />
+            <pro-search style="padding: 18px 0 0 0" :columns="columns" noMargin @search="handleSearch" target="system_dictionary" />
             <JProTable :bodyStyle="{
                 padding: 0,
-            }" :scroll="{ y: 'calc(100vh - 500px)' }" :columns="columns" model="TABLE" :request="queryItem" :params="params" ref="tableRef">
+            }" :scroll="{ y: 'calc(100vh - 500px)' }" :columns="columns" mode="TABLE" :request="queryItem" :params="params" ref="tableRef">
                 <template #headerTitle>
                     <j-permission-button type="primary" @click="add" hasPermission="system/Dictionary:add">
                         新增
@@ -194,6 +194,7 @@ const queryItem = async (_params: any) => {
                 code: resp.status,
                 result: resp.result,
                 status: resp.status,
+                success: resp.status === 200
             };
         }
     } else {
@@ -207,6 +208,7 @@ const queryItem = async (_params: any) => {
                 total: 0,
             },
             status: 200,
+            success: true
         };
     }
 }

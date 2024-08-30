@@ -2,10 +2,10 @@
   <div>
     <j-pro-table
       ref="tableRef"
-      :columns="columns"
-      model="TABLE"
-      :dataSource="tableData"
+      mode="TABLE"
       noPagination
+      :columns="columns"
+      :dataSource="tableData"
     >
       <template #headerTitle>
         <j-permission-button

@@ -1,6 +1,6 @@
 <template>
   <div class="notification-record-container">
-    <j-pro-search
+    <pro-search
       :columns="columns"
       :target="type"
       style="padding: 0"
@@ -10,7 +10,7 @@
       ref="tableRef"
       :columns="columns"
       :request="getList_api"
-      model="TABLE"
+      mode="TABLE"
       :params="queryParams"
       :bodyStyle="{ padding: 0 }"
       :defaultParams="defaultParams"

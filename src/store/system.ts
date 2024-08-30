@@ -1,5 +1,8 @@
 import { defineStore } from "pinia";
 import { getDetails_api, settingDetail } from "@/api/system/basis";
+import {
+  getTagsColor,
+} from '@/api/system/calendar'
 
 interface LayoutType {
   siderWidth: number
@@ -15,6 +18,7 @@ export const useSystemStore = defineStore('system', () => {
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
   const systemInfo = ref<Record<string, any>>({})
   const microApp = ref<Record<string, any>>({})
+  const calendarTagColor = new Map()
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,
@@ -106,17 +110,28 @@ export const useSystemStore = defineStore('system', () => {
     }
   }
 
+  const queryTagsColor = async() => {
+    const answer:any = await getTagsColor();
+    if (answer.success) {
+      Object.keys(answer.result).forEach((i) => {
+        calendarTagColor.set(i, answer.result[i]);
+      });
+    }
+  }
+
   return {
     systemInfo,
     theme,
     ico,
     layout,
+    calendarTagColor,
     changeTheme,
     changeLayout,
     changeIco,
     changeTitle,
     queryInfo,
     querySingleInfo,
-    setMircoData
+    setMircoData,
+    queryTagsColor
   }
 })

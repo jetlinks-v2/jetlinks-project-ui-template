@@ -1,6 +1,6 @@
 <template>
   <div class="role-container">
-    <j-pro-search
+    <pro-search
       :columns="columns"
       target="system-role"
       @search="handelSearch"
@@ -9,13 +9,13 @@
       ref="tableRef"
       :columns="columns"
       :request="getRoleList_api"
-      model="TABLE"
+      mode="TABLE"
       :params="queryParams"
       :defaultParams="{
           sorts: [
             { name: 'createTime', order: 'desc' },
-            { name: 'id', order: 'desc' },
-          ],
+            { name: 'id', order: 'desc' }
+          ]
         }"
       :scroll="{ y: 'calc(100vh - 360px)' }"
     >

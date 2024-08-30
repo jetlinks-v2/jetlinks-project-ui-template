@@ -31,7 +31,7 @@
         :params="params"
         :request="query"
         :scroll="{ y: 350 }"
-        model="CARD"
+        mode="CARD"
       >
         <template #card="slotProps">
           <CardBox

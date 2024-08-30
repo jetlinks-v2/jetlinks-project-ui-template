@@ -1,6 +1,6 @@
 <template>
   <j-page-container>
-    <j-search
+    <pro-search
       :columns="columns"
       target="system-permission"
       @search="handleSearch"
@@ -10,9 +10,9 @@
         ref="tableRef"
         :columns="columns"
         :request="getPermission_api"
-        model="TABLE"
+        mode="TABLE"
         :params="params"
-        :scroll="{ y: 'calc(100vh - 440px)' }"
+        :scroll="{ y: 'calc(100% - 60px)' }"
         :defaultParams="{
           sorts: [{ name: 'id', order: 'asc' }],
         }"
@@ -149,9 +149,7 @@ const tableRef = ref<any>({})  // 表格实例
 
 // 搜索
 const handleSearch = (e: any) => {
-  params.value = {
-    terms: e,
-  }
+  params.value = e
 }
 
 // 打开编辑弹窗

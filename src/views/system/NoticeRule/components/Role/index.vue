@@ -75,7 +75,7 @@
                 ref="tableRef"
                 :columns="columns"
                 :request="queryRoleList"
-                model="CARD"
+                mode="CARD"
                 :params="params"
                 :bodyStyle="{ padding: 0 }"
                 :gridColumn="gridColumn"

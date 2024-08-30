@@ -1,11 +1,11 @@
 <template>
     <a-spin :spinning="spinning">
-        <j-pro-search :columns="columns" target="search-point" @search="handleSearch" />
+        <pro-search :columns="columns" target="search-point" @search="handleSearch" />
         <FullPage>
             <j-scrollbar height="680">
                 <j-pro-table
                     ref="tableRef"
-                    model="CARD"
+                    mode="CARD"
                     :columns="columns"
                     :gridColumn="2"
                     :gridColumns="[1, 2]"
