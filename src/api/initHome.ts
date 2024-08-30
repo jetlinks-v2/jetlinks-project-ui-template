@@ -1,4 +1,4 @@
-import { request } from '@/utils/axios'
+import { request } from '@jetlinks-web/core'
 
 // 更新全部菜单
 export const updateMenus = (data: any) => request.patch(`/menu/iot/_all`, data)

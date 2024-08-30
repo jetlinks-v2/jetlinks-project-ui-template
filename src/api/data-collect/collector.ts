@@ -1,7 +1,4 @@
-import { request } from '@/utils/axios'
-
-export const queryCollector = (data: any) =>
-  request.post(`/data-collect/collector/_query/no-paging?paging=false`, data);
+import { request } from '@jetlinks-web/core'
 
 export const queryCollectorTree = (data: any) =>
   request.post(`/data-collect/collector/_detail/no-paging?paging=false`, data);

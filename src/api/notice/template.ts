@@ -1,4 +1,4 @@
-import { request } from '@/utils/axios'
+import { request } from '@jetlinks-web/core'
 
 export default {
     // 列表
