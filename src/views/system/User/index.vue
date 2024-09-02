@@ -45,14 +45,14 @@
                         </j-ellipsis>
                     </template>
                     <template #status="slotProps">
-                        <BadgeStatus
+                        <j-badge-status
                             :status="slotProps.status"
                             :text="slotProps.status ? '正常' : '禁用'"
                             :statusNames="{
                                 1: 'success',
                                 0: 'error',
                             }"
-                        ></BadgeStatus>
+                        ></j-badge-status>
                     </template>
                     <template #action="slotProps">
                         <a-space :size="16">

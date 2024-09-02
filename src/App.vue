@@ -7,11 +7,10 @@
 import { ConfigProvider } from '@jetlinks-web/components'
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
 import theme from '../configs/theme'
-import { useAuthStore } from '@/store/auth';
+import store, { useAuthStore } from '@/store';
 import { ComponentsEnum } from '@jetlinks-web/constants'
 import {initPackages} from "@/package";
 import {setToken} from "@jetlinks-web/utils";
-
 
 const route = useRoute()
 
@@ -24,6 +23,8 @@ const { hasPermission } = useAuthStore();
 provide(ComponentsEnum.Permission, { hasPermission })
 
 initPackages()
+
+console.log(store)
 
 watch(() => JSON.stringify(route.query || {}), () => {
   if (route.query.token) {
