@@ -1,7 +1,7 @@
 {
   "name": "jetlinks-ui-template",
   "private": true,
-  "version": "2.0.1",
+  "version": "2.1.0",
   "scripts": {
     "dev": "vite",
     "dev:force": "vite --force",
@@ -10,14 +10,20 @@
     "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo"
   },
   "dependencies": {
-    "@jetlinks-web/components": "2.0.20",
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/vue3": "^6.1.15",
+    "@jetlinks-web/components": "2.2.0",
     "@jetlinks-web/constants": "^1.0.2",
-    "@jetlinks-web/hooks": "^1.0.12",
+    "@jetlinks-web/core": "^2.0.1",
+    "@jetlinks-web/hooks": "^1.0.15",
     "@jetlinks-web/types": "^1.0.2",
-    "@jetlinks-web/utils": "^1.0.6",
+    "@jetlinks-web/utils": "^1.1.0",
     "@micro-zoe/micro-app": "1.0.0-rc.5",
     "@vuemap/vue-amap": "^2.0.13",
     "axios": "^1.6.7",
+    "colorpicker-v3": "^2.10.2",
     "dayjs": "^1.11.8",
     "echarts": "^5.4.3",
     "lodash-es": "^4.17.21",

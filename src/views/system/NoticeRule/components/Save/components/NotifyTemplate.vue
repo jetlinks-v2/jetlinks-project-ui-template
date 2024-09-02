@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <j-pro-search
+        <pro-search
             :columns="columns"
             target="action-notice-template"
             @search="handleSearch"
@@ -22,7 +22,7 @@
         <JProTable
             :columns="columns"
             :request="(e) => handleData(e)"
-            model="CARD"
+            mode="CARD"
             :bodyStyle="{
                 padding: 0,
             }"

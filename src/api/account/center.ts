@@ -1,9 +1,8 @@
-import { request } from '@/utils/axios'
+import { request } from '@jetlinks-web/core'
 
 export const getSsoBinds_api = (): any =>request.get(`/application/sso/me/bindings`)
 
-// 获取登录用户信息
-export const getMeInfo_api = () => request.get(`/user/detail`);
+
 // 修改登录用户信息
 export const updateMeInfo_api = (data:object) => request.put(`/user/detail`,data);
 // 修改登录用户密码
@@ -33,7 +32,6 @@ export const checkOldPassword_api = (password:string) => request.post(`/user/me/
 // 我的订阅
 // 查询当前用户可访问的通道配置
 export const getAllNotice = () => request.get(`/notify/channel/all`);
-
 
 
 // 当前登录用户权限信息

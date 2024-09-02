@@ -1,7 +1,7 @@
 <template>
   <j-page-container>
     <div>
-      <j-pro-search
+      <pro-search
         :columns="columns"
         target="search-datacollect-channel"
         @search="handleSearch"
@@ -16,7 +16,7 @@
           :gridColumn="3"
           :params="params"
           :request="query"
-          model="CARD"
+          mode="CARD"
         >
           <template #headerTitle>
             <j-permission-button

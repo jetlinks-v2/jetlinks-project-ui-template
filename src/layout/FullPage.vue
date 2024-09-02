@@ -1,5 +1,5 @@
 <template>
-  <div ref='fullPage' :style="{ height: MinHeight}" :class="{ 'full-page-warp': true, 'scroll': showScroll }" >
+  <div ref='fullPage' :style="styles" :class="{ 'full-page-warp': true, 'scroll': showScroll }" >
     <slot></slot>
   </div>
 </template>
@@ -14,17 +14,48 @@ const props = defineProps({
   showScroll: {
     type: Boolean,
     default: false
+  },
+  padding: {
+    type: Number,
+    default: 24
+  },
+  fixed: {
+    type: Boolean,
+    default: true
+  },
+  margin: {
+    type: String,
+    default: undefined
   }
 })
 
 const fullPage = ref(null)
 const MinHeight = ref(`0`)
 
+const styles = computed(() => {
+  let _style = { height: '100%'}
+
+  if (props.fixed !== false) {
+    _style = {
+      height: MinHeight.value
+    }
+  } else {
+    _style = {
+      minHeight: MinHeight.value,
+      margin: props.margin || '0 0 24px 0'
+    }
+  }
+
+  return _style
+})
+
 onMounted(() => {
   setTimeout(() => {
     const top = fullPage.value.getBoundingClientRect().top
     const _y = top < 0 ? 0 : top
-    MinHeight.value = `calc(100vh - ${_y + props.extraHeight + 24}px)`
+    const height = _y + props.extraHeight + props.padding
+
+    MinHeight.value = `calc(100vh - ${height}px)`
   }, 10)
 })
 

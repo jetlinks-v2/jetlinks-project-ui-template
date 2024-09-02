@@ -1,6 +1,6 @@
 <template>
   <div style="overflow-y: auto;">
-    <j-search
+    <pro-search
         :columns="columns"
         target="category-user"
         @search="handleParams"
@@ -17,7 +17,7 @@
           onSelectAll: onSelectAll,
           onSelectNone: cancelSelect,
         }"
-        model="TABLE"
+        mode="TABLE"
         :scroll="{y: 'calc(100vh - 450px)'}"
     >
       <template #headerTitle>
@@ -157,9 +157,7 @@ const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
 
 // 搜索
 const handleParams = (e: any) => {
-  queryParams.value = {
-    terms: e,
-  }
+  queryParams.value = e
 }
 
 // 请求数据

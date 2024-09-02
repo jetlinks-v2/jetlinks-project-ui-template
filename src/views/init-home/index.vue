@@ -79,12 +79,15 @@ const jump = () => {
  */
 const submitData = async () => {
     loading.value = true;
-    const basicRes = await basicRef.value.submitBasic();
+    const basicRes = await basicRef.value.submitBasic().catch(() => {
+      loading.value = false;
+    });
+    console.log('basicRes',basicRes)
     if (!basicRes) {
-        loading.value = false;
         return;
     }
     const menuRes = await menuRef.value.updataMenu();
+    console.log('menuRes',menuRes)
     if (!menuRes) {
         loading.value = false;
         return;

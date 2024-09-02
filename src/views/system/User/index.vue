@@ -11,7 +11,7 @@
                     ref="tableRef"
                     :columns="columns"
                     :request="getUserList_api"
-                    model="TABLE"
+                    mode="TABLE"
                     :params="queryParams"
                     :defaultParams="{
                         sorts: [
@@ -21,13 +21,13 @@
                     }"
                 >
                     <template #headerTitle>
-                        <PermissionButton
+                        <j-permission-button
                             :hasPermission="`${permission}:add`"
                             type="primary"
                             @click="table.openDialog('add')"
                         >
                             <AIcon type="PlusOutlined" />新增
-                        </PermissionButton>
+                        </j-permission-button>
                     </template>
                     <template #type="slotProps">
                         {{ slotProps.type?.name }}
@@ -55,7 +55,7 @@
                     </template>
                     <template #action="slotProps">
                         <a-space :size="16">
-                            <PermissionButton
+                            <j-permission-button
                                 :hasPermission="`${permission}:update`"
                                 type="link"
                                 :tooltip="{
@@ -64,8 +64,8 @@
                                 @click="table.openDialog('edit', slotProps)"
                             >
                                 <AIcon type="EditOutlined" />
-                            </PermissionButton>
-                            <PermissionButton
+                            </j-permission-button>
+                            <j-permission-button
                                 :hasPermission="`${permission}:action`"
                                 type="link"
                                 :tooltip="{
@@ -88,8 +88,8 @@
                                             : 'PlayCircleOutlined'
                                     "
                                 />
-                            </PermissionButton>
-                            <PermissionButton
+                            </j-permission-button>
+                            <j-permission-button
                                 :hasPermission="`${permission}:update`"
                                 type="link"
                                 :tooltip="{
@@ -98,8 +98,8 @@
                                 @click="table.openDialog('reset', slotProps)"
                             >
                                 <AIcon type="icon-zhongzhimima" />
-                            </PermissionButton>
-                            <PermissionButton
+                            </j-permission-button>
+                            <j-permission-button
                                 type="link"
                                 :hasPermission="`${permission}:delete`"
                                 :tooltip="{
@@ -112,10 +112,10 @@
                                     onConfirm: () =>
                                         table.clickDel(slotProps.id),
                                 }"
-                                :disabled="slotProps.status"
+                                :disabled="!!slotProps.status"
                             >
                                 <AIcon type="DeleteOutlined" />
-                            </PermissionButton>
+                            </j-permission-button>
                         </a-space>
                     </template>
                 </j-pro-table>
@@ -133,7 +133,6 @@
 </template>
 
 <script setup lang="ts" name="UserMange">
-import {PermissionButton} from '@jetlinks-web/components';
 import EditUserDialog from './components/EditUserDialog.vue';
 import {
     getUserType_api,

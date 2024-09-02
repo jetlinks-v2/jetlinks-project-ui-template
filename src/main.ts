@@ -5,25 +5,19 @@ import pinia from '@/store'
 import i18n from '@/locales'
 import JetlinksComponents from '@jetlinks-web/components'
 import components from './components'
+import directive from '@/directive'
+import dayjs from 'dayjs';
+import { loadMicroApp, initAxios } from "@/package";
+
 import 'ant-design-vue/dist/antd.variable.min.css'
 import '@jetlinks-web/components/es/style/index.css'
-import './style.css'
-import directive from '@/directive'
-import { LocalStore, setToken } from "@jetlinks-web/utils";
-import dayjs from 'dayjs';
+import '@/style/global.less'
 import 'dayjs/locale/zh-cn';
+
 dayjs.locale('zh-cn');
 
-(window as any).microApp?.addDataListener((data: any) => {
-    console.log(data)
-    if (data.token) {
-        setToken(data.token)
-    }
-
-    if (data.appId) {
-        LocalStore.set('appId', data.appId)
-    }
-}, true)
+initAxios()
+loadMicroApp()
 
 const app = createApp(App)
 

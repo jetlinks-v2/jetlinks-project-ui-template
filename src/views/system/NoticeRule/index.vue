@@ -212,6 +212,7 @@ onMounted(() => {
     flex-direction: column;
     box-sizing: border-box;
     justify-content: space-between;
+    height: 100%;
 
     .btn {
         padding: 24px 0;
@@ -225,6 +226,10 @@ onMounted(() => {
 }
 
 .content-collapse {
+    overflow-y: auto;
+    flex: 1 1 0;
+    min-height: 0;
+
     :deep(.ant-collapse) {
         border-color: #EBEEF3;
         background-color: #fff;
