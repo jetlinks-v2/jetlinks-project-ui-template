@@ -6,7 +6,7 @@
                 target="system-user"
                 @search="handleParams"
             />
-            <j-FullPage>
+            <FullPage >
                 <j-pro-table
                     ref="tableRef"
                     :columns="columns"
@@ -19,6 +19,7 @@
                             { name: 'username', order: 'asc', value: 'admin' },
                         ],
                     }"
+                    :scroll="{ y: 'calc(100% - 60px)' }"
                 >
                     <template #headerTitle>
                         <j-permission-button
@@ -119,7 +120,7 @@
                         </a-space>
                     </template>
                 </j-pro-table>
-            </j-FullPage>
+            </FullPage>
 
             <EditUserDialog
                 v-if="dialog.visible"

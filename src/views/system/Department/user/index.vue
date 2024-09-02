@@ -2,9 +2,10 @@
   <div style="overflow-y: auto;">
     <pro-search
         :columns="columns"
+        noMargin
         target="category-user"
-        @search="handleParams"
         style="margin: 0;"
+        @search="handleParams"
     />
     <j-pro-table
         ref="tableRef"

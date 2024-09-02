@@ -1,57 +1,61 @@
 <template>
   <div class="role-container">
     <pro-search
+      noMargin
       :columns="columns"
       target="system-role"
       @search="handelSearch"
     />
-    <j-pro-table
-      ref="tableRef"
-      :columns="columns"
-      :request="getRoleList_api"
-      mode="TABLE"
-      :params="queryParams"
-      :defaultParams="{
+    <div class="role-table">
+      <j-pro-table
+        ref="tableRef"
+        mode="TABLE"
+        :columns="columns"
+        :request="getRoleList_api"
+        :params="queryParams"
+        :defaultParams="{
           sorts: [
             { name: 'createTime', order: 'desc' },
             { name: 'id', order: 'desc' }
           ]
         }"
-      :scroll="{ y: 'calc(100vh - 360px)' }"
-    >
-      <template #headerTitle>
-        <j-permission-button
-          type="primary"
-          :hasPermission="`${permission}:add`"
-          @click="addRole"
-        >
-          <AIcon type="PlusOutlined" />新增
-        </j-permission-button>
-      </template>
+        :scroll="{ y: 'calc(100% - 60px)' }"
+      >
+        <template #headerTitle>
+          <j-permission-button
+            type="primary"
+            :hasPermission="`${permission}:add`"
+            @click="addRole"
+          >
+            <AIcon type="PlusOutlined" />新增
+          </j-permission-button>
+        </template>
 
-      <template #action="slotProps">
-        <a-space>
-          <template v-for="i in getActions(slotProps, 'table')" :key="i.key">
-            <j-permission-button
-              :disabled="i.disabled"
-              :popConfirm="i.popConfirm"
-              :tooltip="{
+        <template #action="slotProps">
+          <a-space>
+            <template v-for="i in getActions(slotProps, 'table')" :key="i.key">
+              <j-permission-button
+                :disabled="i.disabled"
+                :popConfirm="i.popConfirm"
+                :tooltip="{
                   ...i.tooltip,
                 }"
-              @click="i.onClick"
-              type="link"
-              style="padding: 0 5px"
-              :danger="i.key === 'delete'"
-              :hasPermission="'system/Role:' + i.key"
-            >
-              <template #icon>
-                <AIcon :type="i.icon" />
-              </template>
-            </j-permission-button>
-          </template>
-        </a-space>
-      </template>
-    </j-pro-table>
+                @click="i.onClick"
+                type="link"
+                style="padding: 0 5px"
+                :danger="i.key === 'delete'"
+                :hasPermission="'system/Role:' + i.key"
+              >
+                <template #icon>
+                  <AIcon :type="i.icon" />
+                </template>
+              </j-permission-button>
+            </template>
+          </a-space>
+        </template>
+      </j-pro-table>
+    </div>
+
     <AddDialog
       v-if="dialogVisible"
       v-model:visible="dialogVisible"
@@ -219,6 +223,13 @@ watch(
 <style lang="less" scoped>
 .role-container {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .role-table {
+    flex: 1 1 0;
+    min-height: 0;
+  }
   :deep(.ant-table-cell) {
     .ant-btn-link {
       padding: 0;
