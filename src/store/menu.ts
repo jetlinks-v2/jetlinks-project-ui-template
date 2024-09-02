@@ -6,7 +6,7 @@ import { onlyMessage } from '@jetlinks-web/utils'
 import { handleMenus, handleMenusMap, handleSiderMenu } from '@/utils'
 import { getOwnMenuThree } from '@/api/system/menu'
 import { getGlobModules } from '@/router/globModules'
-import { extraMenu } from '@/router/extraMenu'
+import { getExtraRouters } from '@/router/extraMenu'
 import { USER_CENTER_ROUTE , INIT_HOME } from '@/router/basic'
 import { useAuthStore } from '@/store/auth'
 import {OWNER_KEY} from "@/utils/consts";
@@ -103,6 +103,8 @@ export const useMenuStore = defineStore('menu', () => {
     menusMap.value.clear()
 
     if (resp.success) {
+      const extraMenu = getExtraRouters()
+      console.log(extraMenu)
       const routes = handleMenus(cloneDeep(resp.result), extraMenu, asyncRoutes) // 处理路由
       if (routes.length) {
         routes.push({
@@ -115,6 +117,7 @@ export const useMenuStore = defineStore('menu', () => {
       routes.push(INIT_HOME) // 添加初始化页面
       authStore.handlePermission(resp.result) // 处理按钮权限
       menu.value = routes
+      console.log('routes', routes)
       handleMenusMap(routes, handleMenusMapById)
       siderMenus.value = handleSiderMenu(cloneDeep(resp.result)) // 处理菜单
     }

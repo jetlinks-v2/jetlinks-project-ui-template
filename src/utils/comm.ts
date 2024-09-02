@@ -72,3 +72,8 @@ export const onlyMessage = (msg: string, type: 'success' | 'error' | 'warning' =
         ...extra
     })
 }
+
+export const accessConfigTypeFilter = (data: any[]): any[] => {
+    if (!data) return []
+    return data.map( item => ({ ...item, label: item.name, value: item.id}))
+}

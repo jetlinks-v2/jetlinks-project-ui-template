@@ -1,5 +1,6 @@
 import { BasicLayoutPage, BlankLayoutPage, Iframe } from '@/layout'
 import { shallowRef } from 'vue'
+import {isArray} from "lodash-es";
 
 type Buttons = Array<{ id: string }>
 
@@ -33,10 +34,13 @@ const handleMeta = (item: MenuItem, isApp: boolean) => {
     }
 }
 
-const findComponents = (code: string, level: number, isApp: boolean, components: any) => {
+const findComponents = (code: string, level: number, isApp: boolean, components: any, mate: any) => {
     const myComponents = components[code]
     // console.log(myComponents, code, components)
     if (level === 1) { // BasicLayoutPage
+        if (myComponents ) {
+            return mate?.hasLayout === false ? () => myComponents() : h(BasicLayoutPage, {}, h(defineAsyncComponent(() => myComponents()), {}))
+        }
         return myComponents ? () => myComponents() : shallowRef(BasicLayoutPage)
     } else if (level === 2) { // BlankLayoutPage or components
       return myComponents ? () => myComponents() : BlankLayoutPage
@@ -51,9 +55,15 @@ const findComponents = (code: string, level: number, isApp: boolean, components:
 
 const hasExtraChildren = (item: MenuItem, extraMenus: any ) => {
     const extraItem = extraMenus[item.code]
-    if (extraItem) {
-        return extraItem.map(e => ({
+    console.log(extraMenus, item.code)
+
+    if (!extraItem) return undefined
+
+    const extraRoutes = isArray(extraItem) ? extraItem : extraItem.children
+    if (extraItem && extraRoutes) {
+        return extraRoutes.map(e => ({
           ...e,
+            code: `${item.code}/Detail`,
           url: `${item.url}${e.url}`,
           isShow: false
         }))
@@ -74,15 +84,15 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
                 name: isApp ? appUrl : item.code,
                 url: isApp ? appUrl : item.url,
                 meta: meta,
-                children: item.children
+                children: item.children || []
             }
 
-            route.component = findComponents(item.code, level, isApp, components)
+            route.component = findComponents(item.code, level, isApp, components, item.meta)
 
             const extraRoute = hasExtraChildren(item, extraMenus)
 
             if (extraRoute && !isApp) { // 包含额外的子路由
-                route.children = route.children ? [...route.children, ...extraRoute] : extraRoute
+                route.children = [...route.children, ...extraRoute]
             }
 
             if (route.children && route.children.length) {
