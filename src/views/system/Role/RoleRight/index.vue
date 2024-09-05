@@ -120,7 +120,7 @@ const columns = [
     title: '操作',
     dataIndex: 'action',
     key: 'action',
-    width: 120,
+    width: 130,
     fixed: 'right',
     scopedSlots: true,
   },
