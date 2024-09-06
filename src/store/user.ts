@@ -5,6 +5,8 @@ import { tabList } from "@/views/account/center/data";
 type UserInfo = {
   name: string
   icon: string
+
+  id: string
 }
 
 export const useUserStore = defineStore('user', () => {
