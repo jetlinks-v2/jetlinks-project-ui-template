@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { getImage } from '@jetlinks-web/utils'
-import BaseMenu, { USER_CENTER_MENU_DATA } from '../data/baseMenu'
+import {getModulesBaseMenu, USER_CENTER_MENU_DATA } from '../data/baseMenu'
 import {  updateMenus } from '@/api/initHome';
 
 /**
@@ -20,7 +20,7 @@ import {  updateMenus } from '@/api/initHome';
  */
 const menuDates = reactive({
     count: 0,
-    current: BaseMenu,
+    current: [],
 });
 
 /**
@@ -67,10 +67,12 @@ const initMenu = async () => {
 const { count } = toRefs(menuDates);
 
 onMounted(()=>{
-    menuDates.count = menuCount(BaseMenu)
+    const menus = getModulesBaseMenu()
+    menuDates.count = menuCount(menus)
+    menuDates.current = menus
 })
 defineExpose({
-    updataMenu: initMenu,
+    updateMenu: initMenu,
 });
 </script>
 <style lang="less" scoped>

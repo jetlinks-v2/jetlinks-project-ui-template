@@ -104,7 +104,6 @@ export const useMenuStore = defineStore('menu', () => {
 
     if (resp.success) {
       const extraMenu = getExtraRouters()
-      console.log(extraMenu)
       const routes = handleMenus(cloneDeep(resp.result), extraMenu, asyncRoutes) // 处理路由
       if (routes.length) {
         routes.push({

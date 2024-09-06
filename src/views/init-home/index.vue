@@ -54,7 +54,7 @@
 import Basic from './Basic/index.vue';
 import Menu from './Menu/index.vue';
 import { getInit, saveInit } from '@/api/initHome';
-import { onlyMessage } from '@/utils/comm';
+import { onlyMessage } from '@jetlinks-web/utils';
 const basicRef = ref();
 // const roleRef = ref();
 const menuRef = ref();
@@ -86,7 +86,7 @@ const submitData = async () => {
     if (!basicRes) {
         return;
     }
-    const menuRes = await menuRef.value.updataMenu();
+    const menuRes = await menuRef.value.updateMenu();
     console.log('menuRes',menuRes)
     if (!menuRes) {
         loading.value = false;
