@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:value'])
+const emits = defineEmits(['update:value', 'change'])
 const editorElement = ref()
 let editorInstance
 
@@ -63,6 +63,7 @@ const init = (theme) => {
     const value = editorInstance.getValue();
     nextTick(() => {
       emits('update:value', value);
+      emits('change', value);
     });
   });
 

@@ -13,7 +13,9 @@ import * as JetlinksCore from '@jetlinks-web/core'
 import * as JetlinksUtils from '@jetlinks-web/utils'
 import * as JetlinksTypes from '@jetlinks-web/types'
 import * as JetlinksConstants from '@jetlinks-web/constants'
+import * as JetlinksHooks from '@jetlinks-web/hooks'
 import * as pinia from 'pinia'
+import * as Router from 'vue-router'
 
 
 defineOptions({ name: 'RenderComponents' })
@@ -34,7 +36,9 @@ const render = debounce(() => {
       '@jetlinks-web/utils': JetlinksUtils,
       '@jetlinks-web/types': JetlinksTypes,
       '@jetlinks-web/constants': JetlinksConstants,
-      pinia: pinia
+      '@jetlinks-web/hooks': JetlinksHooks,
+      pinia: pinia,
+      'vue-router': Router
     },
     getFile(url) {
       return Promise.resolve(props.value)

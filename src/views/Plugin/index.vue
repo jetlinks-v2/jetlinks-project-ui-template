@@ -2,43 +2,30 @@
     <div class="plugin-warp">
       <div class="plugin-header">
         <a-space :size="24">
+          <a-button type="primary" @click="openDirectory">打开文件夹</a-button>
           <a-button type="link" @click="andtvJump">antdv(3.x) 官网</a-button>
-          <a-button type="primary" @click="saveVisible = true">保存</a-button>
+          <a-button type="primary" @click="onSubmit" :loading="loading">保存</a-button>
         </a-space>
       </div>
       <div class="plugin-container">
 
         <div class="plugin-render-body">
-          <div style="height: 60%; overflow: auto">
-            <RenderComponents :value="renderValue" />
+          <div class="tabs">
+            <a-radio-group v-model:value="fileData.codeActive" >
+              <a-radio-button :value="item.name" v-for="item in fileData.context">{{ item.name }}</a-radio-button>
+            </a-radio-group>
           </div>
-          <div style="height: 300px; padding: 4px">
-            <a-table
-              size="small"
-              :columns="columns"
-              :data-source="dataSource"
-              :scroll="{y: 220}"
-              :pagination="false"
-            >
-              <template #bodyCell="{ column, record}">
-                <template v-if="column.dataIndex === 'name'">
-                  {{ record.name || '-'}}
-                </template>
-                <template v-if="column.dataIndex === 'isPage'">
-                  {{ record.page?.isPage ? '页面' : '组件' }}
-                </template>
-                <template v-if="column.dataIndex === 'action'">
-                  <a-button type="link" style="padding: 4px 6px" @click="onUpdatePlugin(record)">编辑</a-button>
-                  <a-button type="link" style="padding: 4px 6px" danger @click="onDelete(record)">删除</a-button>
-                </template>
-              </template>
-            </a-table>
+          <div style="height: 90%; overflow: auto">
+            <a-form :model="formModel">
+              <RenderComponents :value="renderValue" />
+            </a-form>
           </div>
         </div>
         <div class="plugin-editor">
           <Editor
             ref="editorRef"
             v-model:value="renderValue"
+            @change="codeChange"
           />
           <div :class="{ 'plugin-example': true, 'show': visible }">
             <div class="plugin-example-body">
@@ -55,6 +42,12 @@
                   <a-button @click="insertCode('module_search')">查询</a-button>
                   <a-button @click="insertCode('module_table')">表格</a-button>
                 </a-space>
+                <div>采集器</div>
+                <div class="directory-tree">
+                  <div v-for="item in directoryList" class="directory-file" @click="showCode(item)">
+                    {{ item.name }}
+                  </div>
+                </div>
               </div>
               <div class="plugin-example-btn" @click="visible = !visible">
                 <AIcon type="UnorderedListOutlined" />
@@ -64,27 +57,31 @@
         </div>
       </div>
     </div>
-    <Save
-      v-if="saveVisible"
-      :editorValue="renderValue"
-      @cancel="saveVisible = false"
-      @ok="submit"
-    />
 </template>
 
-<script setup>
+<script setup name="Plugin">
 import Editor from './editor.vue'
-import Save from './save.vue'
 import demoText, {insertContentMap} from './demo'
 import {findMatches} from "@/views/Plugin/utils";
-import {deleteSearchHistory, getSearchHistory} from "@/api/comm";
-import {onlyMessage} from "@jetlinks-web/utils";
+import { throttle } from 'lodash-es'
 
 const renderValue  = ref(demoText)
 
 const visible = ref(false)
-const saveVisible = ref(false)
+const loading = ref(false)
 const editorRef = ref()
+const activeKey = ref()
+
+const formModel = reactive({})
+const directoryList = ref([])
+
+const fileData = reactive({
+  active: '',
+  context: [],
+  codeActive: ''
+})
+
+provide('plugin-form', formModel)
 
 const columns = [
   { title: '插件名称', dataIndex: 'name', width: 120},
@@ -121,45 +118,87 @@ const updateCode = (code) => {
   editorRef.value.updateValue(_value)
   renderValue.value = _value
 }
+
 const andtvJump = () => {
   window.open('https://3x.antdv.com/components/form-cn/#Form-')
 }
 
-const submit = () => {
-  init()
-  saveVisible.value = false
+const handleArrayToObj = () => {
+  return fileData.context.reduce((prev, next) => {
+    const { name, value } = next
+    prev[name] = value
+    return prev
+  }, {})
+}
+const onSubmit = async () => {
+  const fileHandle = directoryList.value.find(item => item.name === fileData.active)
+  loading.value = true
+  const writable = await fileHandle.createWritable() // 对待修改文件开启写入流
+  const obj = handleArrayToObj()
+  const text = JSON.stringify(obj)
+  await writable.write(text) // 开始写入
+  await writable.close() // 关闭写入流
+  loading.value = false
 }
 
-const init = () => {
-  getSearchHistory('web-plugin').then(resp => {
-    if (resp.success) {
-      dataSource.value = resp.result.map(item => {
-        const content = JSON.parse(item.content)
-        return {
-          ...content,
-          key: item.key,
-          id: item.id
-        }
-      })
-    }
-  })
+const handleDirectory = async (handle) => {
+  if (handle.kind === 'file' && handle.name.includes('.json')) {
+    return handle
+  }
+  handle.children = []
+
+  const iter = await handle.entries(); // 获取文件夹中的所有文件
+
+  for await (const info of iter) {
+    const subHandle = await handleDirectory(info[1])
+    handle.children.push(subHandle)
+  }
+
+  return handle
 }
 
-const onUpdatePlugin = (record) => {
-  editorRef.value.updateValue(record.render)
-  renderValue.value = record.render
+const showCode = async (handle) => {
+  const file = await handle.getFile()
+  const text = await file.text()
+
+  fileData.active = handle.name
+  try {
+    const json = JSON.parse(text)
+    fileData.context = Object.keys(json).map(key => {
+      return {
+        name: key,
+        value: json[key]
+      }
+    })
+    fileData.codeActive = fileData.context[0]?.name
+  } catch (e) {
+    console.error(e)
+  }
 }
 
-const onDelete = (record) => {
-  deleteSearchHistory('web-plugin', record.key).then(resp => {
-    if (resp.success) {
-      onlyMessage('操作成功')
-      init()
-    }
-  })
+const codeChange = throttle((code) => {
+  const item = fileData.context.find(item => item.name === fileData.codeActive)
+  item.value = code
+}, 100)
+
+const openDirectory = async () => {
+  try {
+    const directory = await showDirectoryPicker()
+
+    const root = await handleDirectory(directory)
+
+    directoryList.value = root.children
+
+  } catch (e) {
+    console.error(e)
+  }
 }
 
-init()
+watch(() => fileData.codeActive, () => {
+  const item = fileData.context.find(item => item.name === fileData.codeActive)
+  editorRef.value.updateValue(item.value)
+  renderValue.value = item.value
+})
 
 </script>
 
@@ -228,6 +267,17 @@ init()
         border-radius: 6px 0 0 6px;
         transform: translateX(-100%);
       }
+    }
+  }
+
+  .directory-file {
+    font-size: 16px;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #9d9ea1;
+
+    &:not(:last-child) {
+      margin-bottom: 12px;
     }
   }
 }

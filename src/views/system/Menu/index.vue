@@ -240,7 +240,7 @@ const toDetails = (row: any) => {
       id: row.id || ':id',
     },
     query: {
-      pid: row.id,
+      pid: row.parentId,
       basePath: row.url || '',
       sortIndex: total.value,
     },
