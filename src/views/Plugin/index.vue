@@ -14,11 +14,15 @@
             <a-radio-group v-model:value="fileData.codeActive" >
               <a-radio-button :value="item.name" v-for="item in fileData.context">{{ item.name }}</a-radio-button>
             </a-radio-group>
+            <a-button type="primary" @click="addCodeItem">新增</a-button>
           </div>
           <div style="height: 90%; overflow: auto">
-            <a-form :model="formModel">
-              <RenderComponents :value="renderValue" />
+            <a-form :model="formModel" layout="vertical" ref="formRef">
+              <RenderComponents :value="renderValue" :propsValue="{ data: { deviceType: 'S200'} }" />
             </a-form>
+          </div>
+          <div>
+            <a-button @click="validate">校验</a-button>
           </div>
         </div>
         <div class="plugin-editor">
@@ -42,9 +46,9 @@
                   <a-button @click="insertCode('module_search')">查询</a-button>
                   <a-button @click="insertCode('module_table')">表格</a-button>
                 </a-space>
-                <div>采集器</div>
+                <div>协议</div>
                 <div class="directory-tree">
-                  <div v-for="item in directoryList" class="directory-file" @click="showCode(item)">
+                  <div v-for="item in directoryList" :class="{ 'directory-file': true, 'active': item.name === fileData.active}" @click="() => showCode(item)">
                     {{ item.name }}
                   </div>
                 </div>
@@ -61,9 +65,11 @@
 
 <script setup name="Plugin">
 import Editor from './editor.vue'
+import { h } from 'vue'
 import demoText, {insertContentMap} from './demo'
 import {findMatches} from "@/views/Plugin/utils";
 import { throttle } from 'lodash-es'
+import { Modal, AutoComplete } from 'ant-design-vue'
 
 const renderValue  = ref(demoText)
 
@@ -75,11 +81,16 @@ const activeKey = ref()
 const formModel = reactive({})
 const directoryList = ref([])
 
+const addData = reactive({
+  name: undefined
+})
+
 const fileData = reactive({
   active: '',
   context: [],
   codeActive: ''
 })
+const formRef = ref()
 
 provide('plugin-form', formModel)
 
@@ -91,7 +102,30 @@ const columns = [
   { title: '操作', dataIndex: 'action', width: 120}
 ]
 
+const renderOption = [
+  {
+    value: 'channelRender',
+    label: 'channelRender(通道)'
+  },
+  {
+    value: 'collectorRender',
+    label: 'collectorRender(采集器)'
+  },
+  {
+    value: 'pointRender',
+    label: 'pointRender(点位)'
+  },
+  {
+    value: 'collectorDetailRender',
+    label: 'collectorDetailRender(采集器详情)'
+  },
+]
+
 const dataSource = ref([])
+
+const validate = () =>{
+  formRef.value.validateFields()
+}
 const insertCode = (key) => {
   const { code, script} = insertContentMap[key]
   const editor = editorRef.value.getInstance()
@@ -178,7 +212,9 @@ const showCode = async (handle) => {
 
 const codeChange = throttle((code) => {
   const item = fileData.context.find(item => item.name === fileData.codeActive)
-  item.value = code
+  if (item) {
+    item.value = code
+  }
 }, 100)
 
 const openDirectory = async () => {
@@ -192,6 +228,32 @@ const openDirectory = async () => {
   } catch (e) {
     console.error(e)
   }
+}
+
+const addCodeItem = () => {
+  Modal.confirm({
+    content: h(AutoComplete, { placeholder: '请输入名称', style: { width: '100%' }, options: renderOption, onChange: (e) => {
+        addData.name = e
+      }}),
+    icon: null,
+    okText: '确定',
+    onOk() {
+      fileData.context.push({
+        name: addData.name,
+        value: `<template>
+
+    </template>
+    <script>
+
+    <\/script>
+    `
+      })
+      fileData.codeActive = addData.name
+    },
+    onCancel() {
+
+    }
+  })
 }
 
 watch(() => fileData.codeActive, () => {
@@ -219,6 +281,10 @@ watch(() => fileData.codeActive, () => {
 .plugin-container {
   display: flex;
   height: calc(100% - 56px);
+
+  .tabs {
+    margin-bottom: 12px;
+  }
 }
 
 .plugin-render-body {
@@ -278,6 +344,11 @@ watch(() => fileData.codeActive, () => {
 
     &:not(:last-child) {
       margin-bottom: 12px;
+    }
+
+    &.active {
+      border-color: @primary-color;
+      color: @primary-color;
     }
   }
 }

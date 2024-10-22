@@ -16,6 +16,7 @@ import * as JetlinksConstants from '@jetlinks-web/constants'
 import * as JetlinksHooks from '@jetlinks-web/hooks'
 import * as pinia from 'pinia'
 import * as Router from 'vue-router'
+import * as Andtv from 'ant-design-vue'
 
 
 defineOptions({ name: 'RenderComponents' })
@@ -23,6 +24,9 @@ defineOptions({ name: 'RenderComponents' })
 const props = defineProps({
   value: {
     type: String
+  },
+  propsValue: {
+    type: Object
   }
 })
 
@@ -37,11 +41,15 @@ const render = debounce(() => {
       '@jetlinks-web/types': JetlinksTypes,
       '@jetlinks-web/constants': JetlinksConstants,
       '@jetlinks-web/hooks': JetlinksHooks,
+      'ant-design-vue': Andtv,
       pinia: pinia,
       'vue-router': Router
     },
     getFile(url) {
       return Promise.resolve(props.value)
+    },
+    props: {
+      ...props.propsValue
     },
     addStyle(textContent) {
       const style = Object.assign(document.createElement('style'), { textContent });
