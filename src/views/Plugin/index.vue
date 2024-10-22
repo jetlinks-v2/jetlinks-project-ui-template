@@ -197,7 +197,7 @@ const showCode = async (handle) => {
 
   fileData.active = handle.name
   try {
-    const json = JSON.parse(text)
+    const json = JSON.parse(text || "{}")
     fileData.context = Object.keys(json).map(key => {
       return {
         name: key,
@@ -258,8 +258,10 @@ const addCodeItem = () => {
 
 watch(() => fileData.codeActive, () => {
   const item = fileData.context.find(item => item.name === fileData.codeActive)
-  editorRef.value.updateValue(item.value)
-  renderValue.value = item.value
+  if (item) {
+    editorRef.value.updateValue(item.value)
+    renderValue.value = item.value
+  }
 })
 
 </script>
