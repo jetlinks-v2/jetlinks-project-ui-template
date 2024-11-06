@@ -18,12 +18,14 @@
 
     <template #rightContentRender>
       <div class="right-content">
-        <Notice style="margin: 0 24px" />
-        <User />
+        <a-space :size="24">
+          <OrgList @change="changeRouterAlive" />
+          <Notice v-if="routerAlive.notice" />
+          <User />
+        </a-space>
       </div>
     </template>
-
-      <router-view v-slot="{ Component }">
+      <router-view v-if="routerAlive.router" v-slot="{ Component }">
         <component :is="components || Component" />
       </router-view>
   </j-pro-layout>
@@ -33,7 +35,7 @@
 import { reactive, computed, watchEffect } from 'vue'
 import { useSystemStore } from '@/store/system'
 import { useMenuStore } from '@/store/menu'
-import { User, Notice } from './components'
+import { User, Notice, OrgList } from './components'
 import { storeToRefs } from 'pinia'
 
 type StateType = {
@@ -48,6 +50,10 @@ const route = useRoute();
 const systemStore = useSystemStore()
 const menuStore = useMenuStore()
 const layoutType = ref('list')
+const routerAlive = reactive({
+  router: true,
+  notice: true
+})
 
 const { theme, layout } = storeToRefs(systemStore)
 
@@ -58,7 +64,6 @@ const components = computed(() => {
   }
   return undefined
 })
-
 
 const config = computed(() => ({
   ...layout.value,
@@ -100,6 +105,27 @@ const jumpPage = (route: { path: string}) => {
 
 const routerBack = () => {
   router.go(-1)
+}
+
+const changeRouterAlive = () => {
+  routerAlive.notice = true
+
+  const matched = route.matched
+  const matchedLength = route.matched.length
+  const prevComponentName = matchedLength - 2 >= 0 ? matched[matchedLength - 2]?.components?.default?.name || '' : ''
+
+  const jumpBack = !['BasicLayoutPage', 'BlankLayoutPage'].includes(prevComponentName)
+
+  if (jumpBack) {
+    routerBack()
+  } else {
+    routerAlive.router = false
+  }
+
+  nextTick(() => {
+    routerAlive.router = true
+    routerAlive.notice = true
+  })
 }
 
 const init = () => {

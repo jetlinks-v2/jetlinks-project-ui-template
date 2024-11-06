@@ -32,7 +32,7 @@ export const captchaConfig = () => request.get(`/authorize/captcha/config`)
 
 /**
  * 登录
- * @returns 
+ * @returns
  */
 export const authLogin = (data: any) => request.post(`/authorize/login`, data)
 
@@ -43,8 +43,10 @@ export const userDetail = () => request.get<any>('/user/detail')
 
 /**
  * 查询初始化配置信息
- * @returns 
+ * @returns
  */
 export const getInitSet = () => request.get(`/user/settings/init`)
+
+export const changeToken = (data: any) => request.post('/token', data)
 
 

@@ -4,6 +4,7 @@
       noMargin
       :columns="columns"
       target="system-role"
+      :style="{ padding: '0 24px'}"
       @search="handelSearch"
     />
     <div class="role-table">

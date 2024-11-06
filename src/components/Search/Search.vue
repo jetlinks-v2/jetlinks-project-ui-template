@@ -8,7 +8,7 @@
       :deleteRequest='(_target: string, id: string) => deleteSearchHistory(target, id)'
       :columns='columns'
       :class='props.class'
-      style='padding-top: 18px; padding-bottom: 18px;'
+      :style='style'
       @search='searchSubmit'
     />
   </div>
@@ -44,6 +44,12 @@ const props = defineProps({
   noMargin: {
     type: Boolean,
     default: false
+  },
+  style: {
+    type: Object,
+    default: () => ({
+      padding: '18px 24px'
+    })
   }
 })
 
