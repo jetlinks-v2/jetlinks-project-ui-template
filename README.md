@@ -15,13 +15,8 @@ VITE_APP_BASE_API = /api
 VITE_PORT=9100
 
 # 代理配置
-VITE_PROXY = [["/api","http://192.168.33.46:8844"]]
+VITE_APP_DEV_PROXY_URL=http://192.168.33.46:8844
 
-# 配置多个代理
-# VITE_PROXY = [
-#     ["/login","http://120.77.179.54:8844"],
-#     ["/api","http://192.168.33.46:8844"]
-# ]
 
 #  token标识
 VITE_TOKEN_KEY = X-Access-Token
