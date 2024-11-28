@@ -1,14 +1,15 @@
-import { BasicLayoutPage, BlankLayoutPage, Iframe } from '@/layout'
-import { shallowRef } from 'vue'
+import {BasicLayoutPage, BlankLayoutPage, Iframe} from '@/layout'
+import {shallowRef} from 'vue'
 import {isArray} from "lodash-es";
 
 type Buttons = Array<{ id: string }>
 
 type MenuItem = {
-    icon: string,
+    icon: string
     name: string
     code: string
     url: string
+    appId?: string
     isShow?: boolean
     buttons?: Buttons
 }
@@ -25,13 +26,17 @@ const handleButtons = (buttons?: Buttons) => {
 }
 
 const handleMeta = (item: MenuItem, isApp: boolean) => {
-    return {
+    const meta = {
         icon: item.icon,
         title: item.name,
         hideInMenu: item.isShow === false,
         buttons: handleButtons(item.buttons),
-        isApp
+        isApp,
     }
+    if (isApp) {
+        meta['appId'] = item.appId
+    }
+    return meta
 }
 
 const findComponents = (code: string, level: number, isApp: boolean, components: any, mate: any, hasChildren: false) => {
@@ -43,17 +48,17 @@ const findComponents = (code: string, level: number, isApp: boolean, components:
         }
         return myComponents ? () => myComponents() : shallowRef(BasicLayoutPage)
     } else if (level === 2) { // BlankLayoutPage or components
-      return myComponents ? () => myComponents() : BlankLayoutPage
-    } else if (isApp){ // iframe
-      return () => Iframe
-    } else if(myComponents) { // components
+        return myComponents ? () => myComponents() : BlankLayoutPage
+    } else if (isApp) { // iframe
+        return () => Iframe
+    } else if (myComponents) { // components
         return () => myComponents()
     }
     // return components['demo'] // 开发测试用
     return undefined
 }
 
-const hasExtraChildren = (item: MenuItem, extraMenus: any ) => {
+const hasExtraChildren = (item: MenuItem, extraMenus: any) => {
     const extraItem = extraMenus[item.code]
 
     if (!extraItem) return undefined
@@ -61,10 +66,10 @@ const hasExtraChildren = (item: MenuItem, extraMenus: any ) => {
     const extraRoutes = isArray(extraItem) ? extraItem : extraItem.children
     if (extraItem && extraRoutes) {
         return extraRoutes.map(e => ({
-          ...e,
+            ...e,
             code: `${item.code}/${e.code}`,
-          url: `${item.url}${e.url}`,
-          isShow: false
+            url: `${item.url}${e.url}`,
+            isShow: false
         }))
     }
 
@@ -76,7 +81,7 @@ const filterMenuCode = ['account-center']
 export const handleMenus = (menuData: any, extraMenus: any, components: any, level: number = 1) => {
     if (menuData && menuData.length) {
         return menuData.filter(item => !filterMenuCode.includes(item.code)).map(item => {
-            const { isApp, appUrl } = hasAppID(item) // 是否为第三方程序
+            const {isApp, appUrl} = hasAppID(item) // 是否为第三方程序
             const meta = handleMeta(item, isApp)
             const route: any = {
                 path: isApp ? appUrl : `${item.url}`,
@@ -95,13 +100,13 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
             }
 
             if (route.children && route.children.length) {
-              route.children = handleMenus(route.children, extraMenus, components, level + 1)
+                route.children = handleMenus(route.children, extraMenus, components, level + 1)
             }
 
             const showChildren = route.children?.filter(r => !r.meta?.hideInMenu) || []
 
             if (route.children && route.children.length && showChildren.length) {
-              route.redirect = showChildren[0].path
+                route.redirect = showChildren[0].path
             }
 
             return route
@@ -112,58 +117,58 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
 }
 
 export const handleMenusMap = (menuData: any, cb: (data: any) => void) => {
-  if (menuData && menuData.length) {
-    menuData.forEach(item => {
-      cb(item)
-      if (item.children) {
-        handleMenusMap(item.children, cb)
-      }
-    })
-  }
+    if (menuData && menuData.length) {
+        menuData.forEach(item => {
+            cb(item)
+            if (item.children) {
+                handleMenusMap(item.children, cb)
+            }
+        })
+    }
 }
 
 const hideInMenu = (code: string) => {
-  return ['account-center', 'message-subscribe'].includes(code)
+    return ['account-center', 'message-subscribe'].includes(code)
 }
 
 export const handleSiderMenu = (menuData: any) => {
-  if (menuData && menuData.length) {
-    return menuData.map(item => {
-      const { isApp, appUrl } = hasAppID(item) // 是否为第三方程序
-      const meta = handleMeta(item, isApp)
-      const route: any = {
-        path: isApp ? appUrl : `${item.url}`,
-        name: isApp ? appUrl : item.code,
-        url: isApp ? appUrl : item.url,
-        meta: meta,
-        children: item.children
-      }
+    if (menuData && menuData.length) {
+        return menuData.map(item => {
+            const {isApp, appUrl} = hasAppID(item) // 是否为第三方程序
+            const meta = handleMeta(item, isApp)
+            const route: any = {
+                path: isApp ? appUrl : `${item.url}`,
+                name: isApp ? appUrl : item.code,
+                url: isApp ? appUrl : item.url,
+                meta: meta,
+                children: item.children
+            }
 
-      if (route.children && route.children.length) {
-        route.children = handleSiderMenu(route.children)
-      }
+            if (route.children && route.children.length) {
+                route.children = handleSiderMenu(route.children)
+            }
 
-      route.meta.hideInMenu = hideInMenu(item.code)
+            route.meta.hideInMenu = hideInMenu(item.code)
 
-      return route
-    })
-  }
-  return []
+            return route
+        })
+    }
+    return []
 }
 
 
 export const handleAuthMenu = (menuData: any, cb: (code, buttons) => void) => {
-  if (menuData && menuData.length) {
-    return menuData.forEach(item => {
-      const { code, buttons, children} = item
+    if (menuData && menuData.length) {
+        return menuData.forEach(item => {
+            const {code, buttons, children} = item
 
-      if (buttons) {
-        cb(code, buttons.map(a => a.id))
-      }
+            if (buttons) {
+                cb(code, buttons.map(a => a.id))
+            }
 
-      if (children) {
-        handleAuthMenu(children, cb)
-      }
-    })
-  }
+            if (children) {
+                handleAuthMenu(children, cb)
+            }
+        })
+    }
 }
