@@ -5,6 +5,7 @@
 ### Features
 * 新增git子模块别名解析
 * 新增prettier格式化支持
+* 新增低码发布菜单跳转适配
 
 ### Bug Fixes
 * 修复git子模块扩展菜单组件解析
