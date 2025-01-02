@@ -10,15 +10,21 @@ function registerModulesAlias() {
   try {
     const folders = fs.readdirSync(pattern)
     folders?.map((name) => {
-      const result = fs.readFileSync(path.resolve(rootPath, modulesBasePath, `${name}/config.json`), 'utf-8')
-      const content = JSON.parse(result)
-      if (content.aliasName) {
-        modulesAlias[content.aliasName] = path.resolve(modulesBasePath, name)
+      try {
+        const result = fs.readFileSync(path.resolve(rootPath, modulesBasePath, `${name}/config.json`), 'utf-8')
+        const content = JSON.parse(result)
+        if (content.aliasName) {
+          modulesAlias[content.aliasName] = path.resolve(modulesBasePath, name)
+        }
+      } catch (error) {
+        console.warn(`Failed to load ${modulesBasePath} configuration file!`)
       }
     })
   } catch (error) {
-    console.warn(`Failed to load ${modulesBasePath} configuration file!`)
+    console.warn(`Failed to load ${modulesBasePath} Folder`)
   }
+
+  console.log(modulesAlias)
   return modulesAlias
 }
 export { registerModulesAlias }
