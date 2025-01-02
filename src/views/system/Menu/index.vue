@@ -27,6 +27,11 @@
             >
               <AIcon type="PlusOutlined" />新增
             </j-permission-button>
+            <j-button
+              v-if="userStore.isAdmin"
+              style="margin-left: 12px"
+              @click="router.push('/system/Menu/Setting')"
+            >菜单配置</j-button>
           </template>
           <template #createTime="slotProps">
             <span v-time-format="'YYYY-MM-DD HH:mm:ss'">
@@ -77,13 +82,15 @@
 
 <script setup lang="ts" name="Menu">
 import { getMenuTree, delMenu } from '@/api/system/menu'
-import { useMenuStore } from '@/store/menu'
+import { useMenuStore, useUserStore } from '@/store'
 import { onlyMessage } from '@jetlinks-web/utils'
 import {OWNER_KEY} from "@/utils/consts";
 
 const permission = 'system/Menu'
 
 const menuStore = useMenuStore()
+const userStore = useUserStore()
+const router = useRouter()
 
 const columns = [
   {
