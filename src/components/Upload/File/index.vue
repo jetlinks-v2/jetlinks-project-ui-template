@@ -35,7 +35,7 @@
           visible: visible,
           minScale: 0.1,
           current: currentPreviewIndex,
-          onVisibleChange: (vis) => (visible = vis),
+          onVisibleChange: (vis) => (visible = vis)
         }"
       >
         <a-image
@@ -53,49 +53,50 @@
 import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
 import { TOKEN_KEY } from '@jetlinks-web/constants'
 import { getToken, onlyMessage } from '@jetlinks-web/utils'
-import { FileStaticPath } from '@/api/comm';
+import { FileStaticPath } from '@/api/comm'
+import { getImageUrl } from '@/utils'
 
 const props = defineProps({
   value: {
     type: [String, Array<UploadProps['fileList']>],
-    default: undefined,
+    default: undefined
   },
   btnText: {
     type: String,
-    default: '',
+    default: ''
   },
   accept: {
     type: String,
-    default: undefined,
+    default: undefined
   },
   types: {
     type: Array as PropType<Array<string>>,
-    default: [],
+    default: []
   },
   size: {
     type: Number,
-    default: 2,
+    default: 2
   },
   maxCount: {
     type: Number,
-    default: 1,
+    default: 1
   },
   listType: {
     type: String as PropType<'text' | 'picture' | 'picture-card'>,
-    default: 'text',
+    default: 'text'
   },
   disabled: {
     type: Boolean,
-    default: false,
+    default: false
   },
   publicAccess: {
     type: Boolean,
-    default: false,
+    default: false
   },
   isUpload: {
     type: Boolean,
-    default: true,
-  },
+    default: true
+  }
 })
 
 const emit = defineEmits(['update:value', 'change', 'remove'])
@@ -124,7 +125,7 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
       //编辑状态
       previewImage.value.push({
         url: file.url,
-        uid: file.uid,
+        uid: file.uid
       })
     }
     currentPreviewIndex.value = fileList.value.findIndex((f: any) => f.uid === file.uid)
@@ -141,9 +142,9 @@ const handleChange = (info: UploadChangeParam) => {
     const _id = info.file.response?.result?.id
     previewImage.value.push({
       url: info.file.response?.result.accessUrl,
-      uid: info.file.uid,
+      uid: info.file.uid
     })
-    emit('update:value', fileList.value)
+    emit('update:value', _id)
     emit('change', info)
   }
   if (info.file.status === 'error') {
@@ -160,11 +161,16 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
     emit('change', file)
     return false
   }
-  let inType = props.types?.includes(file.type)
-  if (file.type.includes('application')) {
-    const type = file.type.split('/')[1]
-    inType = props.types?.includes(type)
+
+  let inType = true
+  if (props.types?.length) {
+    inType = props.types?.includes(file.type)
+    if (file.type.includes('application')) {
+      const type = file.type.split('/')[1]
+      inType = props.types?.includes(type)
+    }
   }
+
   const maxSize = props.size // 文件最大多少兆
   const isMaxSize = file.size / 1024 / 1024 < maxSize
 
@@ -182,6 +188,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
 const handleRemove = (file: any) => {
   previewImage.value = previewImage.value.filter((item: any) => item.uid !== file.uid)
   emit('remove', file)
+  emit('update:value')
 }
 
 const handleImageClick = (index: number) => {
@@ -191,13 +198,13 @@ const handleImageClick = (index: number) => {
 watch(
   () => props?.value,
   (newValue: any) => {
-    if (!newValue?.length) {
-      fileList.value = []
+    if (newValue) {
+      fileList.value = [{ url: getImageUrl(newValue), name: newValue }]
     } else {
-      fileList.value = [...newValue]
+      fileList.value = []
     }
   },
-  { immediate: true },
+  { immediate: true }
 )
 </script>
 
