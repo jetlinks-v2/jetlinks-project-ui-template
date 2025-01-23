@@ -1,5 +1,5 @@
 <template>
- <div class="chart" ref="chart"></div>
+ <div class="chart" ref="chart" ></div>
 </template>
 
 <script setup lang="ts">
@@ -12,8 +12,16 @@ const props = defineProps({
  options:{
      type:Object,
      default:()=>{}
+ },
+ style: {
+     type: Object,
+     default: () => ({
+         width: '100%',
+         height: '100%'
+     })
  }
 });
+
 
 /**
 * 绘制图表
@@ -33,6 +41,17 @@ watch(
  () => createChart(),
  { immediate: true, deep: true },
 );
+watch(
+ () => props.style,
+ () => {
+     nextTick(() => {
+         const myChart = echarts.init(proxy.$refs.chart);
+         myChart.resize();
+     });
+ },
+ { immediate: true, deep: true },
+)
+
 </script>
 
 <style scoped lang="less">

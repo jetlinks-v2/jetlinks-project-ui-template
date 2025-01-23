@@ -32,7 +32,10 @@
         class="content-right-echart"
         v-else
       >
-        <Charts :options="trendData"></Charts>
+        <Charts
+          :options="trendData"
+          style="width: 100%; height: 100%"
+        ></Charts>
       </div>
     </div>
     <div

@@ -20,7 +20,10 @@
       class="message-chart"
       style="width: 100%"
     >
-      <Charts :options="trendOptions"></Charts>
+      <Charts
+        :options="trendOptions"
+        :style="_style"
+      ></Charts>
     </div>
   </div>
 </template>
@@ -281,20 +284,40 @@ watch(
     }
   }
 )
+
+const _style = ref({
+  width: '100%'
+})
+
+watch(
+  () => props.data.componentProps.gridItem,
+  (val) => {
+    if (val) {
+      const el = document.getElementById(props.data.key)
+      const { w, h } = val
+      const style = {
+        width: el?.offsetWidth * (w / 12) + 'px',
+        height: el?.offsetHeight * (h / 30) + 'px'
+      }
+      _style.value = style
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped lang="less">
 .message-card,
 .device-position {
-  margin-top: 24px;
+  // margin-top: 24px;
   padding: 24px;
   background-color: rgb(134, 188, 231);
   height: 100%;
   width: 100%;
 }
 .message-chart {
-  width: 100%;
-  height: 470px;
+  width: 95%;
+  height: 95%;
 }
 .amap-box {
   width: 100%;
