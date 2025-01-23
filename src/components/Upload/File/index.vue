@@ -121,13 +121,13 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     if (!file.url && !file.preview) {
       file.preview = (await getBase64(file.originFileObj)) as string
     }
-    if (file.name === file.uid) {
-      //编辑状态
-      previewImage.value.push({
-        url: file.url,
-        uid: file.uid
-      })
-    }
+    // if (file.name === file.uid) {
+    //编辑状态
+    previewImage.value.push({
+      url: file.url,
+      uid: file.uid
+    })
+    // }
     currentPreviewIndex.value = fileList.value.findIndex((f: any) => f.uid === file.uid)
     visible.value = true
   }
