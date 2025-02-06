@@ -54,6 +54,7 @@ import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
 import { TOKEN_KEY } from '@jetlinks-web/constants'
 import { getToken, onlyMessage } from '@jetlinks-web/utils'
 import { FileStaticPath } from '@/api/comm'
+import { getImageUrl } from '@/utils'
 
 const props = defineProps({
   value: {
@@ -143,7 +144,7 @@ const handleChange = (info: UploadChangeParam) => {
       url: info.file.response?.result.accessUrl,
       uid: info.file.uid
     })
-    emit('update:value', fileList.value)
+    emit('update:value', _id)
     emit('change', info)
   }
   if (info.file.status === 'error') {
@@ -187,6 +188,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
 const handleRemove = (file: any) => {
   previewImage.value = previewImage.value.filter((item: any) => item.uid !== file.uid)
   emit('remove', file)
+  emit('update:value')
 }
 
 const handleImageClick = (index: number) => {
@@ -196,10 +198,10 @@ const handleImageClick = (index: number) => {
 watch(
   () => props?.value,
   (newValue: any) => {
-    if (!newValue?.length) {
-      fileList.value = []
+    if (newValue) {
+      fileList.value = [{ url: getImageUrl(newValue), name: newValue }]
     } else {
-      fileList.value = [...newValue]
+      fileList.value = []
     }
   },
   { immediate: true }
