@@ -18,18 +18,15 @@
     </Guide>
     <div
       class="message-chart"
-      style="width: 100%"
+      style="width: 100%;"
     >
-      <Charts
-        :options="trendOptions"
-        :style="_style"
-      ></Charts>
+      <Charts :options="trendOptions" :style="_style"></Charts>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { trendData_api, queryFlow } from '@/api/dashboard/index'
+import { trendData_api, queryFlow } from '@/api/Dashboard/index'
 import Guide from './components/Guide.vue'
 import Charts from './components/Charts.vue'
 import TimeSelect from './components/TimeSelect.vue'
@@ -286,24 +283,26 @@ watch(
 )
 
 const _style = ref({
-  width: '100%'
+  width: '100%',
 })
 
 watch(
-  () => props.data.componentProps.gridItem,
-  (val) => {
-    if (val) {
+  ()=>props.data.componentProps.gridItem,
+  (val)=>{
+    if(val){
       const el = document.getElementById(props.data.key)
-      const { w, h } = val
+      const { w,h} = val
       const style = {
-        width: el?.offsetWidth * (w / 12) + 'px',
-        height: el?.offsetHeight * (h / 30) + 'px'
+        width: el?.offsetWidth * (w/12) + 'px',
+        height: el?.offsetHeight * (h/30) + 'px'
       }
       _style.value = style
     }
+   
   },
-  { immediate: true }
+  {immediate:true}
 )
+
 </script>
 
 <style scoped lang="less">

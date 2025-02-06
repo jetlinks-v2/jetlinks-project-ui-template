@@ -45,6 +45,7 @@ watch(
  () => props.style,
  () => {
      nextTick(() => {
+        // console.log('resize');
          const myChart = echarts.init(proxy.$refs.chart);
          myChart.resize();
      });

@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts" setup name="Network">
-import { dashboard } from '@/api/dashboard/index'
+import { dashboard } from '@/api/Dashboard/index'
 import { getTimeByType, typeDataLine, areaStyle, colorNetwork, networkParams, arrayReverse } from './components/tools'
 import dayjs from 'dayjs'
 import ServerList from './components/ServerList.vue'

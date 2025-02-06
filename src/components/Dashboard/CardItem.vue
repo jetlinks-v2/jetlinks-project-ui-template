@@ -6,7 +6,7 @@
     <div class="top-card-content">
       <div class="content-left">
         <div class="content-left-title">
-          <span>{{ data.componentProps.name || '--' }}</span>
+          <j-ellipsis>{{ data.componentProps.name || '--' }}</j-ellipsis>
           <!-- <j-tooltip
             placement="top"
             v-if="tooltip"
@@ -32,10 +32,7 @@
         class="content-right-echart"
         v-else
       >
-        <Charts
-          :options="trendData"
-          style="width: 100%; height: 100%"
-        ></Charts>
+        <Charts :options="trendData" style="width: 100%; height: 100%"></Charts>
       </div>
     </div>
     <div
@@ -71,7 +68,7 @@ import {
   videoDevicesNum,
   alarmNum,
   trendData_api
-} from '@/api/dashboard/index'
+} from '@/api/Dashboard/index'
 import { getImageUrl } from '@/utils/comm'
 import dayjs from 'dayjs'
 import Charts from './components/Charts.vue'
@@ -150,6 +147,12 @@ const action = {
             status: 'success'
           }
         }
+      }).catch(() => {
+        footerData.value[0] = {
+            label: '正常',
+            value: 0,
+            status: 'success'
+          }
       })
       productCount(typeParams.disable).then((res) => {
         if (res.success) {
@@ -159,6 +162,12 @@ const action = {
             status: 'error'
           }
         }
+      }).catch(() => {
+        footerData.value[1] = {
+            label: '禁用',
+            value: 0,
+            status: 'error'
+          }
       })
     }
   },
@@ -202,6 +211,12 @@ const action = {
             status: 'success'
           }
         }
+      }).catch(() => {
+        footerData.value[0] = {
+            label: '在线',
+            value: 0,
+            status: 'success'
+          }
       })
       deviceCount(typeParams.offline).then((res) => {
         if (res.success) {
@@ -211,6 +226,12 @@ const action = {
             status: 'error'
           }
         }
+      }).catch(() => {
+        footerData.value[1] = {
+            label: '离线',
+            value: 0,
+            status: 'error'
+          }
       })
     }
   },
@@ -637,10 +658,10 @@ const action = {
     ]).then((res) => {
       if (res.success) {
         if (cardType.value === 'all') {
-          totalData.value = res.result.find((item) => item.group === 'oneday').data.value
+          totalData.value = res.result?.find((item) => item.group === 'oneday')?.data?.value || 0
           footerData.value[0] = {
             label: '当月设备消息量',
-            value: res.result.find((item) => item.group === 'thisMonth').data.value,
+            value: res.result?.find((item) => item.group === 'thisMonth')?.data?.value || 0 ,
             status: 'success'
           }
         } else {
@@ -868,6 +889,7 @@ watch(
     justify-content: space-between;
     padding-top: 16px;
     border-top: 1px solid #f0f0f0;
+    min-height: 40px;
     .footer-item-value {
       color: #323130;
       font-weight: 700;

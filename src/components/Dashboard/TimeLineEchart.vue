@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { dashboard } from '@/api/dashboard/index'
+import { dashboard } from '@/api/Dashboard/index'
 import dayjs from 'dayjs'
 import {
   getTimeByType,
