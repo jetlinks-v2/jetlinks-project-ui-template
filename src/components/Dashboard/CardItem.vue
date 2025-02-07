@@ -332,6 +332,12 @@ const action = {
             status: 'success'
           }
         }
+      }).catch(() => {
+        footerData.value[0] = {
+            label: '正常',
+            value: 0,
+            status: 'success'
+          }
       })
       // 异常通道
       channelCount(typeParams.disable).then((res) => {
@@ -342,6 +348,12 @@ const action = {
             status: 'error'
           }
         }
+      }).catch(() => {
+        footerData.value[1] = {
+            label: '异常',
+            value: 0,
+            status: 'error'
+          }
       })
     }
   },
@@ -383,6 +395,12 @@ const action = {
             status: 'success'
           }
         }
+      }).catch(() => {
+        footerData.value[1] = {
+            label: '正常',
+            value: 0,
+            status: 'success'
+          }
       })
       // 异常数量
       collectorCount(typeParams.disabled).then((res) => {
@@ -393,6 +411,12 @@ const action = {
             status: 'error'
           }
         }
+      }).catch(() => {
+        footerData.value[1] = {
+            label: '异常',
+            value: 0,
+            status: 'error'
+          }
       })
     }
   },
@@ -433,6 +457,12 @@ const action = {
             status: 'success'
           }
         }
+      }).catch(() => {
+        footerData.value[0] = {
+            label: '正常点位',
+            value: 0,
+            status: 'success'
+          }
       })
       // 异常点位
       collectorPoints(typeParams.disable).then((res) => {
@@ -443,6 +473,12 @@ const action = {
             status: 'error'
           }
         }
+      }).catch(() => {
+        footerData.value[2] = {
+            label: '异常点位',
+            value: 0,
+            status: 'error'
+          }
       })
     }
   },
