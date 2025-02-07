@@ -13,6 +13,7 @@
       :beforeUpload="beforeUpload"
       @preview="handlePreview"
       :multiple="true"
+      :disabled="disabled"
     >
       <template v-if="listType === 'text'">
         <a-button>
