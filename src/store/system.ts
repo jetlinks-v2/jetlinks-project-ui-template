@@ -1,5 +1,9 @@
 import { defineStore } from "pinia";
-import { getDetails_api, settingDetail } from "@/api/system/basis";
+import {getDetails_api, settingDetail, systemVersion} from "@/api/system/basis";
+import {
+  getTagsColor,
+} from '@/api/system/calendar'
+import {LocalStore} from "@jetlinks-web/utils";
 
 interface LayoutType {
   siderWidth: number
@@ -14,6 +18,9 @@ export const useSystemStore = defineStore('system', () => {
   const theme = ref<string>('light') // 主题色
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
   const systemInfo = ref<Record<string, any>>({})
+  const microApp = ref<Record<string, any>>({})
+  const calendarTagColor = new Map()
+  const showThreshold = ref(true)
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,
@@ -99,16 +106,44 @@ export const useSystemStore = defineStore('system', () => {
     }
   }
 
+  const setMircoData = () => {
+    if ((window as any).__MICRO_APP_ENVIRONMENT__) {
+      microApp.value = (window as any).microApp.getData() // 获取主应用下发的数据
+    }
+  }
+
+  const queryTagsColor = async() => {
+    const answer:any = await getTagsColor();
+    if (answer.success) {
+      Object.keys(answer.result).forEach((i) => {
+        calendarTagColor.set(i, answer.result[i]);
+      });
+    }
+  }
+
+  const queryVersion = async () => {
+    const resp = await systemVersion()
+    if (resp.success && resp.result) {
+      const isCommunity = resp.result.edition === 'community'
+      LocalStore.set('version_code', isCommunity)
+    }
+  }
+
   return {
     systemInfo,
     theme,
     ico,
     layout,
+    calendarTagColor,
+    showThreshold,
     changeTheme,
     changeLayout,
     changeIco,
     changeTitle,
     queryInfo,
-    querySingleInfo
+    querySingleInfo,
+    setMircoData,
+    queryTagsColor,
+    queryVersion
   }
 })

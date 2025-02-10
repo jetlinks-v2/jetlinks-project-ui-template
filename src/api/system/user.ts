@@ -1,4 +1,4 @@
-import { request } from '@/utils/axios'
+import { request } from '@jetlinks-web/core'
 
 /**
  * 获取用户基本信息
@@ -21,6 +21,18 @@ export const validateField_api = (type: 'username' | 'password', name: string) =
 
 // 获取角色列表
 export const getRoleList_api = () => request.get(`/role/_query/no-paging?paging=false`);
+
+/**
+ * 查询用户列表
+ * @returns
+ */
+export const queryUserListNoPaging = () => request.post(`/user/_query/no-paging`, {
+    paging: false,
+    sorts: [{ name: 'name', order: "asc" }]
+})
+
+//获取角色列表
+export const getRoleList = (data:any) => request.post('/role/group/detail/_query/tree',data)
 // 获取组织列表
 export const getDepartmentList_api = () => request.get(`/organization/_all/tree?paging=false`);
 
@@ -41,3 +53,5 @@ export const changeUserStatus_api = (data: object) => request.patch(`/user`,data
 // 删除用户
 export const deleteUser_api = (id: string) => request.remove(`/user/${id}`);
 
+// 查询角色不分页
+export const queryRole_api = (data: any): Promise<any> => request.post(`/role/_query/no-paging`, data)

@@ -3,12 +3,12 @@
         :confirmLoading="loading" :width="900">
         <JProTable
             :columns="columns"
-            model="CARD"
+            mode="CARD"
             :request="getDic_page"
             :gridColumn="2"
             :defaultParams="{sorts: [{ name: 'createTime', order: 'desc' }]}"
         >
-            <template #headerTitle>
+            <template #headerLeftRender>
                 请选择需要下载的字典
             </template>
             <template #card="slotProps">

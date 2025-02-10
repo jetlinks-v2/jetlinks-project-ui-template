@@ -1,4 +1,4 @@
-import { request } from '@/utils/axios'
+import { request } from '@jetlinks-web/core'
 
 // 三方应用账户信息
 export const applicationInfo = (code: string): any => request.get(`/application/sso/bind-code/${code}`)

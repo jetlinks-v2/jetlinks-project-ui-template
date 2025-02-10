@@ -63,7 +63,7 @@ const CropperModal = defineComponent({
       immediate: false,
       onSuccess(resp) {
         if (resp.success) {
-          emit('ok', resp.result)
+          emit('ok', resp.result.accessUrl)
         }
       }
     })

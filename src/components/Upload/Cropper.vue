@@ -52,7 +52,7 @@ const ok = () => {
     loading.value = true
     fileUpload(formData).then(res => {
       if (res.success) {
-        emit('ok', res.result)
+        emit('ok', res.result.accessUrl)
       }
     }).finally(() => {
       loading.value = false

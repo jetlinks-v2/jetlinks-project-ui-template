@@ -1,5 +1,5 @@
 <template>
-  <page-container>
+  <j-page-container>
     <FullPage>
       <div class="department-container">
         <div class="left">
@@ -10,7 +10,7 @@
         </div>
       </div>
     </FullPage>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="Department">
@@ -27,18 +27,20 @@ const onChange = (id: string) => {
 <style lang="less" scoped>
 .department-container {
   display: flex;
+  background-color: #fff;
   padding: 24px;
-  gap: 12px;
   height: 100%;
 
   .left {
-    width: 300px;
-    height: 100%;
+    border-right: 1px solid #f0f0f0;
+    padding-right: 24px;
+    flex:1;
+    height:100%
   }
 
   .right {
-    flex: 1;
-    height: 100%;
+    flex:4;
+    height:100%
   }
 }
 </style>

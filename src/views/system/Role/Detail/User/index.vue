@@ -1,16 +1,16 @@
 <template>
   <div class="role-user-container">
-    <j-pro-search
+    <pro-search
       :columns="columns"
       target="system-role-user"
-      @search="(params:any)=>queryParams = {...params}"
+      @search="(params)=>queryParams = {...params}"
     />
 
     <j-pro-table
       ref="tableRef"
       :columns="columns"
       :request="table.getList"
-      model="TABLE"
+      mode="TABLE"
       :params="queryParams"
       :rowSelection="{
                 selectedRowKeys: selectedRowKeys,
@@ -18,7 +18,7 @@
             }"
       size="small"
     >
-      <template #headerTitle>
+      <template #headerLeftRender>
         <a-space>
           <a-button type="primary" @click="dialogVisible = true">
             <AIcon type="PlusOutlined" />新增

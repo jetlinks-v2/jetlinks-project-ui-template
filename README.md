@@ -15,13 +15,8 @@ VITE_APP_BASE_API = /api
 VITE_PORT=9100
 
 # 代理配置
-VITE_PROXY = [["/api","http://192.168.33.46:8844"]]
+VITE_APP_DEV_PROXY_URL=http://192.168.33.46:8844
 
-# 配置多个代理
-# VITE_PROXY = [
-#     ["/login","http://120.77.179.54:8844"],
-#     ["/api","http://192.168.33.46:8844"]
-# ]
 
 #  token标识
 VITE_TOKEN_KEY = X-Access-Token
@@ -343,9 +338,9 @@ const value = ref();
 
 ```html
 
-<j-aIcon type="UpCircleOutlined"/>
-<j-aIcon type="UpCircleFilled"/>
-<j-aIcon type="UpCircleTwoTone"/>
+<AIcon type="UpCircleOutlined"/>
+<AIcon type="UpCircleFilled"/>
+<AIcon type="UpCircleTwoTone"/>
 ```
 
 ##### API
@@ -364,8 +359,18 @@ const value = ref();
 > 自定义图标，需要需要传入`scriptUrl`,默认地址`'//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js'`
 
 ```jsx
-<j-aIcon type="icon-xiazai" scriptUrl="/public/iconfont.js"/>
-<j-aIcon type="icon-dianzan"/>
+<AIcon type="icon-xiazai" scriptUrl="/public/iconfont.js"/>
+<AIcon type="icon-dianzan"/>
+```
+
+#### ConfigProvider
+
+JConfigProvider组件新增 IconConfig和MapConfig，作为全局的配置
+
+```html
+<JConfigProvider :IconConfig="{ scriptUrl: '//at.alicdn.com/t/c/font_4035907_o5hxqjo7dq.js'}">
+  <AIcon type="icon-xiazai"/>
+</JConfigProvider>
 ```
 
 #### PermissionButton(权限按钮)
@@ -422,7 +427,7 @@ const value = ref();
             pageSizeOptions: ['10', '20'],
         }"
   >
-    <template #headerTitle
+    <template #headerLeftRender
     >
       <a-button type="primary" @click="refresh"
       >刷新页面

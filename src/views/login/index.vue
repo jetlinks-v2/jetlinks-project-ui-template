@@ -8,52 +8,22 @@
         </a>
       </div>
       <div class='right'>
-        <Right :logo="systemInfo?.front?.logo" :title="layout?.title" :loading="loading" @submit="submit" />
+        <Right :logo="systemInfo?.front?.logo" :title="layout?.title" v-model:loading="loading" />
       </div>
     </div>
   </a-spin>
 </template>
 <script setup name="Login" lang="ts">
-import { useRequest } from '@jetlinks-web/hooks'
-import { login, encryptionConfig } from '@/api/login'
-import { getImage, setToken, encrypt } from '@jetlinks-web/utils'
-import { useUserStore } from '@/store/user'
+import { getImage } from '@jetlinks-web/utils'
 import { useSystemStore } from '@/store/system'
 import { storeToRefs } from 'pinia'
 import Right from './right.vue'
-import { cloneDeep } from "lodash-es";
 
-const userStore = useUserStore()
 const systemStore = useSystemStore()
 const { systemInfo, layout } = storeToRefs(systemStore)
-
-// const { data: sysVersion } = useRequest<any, { version: string}>(systemVersion)
-
-const { loading, run } = useRequest(login, {
-  immediate: false,
-  onSuccess(res) {
-    if (res.success) {
-      setToken(res.result.token)
-      userStore.getUserInfo()
-      window.location.href = '/'
-    }
-  }
-})
-
-const { data: encryption } = useRequest(encryptionConfig)
+const loading = ref(false)
 
 const bgImage = getImage('/login/login.png')
-
-const submit = (data: any) => {
-  const copyData = cloneDeep(data)
-
-  if (encryption.value?.encrypt?.enabled) {
-    const _encrypt = encryption.value?.encrypt
-    copyData.password = encrypt(data.password, _encrypt.publicKey)
-    copyData.encryptId = _encrypt.id
-  }
-  run(copyData)
-}
 
 systemStore.querySingleInfo('front')
 </script>

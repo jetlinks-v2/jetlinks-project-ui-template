@@ -3,9 +3,9 @@
         <j-pro-search
             :columns="columns"
             target="action-notice-config"
-            @search="handleSearch"
             class="action-search"
             style="padding-bottom: 0"
+            @search="handleSearch"
         />
         <j-permission-button
             @click="onAdd"
@@ -23,7 +23,7 @@
         <JProTable
             :columns="columns"
             :request="query"
-            model="CARD"
+            mode="CARD"
             :bodyStyle="{
                 padding: 0,
             }"

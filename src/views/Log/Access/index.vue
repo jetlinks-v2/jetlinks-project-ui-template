@@ -1,22 +1,23 @@
 <template>
-    <div>
-        <j-pro-search :columns="columns" target="search-access" @search="handleSearch" />
+  <div class="log-search">
+        <pro-search :columns="columns" target="search-access" noMargin @search="handleSearch" />
+  </div>
+    <div class="log-table">
         <j-pro-table
             ref="tableRef"
-            model="TABLE"
+            mode="TABLE"
             :columns="columns"
             :request="queryAccess"
             :defaultParams="{
                 sorts: [{ name: 'responseTime', order: 'desc' }],
             }"
             :params="params"
+            :scroll="{y: 'calc(100vh - 420px)'}"
         >
             <template #requestTime="slotProps">
-                <span v-time-format="'YYYY-MM-DD HH:mm:ss'">
-                    {{
-                    slotProps.requestTime
+                {{
+                dayjs(slotProps.requestTime).format('YYYY-MM-DD HH:mm:ss')
                 }}
-                </span>
             </template>
             <template #description="slotProps">
                 {{ slotProps.action }}
@@ -27,8 +28,8 @@
                 </a-tag>
             </template>
             <template #username="slotProps">
-                
-                    <!-- <a-tag color="geekblue"> -->  
+
+                    <!-- <a-tag color="geekblue"> -->
                     <div class="userName">
                         <j-ellipsis style="max-width: 100px;">
                         {{ slotProps.context.userName }}
@@ -36,99 +37,84 @@
                      <!-- </a-tag> -->
                 </div>
             </template>
-                   
-                   
-               
+
+
+
             <template #action="slotProps">
                 <a-space :size="16">
-                    <a-tooltip
-                        v-for="i in getActions(slotProps)"
-                        :key="i.key"
-                        v-bind="i.tooltip"
-                    >
-                        <a-popconfirm v-if="i.popConfirm" v-bind="i.popConfirm">
-                            <a-button
-                                :disabled="i.disabled"
-                                style="padding: 0"
-                                type="link"
-                                ><AIcon :type="i.icon"
-                            /></a-button>
-                        </a-popconfirm>
-                        <a-button
-                            style="padding: 0"
-                            type="link"
-                            v-else
-                            @click="i.onClick && i.onClick(slotProps)"
+                    <template
+                            v-for="i in getActions(slotProps)"
+                            :key="i.key"
                         >
-                            <a-button
-                                :disabled="i.disabled"
-                                style="padding: 0"
+                            <j-permission-button
+                                :tooltip="{
+                                    ...i.tooltip,
+                                }"
+                                @click="i.onClick"
                                 type="link"
-                                ><AIcon :type="i.icon"
-                            /></a-button>
-                        </a-button>
-                    </a-tooltip>
+                                style="padding: 0 5px"
+                            >
+                                <template #icon
+                                    ><AIcon :type="i.icon"
+                                /></template>
+                            </j-permission-button>
+                        </template>
                 </a-space>
             </template>
         </j-pro-table>
     </div>
     <a-modal :width="1100" v-model:visible="visible" title="详情">
-        <j-descriptions :data="descriptionsData" title="" bordered :column="2">
-            <j-descriptions-item label="URL">
+        <a-descriptions :data="descriptionsData" title="" bordered :column="2">
+            <a-descriptions-item label="URL">
                 {{ descriptionsData?.url }}
-            </j-descriptions-item>
-            <j-descriptions-item label="请求方法">
+            </a-descriptions-item>
+            <a-descriptions-item label="请求方法">
                 {{ descriptionsData?.httpMethod }}
-            </j-descriptions-item>
-            <j-descriptions-item label="动作">
+            </a-descriptions-item>
+            <a-descriptions-item label="动作">
                 {{ descriptionsData?.action }}
-            </j-descriptions-item>
-            <j-descriptions-item label="类名">
+            </a-descriptions-item>
+            <a-descriptions-item label="类名">
                 {{ descriptionsData?.target }}
-            </j-descriptions-item>
-            <j-descriptions-item label="方法名">
+            </a-descriptions-item>
+            <a-descriptions-item label="方法名">
                 {{ descriptionsData?.method }}
-            </j-descriptions-item>
-            <j-descriptions-item label="IP">
+            </a-descriptions-item>
+            <a-descriptions-item label="IP">
                 {{ descriptionsData?.ip }}
-            </j-descriptions-item>
-            <j-descriptions-item label="请求时间">
-                 <span v-time-format="'YYYY-MM-DD HH:mm:ss'">
-                    {{
-                    descriptionsData?.requestTime
+            </a-descriptions-item>
+            <a-descriptions-item label="请求时间">
+                {{
+                dayjs(descriptionsData?.requestTime).format(
+                        'YYYY-MM-DD HH:mm:ss',
+                    )
                 }}
-                </span>
-            </j-descriptions-item>
-            <j-descriptions-item label="请求耗时">
+            </a-descriptions-item>
+            <a-descriptions-item label="请求耗时">
                 {{
                     descriptionsData?.responseTime -
                     descriptionsData?.requestTime +
                     'ms'
                 }}
-            </j-descriptions-item>
-            <j-descriptions-item label="请求头" :span="2">
+            </a-descriptions-item>
+            <a-descriptions-item label="请求头" :span="2">
                 {{ descriptionsData?.httpHeaders }}
-            </j-descriptions-item>
-            <j-descriptions-item label="请求参数" :span="2">
+            </a-descriptions-item>
+            <a-descriptions-item label="请求参数" :span="2">
                 {{ descriptionsData?.parameters }}
-            </j-descriptions-item>
-            <j-descriptions-item label="异常信息" :span="2">
-                <a-textarea
-                    v-model:value="descriptionsData.exception"
-                    placeholder="暂无数据"
-                    :auto-size="{ minRows: 3, maxRows: 20 }"
-                />
-            </j-descriptions-item>
-        </j-descriptions>
+            </a-descriptions-item>
+            <a-descriptions-item label="异常信息" :span="2">
+                {{ descriptionsData.exception }}
+            </a-descriptions-item>
+        </a-descriptions>
         <template #footer>
             <a-button type="primary" @click="handleOk">关闭</a-button>
         </template>
     </a-modal>
 </template>
 <script lang="ts" setup name="AccessLog">
-import type { ActionsType } from '@/components/Table/index';
-import type { AccessLogItem } from '../typings';
-import { queryAccess } from '@/api/link/log';
+import { queryAccess } from '@/api/log';
+import dayjs from 'dayjs';
 import { modifySearchColumnValue } from '@/utils/comm';
 
 const tableRef = ref<Record<string, any>>({});
@@ -233,7 +219,7 @@ const columns = [
     },
 ];
 
-const descriptionsData = ref({
+const descriptionsData = ref<any>({
     url: '',
     httpMethod: '',
     action: '',
@@ -252,7 +238,7 @@ const handleOk = (e: MouseEvent) => {
     visible.value = false;
 };
 
-const getActions = (data: Partial<Record<string, any>>): ActionsType[] => {
+const getActions = (data: Partial<Record<string, any>>): any[] => {
     if (!data) {
         return [];
     }
@@ -264,7 +250,7 @@ const getActions = (data: Partial<Record<string, any>>): ActionsType[] => {
                 title: '查看',
             },
             icon: 'EyeOutlined',
-            onClick: (data: AccessLogItem) => {
+            onClick: () => {
                 descriptionsData.value = data;
                 visible.value = true;
             },
@@ -287,7 +273,7 @@ const handleSearch = (e: any) => {
 </script>
 <style scoped lang="less">
 .userName{
-    color: #1d39c4;
+    color: #1677FF;
     background: #f0f5ff;
     border-color: #adc6ff;
     list-style: none;

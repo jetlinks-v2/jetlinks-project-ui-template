@@ -1,19 +1,22 @@
 <template>
-    <div>
-        <j-pro-search :columns="columns" target="search-system" @search="handleSearch" />
-        <j-pro-table
-            ref="tableRef"
-            model="TABLE"
-            :columns="columns"
-            :request="querySystem"
-            :defaultParams="{
+  <div class="log-search">
+    <pro-search :columns="columns" target="search-system" noMargin @search="handleSearch" />
+  </div>
+  <div class="log-table">
+    <j-pro-table
+      ref="tableRef"
+      mode="TABLE"
+      :columns="columns"
+      :request="querySystem"
+      :defaultParams="{
                 sorts: [{ name: 'createTime', order: 'desc' }],
             }"
-            :params="params"
-        >
-            <template #level="slotProps">
-                <a-tag
-                    :color="
+      :params="params"
+      :scroll="{y: 'calc(100% - 60px)'}"
+    >
+      <template #level="slotProps">
+        <a-tag
+          :color="
                         slotProps.level === 'WARN'
                             ? 'orange'
                             : slotProps.level === 'ERROR'
@@ -22,55 +25,47 @@
                             ? 'blue'
                             : 'green'
                     "
-                >
-                    {{ slotProps.level }}
-                </a-tag>
-            </template>
-            <template #createTime="slotProps">
-                <span v-time-format="'YYYY-MM-DD HH:mm:ss'">{{ slotProps.createTime }}</span>
-            </template>
-            <template #server="slotProps">
-                {{ slotProps.context.server }}
-            </template>
+        >
+          {{ slotProps.level }}
+        </a-tag>
+      </template>
+      <template #createTime="slotProps">
+        {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+      </template>
+      <template #server="slotProps">
+        {{ slotProps.context.server }}
+      </template>
 
-            <template #action="slotProps">
-                <a-space :size="16">
-                    <a-tooltip
-                        v-for="i in getActions(slotProps)"
-                        :key="i.key"
-                        v-bind="i.tooltip"
-                    >
-                        <a-popconfirm v-if="i.popConfirm" v-bind="i.popConfirm">
-                            <a-button
-                                :disabled="i.disabled"
-                                style="padding: 0"
-                                type="link"
-                                ><AIcon :type="i.icon"
-                            /></a-button>
-                        </a-popconfirm>
-                        <a-button
-                            style="padding: 0"
-                            type="link"
-                            v-else
-                            @click="i.onClick && i.onClick(slotProps)"
-                        >
-                            <a-button
-                                :disabled="i.disabled"
-                                style="padding: 0"
-                                type="link"
-                                ><AIcon :type="i.icon"
-                            /></a-button>
-                        </a-button>
-                    </a-tooltip>
-                </a-space>
-            </template>
-        </j-pro-table>
-    </div>
+      <template #action="slotProps">
+        <a-space :size="16">
+          <template
+            v-for="i in getActions(slotProps)"
+            :key="i.key"
+          >
+            <j-permission-button
+              :tooltip="{
+                                    ...i.tooltip,
+                                }"
+              @click="i.onClick"
+              type="link"
+              style="padding: 0 5px"
+            >
+              <template #icon
+              ><AIcon :type="i.icon"
+              /></template>
+            </j-permission-button>
+          </template>
+        </a-space>
+      </template>
+    </j-pro-table>
+  </div>
     <a-modal :width="1100" v-model:visible="visible" title="详情">
         <div>
             <span class="mr-10">[{{ descriptionsData?.threadName }}]</span>
-            <span class="mr-10" v-time-format="'YYYY-MM-DD HH:mm:ss'">{{
-                descriptionsData?.createTime
+            <span class="mr-10">{{
+                dayjs(descriptionsData?.createTime).format(
+                    'YYYY-MM-DD HH:mm:ss',
+                )
             }}</span>
             <span>{{ descriptionsData?.className }}</span>
         </div>
@@ -90,20 +85,24 @@
             </a-tag>
             <span>{{ descriptionsData?.message }}</span>
         </div>
-        <a-textarea
-            v-model:value="descriptionsData.exceptionStack"
-            placeholder="暂无数据"
-            :auto-size="{ minRows: 24, maxRows: 28 }"
-        />
+      <div class="warn-content">
+        {{ descriptionsData.exceptionStack }}
+      </div>
+<!--        <a-textarea-->
+<!--            v-model:value=""-->
+<!--            placeholder="暂无数据"-->
+<!--            :auto-size="{ minRows: 24, maxRows: 28 }"-->
+<!--        />-->
         <template #footer>
             <a-button type="primary" @click="handleOk">关闭</a-button>
         </template>
     </a-modal>
 </template>
 <script lang="ts" setup name="SystemLog">
-import type { ActionsType } from '@/components/Table/index';
 import type { SystemLogItem } from '../typings';
-import { querySystem } from '@/api/link/log';
+import { querySystem } from '@/api/log';
+import dayjs from 'dayjs';
+
 import { modifySearchColumnValue } from '@/utils/comm';
 
 const tableRef = ref<Record<string, any>>({});
@@ -210,7 +209,7 @@ const handleOk = (e: MouseEvent) => {
     visible.value = false;
 };
 
-const getActions = (data: Partial<Record<string, any>>): ActionsType[] => {
+const getActions = (data: Partial<Record<string, any>>): any[] => {
     if (!data) {
         return [];
     }
@@ -222,7 +221,7 @@ const getActions = (data: Partial<Record<string, any>>): ActionsType[] => {
                 title: '查看',
             },
             icon: 'EyeOutlined',
-            onClick: (data: SystemLogItem) => {
+            onClick: () => {
                 descriptionsData.value = data;
                 visible.value = true;
             },
@@ -249,5 +248,10 @@ const handleSearch = (e: any) => {
 }
 .mb-10 {
     margin-bottom: 10px;
+}
+.warn-content {
+  border: 1px solid #d9d9d9;
+  padding: 12px;
+  border-radius: 2px;
 }
 </style>

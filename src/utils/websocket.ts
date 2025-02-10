@@ -1,16 +1,20 @@
 import { notification } from 'ant-design-vue'
 import { Observable } from 'rxjs'
+import {BASE_API, TOKEN_KEY} from "@jetlinks-web/constants";
+import {getToken} from "@jetlinks-web/utils";
 
 let webSocketUrl = ''
 let ws: WebSocket | null = null // websocket实例
 let subs = {} // 订阅
-const tempQueue: any[] = [] // 缓存消息队列
+let tempQueue: any[] = [] // 缓存消息队列
 
 type HeartCheckType = {
   timeout: number,
   timer: NodeJS.Timeout | null
   reset: () => HeartCheckType
   start: () => void
+
+  init: () => void
 }
 // 心跳
 const heartCheck: HeartCheckType  = {
@@ -28,6 +32,10 @@ const heartCheck: HeartCheckType  = {
         ws.send(JSON.stringify({ type: 'ping' }))
       }
     }, this.timeout)
+  },
+  init() {
+    this.reset()
+    this.timer = null
   }
 }
 
@@ -40,6 +48,7 @@ const reconnect: {
     reload: () => void
     countAdd: () => void
     getReconnectCount: () => number
+    init: () => void
 } = {
   timeout: 5 * 1000, // 重启时长，1-10次，频率为5s， 11-20次， 频率为15s， 20+， 频率为30s
   timer: null,
@@ -70,11 +79,30 @@ const reconnect: {
     } else {
       return 6
     }
+  },
+  init() {
+    this.timer && clearTimeout(this.timer)
+    this.timer = null
+    this.count = 0
+    this.lock = false
+    this.timeout = 5 * 1000
   }
 }
 
-export const initWebSocket = (url: string) => {
-  webSocketUrl = url
+export const initWebSocket = () => {
+  const token = getToken();
+
+  if (!token) return
+
+  const protocol = window.location.protocol === "https" ? "wss://" : "ws://";
+  const host = document.location.host;
+  webSocketUrl = `${protocol}${host}${BASE_API}/messaging/${token}?:${TOKEN_KEY}=${token}`;
+}
+
+export const initWebSocketInstance = () => {
+  ws = null
+  heartCheck.init()
+  reconnect.init()
 }
 
 function createWebSocket() {
@@ -91,10 +119,11 @@ function createWebSocket() {
       heartCheck.reset().start()
       reconnect.count = 0 // 重置重启次数
       // 发送已缓存的消息
-      if (tempQueue.length) {
+      if (tempQueue.length > 0) {
         for (let i = tempQueue.length - 1; i >= 0; i--) {
-          ws!.send(tempQueue[i])
-          tempQueue.splice(i, 1)
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(tempQueue[i].msg)
+          }
         }
       }
     }
@@ -156,14 +185,17 @@ export const getWebSocket = (id: string, topic: string, parameter: Record<string
     if (thatWs.readyState === WebSocket.OPEN) {
       thatWs.send(msg)
     } else {
-      tempQueue.push(msg)
+      tempQueue.push({id, msg})
     }
   }
 
   return () => {
     const unsub = JSON.stringify({ id, type: 'unsub' })
     delete subs[id]
-    thatWs?.send(unsub)
+    tempQueue = tempQueue.filter(item => item.id !== id)
+    if (thatWs && thatWs.readyState === WebSocket.OPEN) {
+      thatWs.send(unsub)
+    }
   }
 })
 

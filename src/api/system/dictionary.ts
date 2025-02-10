@@ -1,4 +1,4 @@
-import { request } from '@/utils/axios'
+import { request } from '@jetlinks-web/core'
 
 /**
  * 查询字典列表
@@ -28,6 +28,11 @@ export const deleteDictionary =(id:string) => request.remove(`/dictionary/${id}`
  * 查询字典项
  */
 export const queryDicItem = (data:any)=>request.post('/dictionary-item/_query',data)
+
+/**
+ * 查询字典项不分页
+ */
+export const queryDicItemNoPage = (data:any) => request.post('/dictionary-item/_query/no-paging',data)
 
 /**
  * 保存字典项

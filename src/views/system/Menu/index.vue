@@ -1,89 +1,96 @@
 <template>
-  <page-container>
+  <j-page-container>
     <div class="menu-container">
-      <j-search
+      <pro-search
         :labelWidth="56"
         :columns="columns"
         target="category"
         @search="handleSearch"
       />
       <FullPage>
-        <div>
-          <j-pro-table
-              ref="tableRef"
-              :columns="columns"
-              :request="getList"
-              model="TABLE"
-              :params="queryParams"
-              noPagination
-              v-model:expandedRowKeys="expandedRowKeys"
-              :scroll="{ y: 'calc(100vh - 460px)' }"
-          >
-            <template #headerTitle>
-              <j-permission-button
-                  type="primary"
-                  :hasPermission="`${permission}:add`"
-                  @click="toDetails({})"
-              >
-                <AIcon type="PlusOutlined" />新增
-              </j-permission-button>
-            </template>
-            <template #createTime="slotProps">
+        <j-pro-table
+          ref="tableRef"
+          :columns="columns"
+          :request="getList"
+          :params="queryParams"
+          type="TREE"
+          mode="TABLE"
+          noPagination
+          v-model:expandedRowKeys="expandedRowKeys"
+          :scroll="{ y: 'calc(100% - 60px)' }"
+        >
+          <template #headerLeftRender>
+            <j-permission-button
+              type="primary"
+              :hasPermission="`${permission}:add`"
+              @click="toDetails({})"
+            >
+              <AIcon type="PlusOutlined" />新增
+            </j-permission-button>
+            <j-button
+              v-if="userStore.isAdmin"
+              style="margin-left: 12px"
+              @click="router.push('/system/Menu/Setting')"
+            >菜单配置</j-button>
+          </template>
+          <template #createTime="slotProps">
             <span v-time-format="'YYYY-MM-DD HH:mm:ss'">
               {{ slotProps.createTime }}
             </span>
-            </template>
-            <template #action="slotProps">
-              <a-space :size="16">
-                <j-permission-button
-                    type="link"
-                    :hasPermission="`${permission}:add`"
-                    @click="toDetails(slotProps)"
-                    style="padding: 0"
-                    :tooltip="{ title: '编辑' }"
-                >
-                  <AIcon type="EditOutlined" />
-                </j-permission-button>
+          </template>
+          <template #action="slotProps">
+            <a-space :size="16">
+              <j-permission-button
+                type="link"
+                :hasPermission="`${permission}:add`"
+                @click="toDetails(slotProps)"
+                style="padding: 0"
+                :tooltip="{ title: '编辑' }"
+              >
+                <AIcon type="EditOutlined" />
+              </j-permission-button>
 
-                <j-permission-button
-                    type="link"
-                    :hasPermission="`${permission}:add`"
-                    :tooltip="{ title: '新增子菜单' }"
-                    style="padding: 0"
-                    @click="addChildren(slotProps)"
-                >
-                  <AIcon type="PlusCircleOutlined" />
-                </j-permission-button>
-                <j-permission-button
-                    type="link"
-                    :hasPermission="`${permission}:delete`"
-                    :tooltip="{ title: '删除' }"
-                    danger
-                    style="padding: 0"
-                    :popConfirm="{
+              <j-permission-button
+                type="link"
+                :hasPermission="`${permission}:add`"
+                :tooltip="{ title: '新增子菜单' }"
+                style="padding: 0"
+                @click="addChildren(slotProps)"
+              >
+                <AIcon type="PlusCircleOutlined" />
+              </j-permission-button>
+              <j-permission-button
+                type="link"
+                :hasPermission="`${permission}:delete`"
+                :tooltip="{ title: '删除' }"
+                danger
+                style="padding: 0"
+                :popConfirm="{
                   title: `是否删除该菜单`,
                   onConfirm: () => clickDel(slotProps),
                 }"
-                >
-                  <AIcon type="DeleteOutlined" />
-                </j-permission-button>
-              </a-space>
-            </template>
-          </j-pro-table>
-        </div>
+              >
+                <AIcon type="DeleteOutlined" />
+              </j-permission-button>
+            </a-space>
+          </template>
+        </j-pro-table>
       </FullPage>
     </div>
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="Menu">
 import { getMenuTree, delMenu } from '@/api/system/menu'
-import { useMenuStore } from '@/store/menu'
+import { useMenuStore, useUserStore } from '@/store'
 import { onlyMessage } from '@jetlinks-web/utils'
+import {OWNER_KEY} from "@/utils/consts";
 
 const permission = 'system/Menu'
 
 const menuStore = useMenuStore()
+const userStore = useUserStore()
+const router = useRouter()
 
 const columns = [
   {
@@ -168,9 +175,7 @@ const tableRef = ref<Record<string, any>>({}) // 表格实例
 const total = ref<number>(0)
 
 const handleSearch = (e: any) => {
-  queryParams.value = {
-    terms: e,
-  }
+  queryParams.value = e
   if (!e.length) {
     expandedRowKeys.value = []
   }
@@ -185,7 +190,7 @@ const getList = async (_params: any) => {
           {
             column: 'owner',
             termType: 'eq',
-            value: 'iot',
+            value: OWNER_KEY,
           },
           {
             column: 'owner',
@@ -195,6 +200,16 @@ const getList = async (_params: any) => {
           },
         ],
       },
+      {
+        type: 'or',
+        terms: [
+          {
+            value: '%show":false%',
+            termType: 'nlike',
+            column: 'options',
+          },
+        ],
+      }
     ],
   }
   const params = {
@@ -210,13 +225,9 @@ const getList = async (_params: any) => {
 
   return {
     code: resp.message,
-    result: {
-      data: resp.result,
-      pageIndex: resp.pageIndex,
-      pageSize: resp.pageSize,
-      total: resp.total,
-    },
+    result: resp.result,
     status: resp.status,
+    success: resp.status === 200
   }
 }
 const addChildren = (row: any) => {

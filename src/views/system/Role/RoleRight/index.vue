@@ -1,25 +1,28 @@
 <template>
   <div class="role-container">
-    <j-pro-search
+    <pro-search
+      noMargin
       :columns="columns"
       target="system-role"
+      :style="{ padding: '0 24px'}"
       @search="handelSearch"
     />
-    <FullPage>
+    <div class="role-table">
       <j-pro-table
         ref="tableRef"
+        mode="TABLE"
         :columns="columns"
         :request="getRoleList_api"
-        model="TABLE"
         :params="queryParams"
         :defaultParams="{
           sorts: [
             { name: 'createTime', order: 'desc' },
-            { name: 'id', order: 'desc' },
-          ],
+            { name: 'id', order: 'desc' }
+          ]
         }"
+        :scroll="{ y: 'calc(100% - 60px)' }"
       >
-        <template #headerTitle>
+        <template #headerLeftRender>
           <j-permission-button
             type="primary"
             :hasPermission="`${permission}:add`"
@@ -52,7 +55,8 @@
           </a-space>
         </template>
       </j-pro-table>
-    </FullPage>
+    </div>
+
     <AddDialog
       v-if="dialogVisible"
       v-model:visible="dialogVisible"
@@ -99,6 +103,7 @@ const columns = [
     dataIndex: 'name',
     key: 'name',
     ellipsis: true,
+    width: 160,
     search: {
       type: 'string',
     },
@@ -116,7 +121,7 @@ const columns = [
     title: '操作',
     dataIndex: 'action',
     key: 'action',
-    width: 120,
+    width: 130,
     fixed: 'right',
     scopedSlots: true,
   },
@@ -219,7 +224,13 @@ watch(
 <style lang="less" scoped>
 .role-container {
   height: 100%;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  .role-table {
+    flex: 1 1 0;
+    min-height: 0;
+  }
   :deep(.ant-table-cell) {
     .ant-btn-link {
       padding: 0;

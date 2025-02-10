@@ -12,7 +12,7 @@ import {
 } from 'vite-plugin-style-import'
 import * as path from 'path'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
-import { optimizeDeps } from './configs/plugin/optimize'
+import { optimizeDeps, registerModulesAlias } from './configs/plugin'
 import progress from 'vite-plugin-progress'
 
 // https://vitejs.dev/config/
@@ -24,6 +24,7 @@ export default defineConfig(({ mode }) => {
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, 'src'),
+                ...registerModulesAlias()
             },
         },
         build: {
@@ -77,7 +78,7 @@ export default defineConfig(({ mode }) => {
             port: Number(env.VITE_PORT),
             proxy: {
                 [env.VITE_APP_BASE_API]: {
-                    target: 'http://192.168.33.46:8844',
+                    target: env.VITE_APP_DEV_PROXY_URL,
                     ws: true,
                     changeOrigin: true,
                     rewrite: (path) => path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), ''),

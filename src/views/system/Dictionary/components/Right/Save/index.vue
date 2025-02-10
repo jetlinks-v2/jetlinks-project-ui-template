@@ -85,7 +85,7 @@ const validateValue = async (_rule: Rule, value: string) => {
                 }
             ]
         })
-        if (res.status === 200 && res.result) {
+        if (res.success && res.result) {
                     return Promise.reject('value重复');
                 } else {
                     return Promise.resolve();

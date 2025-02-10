@@ -1,6 +1,6 @@
 <template>
-  <page-container>
-    <j-search
+  <j-page-container>
+    <pro-search
       :columns="columns"
       target="system-permission"
       @search="handleSearch"
@@ -10,14 +10,14 @@
         ref="tableRef"
         :columns="columns"
         :request="getPermission_api"
-        model="TABLE"
+        mode="TABLE"
         :params="params"
-        :scroll="{ y: 'calc(100vh - 440px)' }"
+        :scroll="{ y: 'calc(100% - 60px)' }"
         :defaultParams="{
           sorts: [{ name: 'id', order: 'asc' }],
         }"
       >
-        <template #headerTitle>
+        <template #headerLeftRender>
           <a-space>
             <j-permission-button
               type="primary"
@@ -26,7 +26,7 @@
             >
               <AIcon type="PlusOutlined" />新增
             </j-permission-button>
-            <j-dropdown trigger="hover">
+            <a-dropdown trigger="hover">
               <a-button>批量操作</a-button>
               <template #overlay>
                 <a-menu>
@@ -57,7 +57,7 @@
                   </a-menu-item>
                 </a-menu>
               </template>
-            </j-dropdown>
+            </a-dropdown>
           </a-space>
         </template>
         <template #status="slotProps">
@@ -122,7 +122,7 @@
     </FullPage>
     <!-- 编辑和新增 -->
     <EditDialog v-if="visible" :data="current" @close="visible = false" @save="onSave" />
-  </page-container>
+  </j-page-container>
 </template>
 
 <script setup lang="ts" name="Permission">
@@ -149,9 +149,7 @@ const tableRef = ref<any>({})  // 表格实例
 
 // 搜索
 const handleSearch = (e: any) => {
-  params.value = {
-    terms: e,
-  }
+  params.value = e
 }
 
 // 打开编辑弹窗

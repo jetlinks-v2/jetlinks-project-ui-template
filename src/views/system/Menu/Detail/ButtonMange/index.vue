@@ -2,12 +2,12 @@
   <div>
     <j-pro-table
       ref="tableRef"
-      :columns="columns"
-      model="TABLE"
-      :dataSource="tableData"
+      mode="TABLE"
       noPagination
+      :columns="columns"
+      :dataSource="tableData"
     >
-      <template #headerTitle>
+      <template #headerLeftRender>
         <j-permission-button
           type="primary"
           :hasPermission="`${permission}:update`"

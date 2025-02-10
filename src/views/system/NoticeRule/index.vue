@@ -1,5 +1,5 @@
 <template>
-    <page-container>
+    <j-page-container>
         <FullPage>
             <div class="content">
                 <div style="margin-bottom: 15px;">
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </FullPage>
-    </page-container>
+    </j-page-container>
 </template>
 
 <script lang="ts" setup>
@@ -56,7 +56,7 @@ import { queryChannelConfig } from '@/api/system/noticeRule';
 import Item from './components/Item/index.vue';
 import { useMenuStore } from '@/store/menu'
 const menuStore = useMenuStore();
-let dataSource:any[] =[] 
+let dataSource:any[] =[]
 const systemNotice = [
     {
         provider: 'alarm',
@@ -212,6 +212,7 @@ onMounted(() => {
     flex-direction: column;
     box-sizing: border-box;
     justify-content: space-between;
+    height: 100%;
 
     .btn {
         padding: 24px 0;
@@ -225,6 +226,10 @@ onMounted(() => {
 }
 
 .content-collapse {
+    overflow-y: auto;
+    flex: 1 1 0;
+    min-height: 0;
+
     :deep(.ant-collapse) {
         border-color: #EBEEF3;
         background-color: #fff;

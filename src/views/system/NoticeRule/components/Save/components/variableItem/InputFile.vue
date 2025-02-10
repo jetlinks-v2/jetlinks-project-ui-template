@@ -14,7 +14,7 @@
                 :headers="{
                     [TOKEN_KEY]: LocalStore.get(TOKEN_KEY),
                 }"
-                :action="`${BASE_API}/file/static`"
+                :action="FileStaticPath"
                 @change="handleChange"
                 @beforeUpload="handleBeforeUpload"
             >
@@ -29,9 +29,9 @@
 </template>
 
 <script lang="ts" setup>
-import { TOKEN_KEY, BASE_API } from '@jetlinks-web/constants'
+import { TOKEN_KEY} from '@jetlinks-web/constants'
 import { LocalStore, onlyMessage } from "@jetlinks-web/utils";
-
+import { FileStaticPath} from '@/api/comm'
 
 const props = defineProps({
     id: {
@@ -53,9 +53,9 @@ const handleChange = (info: any) => {
         loading.value = true;
     }
     if (info.file.status === 'done') {
-        info.file.url = info.file.response?.result;
+        info.file.url = info.file.response?.result.accessUrl;
         loading.value = false;
-        const result = info.file.response?.result;
+        const result = info.file.response?.result.accessUrl;
         emit('update:value', result);
     }
 };

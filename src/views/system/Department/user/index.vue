@@ -1,10 +1,11 @@
 <template>
   <div style="overflow-y: auto;">
-    <j-search
+    <pro-search
         :columns="columns"
+        noMargin
         target="category-user"
-        @search="handleParams"
         style="margin: 0;"
+        @search="handleParams"
     />
     <j-pro-table
         ref="tableRef"
@@ -17,10 +18,10 @@
           onSelectAll: onSelectAll,
           onSelectNone: cancelSelect,
         }"
-        model="TABLE"
+        mode="TABLE"
         :scroll="{y: 'calc(100vh - 450px)'}"
     >
-      <template #headerTitle>
+      <template #headerLeftRender>
         <a-space>
           <j-permission-button
               type="primary"
@@ -157,9 +158,7 @@ const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
 
 // 搜索
 const handleParams = (e: any) => {
-  queryParams.value = {
-    terms: e,
-  }
+  queryParams.value = e
 }
 
 // 请求数据

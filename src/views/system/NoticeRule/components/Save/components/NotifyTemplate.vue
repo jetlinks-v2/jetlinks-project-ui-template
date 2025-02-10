@@ -22,7 +22,7 @@
         <JProTable
             :columns="columns"
             :request="(e) => handleData(e)"
-            model="CARD"
+            mode="CARD"
             :bodyStyle="{
                 padding: 0,
             }"

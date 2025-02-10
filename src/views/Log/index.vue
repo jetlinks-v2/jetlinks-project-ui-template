@@ -1,17 +1,18 @@
 <template>
-    <page-container
+    <j-page-container
         :tabList="list"
         :tabActiveKey="activeKey"
         @tabChange="onTabChange"
     >
         <FullPage>
+          <div class="log-body">
             <AccessLog v-if="activeKey === '1'" />
             <SystemLog v-else />
+          </div>
         </FullPage>
-    </page-container>
+    </j-page-container>
 </template>
 <script lang="ts" setup name="LogPage">
-import { defineComponent, ref } from 'vue';
 import AccessLog from './Access/index.vue';
 import SystemLog from './System/index.vue';
 import { useRouterParams } from '@jetlinks-web/hooks';
@@ -40,3 +41,15 @@ onMounted(() => {
     }
 });
 </script>
+<style lang="less">
+.log-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .log-table {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+}
+</style>

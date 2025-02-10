@@ -1,5 +1,5 @@
 <template>
-    <page-container>
+    <j-page-container>
         <FullPage>
           <div class="details-container">
             <a-tabs v-model:activeKey="activeKey" type="card">
@@ -8,7 +8,7 @@
             </a-tabs>
           </div>
         </FullPage>
-    </page-container>
+    </j-page-container>
 </template>
 
 <script setup lang="ts" name="RoleDetail">

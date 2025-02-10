@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div class="left-tree-contain">
     <a-input
       v-model:value="searchValue"
       @change="onSearch"
@@ -18,71 +18,69 @@
     >
       新增
     </j-permission-button>
-    <div class="tree" style="height: calc(100% - 76px)">
-      <div style="overflow-y: auto; height: 100%">
-        <a-spin :spinning="loading">
-          <a-tree
-              v-if="treeData.length > 0"
-              :tree-data="treeData"
-              v-model:selected-keys="selectedKeys"
-              v-model:expandedKeys="expandedKeys"
-              :fieldNames="{ key: 'id' }"
-          >
-            <template #title="{ name, data }">
-              <div class="department-tree-item-content">
-                <div class="title">
-                  <j-ellipsis>
-                    {{ name }}
-                  </j-ellipsis>
-                </div>
-                <div class="func-btn" @click="(e) => e.stopPropagation()">
-                  <j-permission-button
-                      :hasPermission="`${permission}:update`"
-                      type="link"
-                      :tooltip="{
+    <div class="tree">
+      <a-spin :spinning="loading">
+        <a-tree
+          v-if="treeData.length > 0"
+          :tree-data="treeData"
+          v-model:selected-keys="selectedKeys"
+          v-model:expandedKeys="expandedKeys"
+          :fieldNames="{ key: 'id' }"
+        >
+          <template #title="{ name, data }">
+            <div class="department-tree-item-content">
+              <div class="title">
+                <j-ellipsis>
+                  {{ name }}
+                </j-ellipsis>
+              </div>
+              <div class="func-btn" @click="(e) => e.stopPropagation()">
+                <j-permission-button
+                  :hasPermission="`${permission}:update`"
+                  type="link"
+                  :tooltip="{
                     title: '编辑',
                   }"
-                      style="padding: 0"
-                      @click="openDialog(data)"
-                  >
-                    <AIcon type="EditOutlined" />
-                  </j-permission-button>
-                  <j-permission-button
-                      :hasPermission="`${permission}:add`"
-                      type="link"
-                      :tooltip="{
+                  style="padding: 0"
+                  @click="openDialog(data)"
+                >
+                  <AIcon type="EditOutlined" />
+                </j-permission-button>
+                <j-permission-button
+                  :hasPermission="`${permission}:add`"
+                  type="link"
+                  :tooltip="{
                     title: '新增子组织',
                   }"
-                      @click="
+                  @click="
                     openDialog({
                       ...data,
                       id: '',
                       parentId: data.id,
                     })
                   "
-                  >
-                    <AIcon type="PlusCircleOutlined" />
-                  </j-permission-button>
-                  <j-permission-button
-                      type="link"
-                      :hasPermission="`${permission}:delete`"
-                      :tooltip="{ title: '删除' }"
-                      style="padding: 0"
-                      danger
-                      :popConfirm="{
+                >
+                  <AIcon type="PlusCircleOutlined" />
+                </j-permission-button>
+                <j-permission-button
+                  type="link"
+                  :hasPermission="`${permission}:delete`"
+                  :tooltip="{ title: '删除' }"
+                  style="padding: 0"
+                  danger
+                  :popConfirm="{
                     title: `确定要删除吗`,
                     onConfirm: () => delDepartment(data.id),
                   }"
-                  >
-                    <AIcon type="DeleteOutlined" />
-                  </j-permission-button>
-                </div>
+                >
+                  <AIcon type="DeleteOutlined" />
+                </j-permission-button>
               </div>
-            </template>
-          </a-tree>
-          <j-empty v-else />
-        </a-spin>
-      </div>
+            </div>
+          </template>
+        </a-tree>
+        <j-empty v-else />
+      </a-spin>
     </div>
     <!-- 编辑弹窗 -->
     <Save
@@ -243,6 +241,16 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
+.left-tree-contain {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .tree {
+    flex: 1 auto;
+    overflow-y: auto;
+  }
+}
 .department-tree-item-content {
   display: flex;
   align-items: center;
@@ -253,7 +261,6 @@ onMounted(() => {
     width: calc(100% - 80px);
   }
   .func-btn {
-    display: none;
     font-size: 14px;
     width: 80px;
   }
@@ -264,13 +271,6 @@ onMounted(() => {
   .ant-tree-node-content-wrapper {
     flex: 1 1 auto;
 
-    .ant-tree-title {
-      &:hover {
-        .func-btn {
-          display: block;
-        }
-      }
-    }
   }
 }
 </style>

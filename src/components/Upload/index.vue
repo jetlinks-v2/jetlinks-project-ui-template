@@ -8,7 +8,7 @@
                 :show-upload-list="false"
                 :before-upload="beforeUpload"
                 @change="handleChange"
-                :action="`${BASE_API}/${FileStatic}`"
+                :action="FileStaticPath"
                 :headers="{
                     'X-Access-Token': LocalStore.get(TOKEN_KEY),
                 }"
@@ -56,8 +56,8 @@
 
 <script lang="ts" setup name='JProUpload'>
 import { UploadChangeParam, UploadProps } from 'ant-design-vue';
-import { FileStatic } from '@/api/comm';
-import { BASE_API,TOKEN_KEY } from '@jetlinks-web/constants';
+import { FileStaticPath } from '@/api/comm';
+import { TOKEN_KEY } from '@jetlinks-web/constants';
 import {getBase64ByImg, LocalStore, onlyMessage} from '@jetlinks-web/utils';
 import { CSSProperties } from 'vue';
 import ImageCropper from './Cropper.vue';
@@ -129,9 +129,9 @@ const handleChange = (info: UploadChangeParam) => {
         loading.value = true;
     }
     if (info.file.status === 'done') {
-        imageUrl.value = info.file.response?.result;
+        imageUrl.value = info.file.response?.result.accessUrl;
         loading.value = false;
-        emit('update:modelValue', info.file.response?.result);
+        emit('update:modelValue', info.file.response?.result.accessUrl);
     }
     if (info.file.status === 'error') {
         loading.value = false;
