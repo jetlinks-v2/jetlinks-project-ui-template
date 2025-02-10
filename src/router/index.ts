@@ -3,19 +3,19 @@ import {
   createWebHashHistory,
 } from 'vue-router'
 import { getToken, removeToken } from '@jetlinks-web/utils'
-import { NOT_FIND_ROUTE, LOGIN_ROUTE } from './basic'
+import { NOT_FIND_ROUTE, LOGIN_ROUTE, DEMO } from './basic'
 import {useUserStore} from "@/store/user";
 import {useSystemStore} from "@/store/system";
 import {useMenuStore} from "@/store/menu";
 
-let TokenFilterRoute: string[] = []
+let TokenFilterRoute: string[] = [ DEMO.path ]
 
-let FilterPath: string[] = []
+let FilterPath: string[] = [DEMO.path]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
-    LOGIN_ROUTE
+    LOGIN_ROUTE, DEMO
   ],
   scrollBehavior(to, form, savedPosition) {
     return savedPosition || {top: 0}
