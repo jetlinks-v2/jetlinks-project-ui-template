@@ -32,7 +32,10 @@
         class="content-right-echart"
         v-else
       >
-        <Charts :options="trendData" style="width: 100%; height: 100%"></Charts>
+        <Charts
+          :options="trendData"
+          style="width: 100%; height: 100%"
+        ></Charts>
       </div>
     </div>
     <div
@@ -139,36 +142,40 @@ const action = {
     })
 
     if (cardType.value === 'all') {
-      productCount(typeParams.normal).then((res) => {
-        if (res.success) {
+      productCount(typeParams.normal)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[0] = {
+              label: '正常',
+              value: res.result,
+              status: 'success'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[0] = {
             label: '正常',
-            value: res.result,
-            status: 'success'
-          }
-        }
-      }).catch(() => {
-        footerData.value[0] = {
-            label: '正常',
             value: 0,
             status: 'success'
           }
-      })
-      productCount(typeParams.disable).then((res) => {
-        if (res.success) {
+        })
+      productCount(typeParams.disable)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[1] = {
+              label: '禁用',
+              value: res.result,
+              status: 'error'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[1] = {
             label: '禁用',
-            value: res.result,
-            status: 'error'
-          }
-        }
-      }).catch(() => {
-        footerData.value[1] = {
-            label: '禁用',
             value: 0,
             status: 'error'
           }
-      })
+        })
     }
   },
   /**
@@ -203,36 +210,40 @@ const action = {
       }
     })
     if (cardType.value === 'all') {
-      deviceCount(typeParams.online).then((res) => {
-        if (res.success) {
+      deviceCount(typeParams.online)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[0] = {
+              label: '在线',
+              value: res.result,
+              status: 'success'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[0] = {
             label: '在线',
-            value: res.result,
-            status: 'success'
-          }
-        }
-      }).catch(() => {
-        footerData.value[0] = {
-            label: '在线',
             value: 0,
             status: 'success'
           }
-      })
-      deviceCount(typeParams.offline).then((res) => {
-        if (res.success) {
+        })
+      deviceCount(typeParams.offline)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[1] = {
+              label: '离线',
+              value: res.result,
+              status: 'error'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[1] = {
             label: '离线',
-            value: res.result,
-            status: 'error'
-          }
-        }
-      }).catch(() => {
-        footerData.value[1] = {
-            label: '离线',
             value: 0,
             status: 'error'
           }
-      })
+        })
     }
   },
   /**
@@ -324,37 +335,41 @@ const action = {
 
     if (cardType.value === 'all') {
       // 正常通道
-      channelCount(typeParams.normal).then((res) => {
-        if (res.success) {
+      channelCount(typeParams.normal)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[0] = {
+              label: '正常',
+              value: res.result,
+              status: 'success'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[0] = {
             label: '正常',
-            value: res.result,
-            status: 'success'
-          }
-        }
-      }).catch(() => {
-        footerData.value[0] = {
-            label: '正常',
             value: 0,
             status: 'success'
           }
-      })
+        })
       // 异常通道
-      channelCount(typeParams.disable).then((res) => {
-        if (res.success) {
+      channelCount(typeParams.disable)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[1] = {
+              label: '异常',
+              value: res.result,
+              status: 'error'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[1] = {
             label: '异常',
-            value: res.result,
-            status: 'error'
-          }
-        }
-      }).catch(() => {
-        footerData.value[1] = {
-            label: '异常',
             value: 0,
             status: 'error'
           }
-      })
+        })
     }
   },
 
@@ -387,37 +402,41 @@ const action = {
     })
     if (cardType.value === 'all') {
       // 正常数量
-      collectorCount(typeParams.normal).then((res) => {
-        if (res.success) {
+      collectorCount(typeParams.normal)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[0] = {
+              label: '正常',
+              value: res.result,
+              status: 'success'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[0] = {
             label: '正常',
-            value: res.result,
-            status: 'success'
-          }
-        }
-      }).catch(() => {
-        footerData.value[1] = {
-            label: '正常',
             value: 0,
             status: 'success'
           }
-      })
+        })
       // 异常数量
-      collectorCount(typeParams.disabled).then((res) => {
-        if (res.success) {
+      collectorCount(typeParams.disable)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[1] = {
+              label: '异常',
+              value: res.result,
+              status: 'error'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[1] = {
             label: '异常',
-            value: res.result,
-            status: 'error'
-          }
-        }
-      }).catch(() => {
-        footerData.value[1] = {
-            label: '异常',
             value: 0,
             status: 'error'
           }
-      })
+        })
     }
   },
   // 采集点位
@@ -437,7 +456,7 @@ const action = {
         terms: [
           {
             column: 'runningState',
-            termType: 'eq',
+            termType: 'not',
             value: 'running'
           }
         ]
@@ -449,37 +468,41 @@ const action = {
     })
     if (cardType.value === 'all') {
       // 正常点位
-      collectorPoints(typeParams.normal).then((res) => {
-        if (res.success) {
+      collectorPoints(typeParams.normal)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[0] = {
+              label: '正常点位',
+              value: res.result,
+              status: 'success'
+            }
+          }
+        })
+        .catch(() => {
           footerData.value[0] = {
             label: '正常点位',
-            value: res.result,
-            status: 'success'
-          }
-        }
-      }).catch(() => {
-        footerData.value[0] = {
-            label: '正常点位',
             value: 0,
             status: 'success'
           }
-      })
+        })
       // 异常点位
-      collectorPoints(typeParams.disable).then((res) => {
-        if (res.success) {
-          footerData.value[1] = {
-            label: '异常点位',
-            value: res.result,
-            status: 'error'
+      collectorPoints(typeParams.disable)
+        .then((res) => {
+          if (res.success) {
+            footerData.value[1] = {
+              label: '异常点位',
+              value: res.result,
+              status: 'error'
+            }
           }
-        }
-      }).catch(() => {
-        footerData.value[2] = {
+        })
+        .catch(() => {
+          footerData.value[2] = {
             label: '异常点位',
             value: 0,
             status: 'error'
           }
-      })
+        })
     }
   },
   // 视频设备数量
@@ -697,7 +720,7 @@ const action = {
           totalData.value = res.result?.find((item) => item.group === 'oneday')?.data?.value || 0
           footerData.value[0] = {
             label: '当月设备消息量',
-            value: res.result?.find((item) => item.group === 'thisMonth')?.data?.value || 0 ,
+            value: res.result?.find((item) => item.group === 'thisMonth')?.data?.value || 0,
             status: 'success'
           }
         } else {
@@ -853,6 +876,13 @@ onMounted(() => {
   }
   action[actionName.value]()
 })
+onUnmounted(() => {
+  if (intervalId.value !== null) {
+    clearInterval(intervalId.value)
+    intervalId.value = null
+  }
+})
+
 defineExpose({ refreshManual })
 watch(
   () => props.data.componentProps.filterType.value,
@@ -870,7 +900,8 @@ watch(
     if (val[1] && val[0] > 0) {
       refreshInterval(val[0])
     }
-  }
+  },
+  {immediate: true}
 )
 </script>
 
