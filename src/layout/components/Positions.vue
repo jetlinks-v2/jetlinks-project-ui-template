@@ -16,7 +16,6 @@ import {setToken} from "@jetlinks-web/utils";
 import {initWebSocket, initWebSocketInstance} from "@/utils/websocket";
 
 const emit = defineEmits(['change'])
-const menuStore = useMenuStore()
 const userStore = useUserStore()
 const value = ref()
 
