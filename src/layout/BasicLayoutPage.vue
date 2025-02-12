@@ -19,6 +19,7 @@
     <template #rightContentRender>
       <div class="right-content">
         <a-space :size="24">
+          <Positions @change="changeRouterAlive" />
           <OrgList @change="changeRouterAlive" />
           <Notice v-if="routerAlive.notice" />
           <User />
@@ -35,7 +36,7 @@
 import { reactive, computed, watchEffect } from 'vue'
 import { useSystemStore } from '@/store/system'
 import { useMenuStore } from '@/store/menu'
-import { User, Notice, OrgList } from './components'
+import { User, Notice, OrgList, Positions } from './components'
 import { storeToRefs } from 'pinia'
 
 type StateType = {
