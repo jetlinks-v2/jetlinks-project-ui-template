@@ -1,53 +1,63 @@
 <template>
     <div class="tagsContainer" ref="tags">
-        <j-permission-button type="primary"  hasPermission="system/Calendar:add" ghost block @click="addTag" :disabled="rapidOn" style="margin-bottom: 10px;">
-            + 新增标签
+        <j-permission-button
+            type="primary"
+            hasPermission="system/Calendar:add"
+            ghost
+            block
+            @click="addTag"
+            :disabled="rapidOn"
+            style="margin-bottom: 10px"
+        >
+            +{{ $t('Tags.index.675027-0') }}
         </j-permission-button>
-        <div v-for="i in tagsList" class="tag">
-            <div class="tagLeft">
-                <div
-                    :style="{ background: i.color }"
-                    class="colorExtractor"
-                ></div>
-                <j-ellipsis
-                    class="tagName"
-                    style="
+        <div class="content">
+            <div v-for="i in tagsList" class="tag">
+                <div class="tagLeft">
+                    <div
+                        :style="{ background: i.color }"
+                        class="colorExtractor"
+                    ></div>
+                    <j-ellipsis
+                        class="tagName"
+                        style="
                         width: 120px;
                     "
-                    :id="i.id"
-                    >{{ i.name }}
-                </j-ellipsis>
-            </div>
-            <div class="controls">
-                <j-permission-button
-                    type="text"
-                     hasPermission="system/Calendar:update"
-                    :disabled="i.disabled || rapidOn"
-                    :tooltip="{
-                        title: '编辑'
+                        :id="i.id"
+                    >{{ i.i18nName || i.name }}
+                    </j-ellipsis>
+                </div>
+                <div class="controls">
+                    <j-permission-button
+                        type="text"
+                        hasPermission="system/Calendar:update"
+                        :disabled="i.disabled || rapidOn"
+                        :tooltip="{
+                        title: $t('Tags.index.675027-1')
                     }"
-                    @click="() => editData(i)"
-                >
-                    <template #icon>
-                        <AIcon type="EditOutlined" />
-                    </template>
-                </j-permission-button>
-                <j-permission-button
-                    type="text"
-                     hasPermission="system/Calendar:delete"
-                    :disabled="i.disabled || rapidOn"
-                    :tooltip="{
-                        title: '删除'
+                        @click="() => editData(i)"
+                    >
+                        <template #icon>
+                            <AIcon type="EditOutlined" />
+                        </template>
+                    </j-permission-button>
+                    <j-permission-button
+                        type="text"
+                        hasPermission="system/Calendar:delete"
+                        :disabled="i.disabled || rapidOn"
+                        :tooltip="{
+                        title: $t('Tags.index.675027-2')
                     }"
-                    :popConfirm="{
-                        title: `确认删除？`,
+                        :popConfirm="{
+                        title: $t('Tags.index.675027-3'),
                         onConfirm: () => deleteData(i.id),
                     }"
-                >
-                    <template #icon>
-                        <AIcon type="DeleteOutlined" />
-                    </template>
-                </j-permission-button>
+                    >
+                        <template #icon>
+                            <AIcon type="DeleteOutlined" />
+                        </template>
+                    </j-permission-button>
+                </div>
             </div>
         </div>
     </div>
@@ -64,11 +74,13 @@
 import { queryTags, deleteTags, saveTagsColor } from '@/api/system/calendar';
 import { Draggable } from '@fullcalendar/interaction';
 import EditTag from './components/editTag.vue';
-import { onlyMessage } from '@/utils/comm';
+import { onlyMessage } from '@jetlinks-web/utils';
 import { inject } from 'vue';
 import { omit } from 'lodash-es';
 import { useSystemStore } from '@/store/system';
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 const system = useSystemStore();
 const calendarTagColor = system.calendarTagColor;
 const tagsMap = inject('tagsMap');
@@ -83,10 +95,10 @@ const addTag = () => {
     editType.value = 'add';
 };
 const buildInTag = ['weekend', 'holiday', 'workday'];
-const defaultColor = new Map()
-defaultColor.set('weekend', 'rgb(149, 222, 100)')
-defaultColor.set('holiday', 'rgb(161, 180, 204)')
-defaultColor.set('workday', 'rgba(105,177,255,1')
+const defaultColor = new Map();
+defaultColor.set('weekend', 'rgb(149, 222, 100)');
+defaultColor.set('holiday', 'rgb(161, 180, 204)');
+defaultColor.set('workday', 'rgb(105,177,255)');
 
 const createDrag = () => {
     new Draggable(tags.value, {
@@ -146,7 +158,7 @@ const deleteData = async (id) => {
             });
             const deleteColor = await saveTagsColor(color);
         }
-        onlyMessage('操作成功');
+        onlyMessage($t('Tags.index.675027-4'));
         queryTagsData();
     }
 };
@@ -165,9 +177,12 @@ onMounted(() => {
 .tagsContainer {
     width: 260px;
     background-color: #fff;
-    border-right: 1px solid #f0f0f0;
+    border-right: 1px solid #cccccc;
     padding-right: 24px;
-
+    .content {
+        overflow: auto;
+        height: 700px;
+    }
     .tag {
         display: flex;
         justify-content: space-between;

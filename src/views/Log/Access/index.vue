@@ -1,8 +1,6 @@
 <template>
-  <div class="log-search">
-        <pro-search :columns="columns" target="search-access" noMargin @search="handleSearch" />
-  </div>
-    <div class="log-table">
+    <div>
+        <pro-search :columns="columns" target="search-access" @search="handleSearch" />
         <j-pro-table
             ref="tableRef"
             mode="TABLE"
@@ -12,7 +10,6 @@
                 sorts: [{ name: 'responseTime', order: 'desc' }],
             }"
             :params="params"
-            :scroll="{y: 'calc(100vh - 420px)'}"
         >
             <template #requestTime="slotProps">
                 {{
@@ -29,17 +26,14 @@
             </template>
             <template #username="slotProps">
 
-                    <!-- <a-tag color="geekblue"> -->
+                    <!-- <j-tag color="geekblue"> -->
                     <div class="userName">
                         <j-ellipsis style="max-width: 100px;">
                         {{ slotProps.context.userName }}
                     </j-ellipsis>
-                     <!-- </a-tag> -->
+                     <!-- </j-tag> -->
                 </div>
             </template>
-
-
-
             <template #action="slotProps">
                 <a-space :size="16">
                     <template
@@ -63,60 +57,63 @@
             </template>
         </j-pro-table>
     </div>
-    <a-modal :width="1100" v-model:visible="visible" title="详情">
-        <a-descriptions :data="descriptionsData" title="" bordered :column="2">
+    <a-modal :width="1100" v-model:visible="visible" :title="$t('Access.index.480752-0')">
+        <a-descriptions :labelStyle="{width: '200px'}" :data="descriptionsData" title="" bordered :column="2">
             <a-descriptions-item label="URL">
                 {{ descriptionsData?.url }}
             </a-descriptions-item>
-            <a-descriptions-item label="请求方法">
+            <a-descriptions-item :label="$t('Access.index.480752-1')">
                 {{ descriptionsData?.httpMethod }}
             </a-descriptions-item>
-            <a-descriptions-item label="动作">
+            <a-descriptions-item :label="$t('Access.index.480752-2')">
                 {{ descriptionsData?.action }}
             </a-descriptions-item>
-            <a-descriptions-item label="类名">
+            <a-descriptions-item :label="$t('Access.index.480752-3')">
                 {{ descriptionsData?.target }}
             </a-descriptions-item>
-            <a-descriptions-item label="方法名">
+            <a-descriptions-item :label="$t('Access.index.480752-4')">
                 {{ descriptionsData?.method }}
             </a-descriptions-item>
             <a-descriptions-item label="IP">
                 {{ descriptionsData?.ip }}
             </a-descriptions-item>
-            <a-descriptions-item label="请求时间">
+            <a-descriptions-item :label="$t('Access.index.480752-5')">
                 {{
                 dayjs(descriptionsData?.requestTime).format(
                         'YYYY-MM-DD HH:mm:ss',
                     )
                 }}
             </a-descriptions-item>
-            <a-descriptions-item label="请求耗时">
+            <a-descriptions-item :label="$t('Access.index.480752-6')">
                 {{
                     descriptionsData?.responseTime -
                     descriptionsData?.requestTime +
                     'ms'
                 }}
             </a-descriptions-item>
-            <a-descriptions-item label="请求头" :span="2">
+            <a-descriptions-item :label="$t('Access.index.480752-7')" :span="2">
                 {{ descriptionsData?.httpHeaders }}
             </a-descriptions-item>
-            <a-descriptions-item label="请求参数" :span="2">
+            <a-descriptions-item :label="$t('Access.index.480752-8')" :span="2">
                 {{ descriptionsData?.parameters }}
             </a-descriptions-item>
-            <a-descriptions-item label="异常信息" :span="2">
+            <a-descriptions-item :label="$t('Access.index.480752-9')" :span="2">
                 {{ descriptionsData.exception }}
             </a-descriptions-item>
         </a-descriptions>
         <template #footer>
-            <a-button type="primary" @click="handleOk">关闭</a-button>
+            <a-button type="primary" @click="handleOk">{{ $t('Access.index.480752-10') }}</a-button>
         </template>
     </a-modal>
 </template>
 <script lang="ts" setup name="AccessLog">
+import type { ActionsType } from '../typings';
 import { queryAccess } from '@/api/log';
 import dayjs from 'dayjs';
 import { modifySearchColumnValue } from '@/utils/comm';
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 const tableRef = ref<Record<string, any>>({});
 const params = ref<Record<string, any>>({});
 
@@ -133,7 +130,7 @@ const columns = [
         fixed: 'left',
     },
     {
-        title: '请求路径',
+        title: $t('Access.index.480752-11'),
         dataIndex: 'url',
         key: 'url',
         search: {
@@ -142,7 +139,7 @@ const columns = [
         ellipsis: true,
     },
     {
-        title: '说明',
+        title: $t('Access.index.480752-12'),
         dataIndex: 'description',
         key: 'description',
         scopedSlots: true,
@@ -152,7 +149,7 @@ const columns = [
         ellipsis: true,
     },
     {
-        title: '请求方法',
+        title: $t('Access.index.480752-1'),
         dataIndex: 'httpMethod',
         key: 'httpMethod',
         search: {
@@ -184,7 +181,7 @@ const columns = [
         width: 100,
     },
     {
-        title: '请求时间',
+        title: $t('Access.index.480752-5'),
         dataIndex: 'requestTime',
         key: 'requestTime',
         scopedSlots: true,
@@ -194,14 +191,14 @@ const columns = [
         width: 200,
     },
     {
-        title: '请求耗时',
+        title: $t('Access.index.480752-6'),
         dataIndex: 'responseTime',
         key: 'responseTime',
         scopedSlots: true,
         width: 100,
     },
     {
-        title: '请求用户',
+        title: $t('Access.index.480752-13'),
         dataIndex: 'username',
         key: 'username',
         // search: {
@@ -211,10 +208,10 @@ const columns = [
         scopedSlots: true,
     },
     {
-        title: '操作',
+        title: $t('Access.index.480752-14'),
         key: 'action',
         fixed: 'right',
-        width: 60,
+        width: 100,
         scopedSlots: true,
     },
 ];
@@ -238,16 +235,16 @@ const handleOk = (e: MouseEvent) => {
     visible.value = false;
 };
 
-const getActions = (data: Partial<Record<string, any>>): any[] => {
+const getActions = (data: Partial<Record<string, any>>): ActionsType[] => {
     if (!data) {
         return [];
     }
     return [
         {
             key: 'eye',
-            text: '查看',
+            text: $t('Access.index.480752-15'),
             tooltip: {
-                title: '查看',
+                title: $t('Access.index.480752-15'),
             },
             icon: 'EyeOutlined',
             onClick: () => {
@@ -275,7 +272,6 @@ const handleSearch = (e: any) => {
 .userName{
     color: #1677FF;
     background: #f0f5ff;
-    border-color: #adc6ff;
     list-style: none;
     font-feature-settings: 'tnum';
     display: inline-block;
@@ -283,7 +279,8 @@ const handleSearch = (e: any) => {
     margin-right: 8px;
     padding: 0 7px;
     font-size: 12px;
-    line-height: 20px;border: 1px solid #d9d9d9;
+    line-height: 20px;
+    border: 1px solid #d9d9d9;
     border-radius: 2px;
     opacity: 1;
 }

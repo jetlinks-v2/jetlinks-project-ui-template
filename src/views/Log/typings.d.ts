@@ -1,3 +1,4 @@
+import type { PopconfirmProps } from "ant-design-vue/es/popconfirm";
 export type AccessLogItem = {
   id: string;
   context: any;
@@ -29,3 +30,16 @@ export type SystemLogItem = {
   threadId: string;
   threadName: string;
 };
+
+export interface ActionsType {
+  key: string;
+  text?: string;
+  disabled?: boolean;
+  permission?: boolean;
+  onClick?: (data: any) => void;
+  style?: CSSProperties;
+  tooltip?: TooltipProps;
+  popConfirm?: PopconfirmProps;
+  icon?: string;
+  children?: ActionsType[];
+}

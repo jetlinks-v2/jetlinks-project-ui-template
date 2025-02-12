@@ -42,13 +42,11 @@
           <j-permission-button
             type="link"
             :popConfirm="{
-              title: `确认标为${
-                slotProps.state.value === 'read' ? '未读' : '已读'
-              }`,
+              title: $t('NotificationRecord.index.803553-0', [slotProps.state.value === 'read' ? $t('NotificationRecord.index.803553-8') : $t('NotificationRecord.index.803553-9')]),
               onConfirm: () => changeStatus(slotProps),
             }"
             :tooltip="{
-              title: slotProps.state.value === 'read' ? '标为未读' : '标为已读',
+              title: slotProps.state.value === 'read' ? $t('NotificationRecord.index.803553-1') : $t('NotificationRecord.index.803553-2'),
             }"
           >
             <AIcon type="icon-a-PIZHU1" />
@@ -56,7 +54,7 @@
           <j-permission-button
             type="link"
             :tooltip="{
-              title: '查看',
+              title: $t('NotificationRecord.index.803553-3'),
             }"
             @click="view(slotProps)"
           >
@@ -80,9 +78,11 @@ import { getList_api, changeStatus_api } from '@/api/account/notificationRecord'
 import dayjs from 'dayjs'
 import { useUserStore } from '@/store/user'
 import { useRouterParams } from '@jetlinks-web/hooks'
-import { getTypeList_api } from '@/api/account/notificationSubscription'
+import { getTypeListNew } from '@/api/account/notificationSubscription'
 import { onlyMessage } from '@jetlinks-web/utils'
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 const user = useUserStore()
 
 const props = defineProps({
@@ -111,7 +111,7 @@ const getType = computed(() => {
       'alarm',
       'alarm-product',
       'alarm-device',
-      'alarm-other',
+      'alarm-scene',
       'alarm-org',
     ]
   }
@@ -119,32 +119,26 @@ const getType = computed(() => {
 
 const columns = [
   {
-    title: '类型',
+    title: $t('NotificationRecord.index.803553-4'),
     dataIndex: 'topicProvider',
     key: 'topicProvider',
     search: {
       type: 'select',
       termFilter: ['in', 'nin'],
       options: () =>
-        getTypeList_api().then((resp: any) => {
-          return resp.result
-            .map((item: any) => ({
-              label: item.name,
-              value: item.id,
+      getTypeListNew(props.type).then((resp: any) => {
+                    return resp.result
+                        .map((item: any) => ({
+                            label: item.name,
+                            value: item.id,
             }))
-            .filter((item: any) => {
-              return [...getType.value].includes(item?.value)
-            })
-            .sort((a: any, b: any) => {
-              return b?.value?.length - a?.value?.length
-            })
         }),
     },
     scopedSlots: true,
     ellipsis: true,
   },
   {
-    title: '消息',
+    title: $t('NotificationRecord.index.803553-5'),
     dataIndex: 'message',
     key: 'message',
     search: {
@@ -154,7 +148,7 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: '通知时间',
+    title: $t('NotificationRecord.index.803553-6'),
     dataIndex: 'notifyTime',
     key: 'notifyTime',
     search: {
@@ -164,7 +158,7 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: '状态',
+    title: $t('NotificationRecord.index.803553-7'),
     dataIndex: 'state',
     key: 'state',
     search: {
@@ -172,11 +166,11 @@ const columns = [
       termFilter: ['in', 'nin'],
       options: [
         {
-          label: '未读',
+          label: $t('NotificationRecord.index.803553-8'),
           value: 'unread',
         },
         {
-          label: '已读',
+          label: $t('NotificationRecord.index.803553-9'),
           value: 'read',
         },
       ],
@@ -185,7 +179,7 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: '操作',
+    title: $t('NotificationRecord.index.803553-10'),
     dataIndex: 'action',
     key: 'action',
     ellipsis: true,
@@ -230,7 +224,7 @@ const changeStatus = (row: any) => {
   const type = row.state.value === 'read' ? '_unread' : '_read'
   changeStatus_api(type, [row.id]).then((resp: any) => {
     if (resp.status === 200) {
-      onlyMessage('操作成功！')
+      onlyMessage($t('NotificationRecord.index.803553-11'))
       refresh()
       user.updateAlarm()
     }
@@ -246,7 +240,7 @@ watchEffect(() => {
 // const onAllRead = async () => {
 //     const resp = await changeAllStatus('_read', getType.value);
 //     if (resp.status === 200) {
-//         onlyMessage('操作成功！');
+//         onlyMessage($t('NotificationRecord.index.803553-11'));
 //         refresh();
 //         user.updateAlarm();
 //     }

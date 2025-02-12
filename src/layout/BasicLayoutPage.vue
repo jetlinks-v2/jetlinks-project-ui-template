@@ -21,6 +21,7 @@
         <a-space :size="24">
           <Positions @change="changeRouterAlive" />
           <OrgList @change="changeRouterAlive" />
+          <Language />
           <Notice v-if="routerAlive.notice" />
           <User />
         </a-space>
@@ -36,7 +37,7 @@
 import { reactive, computed, watchEffect } from 'vue'
 import { useSystemStore } from '@/store/system'
 import { useMenuStore } from '@/store/menu'
-import { User, Notice, OrgList, Positions } from './components'
+import { User, Notice, OrgList, Positions, Language } from './components'
 import { storeToRefs } from 'pinia'
 
 type StateType = {

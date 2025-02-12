@@ -8,27 +8,27 @@
         @cancel="emits('update:visible', false)"
         class="edit-dialog-container"
         :confirmLoading="loading"
-        cancelText="取消"
-        okText="确定"
+        :cancelText="$t('components.EditUserDialog.939453-0')"
+        :okText="$t('components.EditUserDialog.939453-1')"
     >
         <a-form ref="formRef" :model="form.data" layout="vertical">
-            <div class="formName" v-if="form.IsShow('add', 'edit')">基础信息</div>
+            <div class="formName" v-if="form.IsShow('add', 'edit')">{{ $t('components.EditUserDialog.939453-2') }}</div>
             <a-row :gutter="24" v-if="form.IsShow('add', 'edit')">
                 <a-col :span="24">
                     <a-form-item
                         name="name"
-                        label="姓名"
+                        :label="$t('components.EditUserDialog.939453-3')"
                         :rules="[
-                            { required: true, message: '请输入姓名' },
+                            { required: true, message: $t('components.EditUserDialog.939453-4') },
                             {
                                 max: 64,
-                                message: '最多可输入64个字符',
+                                message: $t('components.EditUserDialog.939453-5'),
                             },
                         ]"
                     >
                         <a-input
                             v-model:value="form.data.name"
-                            placeholder="请输入姓名"
+                            :placeholder="$t('components.EditUserDialog.939453-4')"
                         />
                     </a-form-item>
                 </a-col>
@@ -37,17 +37,17 @@
                 <a-col :span="12">
                     <a-form-item
                         name="telephone"
-                        label="手机号"
+                        :label="$t('components.EditUserDialog.939453-6')"
                         :rules="[
                             {
                                 pattern: /^1[3456789]\d{9}$/,
-                                message: '请输入正确的手机号',
+                                message: $t('components.EditUserDialog.939453-7'),
                             },
                         ]"
                     >
                         <a-input
                             v-model:value="form.data.telephone"
-                            placeholder="请输入手机号"
+                            :placeholder="$t('components.EditUserDialog.939453-8')"
                             :maxlength="64"
                         />
                     </a-form-item>
@@ -55,18 +55,18 @@
                 <a-col :span="12">
                     <a-form-item
                         name="email"
-                        label="邮箱"
+                        :label="$t('components.EditUserDialog.939453-9')"
                         :rules="[
                             {
                                 pattern:
                                     /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-                                message: '请输入正确的邮箱',
+                                message: $t('components.EditUserDialog.939453-10'),
                             },
                         ]"
                     >
                         <a-input
                             v-model:value="form.data.email"
-                            placeholder="请输入邮箱"
+                            :placeholder="$t('components.EditUserDialog.939453-11')"
                             :maxlength="64"
                         />
                     </a-form-item>
@@ -74,77 +74,36 @@
             </a-row>
             <a-row :gutter="24" v-if="form.IsShow('add', 'edit')">
                 <a-col :span="12">
-                    <a-form-item name="roleIdList" label="角色" class="flex"
+                    <a-form-item name="roleIdList" :label="$t('components.EditUserDialog.939453-12')" class="flex"
                         :rules="[
-                            { required: form.data.username !== 'admin', message: '请选择角色' },
+                            { required: form.data.username !== 'admin', message: $t('components.EditUserDialog.939453-13') },
                         ]"
                     >
-                        <a-tree-select
-                            v-model:value="form.data.roleIdList"
-                            multiple
-                            show-search
-                            style="width: calc(100% - 40px)"
-                            placeholder="请选择角色"
-                            :tree-data="form.roleOptions"
-                            :fieldNames="{ label: 'name', value: 'id', children:'children' }"
-                            :disabled="form.data.username === 'admin'"
-                            :filterTreeNode="
-                                (v: string, node: any) => filterSelectNode(v, node, 'name')
-                            "
-                        >
-                        <template #title="{ name }">
-                            <div style="width: calc(100% - 10px) ">
-                                <j-ellipsis>{{ name }}</j-ellipsis>
-                            </div>
-                        </template>
-                    </a-tree-select>
-                        <j-permission-button
-                            :hasPermission="`${rolePermission}:add`"
-                            @click="form.clickAddItem('roleIdList', 'Role')"
-                            v-if="form.data.username !== 'admin'"
-                        >
-                            <AIcon type="PlusOutlined" />
-                        </j-permission-button>
+                      <form-item-role v-model:value="form.data.roleIdList" :disabled="form.data.username === 'admin'" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
-                    <a-form-item name="orgIdList" label="组织" class="flex">
-                        <a-tree-select
-                            v-model:value="form.data.orgIdList"
-                            show-search
-                            style="width: calc(100% - 40px)"
-                            placeholder="请选择组织"
-                            :tree-data="form.departmentOptions"
-                            :fieldNames="{ label: 'name', value: 'id' }"
-                            multiple
-                            :filterTreeNode="
-                                (v: string, node: any) => filterSelectNode(v, node, 'name')
-                            "
-                        >
-                            <template #title="{ name }">
-                                {{ name }}
-                            </template>
-                        </a-tree-select>
-                        <j-permission-button
-                            :hasPermission="`${deptPermission}:add`"
-                            @click="
-                                form.clickAddItem('orgIdList', 'Department')
-                            "
-                        >
-                            <AIcon type="PlusOutlined" />
-                        </j-permission-button>
+                    <a-form-item name="orgIdList" :label="$t('components.EditUserDialog.939453-14')" class="flex">
+                      <form-item-org v-model:value="form.data.orgIdList" />
                     </a-form-item>
                 </a-col>
             </a-row>
-            <div class="formName" v-if="form.IsShow('add', 'edit')">账号信息</div>
+          <a-row v-if="form.IsShow('add', 'edit')">
+            <a-col :span="12">
+              <a-form-item name="positions" :label="$t('components.EditUserDialog.939453-31')">
+                  <form-item-position v-model:value="form.data.positions" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+            <div class="formName" v-if="form.IsShow('add', 'edit')">{{ $t('components.EditUserDialog.939453-16') }}</div>
             <a-row :gutter="24" v-if="form.IsShow('add', 'edit')">
                 <a-col :span="24">
                     <a-form-item
                         name="username"
-                        label="用户名"
+                        :label="$t('components.EditUserDialog.939453-17')"
                         :validateFirst="true"
                         :rules="[
-                            { required: true, message: '请输入用户名' },
+                            { required: true, message: $t('components.EditUserDialog.939453-18') },
                             {
                                 validator: checkCh,
                                 trigger: ['change', 'blur'],
@@ -157,7 +116,7 @@
                     >
                         <a-input
                             v-model:value="form.data.username"
-                            placeholder="请输入用户名"
+                            :placeholder="$t('components.EditUserDialog.939453-18')"
                             :disabled="props.type === 'edit'"
                         />
                     </a-form-item>
@@ -167,7 +126,7 @@
                 <a-col :span="24">
                     <a-form-item
                         name="password"
-                        label="密码"
+                        :label="$t('components.EditUserDialog.939453-19')"
                         :rules="[
                             { required: true, message: '' },
                             {
@@ -178,7 +137,7 @@
                     >
                         <a-input-password
                             v-model:value="form.data.password"
-                            placeholder="请输入密码"
+                            :placeholder="$t('components.EditUserDialog.939453-20')"
                         />
                     </a-form-item>
                 </a-col>
@@ -187,21 +146,18 @@
                 <a-col :span="24">
                     <a-form-item
                         name="confirmPassword"
-                        label="确认密码"
+                        :label="$t('components.EditUserDialog.939453-21')"
                         :rules="[
                             { required: true, message: '' },
                             {
                                 validator: form.rules.checkAgainPassword,
                                 trigger: 'blur',
                             },
-                            {
-
-                            }
                         ]"
                     >
                         <a-input-password
                             v-model:value="form.data.confirmPassword"
-                            placeholder="请再次输入密码"
+                            :placeholder="$t('components.EditUserDialog.939453-22')"
                             :maxlength="64"
                         />
                     </a-form-item>
@@ -212,25 +168,23 @@
 </template>
 
 <script setup lang="ts">
-import {PermissionButton} from '@jetlinks-web/components';
 import { FormInstance } from 'ant-design-vue';
 import {
     validateField_api,
-    getDepartmentList_api,
     addUser_api,
     updateUser_api,
     updatePassword_api,
     getUser_api,
-    getRoleList
 } from '@/api/system/user';
 import { Rule } from 'ant-design-vue/es/form';
 import { DefaultOptionType } from 'ant-design-vue/es/vc-tree-select/TreeSelect';
 import { AxiosResponse } from 'axios';
 import { passwordRegEx } from '@/utils/validate';
-import { filterSelectNode, onlyMessage } from '@/utils/comm';
+import { onlyMessage } from '@/utils/comm';
+import { cloneDeep } from 'lodash-es';
+import { useI18n } from 'vue-i18n';
 
-const deptPermission = 'system/Department';
-const rolePermission = 'system/Role';
+const { t: $t } = useI18n();
 
 const emits = defineEmits(['confirm', 'update:visible']);
 const props = defineProps<{
@@ -241,9 +195,9 @@ const props = defineProps<{
 // 弹窗相关
 const loading = ref(false);
 const dialogTitle = computed(() => {
-    if (props.type === 'add') return '新增';
-    else if (props.type === 'edit') return '编辑';
-    else if (props.type === 'reset') return '重置密码';
+    if (props.type === 'add') return $t('components.EditUserDialog.939453-23');
+    else if (props.type === 'edit') return $t('components.EditUserDialog.939453-24');
+    else if (props.type === 'reset') return $t('components.EditUserDialog.939453-25');
     else return '';
 });
 const confirm = () => {
@@ -253,7 +207,7 @@ const confirm = () => {
         .then(() => form.submit())
         .then((resp: any) => {
             if (resp.status === 200) {
-                onlyMessage('操作成功');
+                onlyMessage($t('components.EditUserDialog.939453-26'));
                 emits('confirm');
                 emits('update:visible', false);
             }
@@ -262,14 +216,15 @@ const confirm = () => {
 };
 
 const formRef = ref<FormInstance>();
+const _roleDetail = ref([] as any[]);
 const form = reactive({
     data: {} as formType,
     rules: {
         checkUserName: (_rule: Rule, value: string): Promise<any> =>
             new Promise((resolve, reject) => {
                 if(props.type==='edit') return resolve('')
-                else if(!value) return reject('请输入用户名');
-                else if (value.length > 64) return reject('最多可输入64个字符');
+                else if(!value) return reject($t('components.EditUserDialog.939453-18'));
+                else if (value.length > 64) return reject($t('components.EditUserDialog.939453-5'));
                 validateField_api('username', value).then((resp: any): any => {
                     resp.result.passed
                         ? resolve('')
@@ -278,11 +233,11 @@ const form = reactive({
             }),
         checkPassword: (_rule: Rule, value: string): Promise<any> =>
             new Promise((resolve, reject) => {
-                if (!value) return reject('请输入密码');
-                else if (value.length > 64) return reject('最多可输入64个字符');
-                else if (value.length < 8) return reject('密码不能少于8位');
+                if (!value) return reject($t('components.EditUserDialog.939453-20'));
+                else if (value.length > 64) return reject($t('components.EditUserDialog.939453-5'));
+                else if (value.length < 8) return reject($t('components.EditUserDialog.939453-27'));
                 else if (!passwordRegEx(value))
-                    return reject('密码必须包含大小写英文和数字');
+                    return reject($t('components.EditUserDialog.939453-28'));
                 validateField_api('password', value).then((resp: any) => {
                     resp.result.passed
                         ? resolve('')
@@ -290,21 +245,17 @@ const form = reactive({
                 });
             }),
         checkAgainPassword: (_rule: Rule, value: string): Promise<any> => {
-            if (!value) return Promise.reject('请再次输入密码');
+            if (!value) return Promise.reject($t('components.EditUserDialog.939453-22'));
             return value === form.data.password
                 ? Promise.resolve()
-                : Promise.reject('两次密码输入不一致');
+                : Promise.reject($t('components.EditUserDialog.939453-29'));
         },
     },
 
     roleOptions: [],
-    departmentOptions: [] as DefaultOptionType[],
-
     _departmentOptions: [] as DefaultOptionType[],
 
     init: () => {
-        form.getDepartmentList();
-        form.getRoleList();
         form.getUserInfo();
     },
     getUserInfo: () => {
@@ -314,6 +265,7 @@ const form = reactive({
         else if (props.type === 'reset') form.data = { id } as formType;
         else if (props.type === 'edit') {
             getUser_api(id).then((resp: any) => {
+                _roleDetail.value = resp.result.roleList;
                 form.data = {
                     ...(resp.result as formType),
                     orgIdList: resp.result.orgList.map(
@@ -336,21 +288,23 @@ const form = reactive({
     submit: (): Promise<any> => {
         let api: axiosFunType;
         let params = {};
-
+        const { positions, ...extraFormData} = form.data
         if (props.type === 'add') {
             api = addUser_api;
             params = {
-                user: form.data,
+                user: extraFormData,
                 orgIdList: form.data.orgIdList,
                 roleIdList: form.data.roleIdList,
+                positions: positions,
             };
         } else if (props.type === 'edit') {
             api = updateUser_api;
             params = {
                 id: form.data.id,
-                user: form.data,
+                user: extraFormData,
                 orgIdList: form.data.orgIdList,
                 roleIdList: form.data.roleIdList,
+                positions: positions,
             };
         } else if (props.type === 'reset') {
             api = updatePassword_api;
@@ -361,60 +315,46 @@ const form = reactive({
         } else return Promise.reject();
         return api(params);
     },
-    getRoleList: () => {
-        getRoleList({ sorts: [{ name: 'createTime', order: 'desc' }] }).then((resp: any) => {
-           if(resp.status === 200){
-            form.roleOptions =  dealRoleList(resp.result)
-           }
-        });
-    },
-    getDepartmentList: () => {
-        getDepartmentList_api({
-        paging: false,
-        sorts: [{ name: 'sortIndex', order: 'asc' }],
-    }).then((resp: any) => {
-            form.departmentOptions = resp.result.sort((a: any, b: any) =>
-                a.sortIndex === b.sortIndex
-                    ? b.createTime - a.createTime
-                    : a.sortIndex - b.sortIndex,
-            ); // 报存源数据;
-        });
-    },
     IsShow: (...typeList: modalType[]) => typeList.includes(props.type),
-    clickAddItem: (prop: 'roleIdList' | 'orgIdList', target: string) => {
-        const tab: any = window.open(`${origin}/#/system/${target}?save=true`);
-        tab.onTabSaveSuccess = (value: string) => {
-            form.data[prop] = [...(form.data[prop] || []), value];
-            if (prop === 'roleIdList') form.getRoleList();
-            else form.getDepartmentList();
-        };
-    },
 });
 const checkCh = async(_rule:Rule,value:string) => {
-                if (/[\u4e00-\u9fa5]/.test(value)) return Promise.reject('用户名不能包含中文');
+                if (/[\u4e00-\u9fa5]/.test(value)) return Promise.reject($t('components.EditUserDialog.939453-30'));
                 else return Promise.resolve('')
             }
-const  dealRoleList = (data:any) =>{
-    return data.map((item:any)=>{
-        return {
-            name: item.groupName,
-            id: item.groupId,
-            disabled: true,
-            children: item?.roles ?  item.roles.map((i:any)=>{
-            return {
-                name:i.name,
-                id:i.id
-            }
-        }) : []
-        }
-    })
-}
+
 // 组织已删除在仍显示在列表中
 // const _departmentOptions = computed(() => {
 //     return uniqBy([...form.departmentOptions, ...form._departmentOptions], 'id')
 // })
 
 form.init();
+
+const hasNodeWithId = (arr: any, id: any)=>{
+    for (let item of arr) {
+        if (item.id === id) {
+            return true;
+        }
+        if (item.children && hasNodeWithId(item.children, id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+watch(
+    () => _roleDetail.value,
+    (val) => {
+        if (val && form.roleOptions.length) {
+            const tree = cloneDeep(form.roleOptions);
+            val.forEach((item: any) => {
+                if (!hasNodeWithId(tree, item.id)) {
+                    form.roleOptions.push(item);
+                }
+            });
+        }
+    },
+    { immediate: true },
+);
 
 interface AxiosResponseRewrite<T = any[]> extends AxiosResponse<T, any> {
     result: T;
@@ -429,6 +369,7 @@ type formType = {
     password: string;
     confirmPassword: string;
     roleIdList: string[];
+    positions: string[];
     orgIdList: string[];
     telephone: string;
     email: string;
@@ -445,48 +386,16 @@ type optionType = {
 </script>
 
 <style lang="less" scoped>
-.edit-dialog-container {
-    .ant-form-item {
-        &.flex {
-            :deep(.ant-form-item-control-input-content) {
-                display: flex;
-                .ant-select {
-                    flex: 1;
-                }
-                .ant-tooltip-disabled-compatible-wrapper {
-                    .ant-btn {
-                        color: rgba(0, 0, 0, 0.25);
-                        border-color: #d9d9d9;
-                        background: #f5f5f5;
-                        text-shadow: none;
-                        box-shadow: none;
-                    }
-                }
-                .ant-btn {
-                    width: 32px;
-                    height: 32px;
-                    border: 1px solid @primary-color;
-                    color: @primary-color;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-left: 8px;
-                    cursor: pointer;
-                }
-            }
-        }
-    }
-}
 .formName{
     margin-bottom: 10px;
     font-size: 16px;
     &::before{
-    width: 2px;
-    background-color: rgb(184, 184, 184);
-    display: inline-block;
-    height: 13px;
-    margin-right: 3px;
-    content:''
+        width: 2px;
+        background-color: rgb(184, 184, 184);
+        display: inline-block;
+        height: 13px;
+        margin-right: 3px;
+        content:''
     }
 }
 </style>
