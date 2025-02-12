@@ -1,19 +1,20 @@
+import i18n from "@/locales";
 type KeyType = 'HomeView' | 'BindThirdAccount' | 'Subscribe' | 'StationMessage';
 export const tabList: { key: KeyType; title: string }[] =  [
-    // {
-    //   key: 'HomeView',
-    //   title: '首页视图',
-    // },
-    // {
-    //   key: 'BindThirdAccount',
-    //   title: '绑定第三方账号',
-    // },
+    {
+      key: 'HomeView',
+      title: i18n.global.t('center.data.756829-2'),
+    },
+    {
+      key: 'BindThirdAccount',
+      title: i18n.global.t('center.data.756829-3'),
+    },
     {
         key: 'Subscribe',
-        title: '我的订阅',
+        title: i18n.global.t('center.data.756829-0'),
     },
     {
         key: 'StationMessage',
-        title: '站内信',
+        title: i18n.global.t('center.data.756829-1'),
     },
 ]

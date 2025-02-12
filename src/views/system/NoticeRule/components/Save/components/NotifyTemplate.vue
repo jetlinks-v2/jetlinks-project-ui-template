@@ -3,6 +3,7 @@
         <pro-search
             :columns="columns"
             target="action-notice-template"
+            type="simple"
             @search="handleSearch"
             style="padding-bottom: 0"
         />
@@ -11,12 +12,12 @@
             type="primary"
             :hasPermission="['notice/Template:add']"
         >
-            新增
+            {{ $t('components.NotifyTemplate.016284-0') }}
         </j-permission-button>
     </div>
     <div class="alert">
         <AIcon type="InfoCircleOutlined" />
-        已规定固定收信人的模板在当前页面将被过滤
+        {{ $t('components.NotifyTemplate.016284-1') }}
     </div>
     <div style="max-height: 400px; overflow-y: auto">
         <JProTable
@@ -65,14 +66,14 @@
                         <a-row>
                             <a-col :span="12">
                                 <div class="card-item-content-text">
-                                    通知方式
+                                    {{ $t('components.NotifyTemplate.016284-2') }}
                                 </div>
                                 <div>
                                     {{ getMethodTxt(slotProps.type) }}
                                 </div>
                             </a-col>
                             <a-col :span="12">
-                                <div class="card-item-content-text">说明</div>
+                                <div class="card-item-content-text">{{ $t('components.NotifyTemplate.016284-3') }}</div>
                                 <j-ellipsis>
                                     {{ slotProps.description }}
                                 </j-ellipsis>
@@ -94,6 +95,10 @@
 import TemplateApi from '@/api/notice/template';
 import { MSG_TYPE, NOTICE_METHOD } from './const';
 import { noticeType, _variableMap } from '../../../data';
+import { useI18n } from 'vue-i18n';
+import { cloneDeep } from "lodash-es";
+
+const { t: $t } = useI18n();
 const props = defineProps({
     notifierId: {
         type: String,
@@ -126,7 +131,7 @@ const _selectedRowKeys = ref<string[]>([]);
 
 const columns = [
     {
-        title: '名称',
+        title: $t('components.NotifyTemplate.016284-4'),
         dataIndex: 'name',
         key: 'name',
         search: {
@@ -142,7 +147,7 @@ const columns = [
         },
     },
     {
-        title: '说明',
+        title: $t('components.NotifyTemplate.016284-3'),
         dataIndex: 'description',
         key: 'description',
         search: {
@@ -187,16 +192,10 @@ const handleData = async (e: any) => {
         const arr = item?.variableDefinitions?.map((i: any) => i?.id) || [];
         return arr.includes(_variable);
     });
-    return {
-        code: resp.message,
-        result: {
-            data: result,
-            pageIndex: 0,
-            pageSize: resp.result.length,
-            total: resp.result.length,
-        },
-        status: resp.status,
-    };
+
+    const data = cloneDeep(resp)
+    data.result.data = result
+    return data
 };
 
 const onAdd = () => {
@@ -251,5 +250,8 @@ watch(
     color: rgba(0, 0, 0, 0.55);
     line-height: 40px;
     background-color: #f6f6f6;
+}
+:deep(.JSearch-warp) {
+  margin-bottom: 0 !important;
 }
 </style>

@@ -11,28 +11,28 @@
                 valueFormat="YYYY-MM"
             />
             <a-button @click="handleCustomPrev" :disabled="selectable"
-                >上月</a-button
+                >{{ $t('FullCalendar.index.397640-0') }}</a-button
             >
             <a-button @click="handleCustomToday" :disabled="selectable"
-                >今天</a-button
+                >{{ $t('FullCalendar.index.397640-1') }}</a-button
             >
             <a-button @click="handleCustomNext" :disabled="selectable"
-                >下月</a-button
+                >{{ $t('FullCalendar.index.397640-2') }}</a-button
             >
           </a-space>
         </div>
         <a-button v-if="preview" class="skip" type="link" @click="gotoCalendar"
-            >日历维护</a-button
+            >{{ $t('FullCalendar.index.397640-3') }}</a-button
         >
         <div class="compareTip" v-if="eventChange">
-            点击确认完成本次日历维护
+            {{ $t('FullCalendar.index.397640-4') }}
         </div>
         <div class="compareSave" v-if="eventChange">
             <j-permission-button
                 type="primary"
                 @click="saveCalendar"
                 :disabled="selectable"
-                >确认</j-permission-button
+                >{{ $t('FullCalendar.index.397640-5') }}</j-permission-button
             >
         </div>
         <FullCalendar
@@ -65,7 +65,7 @@
             class="tips"
             :style="{ top: mouseY + 'px', left: mouseX + 20 + 'px' }"
         >
-            {{ choiceStart ? '点击选中模板结束日期' : '点击选中模板开始日期' }}
+            {{ choiceStart ? $t('FullCalendar.index.397640-6') : $t('FullCalendar.index.397640-7') }}
         </div>
     </div>
 </template>
@@ -75,7 +75,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import locale from '@fullcalendar/core/locales/zh-cn';
-import { onlyMessage } from '@/utils/comm';
+import { onlyMessage } from '@jetlinks-web/utils';
 import dayjs from 'dayjs';
 import { queryEvents, saveEvents } from '@/api/system/calendar';
 import { cloneDeep, flatten } from 'lodash-es';
@@ -83,6 +83,9 @@ import { defineExpose } from 'vue';
 import { inject } from 'vue';
 import { useMenuStore } from '@/store/menu';
 import { useSystemStore } from '@/store/system';
+import { useI18n } from 'vue-i18n';
+
+const { t: $t } = useI18n();
 const props = defineProps({
     selectable: {
         type: String,
@@ -136,12 +139,12 @@ const queryEventsData = async (startDate, endDate, updateView) => {
                     eventsData.value.push({
                         date: i.date,
                         id: item.id,
-                        name: item.name,
+                        name: item.i18nName || item.name,
                     });
                     initialData.value.push({
                         date: i.date,
                         id: item.id,
-                        name: item.name,
+                        name: item.i18nName || item.name,
                     });
                 });
             }
@@ -181,7 +184,7 @@ const handleEventAdd = ({ event }) => {
     });
     if (thatEvent?.length >= 5) {
         event.remove();
-        onlyMessage('该日期已超出可配置标签上限', 'error');
+        onlyMessage($t('FullCalendar.index.397640-8'), 'error');
         return;
     } else if (thatEvent.length) {
         const alreadyExist = thatEvent.find((i) => {
@@ -279,7 +282,7 @@ const saveCalendar = async () => {
     });
     const res = await saveEvents(submitData);
     if (res.success) {
-        onlyMessage('操作成功');
+        onlyMessage($t('FullCalendar.index.397640-9'));
         // initialData.value = cloneDeep(eventsData.value);
         refresh();
     }
@@ -315,9 +318,9 @@ const handleDateClick = (selectInfo) => {
             `.fc-day[data-date="${selectInfo.dateStr}"]`,
         );
         selectedDate.classList.add('selectedDate');
-    } else {
+    } else if(!choiceEnd.value) {
         if (dayjs(selectInfo.dateStr).isBefore(choiceStart.value)) {
-            onlyMessage('结束时间必须大于开始时间');
+            onlyMessage($t('FullCalendar.index.397640-10'));
             return;
         }
         choiceEnd.value = dayjs(selectInfo.dateStr).add(1, 'day');
@@ -484,7 +487,7 @@ const rapidAction = async (effectDays) => {
     });
     calendarApi.value.removeAllEvents();
     calendarApi.value.addEventSource(initialEventData.value);
-    onlyMessage('操作成功');
+    onlyMessage($t('FullCalendar.index.397640-9'));
     emit('resetRapid');
 };
 //取消多选(原生)
@@ -521,7 +524,7 @@ const changeDate = (date) => {
 };
 
 const gotoCalendar = () => {
-    menuStory.jumpPage('system/Calendar');
+    menuStory.jumpPage('system/Calendar', {});
 };
 defineExpose({
     reselection,
@@ -600,7 +603,7 @@ setTimeout(() => {
         position: absolute;
         right: 20%;
         top: 27px;
-        transform: translateX(50%);
+        transform: translateX(40%);
     }
     .skip {
         position: absolute;

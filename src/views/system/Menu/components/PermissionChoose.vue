@@ -4,15 +4,15 @@
       v-model:value="searchValue"
       style="width: 300px"
       allowClear
-      placeholder="请输入权限名称"
+      :placeholder="$t('components.PermissionChoose.947802-0')"
       @input="onSearch"
       :disabled="disabled"
     />
 
     <div class="permission-table">
       <a-row :gutter="24" class="table-head">
-        <a-col :span="firstWidth">权限名称</a-col
-        ><a-col :span="24 - firstWidth">权限操作</a-col>
+        <a-col :span="firstWidth">{{ $t('components.PermissionChoose.947802-1') }}</a-col
+        ><a-col :span="24 - firstWidth">{{ $t('components.PermissionChoose.947802-2') }}</a-col>
       </a-row>
       <div class="table-body" :style="{ 'max-height': maxHeight }">
         <a-row
@@ -28,7 +28,9 @@
               @change="(e) => selectAllOptions(e, rowItem)"
               :disabled="disabled"
             >
-              {{ rowItem.name }}
+              <j-ellipsis>
+               {{ rowItem.name }}
+              </j-ellipsis>
             </a-checkbox>
           </a-col>
           <a-col :span="24 - firstWidth">
@@ -135,13 +137,13 @@ const handleData = (_arr: any[], checkedValue: any[]) => {
     const options =
       (item.actions &&
         item.actions.map((actionItem: any) => ({
-          label: actionItem.name,
+          label: actionItem.i18nName || actionItem.name,
           value: actionItem.action,
         }))) ||
       []
     return {
       id: item.id,
-      name: item.name,
+      name: item.i18nName ||item.name,
       checkedList: (checked && checked.actions) || [],
       checkAll:
         (checked &&

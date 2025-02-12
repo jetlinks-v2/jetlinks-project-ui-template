@@ -4,6 +4,7 @@ import {
   getTagsColor,
 } from '@/api/system/calendar'
 import {LocalStore} from "@jetlinks-web/utils";
+import {langKey} from "@/utils/consts";
 
 interface LayoutType {
   siderWidth: number
@@ -21,6 +22,7 @@ export const useSystemStore = defineStore('system', () => {
   const microApp = ref<Record<string, any>>({})
   const calendarTagColor = new Map()
   const showThreshold = ref(true)
+  const language = ref(LocalStore.get(langKey) || 'zh');
 
   const layout = reactive<LayoutType>({
     siderWidth: 208,
@@ -136,6 +138,7 @@ export const useSystemStore = defineStore('system', () => {
     layout,
     calendarTagColor,
     showThreshold,
+    language,
     changeTheme,
     changeLayout,
     changeIco,

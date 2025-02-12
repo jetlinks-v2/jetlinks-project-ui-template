@@ -9,25 +9,29 @@
         </div>
 
         <p>
-            <span class="label">请求数据类型</span>
+            <span class="label">{{ $t('components.ApiDoes.5497514-0') }}</span>
             <span>{{
                 getContent(selectApi.requestBody) ||
                 'application/x-www-form-urlencoded'
             }}</span>
-            <span class="label">响应数据类型</span>
+            <span class="label">{{ $t('components.ApiDoes.5497514-1') }}</span>
             <span>{{ `["/"]` }}</span>
         </p>
 
         <div class="api-card" v-if="props.selectApi.description">
-            <h5>接口描述</h5>
+            <h5>{{ $t('components.ApiDoes.5497514-2') }}</h5>
             <div>{{ props.selectApi.description }}</div>
         </div>
         <div class="api-card" v-if="requestCard.codeText !== undefined">
-            <h5>请求示例</h5>
-            <JsonViewer :value="requestCard.codeText" copyable />
+            <h5>{{ $t('components.ApiDoes.5497514-3') }}</h5>
+            <Monaco
+                :tips="requestCard.tips"
+                :codeText="requestCard.codeText"
+                :loading="loading"
+            />
         </div>
         <div class="api-card" v-if="requestCard.tableData.length">
-            <h5>请求参数</h5>
+            <h5>{{$t('components.ApiDoes.5497514-4')}}</h5>
             <div class="content">
                 <j-pro-table
                     :columns="requestCard.columns"
@@ -37,16 +41,13 @@
                     size="small"
                 >
                     <template #required="slotProps">
-                        <span>{{ Boolean(slotProps.required) + '' }}</span>
-                    </template>
-                    <template #type="slotProps">
-                        <span>{{ slotProps?.schema.type }}</span>
+                        <span :style="{ color: Boolean(slotProps.required) ? '#f81d22' : ''}">{{ Boolean(slotProps.required) + '' }}</span>
                     </template>
                 </j-pro-table>
             </div>
         </div>
         <div class="api-card">
-            <h5>响应状态</h5>
+            <h5>{{$t('components.ApiDoes.5497514-5')}}</h5>
             <div class="content">
                 <j-pro-table
                     :columns="responseStatusCard.columns"
@@ -68,7 +69,7 @@
         </div>
 
         <div class="api-card">
-            <h5>响应参数</h5>
+            <h5>{{ $t('components.ApiDoes.5497514-6') }}</h5>
             <div class="content">
                 <j-pro-table
                     :columns="respParamsCard.columns"
@@ -79,20 +80,26 @@
                 >
                 </j-pro-table>
             </div>
-
-            <JsonViewer :value="respParamsCard.codeText" copyable />
+            <Monaco
+                :tips="respParamsCard.tips"
+                :codeText="respParamsCard.codeText"
+                :loading="loading"
+            />
         </div>
     </div>
 </template>
 
-<script setup lang="ts">
-import { JsonViewer } from 'vue3-json-viewer';
+<script setup lang="ts" name="APIDoes">
 import 'vue3-json-viewer/dist/index.css';
 import type { apiDetailsType } from '../typing';
 import InputCard from './InputCard.vue';
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 import { findData, getCodeText, dealNoRef } from '../utils';
+import { randomString } from "@jetlinks-web/utils";
+import Monaco from './monaco.vue';
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 type cardType = {
     columns: object[];
     tableData: any[];
@@ -112,86 +119,113 @@ const props = defineProps({
     },
 });
 const { selectApi } = toRefs(props);
+const loading = ref(false)
 
 const requestCard = reactive<cardType>({
     columns: [
         {
-            title: '参数名',
-            dataIndex: 'name',
-            key: 'name',
+            title: $t('components.ApiDoes.5497514-7'),
+            dataIndex: 'paramsName',
+            key: 'paramsName',
         },
         {
-            title: '参数说明',
-            dataIndex: 'description',
-            key: 'description',
+            title: $t('components.ApiDoes.5497514-8'),
+            dataIndex: 'desc',
+            key: 'desc',
         },
         {
-            title: '请求类型',
+            title: $t('components.ApiDoes.5497514-9'),
             dataIndex: 'in',
             key: 'in',
+            width: 80
         },
         {
-            title: '是否必须',
+            title: $t('components.ApiDoes.5497514-10'),
             dataIndex: 'required',
             key: 'required',
             scopedSlots: true,
+            width: 80
         },
         {
-            title: '参数类型',
+            title: $t('components.ApiDoes.5497514-11'),
+            dataIndex: 'paramsType',
+            key: 'paramsType',
+            width: 200
+        },
+        {
+            title: 'schema',
             dataIndex: 'type',
             key: 'type',
-            scopedSlots: true,
+            width: 200
         },
     ],
     tableData: [],
+    tips: [],
     codeText: undefined,
     getData: () => {
-        if (!props.selectApi.requestBody)
-            return (requestCard.tableData = props.selectApi.parameters);
-        const schema =
-            props.selectApi.requestBody.content['application/json'].schema;
+        if (!props.selectApi.requestBody) {
+            requestCard.tableData = props.selectApi.parameters?.map(i => {
+                const desc =  i.description ? (i.description + (i.schema?.enum?.length ? `,${$t('components.ApiDoes.5497514-12')}:${i.schema?.enum.join(',')}` : '')) : '';
+                const _paramsType = i.schema?.type ? (i.schema?.type + (i.schema?.format ? `(${i.schema?.format})` : '')) : ''
+                return {
+                    ...i,
+                    paramsName: i.name,
+                    paramsType: _paramsType,
+                    desc: desc
+                }
+            })
+            return;
+        }
+        const schema = props.selectApi.requestBody.content['application/json'].schema;
         const _ref = schema.$ref || schema?.items?.$ref;
         // schema不是Java中的类的话则不进行解析，直接结束
         if (!_ref) {
             const type = schema.type || '';
-            requestCard.codeText = dealNoRef(type, schema);
+            if(type === 'array' || type === 'object'){
+                requestCard.codeText = JSON.stringify(dealNoRef(type, schema));
+            } else {
+                requestCard.codeText = String(dealNoRef(type, schema))
+            }
         } else {
             const schemaName = _ref?.split('/').pop();
             const type = schema.type || '';
             const tableData = findData(props.schemas, schemaName);
-            requestCard.codeText =
-                type === 'array'
-                    ? [getCodeText(props.schemas, tableData, 3)]
-                    : getCodeText(props.schemas, tableData, 3);
+            // requestCard.codeText =
+            //     type === 'array'
+            //         ? [getCodeText(props.schemas, tableData, 3)]
+            //         : getCodeText(props.schemas, tableData, 3);
+            const { codeText, codeTips } = getCodeText(props.schemas, tableData, 3)
+            requestCard.codeText = JSON.stringify(codeText)
+            requestCard.tips = codeTips
             requestCard.tableData = [
                 {
-                    name: schemaName[0].toLowerCase() + schemaName.substring(1),
-                    description: schemaName,
+                    paramsName: schemaName[0].toLowerCase() + schemaName.substring(1),
+                    desc: schemaName,
                     in: 'body',
+                    id: randomString(),
                     required: true,
-                    schema: { type: type || schemaName },
-                    children: tableData.map((item) => ({
-                        name: item.paramsName,
-                        description: item.desc,
-                        required: false,
-                        schema: { type: item.paramsType },
-                    })),
+                    paramsType: type || schemaName,
+                    type: type || schemaName,
+                    children: tableData,
                 },
             ];
-            // console.log(requestCard,'requestCard')
         }
+        setTimeout(() => {
+            loading.value = true
+        }, 1000)
     },
 });
 const responseStatusCard = reactive<cardType>({
     activeKey: '',
     columns: [
         {
-            title: '状态码',
+            title: $t('components.ApiDoes.5497514-13'),
             dataIndex: 'code',
             key: 'code',
+            width: 200
         },
         {
-            title: '说明',
+            title: $t('components.ApiDoes.5497514-14'),
             dataIndex: 'desc',
             key: 'desc',
         },
@@ -199,6 +233,7 @@ const responseStatusCard = reactive<cardType>({
             title: 'schema',
             dataIndex: 'schema',
             key: 'schema',
+            width: 200
         },
     ],
     tableData: [],
@@ -229,19 +264,27 @@ const tabs = computed(() =>
 const respParamsCard = reactive<cardType>({
     columns: [
         {
-            title: '参数名称',
+            title: $t('components.ApiDoes.5497514-7'),
             dataIndex: 'paramsName',
+            width: 320
         },
         {
-            title: '参数说明',
+            title: $t('components.ApiDoes.5497514-8'),
             dataIndex: 'desc',
         },
         {
-            title: '类型',
+            title: $t('components.ApiDoes.5497514-15'),
             dataIndex: 'paramsType',
+            width: 320
+        },
+        {
+            title: 'schema',
+            dataIndex: 'schema',
+            width: 200
         },
     ],
     tableData: [],
+    tips: [],
     codeText: '',
     getData: (code: string) => {
         const schemaName = responseStatusCard.tableData.find(
@@ -249,11 +292,21 @@ const respParamsCard = reactive<cardType>({
         )?.schema;
 
         const tableData = findData(props.schemas, schemaName);
-        respParamsCard.codeText = getCodeText(props.schemas, tableData, 3);
+        const { codeText, codeTips } = getCodeText(props.schemas, tableData, 3)
+        respParamsCard.codeText = JSON.stringify(codeText)
+        respParamsCard.tips = codeTips
         respParamsCard.tableData = tableData;
+        setTimeout(() => {
+            loading.value = true
+        }, 1000)
     },
 });
 
+const options = {
+    minimap: {
+        enabled: false
+    }
+}
 const getContent = (data: any) => {
     if (data && data.content) {
         return Object.keys(data.content || {})[0];
@@ -263,17 +316,18 @@ const getContent = (data: any) => {
 onMounted(() => {
     requestCard.getData();
     responseStatusCard.getData();
-    watch(
-        () => props.selectApi,
-        () => {
-            requestCard.getData();
-            responseStatusCard.getData();
-        },
-    );
+});
 
-    watch([() => responseStatusCard.activeKey, () => props.selectApi], (n) => {
-        n[0] && respParamsCard.getData(n[0]);
-    });
+watch(
+    () => props.selectApi,
+    () => {
+        requestCard.getData();
+        responseStatusCard.getData();
+    },
+);
+
+watch([() => responseStatusCard.activeKey, () => props.selectApi], (n) => {
+    n[0] && respParamsCard.getData(n[0]);
 });
 </script>
 

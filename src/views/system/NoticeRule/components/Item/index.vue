@@ -6,7 +6,7 @@
                     {{ data?.name }}
                 </div>
                 <div>
-                    <a-tooltip :title="!action ? '暂无权限，请联系管理员' : ''">
+                    <a-tooltip :title="!action ? $t('Item.index.538002-0') : ''">
                         <a-switch
                             :disabled="!action"
                             @change="onSwitchChange"
@@ -20,9 +20,9 @@
                 >
                     <a-tooltip>
                         <template #title>
-                            <span v-if="!update">暂无权限，请联系管理员</span>
+                            <span v-if="!update">{{ $t('Item.index.538002-0') }}</span>
                             <div v-else>
-                                通过角色控制【{{ data.name }}】的所有的通知方式可被哪些用户订阅。
+                                {{ $t('Item.index.538002-1', [data.name]) }}
                             </div>
                         </template>
                         <a-button
@@ -39,7 +39,7 @@
                                 ><AIcon type="KeyOutlined"
                             /></span>
                             <span class="child-item-left-auth-text"
-                                >权限控制</span
+                                >{{ $t('Item.index.538002-3') }}</span
                             >
                         </a-button>
                     </a-tooltip>
@@ -74,7 +74,7 @@
                                                 type="link"
                                                 :hasPermission="true"
                                             >
-                                                查看
+                                                {{ $t('Item.index.538002-4') }}
                                             </j-permission-button>
                                         </a-menu-item>
                                         <a-menu-item>
@@ -85,7 +85,7 @@
                                                     'system/NoticeRule:update',
                                                 ]"
                                             >
-                                                编辑
+                                                {{ $t('Item.index.538002-5') }}
                                             </j-permission-button>
                                         </a-menu-item>
                                         <a-menu-item>
@@ -97,20 +97,20 @@
                                                     'system/NoticeRule:delete',
                                                 ]"
                                             >
-                                                删除
+                                                {{ $t('Item.index.538002-6') }}
                                             </j-permission-button>
                                         </a-menu-item>
                                     </a-menu>
                                 </template>
                             </a-dropdown>
                             <div class="box-item-text">
-                                <j-ellipsis>{{ slotProps?.name }}</j-ellipsis>
+                                <j-ellipsis>{{ slotProps?.i18nName || slotProps.name }}</j-ellipsis>
                             </div>
                         </div>
                     </template>
                 </MCarousel>
 
-                <a-tooltip :title="!add ? '暂无权限，请联系管理员' : ''">
+                <a-tooltip :title="!add ? $t('Item.index.538002-0') : ''">
                     <a-button
                         class="box-item-add"
                         :disabled="!add"
@@ -163,7 +163,9 @@ import { Modal, Checkbox } from 'ant-design-vue';
 import { usePermission } from '@jetlinks-web/hooks'
 import { LocalStore } from '@jetlinks-web/utils';
 import { useUserStore } from '@/store/user'
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 const props = defineProps({
     data: {
         type: Object,
@@ -222,7 +224,7 @@ const onDelete = async (id: string) => {
     if (id) {
         const resp = await deleteChannelConfig(id);
         if (resp.status === 200) {
-            onlyMessage('操作成功！');
+            onlyMessage($t('Item.index.538002-7'));
             emits('refresh');
         }
     }
@@ -238,17 +240,13 @@ const onAuthSave = (_data: string[]) => {
             role: {
                 idList: _data || [],
             },
-            permissions:
-                props.provider === 'alarm'
-                    ? [{ id: 'alarm-config', actions: ['query'] }]
-                    : [],
         },
     };
     spinning.value = true;
     editChannelConfig(props.data.id, obj)
         .then((resp) => {
             if (resp.status === 200) {
-                onlyMessage('操作成功！', 'success');
+                onlyMessage($t('Item.index.538002-7'), 'success');
                 authVisible.value = false;
                 emits('refresh');
             }
@@ -272,7 +270,7 @@ const onAction = (e: boolean) => {
             actionChannelConfig(props.data.id, 'enable')
                 .then((resp) => {
                     if (resp.status === 200) {
-                        onlyMessage('操作成功！');
+                        onlyMessage($t('Item.index.538002-7'));
                         emits('refresh');
                     }
                 })
@@ -289,32 +287,26 @@ const onAction = (e: boolean) => {
                               role: {
                                   idList: [],
                               },
-                              permissions: [
-                                  {
-                                      id: 'alarm-config',
-                                      actions: ['query'],
-                                  },
-                              ],
                           }
                         : props.data.grant,
                 channels: [
                     {
-                        name: '站内信',
+                        name: $t('Item.index.538002-8'),
                         channelProvider: 'inside-mail',
                         grant: {
                             role: {
                                 idList: [],
                             },
-                            permissions:
-                                props.provider === 'alarm'
-                                    ? [
-                                          {
-                                              id: 'alarm-config',
-                                              actions: ['query'],
-                                          },
-                                      ]
-                                    : [],
                         },
+                        i18nMessage: {
+                          name:
+                            {
+                              'zh_CN': '站内信',
+                              'en_US': 'In-site Message',
+                              'zh': '站内信',
+                              'en': 'In-site Message'
+                            }
+                        }
                     },
                 ],
             };
@@ -322,7 +314,7 @@ const onAction = (e: boolean) => {
             saveChannelConfig([obj])
                 .then((resp) => {
                     if (resp.status === 200) {
-                        onlyMessage('操作成功！', 'success');
+                        onlyMessage($t('Item.index.538002-7'), 'success');
                         emits('refresh');
                     }
                 })
@@ -333,7 +325,7 @@ const onAction = (e: boolean) => {
     } else {
         actionChannelConfig(props.data.id, 'disable').then((resp) => {
             if (resp.status === 200) {
-                onlyMessage('操作成功！');
+                onlyMessage($t('Item.index.538002-7'));
                 emits('refresh');
             }
         });
@@ -351,10 +343,10 @@ const onSwitchChange = (e: boolean) => {
         } else {
             Modal.confirm({
                 title: e
-                    ? '开启后默认平台所有用户都能接收到该通知'
-                    : '关闭后平台所有用户都不能接收到该通知',
-                cancelText: '取消',
-                okText: e ? '确认开启' : '确认关闭',
+                    ? $t('Item.index.538002-9')
+                    : $t('Item.index.538002-10'),
+                cancelText: $t('Item.index.538002-11'),
+                okText: e ? $t('Item.index.538002-12') : $t('Item.index.538002-13'),
                 content: h(
                     'div',
                     {
@@ -383,7 +375,7 @@ const onSwitchChange = (e: boolean) => {
                                     );
                                 },
                             },
-                            '不再提示',
+                            $t('Item.index.538002-14'),
                         ),
                     ],
                 ),
@@ -401,7 +393,7 @@ const onSave = (_data: any) => {
     updateChannelConfig(props.data.id, [_data])
         .then((resp) => {
             if (resp.status === 200) {
-                onlyMessage('操作成功！', 'success');
+                onlyMessage($t('Item.index.538002-7'), 'success');
                 visible.value = false;
                 emits('refresh');
             }

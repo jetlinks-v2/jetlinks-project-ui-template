@@ -1,8 +1,10 @@
 import {initWebSocket} from "@/utils/websocket";
-import {LocalStore, setToken} from "@jetlinks-web/utils";
+import {getToken, LocalStore, setToken} from "@jetlinks-web/utils";
+import {BASE_API, TOKEN_KEY} from "@jetlinks-web/constants";
 import {crateAxios} from '@jetlinks-web/core'
 import {jumpLogin} from '@/router'
 import { notification } from 'ant-design-vue'
+import {langKey} from "@/utils/consts";
 
 /**
  * 初始化package
@@ -12,12 +14,25 @@ export const initPackages = () => {
     /**
      * 初始化websocket
      */
-    initWebSocket();
+    const _initWs = () => {
+        const token = getToken();
+
+        if (!token) return
+
+        const protocol = window.location.protocol === "https" ? "wss://" : "ws://";
+        const host = document.location.host;
+        const url = `${protocol}${host}${BASE_API}/messaging/${token}?:${TOKEN_KEY}=${token}`;
+
+        initWebSocket(url);
+    };
+
+    _initWs();
 };
 
 export const initAxios = () => {
     crateAxios(
         {
+            langKey: langKey,
             tokenExpiration: () => {
                 jumpLogin()
             },
@@ -31,13 +46,8 @@ export const initAxios = () => {
                 '/application/',
                 '/application/sso/_all',
             ],
-            requestOptions: () => {
-                return {
-                    lang: localStorage.getItem('lang')
-                }
-            },
             handleError: (description, key, err) => {
-                if (!err.config?.hiddenError) {
+                if (!err.config.hiddenError) {
                     notification.error({
                         style: {
                             zIndex: 1040

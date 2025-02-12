@@ -4,15 +4,16 @@
             <img :src="getImage('/init-home/menu.png')" />
         </div>
         <div class="menu-info">
-            <b>系统初始化{{ count }}个菜单</b>
-            <div>初始化后的菜单可在“菜单管理”页面进行维护管理</div>
+            <b>{{ $t('Menu.index.459633-0', [count]) }}</b>
+            <div>{{ $t('Menu.index.459633-2') }}</div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { getImage } from '@jetlinks-web/utils'
-import {getModulesBaseMenu, USER_CENTER_MENU_DATA } from '../data/baseMenu'
+import { USER_CENTER_MENU_DATA } from '../data/baseMenu'
+import BaseMenu from '../data'
 import {  updateMenus } from '@/api/initHome';
 
 /**
@@ -20,7 +21,7 @@ import {  updateMenus } from '@/api/initHome';
  */
 const menuDates = reactive({
     count: 0,
-    current: [],
+    current: BaseMenu,
 });
 
 /**
@@ -67,12 +68,10 @@ const initMenu = async () => {
 const { count } = toRefs(menuDates);
 
 onMounted(()=>{
-    const menus = getModulesBaseMenu()
-    menuDates.count = menuCount(menus)
-    menuDates.current = menus
+    menuDates.count = menuCount(BaseMenu)
 })
 defineExpose({
-    updateMenu: initMenu,
+    updataMenu: initMenu,
 });
 </script>
 <style lang="less" scoped>

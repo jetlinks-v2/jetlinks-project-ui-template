@@ -2,6 +2,7 @@
   <a-select
     style="width: 180px"
     :value="value"
+    v-if="options.length"
     :options="options"
     placeholder="组织"
     @select="orgChange"

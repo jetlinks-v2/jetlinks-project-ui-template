@@ -7,3 +7,5 @@ export const OWNER_KEY = 'iot'
 export const default_app_id = 'authentication-service'
 
 export const URL_TOKEN_KET = import.meta.env.VITE_TOKEN_KEY.replace(/-/g, '_')
+
+export const langKey = 'Accept-Language'

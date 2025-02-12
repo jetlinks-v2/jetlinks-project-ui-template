@@ -52,3 +52,12 @@ export const INIT_HOME: RouteRecordItem = {
     title: "初始化",
   },
 }
+
+export const DEMO: RouteRecordItem = {
+  path: '/demo',
+  name: 'demo',
+  component: () => import('@/views/demo/index.vue'),
+  meta: {
+    title: 'demo'
+  }
+}

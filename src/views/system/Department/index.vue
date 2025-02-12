@@ -6,7 +6,23 @@
           <LeftTree @change="onChange" />
         </div>
         <div class="right">
-          <User :parentId="departmentId" />
+          <a-tabs v-if='isNoCommunity && extraComponents?.length' v-model:activeKey="activeKey" destroyInactiveTabPane>
+            <a-tab-pane v-for="item in extraComponents" :key="item.name" :tab="$t(item.label)">
+              <component
+                :is="item.component"
+                :parentId="departmentId"
+                @open-device-bind="openDeviceBind"
+                v-model:bindBool="bindBool"
+              />
+            </a-tab-pane>
+            <a-tab-pane key="position" :tab="$t('Department.index.945805-3')">
+              <Position :parentId="departmentId" @changeTabs="onChangeTabs" />
+            </a-tab-pane>
+            <a-tab-pane key="user" :tab="$t('Department.index.945805-2')">
+              <User :parentId="departmentId" :positionId="positionId"  />
+            </a-tab-pane>
+          </a-tabs>
+          <User v-else :parentId="departmentId" />
         </div>
       </div>
     </FullPage>
@@ -15,13 +31,37 @@
 
 <script setup lang="ts" name="Department">
 import LeftTree from './components/LeftTree.vue'
-import User from './user/index.vue'
+import User from './user/index.vue';
+import Position from './positions/index.vue';
+import {getModulesComponents, isNoCommunity} from "@/utils";
 
-const departmentId = ref<string>('')
+const activeKey = ref<'product' | 'device' | 'user'>('product');
+
+const departmentId = ref<string>('');
+const positionId = ref<string>('');
+const extraComponents = ref([])
+
+const bindBool = ref<boolean>(false);
+const openDeviceBind = () => {
+  bindBool.value = true;
+  activeKey.value = 'device';
+};
 
 const onChange = (id: string) => {
   departmentId.value = id
 }
+
+const onChangeTabs = (id) => {
+  positionId.value = id
+  activeKey.value = 'user';
+  setTimeout(() => {
+    positionId.value = undefined
+  }, 100)
+}
+
+onMounted(() => {
+  extraComponents.value = getModulesComponents('department')
+})
 </script>
 
 <style lang="less" scoped>
@@ -32,15 +72,17 @@ const onChange = (id: string) => {
   height: 100%;
 
   .left {
-    border-right: 1px solid #f0f0f0;
-    padding-right: 24px;
-    flex:1;
-    height:100%
+    position: absolute;
+    height: 100%;
+    width: 300px;
   }
 
   .right {
-    flex:4;
-    height:100%
+    width: calc(100% - 316px);
+    margin-left: 316px;
+    :deep(.ant-tabs-nav-wrap) {
+      padding-left: 24px;
+    }
   }
 }
 </style>

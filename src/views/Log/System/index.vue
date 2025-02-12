@@ -1,22 +1,19 @@
 <template>
-  <div class="log-search">
-    <pro-search :columns="columns" target="search-system" noMargin @search="handleSearch" />
-  </div>
-  <div class="log-table">
-    <j-pro-table
-      ref="tableRef"
-      mode="TABLE"
-      :columns="columns"
-      :request="querySystem"
-      :defaultParams="{
+    <div>
+        <pro-search :columns="columns" target="search-system" @search="handleSearch" />
+        <j-pro-table
+            ref="tableRef"
+            model="TABLE"
+            :columns="columns"
+            :request="querySystem"
+            :defaultParams="{
                 sorts: [{ name: 'createTime', order: 'desc' }],
             }"
-      :params="params"
-      :scroll="{y: 'calc(100% - 60px)'}"
-    >
-      <template #level="slotProps">
-        <a-tag
-          :color="
+            :params="params"
+        >
+            <template #level="slotProps">
+                <a-tag
+                    :color="
                         slotProps.level === 'WARN'
                             ? 'orange'
                             : slotProps.level === 'ERROR'
@@ -25,41 +22,41 @@
                             ? 'blue'
                             : 'green'
                     "
-        >
-          {{ slotProps.level }}
-        </a-tag>
-      </template>
-      <template #createTime="slotProps">
-        {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}
-      </template>
-      <template #server="slotProps">
-        {{ slotProps.context.server }}
-      </template>
+                >
+                    {{ slotProps.level }}
+                </a-tag>
+            </template>
+            <template #createTime="slotProps">
+                {{ dayjs(slotProps.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+            </template>
+            <template #server="slotProps">
+                {{ slotProps.context.server }}
+            </template>
 
-      <template #action="slotProps">
-        <a-space :size="16">
-          <template
-            v-for="i in getActions(slotProps)"
-            :key="i.key"
-          >
-            <j-permission-button
-              :tooltip="{
+            <template #action="slotProps">
+                <a-space :size="16">
+                    <template
+                            v-for="i in getActions(slotProps)"
+                            :key="i.key"
+                        >
+                            <j-permission-button
+                                :tooltip="{
                                     ...i.tooltip,
                                 }"
-              @click="i.onClick"
-              type="link"
-              style="padding: 0 5px"
-            >
-              <template #icon
-              ><AIcon :type="i.icon"
-              /></template>
-            </j-permission-button>
-          </template>
-        </a-space>
-      </template>
-    </j-pro-table>
-  </div>
-    <a-modal :width="1100" v-model:visible="visible" title="详情">
+                                @click="i.onClick"
+                                type="link"
+                                style="padding: 0 5px"
+                            >
+                                <template #icon
+                                    ><AIcon :type="i.icon"
+                                /></template>
+                            </j-permission-button>
+                        </template>
+                </a-space>
+            </template>
+        </j-pro-table>
+    </div>
+    <a-modal :width="1100" v-model:visible="visible" :title="$t('System.index.112006-0')">
         <div>
             <span class="mr-10">[{{ descriptionsData?.threadName }}]</span>
             <span class="mr-10">{{
@@ -88,21 +85,24 @@
       <div class="warn-content">
         {{ descriptionsData.exceptionStack }}
       </div>
-<!--        <a-textarea-->
+<!--        <j-textarea-->
 <!--            v-model:value=""-->
 <!--            placeholder="暂无数据"-->
 <!--            :auto-size="{ minRows: 24, maxRows: 28 }"-->
 <!--        />-->
         <template #footer>
-            <a-button type="primary" @click="handleOk">关闭</a-button>
+            <a-button type="primary" @click="handleOk">{{ $t('System.index.112006-1') }}</a-button>
         </template>
     </a-modal>
 </template>
 <script lang="ts" setup name="SystemLog">
+import type { ActionsType } from '../typings';
 import type { SystemLogItem } from '../typings';
 import { querySystem } from '@/api/log';
 import dayjs from 'dayjs';
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 import { modifySearchColumnValue } from '@/utils/comm';
 
 const tableRef = ref<Record<string, any>>({});
@@ -110,7 +110,7 @@ const params = ref<Record<string, any>>({});
 
 const columns = [
     {
-        title: '名称',
+        title: $t('System.index.112006-2'),
         dataIndex: 'name',
         key: 'name',
         search: {
@@ -122,7 +122,7 @@ const columns = [
         ellipsis: true,
     },
     {
-        title: '日志级别',
+        title: $t('System.index.112006-3'),
         dataIndex: 'level',
         key: 'level',
         search: {
@@ -150,7 +150,7 @@ const columns = [
         width: 100,
     },
     {
-        title: '日志内容',
+        title: $t('System.index.112006-4'),
         dataIndex: 'message',
         key: 'message',
         search: {
@@ -160,7 +160,7 @@ const columns = [
         ellipsis: true,
     },
     {
-        title: '服务名',
+        title: $t('System.index.112006-5'),
         dataIndex: 'server',
         key: 'server',
         scopedSlots: true,
@@ -171,7 +171,7 @@ const columns = [
         ellipsis: true,
     },
     {
-        title: '创建时间',
+        title: $t('System.index.112006-6'),
         dataIndex: 'createTime',
         key: 'createTime',
         search: {
@@ -181,10 +181,10 @@ const columns = [
         width: 200,
     },
     {
-        title: '操作',
+        title: $t('System.index.112006-7'),
         key: 'action',
         fixed: 'right',
-        width: 60,
+        width: 100,
         scopedSlots: true,
     },
 ];
@@ -209,16 +209,16 @@ const handleOk = (e: MouseEvent) => {
     visible.value = false;
 };
 
-const getActions = (data: Partial<Record<string, any>>): any[] => {
+const getActions = (data: Partial<Record<string, any>>): ActionsType[] => {
     if (!data) {
         return [];
     }
     return [
         {
             key: 'eye',
-            text: '查看',
+            text: $t('System.index.112006-8'),
             tooltip: {
-                title: '查看',
+                title: $t('System.index.112006-8'),
             },
             icon: 'EyeOutlined',
             onClick: () => {

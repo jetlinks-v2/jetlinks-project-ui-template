@@ -1,13 +1,13 @@
 <template>
   <a-modal
-    title="绑定"
+    :title="$t('components.AddBindUserDialog.811389-0')"
     :width="900"
     visible
     :confirmLoading="loading"
     @ok="confirm"
     @cancel="emits('close')"
   >
-    <pro-search :columns="bindUserColumns" target="category" @search="onSearch" />
+    <pro-search type="simple" :columns="bindUserColumns" target="category" @search="onSearch" />
     <div class="table">
       <j-pro-table
         ref="tableRef"
@@ -36,7 +36,9 @@ import { bindUser_api } from '@/api/system/department'
 import { useRequest } from '@jetlinks-web/hooks'
 import { onlyMessage } from '@jetlinks-web/utils'
 import { bindUserColumns, requestFun } from '../../util'
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 const emits = defineEmits(['save', 'close'])
 
 const props = defineProps({
@@ -46,7 +48,7 @@ const props = defineProps({
   },
 })
 
-const queryParams = ref({})
+const queryParams = ref({ terms: [] })
 const _selectedRowKeys = ref<string[]>([])
 
 // 保存数据
@@ -54,7 +56,7 @@ const { loading, run } = useRequest(bindUser_api, {
   immediate: false,
   onSuccess(res) {
     if (res.success) {
-      onlyMessage('操作成功')
+      onlyMessage($t('components.AddBindUserDialog.811389-1'))
       _selectedRowKeys.value = []
       emits('save')
     }
@@ -65,7 +67,7 @@ const confirm = () => {
   if (_selectedRowKeys.value.length && props.parentId) {
     run(props.parentId, _selectedRowKeys.value)
   } else {
-    onlyMessage('请选择要绑定的用户', 'warning')
+    onlyMessage($t('components.AddBindUserDialog.811389-2'), 'warning')
   }
 }
 
@@ -95,8 +97,8 @@ const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
     })
   } else {
     const arr = changeRows.map((item: any) => item.id)
-    const _ids: string[] = []
-    ;[..._selectedRowKeys.value].map((i: any) => {
+    const _ids: string[] = [];
+    [..._selectedRowKeys.value].map((i: any) => {
       if (!arr.includes(i)) {
         _ids.push(i)
       }
@@ -107,21 +109,19 @@ const onSelectAll = (selected: boolean, _: any[], changeRows: any) => {
 
 // 请求数据
 const handleSearch = (oParams: any) =>
-  requestFun(props.parentId, oParams, [
-    {
-      terms: [
-        {
-          column: 'id$in-dimension$org$not',
-          value: props.parentId,
-        },
-      ],
-    },
-  ])
+    requestFun(props.parentId, oParams, [
+      {
+        terms: [
+          {
+            column: 'id$in-dimension$org$not',
+            value: props.parentId,
+          },
+        ],
+      },
+    ])
 
 //
-const onSearch = (e: any[]) => {
-  queryParams.value = {
-    terms: e,
-  }
+const onSearch = (e: any) => {
+  queryParams.value = e
 }
 </script>
