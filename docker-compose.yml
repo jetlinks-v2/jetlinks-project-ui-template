@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  jetlinks-template-ui:
+    build: .
+    ports:
+      - "9100:9100"
+    volumes:
+      - .:/app
+      - /app/node_modules  # 防止覆盖容器内的node_modules
+    environment:
+      - HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true  # 确保文件变化检测
