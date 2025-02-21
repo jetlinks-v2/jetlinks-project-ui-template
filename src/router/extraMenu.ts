@@ -10,11 +10,6 @@ export const getExtraRouters = () => {
     }],
     'system/Menu': [
       {
-        code: 'Setting',
-        url: '/Setting',
-        name: i18n.global.t('router.extraMenu.260658-1')
-      },
-      {
         code: 'Detail',
         url: '/Detail/:id',
         name: i18n.global.t('router.extraMenu.260658-2')
