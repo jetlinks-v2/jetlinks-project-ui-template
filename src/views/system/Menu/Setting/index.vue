@@ -68,19 +68,17 @@
 </template>
 
 <script setup lang="ts" name="MenuSetting">
-import { getMenuTree, getProviders } from '@/api/system/menu';
+import { getMenuTree } from '@/api/system/menu';
 import {
     getSystemPermission as getSystemPermission_api,
     updateMenus,
 } from '@/api/initHome';
 import {
     filterMenu,
-    initData,
     inItSelected,
     drop,
     select,
     getMaxDepth,
-    mergeArr,
     findAllParentsAndChildren,
     handleSorts,
     handleSortsArr,
@@ -90,7 +88,7 @@ import type { AntTreeNodeDropEvent } from 'ant-design-vue/es/tree';
 import { cloneDeep, unionBy } from 'lodash-es';
 import { onlyMessage } from '@/utils/comm';
 import { USER_CENTER_MENU_CODE, messageSubscribe } from '@/utils/consts';
-import { protocolList } from '@/utils/consts';
+import { protocolList } from './data';
 import { isNoCommunity } from '@/utils/utils';
 import { USER_CENTER_MENU_DATA } from '@/views/init-home/data/baseMenu';
 import { useI18n } from 'vue-i18n';
@@ -129,17 +127,17 @@ const params = {
  * 查询支持的协议
  */
 let filterProtocolList: any[] = [];
-const getProvidersFn = async () => {
-    if (!isNoCommunity) {
-        return;
-    } else {
-        const res: any = await getProviders();
-        filterProtocolList = protocolList.filter((item) => {
-            return res.result?.find((val: any) => item.alias == val.id);
-        });
-    }
-};
-getProvidersFn();
+// const getProvidersFn = async () => {
+//     if (!isNoCommunity) {
+//         return;
+//     } else {
+//         const res: any = await getProviders();
+//         filterProtocolList = protocolList.filter((item) => {
+//             return res.result?.find((val: any) => item.alias == val.id);
+//         });
+//     }
+// };
+// getProvidersFn();
 /**
  * 作用：过滤掉非选中菜单重新组成新的数组
  */
