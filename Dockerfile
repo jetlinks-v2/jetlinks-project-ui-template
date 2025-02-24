@@ -4,19 +4,28 @@ FROM node:18-alpine
 # 设置工作目录
 WORKDIR /app
 
+# 设置环境变量，允许用户自定义npm源
+ARG NPM_REGISTRY=https://registry.npmmirror.com
+ENV NPM_REGISTRY=${NPM_REGISTRY}
+
 # 复制包管理文件
 COPY package*.json ./
-
-# 安装依赖（包含开发依赖）, 使用淘宝镜像
-RUN npm config set registry https://registry.npmmirror.com
-RUN npm install pnpm -g
-RUN pnpm install
 
 # 复制项目文件
 COPY . .
 
+# 复制并设置启动脚本
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# 创建 node_modules 挂载点
+VOLUME /app/node_modules
+
 # 暴露端口
-EXPOSE 3000
+EXPOSE 9100
+
+# 使用启动脚本
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # 启动开发服务器
 CMD ["pnpm", "run", "dev"]

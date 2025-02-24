@@ -1,0 +1,10 @@
+.git
+.gitignore
+.vscode
+.DS_Store
+.idea
+dist
+node_modules
+Dockerfile
+docker-compose.yml
+.dockerignore

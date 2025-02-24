@@ -1,13 +1,17 @@
-version: '3.8'
-
+version: '3'
 services:
-  jetlinks-template-ui:
-    build: .
+  app:
+    image: jetlinks-template-ui  # 替换为实际的镜像名称
     ports:
       - "9100:9100"
     volumes:
-      - .:/app
-      - /app/node_modules  # 防止覆盖容器内的node_modules
+      # 只挂载 modules 目录和运行时配置
+      - ./modules/data-collector-ui:/app/src/modules/data-collector-ui
+      - ./modules/device-manager-ui:/app/src/modules/device-manager-ui
+      - ${RUNTIME_CONFIG:-./config}:/runtime-config
     environment:
-      - HOST=0.0.0.0
-      - CHOKIDAR_USEPOLLING=true  # 确保文件变化检测
+      # 运行时配置路径
+      - RUNTIME_CONFIG=/runtime-config
+      # 其他必要的环境变量
+      - NODE_ENV=${NODE_ENV:-development}
+      - VITE_APP_DEV_PROXY_URL=${VITE_APP_DEV_PROXY_URL:-http://localhost:8080}
