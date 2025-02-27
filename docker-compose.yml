@@ -1,13 +1,13 @@
 version: '3'
 services:
   app:
-    image: jetlinks-template-ui  # 替换为实际的镜像名称
+    image: registry.cn-shenzhen.aliyuncs.com/jetlinks/jetlinks-template-ui:1.0  # 替换为实际的镜像名称
     ports:
       - "9100:9100"
     volumes:
       # 只挂载 modules 目录和运行时配置
-      - ./modules/data-collector-ui:/app/src/modules/data-collector-ui
-      - ./modules/device-manager-ui:/app/src/modules/device-manager-ui
+#      - ./modules/data-collector-ui:/app/src/modules/data-collector-ui
+#      - ./modules/device-manager-ui:/app/src/modules/device-manager-ui
       - ${RUNTIME_CONFIG:-./config}:/runtime-config
     environment:
       # 运行时配置路径
@@ -15,3 +15,4 @@ services:
       # 其他必要的环境变量
       - NODE_ENV=${NODE_ENV:-development}
       - VITE_APP_DEV_PROXY_URL=${VITE_APP_DEV_PROXY_URL:-http://localhost:8080}
+      - VITE_PORT=${VITE_PORT:-9100}
