@@ -12,12 +12,19 @@ import {
 } from 'vite-plugin-style-import'
 import * as path from 'path'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
-import { optimizeDeps, registerModulesAlias } from './configs/plugin'
+import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile } from './configs/plugin'
 import progress from 'vite-plugin-progress'
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, command }) => {
     const env: Partial<ImportMetaEnv> = loadEnv(mode, process.cwd())
+    let modulesName
+
+    if (String(command) === 'build') {
+        backupModulesFile();
+        modulesName = process.env.MODULES || process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || '**';
+        updateModulesFile(modulesName)
+    }
 
     return {
         base: './',
@@ -28,8 +35,8 @@ export default defineConfig(({ mode }) => {
             },
         },
         build: {
-            outDir: 'dist',
-            assetsDir: 'assets',
+            outDir: modulesName ? `src/modules/${modulesName}/dist` : 'dist',
+            assetsDir: modulesName ? `src/modules/${modulesName}/assets` : 'assets',
             sourcemap: false,
             cssCodeSplit: false,
             manifest: true,
@@ -37,9 +44,15 @@ export default defineConfig(({ mode }) => {
             assetsInlineLimit: 1000,
             rollupOptions: {
                 output: {
-                    entryFileNames: `assets/[name].${ new Date().getTime() }.js`,
-                    chunkFileNames: `assets/[name].${ new Date().getTime() }.js`,
-                    assetFileNames: `assets/[name].${ new Date().getTime() }.[ext]`,
+                    entryFileNames: `assets/[name].[hash].js`,
+                    chunkFileNames: `assets/[name].[hash].js`,
+                    assetFileNames: (pre) => {
+                        const fileType = pre.name.split('.')?.pop()
+                        if (['png', 'svg', 'ico', 'jpg'].includes(fileType)) {
+                            return `assets/[name].[ext]`
+                        }
+                        return `assets/[name].[hash].[ext]`
+                    },
                     compact: true,
                     manualChunks: {
                         vue: ['vue', 'vue-router', 'pinia'],
@@ -72,6 +85,7 @@ export default defineConfig(({ mode }) => {
                 resolves: [AndDesignVueResolve()],
             }),
             progress(),
+            restoreModulesFile()
         ],
         server: {
             host: '0.0.0.0',

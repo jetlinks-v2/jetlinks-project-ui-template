@@ -20,9 +20,14 @@ import { saveSearchHistory, getSearchHistory, deleteSearchHistory } from '@/api/
 
 interface Emit {
   (e: 'search', data: any): void
+  (e: 'update:value', data: any): void
 }
 
 const props = defineProps({
+  value: {
+    type: Object,
+    default: () => ({})
+  },
   columns: {
     type: Array as PropType<any[]>,
     default: () => [],
@@ -66,6 +71,7 @@ const classNames = computed(() => {
  * 提交
  */
 const searchSubmit = (data: any) => {
+  emit('update:value', data)
   emit('search', data)
 }
 
