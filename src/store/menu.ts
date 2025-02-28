@@ -102,12 +102,14 @@ export const useMenuStore = defineStore('menu', () => {
       paging: false,
       terms: defaultOwnParams,
     })
+    //  TODO 获取子应用，二分法遍历树节点，来判断哪些是子应用页面，并处理resp.result数据
+
     const asyncRoutes = getGlobModules()
     menusMap.value.clear()
 
     if (resp.success) {
       const extraMenu = getExtraRouters()
-      console.log(extraMenu)
+
       const routes = handleMenus(cloneDeep(resp.result), extraMenu, asyncRoutes) // 处理路由
       if (routes.length) {
         routes.push({
