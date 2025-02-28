@@ -19,12 +19,17 @@ import progress from 'vite-plugin-progress'
 export default defineConfig(({ mode, command }) => {
     const env: Partial<ImportMetaEnv> = loadEnv(mode, process.cwd())
     let modulesName
+    let isModule = false
 
     if (String(command) === 'build') {
         backupModulesFile();
         modulesName = process.env.MODULES || process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || '**';
         updateModulesFile(modulesName)
     }
+
+    isModule = modulesName && modulesName !== '**'
+
+    console.log('modulesName', modulesName)
 
     return {
         base: './',
@@ -35,8 +40,8 @@ export default defineConfig(({ mode, command }) => {
             },
         },
         build: {
-            outDir: modulesName ? `src/modules/${modulesName}/dist` : 'dist',
-            assetsDir: modulesName ? `src/modules/${modulesName}/assets` : 'assets',
+            outDir: isModule ? `src/modules/${modulesName}/dist` : 'dist',
+            assetsDir: isModule ? `src/modules/${modulesName}/assets` : 'assets',
             sourcemap: false,
             cssCodeSplit: false,
             manifest: true,
