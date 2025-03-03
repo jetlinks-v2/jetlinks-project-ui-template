@@ -26,27 +26,27 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.jetlinks.pro</groupId>
+            <groupId>org.jetlinks.ui</groupId>
             <artifactId>jetlinks-ui-assets</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jetlinks.pro</groupId>
+            <groupId>org.jetlinks.ui</groupId>
             <artifactId>jetlinks-ui-fonts</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jetlinks.pro</groupId>
+            <groupId>org.jetlinks.ui</groupId>
             <artifactId>jetlinks-ui-images</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jetlinks.pro</groupId>
+            <groupId>org.jetlinks.ui</groupId>
             <artifactId>jetlinks-ui-other</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jetlinks.pro</groupId>
+            <groupId>org.jetlinks.ui</groupId>
             <artifactId>jetlinks-ui-monacoeditorwork</artifactId>
             <version>${project.version}</version>
         </dependency>
