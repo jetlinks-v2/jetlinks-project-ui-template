@@ -7,6 +7,17 @@ export function backupModulesFile() {
     }
 }
 
+export function handleRestoreModulesFile() {
+    if (fs.existsSync(backupFilePath)) {
+        console.log('Backup file exists. Restoring...');
+        fs.copyFileSync(backupFilePath, 'src/utils/modules.ts');
+        fs.unlinkSync(backupFilePath);
+        console.log('Restore complete. Backup file deleted.');
+    } else {
+        console.log('No backup file found. Nothing to restore.');
+    }
+}
+
 export function restoreModulesFile() {
     let called = false
     return {
@@ -14,14 +25,7 @@ export function restoreModulesFile() {
         buildEnd() {
             if (!called) {
                 console.log('Attempting to restore modules.ts from backup.');
-                if (fs.existsSync(backupFilePath)) {
-                    console.log('Backup file exists. Restoring...');
-                    fs.copyFileSync(backupFilePath, 'src/utils/modules.ts');
-                    fs.unlinkSync(backupFilePath);
-                    console.log('Restore complete. Backup file deleted.');
-                } else {
-                    console.log('No backup file found. Nothing to restore.');
-                }
+                handleRestoreModulesFile()
             }
         }
     }

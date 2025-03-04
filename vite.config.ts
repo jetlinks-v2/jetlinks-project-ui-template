@@ -12,8 +12,13 @@ import {
 } from 'vite-plugin-style-import'
 import * as path from 'path'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
-import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile } from './configs/plugin'
+import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile } from './configs/plugin'
 import progress from 'vite-plugin-progress'
+
+process.on('SIGINT', handleRestoreModulesFile);
+process.on('SIGTERM', handleRestoreModulesFile);
+process.on('uncaughtException', handleRestoreModulesFile);
+process.on('unhandledRejection', handleRestoreModulesFile);
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode, command }) => {
@@ -88,6 +93,15 @@ export default defineConfig(({ mode, command }) => {
                 resolves: [AndDesignVueResolve()],
             }),
             progress(),
+            {
+                name: 'vite-plugin-error-handler',
+                buildEnd(error) {
+                    if (error) {
+                        console.error('Build failed:', error);
+                        handleRestoreModulesFile();
+                    }
+                }
+            },
             restoreModulesFile()
         ],
         server: {
