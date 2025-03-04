@@ -30,6 +30,25 @@ export function restoreModulesFile() {
 export function updateModulesFile(modules='**') {
     const modulesArray = modules === 'no-modules' ? [] : modules.split(',')
     const importStatements = modulesArray.map(module => `import.meta.glob('../modules/${module}/index.ts', { eager: true })`).join(',\n')
-    const content = `export const modules = () => {\n    let modulesMap = {}\n    const modulesFiles = [\n${importStatements}\n    ]\n  return Object.assign(modulesMap, ...modulesFiles)\n}`
+    const importMenus = modulesArray.map(module => `import.meta.glob('../modules/${module}/baseMenu.ts', {eager: true})`).join(',\n')
+    const content = `export const modules = () => {
+        let modulesMap = {}
+        const modulesFiles = [
+            ${importStatements}
+        ]
+        return Object.assign(modulesMap, ...modulesFiles)
+     }
+     export const getModulesMenu = () => {
+       const modulesFiles = [
+            ${importMenus}
+       ]
+       const menus: any[] = []
+       modulesFiles.forEach(item => {
+         const modules = Object.values(item)
+         menus.push(...modules.map((m:any) => m.default?.()))
+       })
+       return menus
+     }
+     `
     fs.writeFileSync('src/utils/modules.ts', content)
 }

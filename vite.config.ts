@@ -27,7 +27,7 @@ export default defineConfig(({ mode, command }) => {
         updateModulesFile(modulesName)
     }
 
-    isModule = modulesName && modulesName !== '**'
+    isModule = modulesName && ['**', 'no-modules'].includes(modulesName)
 
     return {
         base: './',
