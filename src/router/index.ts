@@ -7,6 +7,8 @@ import { NOT_FIND_ROUTE, LOGIN_ROUTE, DEMO } from './basic'
 import {useUserStore} from "@/store/user";
 import {useSystemStore} from "@/store/system";
 import {useMenuStore} from "@/store/menu";
+import {isSubApp} from "@/utils";
+import {useApplication} from "@/store";
 
 let TokenFilterRoute: string[] = [ DEMO.path ]
 
@@ -21,6 +23,14 @@ const router = createRouter({
     return savedPosition || {top: 0}
   },
 })
+
+// const originalPush = router.push;
+// router.push = function push(location) {
+//   return originalPush.call(this, location).catch(err => {
+//     if (err.name !== 'NavigationDuplicated') throw err;
+//   });
+// };
+
 
 const NoTokenJump = (to: any, next: any, isLogin: boolean) => {
   // 登录页，不需要token 的页面直接放行，否则跳转登录页
@@ -37,6 +47,8 @@ const getRoutesByServer = async (to: any, next: any) => {
   const SystemStore = useSystemStore()
   const MenuStore = useMenuStore()
 
+
+
   if (!Object.keys(UserInfoStore.userInfo).length) {
     // 是否有用户信息
     await UserInfoStore.getUserInfo()
@@ -44,6 +56,10 @@ const getRoutesByServer = async (to: any, next: any) => {
     await SystemStore.queryVersion()
     await SystemStore.queryInfo()
     await SystemStore.setMircoData()
+
+    if (!isSubApp) {
+      await useApplication().queryApplication() // 获取子应用
+    }
   }
 
   // 没有菜单的情况下获取菜单

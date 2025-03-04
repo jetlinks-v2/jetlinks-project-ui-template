@@ -1,6 +1,7 @@
 import { BasicLayoutPage, BlankLayoutPage, Iframe } from '@/layout'
-import { shallowRef } from 'vue'
+import {ShallowRef, shallowRef} from 'vue'
 import {isArray} from "lodash-es";
+import SubAppPage from '@/views/mirco/SubAppRedirect/base.vue'
 
 type Buttons = Array<{ id: string }>
 
@@ -27,6 +28,7 @@ const handleButtons = (buttons?: Buttons) => {
 
 const handleMeta = (item: MenuItem, isApp: boolean) => {
   return {
+    ...(item.meta || {}),
     icon: item.icon,
     title: item.i18nName || item.name,
     hideInMenu: item.isShow === false,
@@ -35,21 +37,34 @@ const handleMeta = (item: MenuItem, isApp: boolean) => {
   }
 }
 
-const findComponents = (code: string, level: number, isApp: boolean, components: any, mate: any, hasChildren: false) => {
+type FindComponentsFn = (code: string, level: number, isApp: boolean, components: any, mate: any, hasChildren: false) => undefined | Function | VNode | ShallowRef
+
+const findComponents: FindComponentsFn = (code, level, isApp, components, mate, hasChildren) => {
   const myComponents = components[code]
+
+  if (!hasChildren && mate && mate.appName && mate.appUrl) {
+    return () => SubAppPage
+  }
+
   if (level === 1) { // BasicLayoutPage
     if (myComponents && !hasChildren) {
       return mate?.hasLayout === false ? () => myComponents() : h(BasicLayoutPage, {}, h(defineAsyncComponent(() => myComponents()), {}))
     }
     return myComponents ? () => myComponents() : shallowRef(BasicLayoutPage)
-  } else if (level === 2) { // BlankLayoutPage or components
+  }
+
+  if (level === 2) { // BlankLayoutPage or components
     return myComponents ? () => myComponents() : BlankLayoutPage
-  } else if (isApp){ // iframe
+  }
+
+  if (isApp){ // iframe
     return () => Iframe
-  } else if(myComponents) { // components
+  }
+
+  if(myComponents) { // components
     return () => myComponents()
   }
-  // return components['demo'] // 开发测试用
+
   return undefined
 }
 
@@ -85,7 +100,6 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
         meta: meta,
         children: item.children || []
       }
-
       route.component = item.component ?? findComponents(item.code, level, isApp, components, item.meta, route.children.length)
       const extraRoute = hasExtraChildren(item, extraMenus)
       if (extraRoute && !isApp) { // 包含额外的子路由

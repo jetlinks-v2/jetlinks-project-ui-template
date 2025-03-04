@@ -29,8 +29,6 @@ export default defineConfig(({ mode, command }) => {
 
     isModule = modulesName && modulesName !== '**'
 
-    console.log('modulesName', modulesName)
-
     return {
         base: './',
         resolve: {
@@ -46,7 +44,7 @@ export default defineConfig(({ mode, command }) => {
             cssCodeSplit: false,
             manifest: true,
             chunkSizeWarningLimit: 2000,
-            assetsInlineLimit: 1000,
+            assetsInlineLimit: 4000,
             rollupOptions: {
                 output: {
                     entryFileNames: `assets/[name].[hash].js`,

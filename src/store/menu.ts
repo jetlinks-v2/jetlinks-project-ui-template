@@ -11,6 +11,7 @@ import {USER_CENTER_ROUTE, INIT_HOME} from '@/router/basic'
 import {useAuthStore} from '@/store/auth'
 import {OWNER_KEY} from "@/utils/consts";
 import i18n from "@/locales";
+import {useApplication} from "@/store/application";
 
 const $t = i18n.global.t
 
@@ -40,6 +41,7 @@ export const useMenuStore = defineStore('menu', () => {
   const menu = ref<any[]>([])
   const menusMap = ref<Map<string, any>>(new Map())
   const siderMenus = ref([])
+  const app = useApplication()
 
   const authStore = useAuthStore()
 
@@ -102,7 +104,35 @@ export const useMenuStore = defineStore('menu', () => {
       paging: false,
       terms: defaultOwnParams,
     })
-    //  TODO 获取子应用，二分法遍历树节点，来判断哪些是子应用页面，并处理resp.result数据
+
+    let menuResult = resp.result
+    //  遍历树节点，处理子应用页面
+
+    if (app.appList.length > 0) {
+      const handleMicroApp = (nodes: any[]) => {
+        if (!nodes || nodes.length === 0) return;
+
+        for (const node of nodes) {
+          // 处理当前节点
+          if (node.children && node.children.length > 0) {
+            // 处理子节点
+            handleMicroApp(node.children);
+          }
+
+          if(node.options && node.options.appName) {
+            const appInfo = app.findAppById(node.options.appName)
+            node.meta = {
+              appName: node.options.appName,
+              appUrl: appInfo?.path
+            }
+          }
+        }
+      }
+
+      // 开始遍历处理
+      handleMicroApp(menuResult);
+
+    }
 
     const asyncRoutes = getGlobModules()
     menusMap.value.clear()
@@ -110,7 +140,7 @@ export const useMenuStore = defineStore('menu', () => {
     if (resp.success) {
       const extraMenu = getExtraRouters()
 
-      const routes = handleMenus(cloneDeep(resp.result), extraMenu, asyncRoutes) // 处理路由
+      const routes = handleMenus(cloneDeep(menuResult), extraMenu, asyncRoutes) // 处理路由
       if (routes.length) {
         routes.push({
           path: '/',
@@ -120,11 +150,11 @@ export const useMenuStore = defineStore('menu', () => {
 
       routes.push(USER_CENTER_ROUTE) // 添加个人中心
       routes.push(INIT_HOME) // 添加初始化页面
-      authStore.handlePermission(resp.result) // 处理按钮权限
+      authStore.handlePermission(menuResult) // 处理按钮权限
       menu.value = routes
       console.log('routes', routes)
       handleMenusMap(routes, handleMenusMapById)
-      siderMenus.value = handleSiderMenu(cloneDeep(resp.result)) // 处理菜单
+      siderMenus.value = handleSiderMenu(cloneDeep(menuResult)) // 处理菜单
     }
   }
 

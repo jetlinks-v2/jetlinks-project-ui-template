@@ -17,7 +17,7 @@ import componentsZhCN from '@jetlinks-web/components/es/locale/zh-CN'
 import componentsEnUS from '@jetlinks-web/components/es/locale/en-US'
 import theme from '../configs/theme'
 import { useAuthStore, useSystemStore } from '@/store';
-import { ComponentsEnum } from '@jetlinks-web/constants'
+import { usePermissionContext } from '@jetlinks-web/hooks'
 import {initPackages} from "@/package";
 import { setToken} from "@jetlinks-web/utils";
 
@@ -37,7 +37,7 @@ const componentsLocale = {
 // 为公共hooks提供权限校验方法
 const { hasPermission } = useAuthStore();
 
-provide(ComponentsEnum.Permission, { hasPermission })
+usePermissionContext({ hasPermission })
 
 ConfigProvider.config({
   theme: theme,

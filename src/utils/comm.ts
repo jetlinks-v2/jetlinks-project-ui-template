@@ -107,3 +107,5 @@ export const getModulesComponents = (name: string) =>{
 
     return components[name]
 }
+
+export const isSubApp = (window as any).__MICRO_APP_ENVIRONMENT__
