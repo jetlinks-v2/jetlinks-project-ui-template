@@ -6,8 +6,8 @@ const route = useRoute()
 const loading = ref(true)
 
 const pageData = reactive({
-  name: undefined,
-  url: undefined,
+  name: 'device-ui',
+  url: 'http://localhost:9101/',
   defaultPage: '/',
 })
 
@@ -54,8 +54,8 @@ const initPage = () => {
   } else {
     const hasHttp = appUrl.startsWith('http')
     pageData.name = appName
-    pageData.url = hasHttp ? appUrl : `${window.location.protocol}${document.location.host}${appUrl}`
-    pageData.defaultPage = _defaultPage
+    pageData.url = hasHttp ? appUrl : `${window.location.protocol}//${document.location.host}${appUrl}/index.html`
+    pageData.defaultPage = '#' + _defaultPage
   }
   loading.value = false
 }

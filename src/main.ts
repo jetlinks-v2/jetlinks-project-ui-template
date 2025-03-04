@@ -22,8 +22,9 @@ dayjs.locale('zh-cn');
 initAxios()
 loadMicroApp()
 
+console.log(import.meta.env.tagName)
 microApp.start({
-  iframe: true
+  iframe: true,
 })
 
 const app = createApp(App)

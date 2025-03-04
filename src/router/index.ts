@@ -1,6 +1,6 @@
 import {
   createRouter,
-  createWebHashHistory,
+  createWebHashHistory, createWebHistory,
 } from 'vue-router'
 import { getToken, removeToken } from '@jetlinks-web/utils'
 import { NOT_FIND_ROUTE, LOGIN_ROUTE, DEMO } from './basic'
@@ -15,7 +15,7 @@ let TokenFilterRoute: string[] = [ DEMO.path ]
 let FilterPath: string[] = [DEMO.path]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: (window as any).__MICRO_APP_ENVIRONMENT__ ? createWebHashHistory() : createWebHistory(),
   routes: [
     LOGIN_ROUTE, DEMO
   ],
@@ -23,14 +23,6 @@ const router = createRouter({
     return savedPosition || {top: 0}
   },
 })
-
-// const originalPush = router.push;
-// router.push = function push(location) {
-//   return originalPush.call(this, location).catch(err => {
-//     if (err.name !== 'NavigationDuplicated') throw err;
-//   });
-// };
-
 
 const NoTokenJump = (to: any, next: any, isLogin: boolean) => {
   // 登录页，不需要token 的页面直接放行，否则跳转登录页

@@ -18,8 +18,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["ant-design-vue/typings/global", "vite/client"],
-    "suppressImplicitAnyIndexErrors": true
+    "types": ["ant-design-vue/typings/global", "vite/client", "node"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }],

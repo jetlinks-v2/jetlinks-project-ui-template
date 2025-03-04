@@ -9,6 +9,10 @@ export const useApplication = defineStore('application', () => {
     const resp = await uiList()
     if (resp.success) {
       appList.value = resp.result
+      // appList.value = [{
+      //   id: 'device-manager',
+      //   path: 'http://localhost:9101/'
+      // }]
     }
   }
 

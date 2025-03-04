@@ -1,7 +1,6 @@
 import { BasicLayoutPage, BlankLayoutPage, Iframe } from '@/layout'
 import {ShallowRef, shallowRef} from 'vue'
 import {isArray} from "lodash-es";
-import SubAppPage from '@/views/mirco/SubAppRedirect/base.vue'
 
 type Buttons = Array<{ id: string }>
 
@@ -37,18 +36,18 @@ const handleMeta = (item: MenuItem, isApp: boolean) => {
   }
 }
 
-type FindComponentsFn = (code: string, level: number, isApp: boolean, components: any, mate: any, hasChildren: false) => undefined | Function | VNode | ShallowRef
+type FindComponentsFn = (code: string, level: number, isApp: boolean, components: any, meta: any, hasChildren: false) => undefined | Function | VNode | ShallowRef
 
-const findComponents: FindComponentsFn = (code, level, isApp, components, mate, hasChildren) => {
+const findComponents: FindComponentsFn = (code, level, isApp, components, meta, hasChildren) => {
   const myComponents = components[code]
 
-  if (!hasChildren && mate && mate.appName && mate.appUrl) {
-    return () => SubAppPage
+  if (!hasChildren && meta && meta.appName && meta.appUrl) {
+    return () => import('../views/mirco/SubAppRedirect/base.vue')
   }
 
   if (level === 1) { // BasicLayoutPage
     if (myComponents && !hasChildren) {
-      return mate?.hasLayout === false ? () => myComponents() : h(BasicLayoutPage, {}, h(defineAsyncComponent(() => myComponents()), {}))
+      return meta?.hasLayout === false ? () => myComponents() : h(BasicLayoutPage, {}, h(defineAsyncComponent(() => myComponents()), {}))
     }
     return myComponents ? () => myComponents() : shallowRef(BasicLayoutPage)
   }
@@ -100,7 +99,7 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
         meta: meta,
         children: item.children || []
       }
-      route.component = item.component ?? findComponents(item.code, level, isApp, components, item.meta, route.children.length)
+      route.component = item.component ?? findComponents(item.code, level, isApp, components, meta, route.children.length)
       const extraRoute = hasExtraChildren(item, extraMenus)
       if (extraRoute && !isApp) { // 包含额外的子路由
 

@@ -28,14 +28,18 @@ export default defineConfig(({ mode, command }) => {
 
     if (String(command) === 'build') {
         backupModulesFile();
-        modulesName = process.env.MODULES || process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || '**';
+        modulesName = process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || '**';
         updateModulesFile(modulesName)
     }
 
-    isModule = modulesName && ['**', 'no-modules'].includes(modulesName)
+    isModule = modulesName && !['**', 'no-modules'].includes(modulesName)
+    const tagName = `micro-app-${isModule ? modulesName : 'default'}`
 
     return {
         base: './',
+        define: {
+            'import.meta.env.tagName': JSON.stringify(tagName)
+        },
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, 'src'),

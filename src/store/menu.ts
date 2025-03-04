@@ -12,6 +12,7 @@ import {useAuthStore} from '@/store/auth'
 import {OWNER_KEY} from "@/utils/consts";
 import i18n from "@/locales";
 import {useApplication} from "@/store/application";
+import {BASE_API} from "@jetlinks-web/constants";
 
 const $t = i18n.global.t
 
@@ -118,12 +119,20 @@ export const useMenuStore = defineStore('menu', () => {
             // 处理子节点
             handleMicroApp(node.children);
           }
-
           if(node.options && node.options.appName) {
             const appInfo = app.findAppById(node.options.appName)
+            let url = appInfo?.path
+            if (url && !url.startsWith('http') && !url.startsWith('/')) {
+              url =  '/' + url
+            }
+
+            if (url?.startsWith('/')) {
+              url =  BASE_API + url
+            }
+
             node.meta = {
               appName: node.options.appName,
-              appUrl: appInfo?.path
+              appUrl: url
             }
           }
         }
