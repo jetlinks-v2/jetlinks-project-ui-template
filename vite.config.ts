@@ -28,7 +28,7 @@ export default defineConfig(({ mode, command }) => {
 
     if (String(command) === 'build') {
         backupModulesFile();
-        modulesName = process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || '**';
+        modulesName = process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || '*';
         updateModulesFile(modulesName)
     }
 

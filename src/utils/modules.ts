@@ -1,14 +1,14 @@
 export const modules = () => {
-  let modulesMap = {}
+  const modulesMap = {}
   const modulesFiles = [
-    import.meta.glob('../modules/**/index.ts', { eager: true })
+    import.meta.glob('../modules/*/index.ts', { eager: true })
   ]
   return Object.assign(modulesMap, ...modulesFiles)
 }
 
 export const getModulesMenu = (): any[] => {
   const modulesFiles = [
-    import.meta.glob('../modules/**/baseMenu.ts', {eager: true})
+    import.meta.glob('../modules/*/baseMenu.ts', {eager: true})
   ]
   const menus: any[] = []
 
@@ -18,4 +18,12 @@ export const getModulesMenu = (): any[] => {
   })
 
   return menus
+}
+
+export const getLang = () => {
+  const modulesMap = {}
+  const modulesFiles = [
+    import.meta.glob('../modules/*/locales/lang/*.json', {eager: true})
+  ]
+  return Object.assign(modulesMap, ...modulesFiles)
 }

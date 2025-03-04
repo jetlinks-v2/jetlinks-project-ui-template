@@ -31,10 +31,11 @@ export function restoreModulesFile() {
     }
 }
 
-export function updateModulesFile(modules='**') {
+export function updateModulesFile(modules='*') {
     const modulesArray = modules === 'no-modules' ? [] : modules.split(',')
     const importStatements = modulesArray.map(module => `import.meta.glob('../modules/${module}/index.ts', { eager: true })`).join(',\n')
     const importMenus = modulesArray.map(module => `import.meta.glob('../modules/${module}/baseMenu.ts', {eager: true})`).join(',\n')
+    const importLang = modulesArray.map(module => `import.meta.glob('../modules/${module}/locales/lang/*.json', {eager: true})`).join(',\n')
     const content = `export const modules = () => {
         let modulesMap = {}
         const modulesFiles = [
@@ -42,6 +43,7 @@ export function updateModulesFile(modules='**') {
         ]
         return Object.assign(modulesMap, ...modulesFiles)
      }
+     
      export const getModulesMenu = () => {
        const modulesFiles = [
             ${importMenus}
@@ -53,6 +55,14 @@ export function updateModulesFile(modules='**') {
        })
        return menus
      }
+     
+     export const getLang = () => {
+      const modulesMap = {}
+      const modulesFiles = [
+        ${importLang}
+      ]
+      return Object.assign(modulesMap, ...modulesFiles)
+    }
      `
     fs.writeFileSync('src/utils/modules.ts', content)
 }

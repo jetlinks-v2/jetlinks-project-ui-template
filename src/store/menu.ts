@@ -13,6 +13,7 @@ import {OWNER_KEY} from "@/utils/consts";
 import i18n from "@/locales";
 import {useApplication} from "@/store/application";
 import {BASE_API} from "@jetlinks-web/constants";
+import { modules } from '@/utils/modules'
 
 const $t = i18n.global.t
 
@@ -107,9 +108,11 @@ export const useMenuStore = defineStore('menu', () => {
     })
 
     let menuResult = resp.result
-    //  遍历树节点，处理子应用页面
 
+    //  遍历树节点，处理子应用页面
     if (app.appList.length > 0) {
+      const modulesFile = modules()
+
       const handleMicroApp = (nodes: any[]) => {
         if (!nodes || nodes.length === 0) return;
 
@@ -130,9 +133,20 @@ export const useMenuStore = defineStore('menu', () => {
               url =  BASE_API + url
             }
 
-            node.meta = {
-              appName: node.options.appName,
-              appUrl: url
+            let isLocal = false
+
+            if (import.meta.env.DEV) {
+              isLocal = Object.values(modulesFile).some(v => {
+                const localMenus = (v as any).default.getAsyncRoutesMap()
+                return localMenus[node.code]
+              })
+            }
+
+            if (!isLocal) {
+              node.meta = {
+                appName: node.options.appName,
+                appUrl: url
+              }
             }
           }
         }
