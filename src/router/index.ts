@@ -15,7 +15,7 @@ let TokenFilterRoute: string[] = [ DEMO.path ]
 let FilterPath: string[] = [DEMO.path]
 
 const router = createRouter({
-  history: (window as any).__MICRO_APP_ENVIRONMENT__ ? createWebHashHistory() : createWebHistory(),
+  history: createWebHashHistory(),
   routes: [
     LOGIN_ROUTE, DEMO
   ],

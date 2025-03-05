@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { NO_MODULE, DEFAULT_POINT } from '../contst'
 const backupFilePath = 'src/utils/modules.backup.ts';
 
 export function backupModulesFile() {
@@ -31,8 +32,8 @@ export function restoreModulesFile() {
     }
 }
 
-export function updateModulesFile(modules='*') {
-    const modulesArray = modules === 'no-modules' ? [] : modules.split(',')
+export function updateModulesFile(modules= DEFAULT_POINT) {
+    const modulesArray = modules === NO_MODULE ? [] : modules.split(',')
     const importStatements = modulesArray.map(module => `import.meta.glob('../modules/${module}/index.ts', { eager: true })`).join(',\n')
     const importMenus = modulesArray.map(module => `import.meta.glob('../modules/${module}/baseMenu.ts', {eager: true})`).join(',\n')
     const importLang = modulesArray.map(module => `import.meta.glob('../modules/${module}/locales/lang/*.json', {eager: true})`).join(',\n')

@@ -2,8 +2,14 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import {uiList} from "@/api/application";
 
+type ApplicationItemType = {
+  id: string
+  path: string
+  name: string
+}
+
 export const useApplication = defineStore('application', () => {
-  const appList = ref<Record<string, string>[]>([])
+  const appList = ref<Array<ApplicationItemType>>([])
 
   const queryApplication = async () => {
     const resp = await uiList()

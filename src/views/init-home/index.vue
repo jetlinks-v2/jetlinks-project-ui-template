@@ -90,7 +90,7 @@ const submitData = async () => {
     if (!basicRes) {
         return;
     }
-    const menuRes = await menuRef.value.updataMenu();
+    const menuRes = await menuRef.value.updateMenu();
     console.log('menuRes',menuRes)
     if (!menuRes) {
         loading.value = false;
