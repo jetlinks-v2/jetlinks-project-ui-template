@@ -20,6 +20,7 @@ import { useAuthStore, useSystemStore } from '@/store';
 import { usePermissionContext } from '@jetlinks-web/hooks'
 import {initPackages} from "@/package";
 import { setToken} from "@jetlinks-web/utils";
+import {BASE_API, LOCAL_BASE_API} from '@jetlinks-web/constants'
 
 const route = useRoute()
 
@@ -39,11 +40,16 @@ const { hasPermission } = useAuthStore();
 
 usePermissionContext({ hasPermission })
 
+initPackages()
+
+if (import.meta.env.DEV) {
+  localStorage.setItem(LOCAL_BASE_API, BASE_API)
+}
+
 ConfigProvider.config({
   theme: theme,
 })
 
-initPackages()
 
 watch(() => JSON.stringify(route.query || {}), () => {
   if (route.query.token) {
