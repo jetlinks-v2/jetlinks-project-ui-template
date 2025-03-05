@@ -35,7 +35,8 @@ const getCloudMenu = async () => {
   const appItems = app.appList.filter(item => !item.path.startsWith('http'))
 
   for (const item of appItems) {
-    const url = `${window.location.protocol}//${document.location.host}${BASE_API}${item.path}/baseMenu.json`
+    let _path = item.path.startsWith('/') ? item.path : '/' + item.path
+    const url = `${window.location.protocol}//${document.location.host}${BASE_API}${_path}/baseMenu.json`
     const resp = await fetch(url)
     if (resp.ok) {
       const res = await resp.json()
