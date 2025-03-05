@@ -47,7 +47,7 @@ const initPage = () => {
     searchParams.set('layout', 'false')
   }
 
-  const _defaultPage = `${route.path}?${searchParams.toString()}`
+  const _defaultPage = '#' + `${route.path}?${searchParams.toString()}`
 
   if (pageData.name && pageData.name === appName) {
     app.router.push({ name: pageData.name, path: _defaultPage })
@@ -55,7 +55,7 @@ const initPage = () => {
     const hasHttp = appUrl.startsWith('http')
     pageData.name = appName
     pageData.url = hasHttp ? appUrl : `${window.location.protocol}//${document.location.host}${appUrl}/index.html`
-    pageData.defaultPage = '#' + _defaultPage
+    pageData.defaultPage =  _defaultPage
   }
   loading.value = false
 }
