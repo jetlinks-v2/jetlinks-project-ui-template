@@ -40,7 +40,6 @@ export default defineConfig(({ mode, command }) => {
                 ...registerModulesAlias()
             },
         },
-        publicDir: isModule ? '' : 'public',
         build: {
             outDir: isModule ? `src/modules/${modulesName}/dist` : 'dist',
             assetsDir: isModule ? `src/modules/${modulesName}/assets` : 'assets',
@@ -123,7 +122,7 @@ export default defineConfig(({ mode, command }) => {
                         'root-entry-name': 'variable',
                         hack: `true; @import (reference) "${ path.resolve(
                             'src/style/variable.less',
-                        ) }";${registerModulesLessVariable()}`,
+                        ) }";`,
                     },
                     javascriptEnabled: true,
                 },
