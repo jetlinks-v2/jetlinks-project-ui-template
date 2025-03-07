@@ -9,6 +9,7 @@ import {useSystemStore} from "@/store/system";
 import {useMenuStore} from "@/store/menu";
 import {isSubApp} from "@/utils";
 import {useApplication} from "@/store";
+import microApp from "@micro-zoe/micro-app";
 
 let TokenFilterRoute: string[] = [ DEMO.path ]
 
@@ -23,7 +24,7 @@ const router = createRouter({
     return savedPosition || {top: 0}
   },
 })
-
+microApp.router.setBaseAppRouter(router)
 const NoTokenJump = (to: any, next: any, isLogin: boolean) => {
   // 登录页，不需要token 的页面直接放行，否则跳转登录页
   if (isLogin || TokenFilterRoute.includes(to.path)) {

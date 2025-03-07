@@ -110,6 +110,7 @@ export const useMenuStore = defineStore('menu', () => {
     let menuResult = resp.result
 
     //  遍历树节点，处理子应用页面
+
     if (app.appList.length > 0) {
       const modulesFile = modules()
 
@@ -122,8 +123,10 @@ export const useMenuStore = defineStore('menu', () => {
             // 处理子节点
             handleMicroApp(node.children);
           }
+
           if(node.options && node.options.appName) {
             const appInfo = app.findAppById(node.options.appName)
+
             let url = appInfo?.path
             if (url && !url.startsWith('http') && !url.startsWith('/')) {
               url =  '/' + url

@@ -99,6 +99,11 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
         meta: meta,
         children: item.children || []
       }
+
+      // if (!route.children?.length && !isApp) {
+      //   route.path = route.path + '/:page*'
+      // }
+
       route.component = item.component ?? findComponents(item.code, level, isApp, components, meta, route.children.length)
       const extraRoute = hasExtraChildren(item, extraMenus)
       if (extraRoute && !isApp) { // 包含额外的子路由

@@ -9,7 +9,7 @@ import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import { createStyleImportPlugin, AndDesignVueResolve } from 'vite-plugin-style-import'
 import * as path from 'path'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
-import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile, copyFile, registerModulesLessVariable } from './configs/plugin'
+import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile, copyFile, copyImagesPlugin } from './configs/plugin'
 import { NO_MODULE, DEFAULT_POINT } from './configs/contst'
 import progress from 'vite-plugin-progress'
 
@@ -55,7 +55,7 @@ export default defineConfig(({ mode, command }) => {
                     assetFileNames: (pre) => {
                         const fileType = pre.name.split('.')?.pop()
                         if (['png', 'svg', 'ico', 'jpg'].includes(fileType)) {
-                            return `assets/[name].[ext]`
+                            return `images/[name].[ext]`
                         }
                         return `assets/[name].[hash].[ext]`
                     },
@@ -102,6 +102,7 @@ export default defineConfig(({ mode, command }) => {
             },
             restoreModulesFile(),
             copyFile(isModule ? modulesName : ''),
+            copyImagesPlugin()
         ],
         server: {
             host: '0.0.0.0',

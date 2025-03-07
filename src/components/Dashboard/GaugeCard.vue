@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { getWebSocket } from '@/utils/websocket'
+import { wsClient } from '@jetlinks-web/core'
 import { map } from 'rxjs/operators'
 import * as echarts from 'echarts'
 import { topOptionsSeries } from './components/tools'
@@ -68,7 +68,7 @@ const getData = () => {
   const topic = '/dashboard/systemMonitor/stats/info/realTime'
   unSub()
 
-  wsRef.value = getWebSocket(id, topic, {
+  wsRef.value = wsClient.getWebSocket(id, topic, {
     type: 'all',
     // serverNodeId: serverId.value,
     serverNodeId: '',

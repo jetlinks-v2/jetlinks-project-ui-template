@@ -1,9 +1,11 @@
 <script setup name="BaseSubApp">
 import {getToken} from "@jetlinks-web/utils";
 import app from '@micro-zoe/micro-app'
+import { wsClient } from '@jetlinks-web/core'
 
 const route = useRoute()
 const loading = ref(true)
+let ws
 
 const pageData = reactive({
   name: 'device-ui',
@@ -12,7 +14,7 @@ const pageData = reactive({
 })
 
 const subContext = ref({
-  token: getToken(),
+  token: getToken()
 })
 
 const handleCreated = () => {
@@ -25,6 +27,7 @@ const handleBeforeMount = () => {
 
 const handleMounted = () => {
   console.log(`[${pageData.name}] handleMounted`)
+  app.setGlobalData({ wsClient })
 }
 
 const handleUnmount = () => {

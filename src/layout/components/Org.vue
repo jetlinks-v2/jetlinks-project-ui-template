@@ -14,7 +14,7 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from "@/store";
 import { changeToken } from '@/api/login'
 import {setToken} from "@jetlinks-web/utils";
-import {initWebSocket, initWebSocketInstance} from '@/utils/websocket'
+import { wsClient } from '@jetlinks-web/core'
 
 const emit = defineEmits(['change'])
 const userStore = useUserStore()
@@ -46,8 +46,7 @@ const orgChange = async (key, option) => {
   if (tokenResp.success) {
     setToken(tokenResp.result) // 设置token
     // 刷新ws
-    initWebSocket()
-    initWebSocketInstance()
+    wsClient.connect()
     emit('change')
   }
 
