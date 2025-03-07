@@ -2,10 +2,7 @@ name: Auto Deploy jetlinks-ui to the JetLinks Maven Repository
 
 on:
   push:
-    branches: ["master","develop"]
-  pull_request:
-    branches: ["master","develop"]
-
+    branches: ["master"]
 
 jobs:
   publish:
