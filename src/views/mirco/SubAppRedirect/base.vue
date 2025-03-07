@@ -54,7 +54,7 @@ const initPage = () => {
 
   if (pageData.name && pageData.name === appName) {
     app.router.push({ name: pageData.name, path: _defaultPage })
-  } else {
+  } else if(appUrl){
     const hasHttp = appUrl.startsWith('http')
     pageData.name = appName
     pageData.url = hasHttp ? appUrl : `${window.location.protocol}//${document.location.host}${appUrl}/index.html`
