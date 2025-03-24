@@ -16,3 +16,8 @@ export const systemVersion = () => request.get('/system/version')
  */
 export const settingDetail = (scopes: string) => request.get(`/system/config/${scopes}`)
 
+/**
+ * 获取系统根路径
+ */
+export const getSystemRootPath = () => request.get('/system/config/paths')
+
