@@ -11,7 +11,8 @@
     "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo",
     "modules:init": "git submodule init && git submodule update && git submodule foreach git checkout master && git submodule foreach git pull origin master",
     "modules:update": "git submodule update",
-    "build:modules": "pnpm build --mode server --"
+    "build:modules": "pnpm build --mode server --",
+    "create:module": "node ./scripts/template.js create"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
@@ -55,9 +56,13 @@
     "@vuemap/unplugin-resolver": "^2.0.0",
     "@vueuse/core": "^10.6.1",
     "ant-design-vue": "^3.2.20",
+    "commander": "^13.1.0",
     "dotenv": "^16.1.4",
+    "inquirer": "^12.5.0",
     "less": "^4.2.0",
+    "minimist": "^1.2.8",
     "pkg-types": "^1.0.3",
+    "progress": "^2.0.3",
     "rollup": "^3.23.1",
     "rollup-plugin-visualizer": "^5.9.0",
     "typescript": "^5.1.3",

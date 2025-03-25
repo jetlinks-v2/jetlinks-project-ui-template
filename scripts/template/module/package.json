@@ -1,0 +1,9 @@
+{
+  "name": "${module-id}",
+  "id": "${module-id}",
+  "version": "1.0.0",
+  "description": "JetLinks sub module",
+  "main": "index.ts",
+  "dependencies": {},
+  "peerDependencies": {}
+}
