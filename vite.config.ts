@@ -102,7 +102,7 @@ export default defineConfig(({ mode, command }) => {
             },
             restoreModulesFile(),
             copyFile(isModule ? modulesName : ''),
-            copyImagesPlugin()
+            copyImagesPlugin(isModule)
         ],
         server: {
             host: '0.0.0.0',
