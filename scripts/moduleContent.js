@@ -10,7 +10,7 @@ const generateImportContent = (hasSearch, hasTable) => {
     }
 
     if (keys.length > 0) {
-        content += `import { ${keys.join(', ')} } from './data' \n`; 
+        content += `import { ${keys.join(', ')} } from './data' \n`;
     }
 
     if (hasTable) {
@@ -21,10 +21,10 @@ const generateImportContent = (hasSearch, hasTable) => {
 }
 
 const generateDataVueContent = (hasSearch, hasTable, pageId) => {
-  let content = `const authkey = '${pageId}'; // 权限标识\n`;
+  let content = `const authKey = '${pageId}'; // 按钮权限标识\n`;
 
   if (hasSearch) {
-    content += `const { params } = useSearch(); // pro-search相关配置\n`; 
+    content += `const { params } = useSearch(); // pro-search相关配置\n`;
   }
 
   if (hasTable) {
@@ -174,7 +174,7 @@ const generateTemplateContent = (hasSearch, hasTable) => {
         </template>
       </j-pro-table>`
     }
-    
+
     content += `
     </FullPage>
   </j-page-container>`
@@ -255,11 +255,9 @@ const createMenu = (code, name, index ) =>{
             "id": item.id,
             "name": item.name,
             "i18nMessages": {
-              "name": {
                 "zh_CN": item.name,
                 "en_US": item.en,
                 "en": item.en
-              }
             },
             "permissions": []
           }
