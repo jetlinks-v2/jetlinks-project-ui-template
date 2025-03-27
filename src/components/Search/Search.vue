@@ -1,22 +1,23 @@
 <template>
   <div :class="classNames">
     <j-advanced-search
-      :target='target'
-      :type='type'
-      :request='(data) => saveSearchHistory(data, target)'
-      :historyRequest='() => getSearchHistory(target)'
-      :deleteRequest='(_target: string, id: string) => deleteSearchHistory(target, id)'
-      :columns='columns'
-      :class='props.class'
-      :style='style'
+      :target='target || _target'
+      :type='type || _target'
+      :request='onSaveSearchHistory'
+      :historyRequest='onSearchHistory'
+      :deleteRequest='onDeleteSearchHistory'
+      :columns='_columns'
+      :class='props.class || config.class'
+      :style='style || config.style'
       @search='searchSubmit'
     />
   </div>
 </template>
 
 <script setup lang='ts' name='ProSearch'>
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 import { saveSearchHistory, getSearchHistory, deleteSearchHistory } from '@/api/comm'
+import type {SearchContent} from './types'
 
 interface Emit {
   (e: 'search', data: any): void
@@ -58,14 +59,26 @@ const props = defineProps({
   }
 })
 
+const config = inject<SearchContent>('pro-search-config', {})
 const emit = defineEmits<Emit>()
 
 const classNames = computed(() => {
   return {
     'j-advanced-search-warp': true,
-    'no-margin': props.noMargin !== false
+    'no-margin': (props.noMargin || config.noMargin) !== false
   }
 })
+
+const _columns = computed(() => {
+  if (props.columns.length > 0) {
+    return props.columns
+  } else if (config.columns?.length) {
+    return config.columns 
+  }
+  return []
+})
+
+const _target = computed(() => props.target || config.target)
 
 /**
  * 提交
@@ -73,6 +86,19 @@ const classNames = computed(() => {
 const searchSubmit = (data: any) => {
   emit('update:value', data)
   emit('search', data)
+  config.onSearch?.(data)
+}
+
+const onSearchHistory = async () => {
+  await getSearchHistory(_target.value!)
+}
+
+const onSaveSearchHistory = async (data: any) => {
+  await saveSearchHistory(data, _target.value!)
+}
+
+const onDeleteSearchHistory = async (data: any, t: string) => {
+  await deleteSearchHistory(data, t)
 }
 
 </script>

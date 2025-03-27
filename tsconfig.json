@@ -20,6 +20,6 @@
     },
     "types": ["ant-design-vue/typings/global", "vite/client", "node"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "scripts/**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
 }
