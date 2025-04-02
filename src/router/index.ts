@@ -39,20 +39,19 @@ const getRoutesByServer = async (to: any, next: any) => {
   const UserInfoStore = useUserStore()
   const SystemStore = useSystemStore()
   const MenuStore = useMenuStore()
+  const application = useApplication()
 
-
-
-  if (!Object.keys(UserInfoStore.userInfo).length) {
-    // 是否有用户信息
+  if (!Object.keys(UserInfoStore.userInfo).length) { // 没有用户信息
+    // 获取有用户信息
     await UserInfoStore.getUserInfo()
     //
     await SystemStore.queryVersion()
     await SystemStore.queryInfo()
     await SystemStore.setMircoData()
+  }
 
-    if (!isSubApp) {
-      await useApplication().queryApplication() // 获取子应用
-    }
+  if (!isSubApp && !application.appList.length) {
+    await application.queryApplication() // 获取子应用
   }
 
   // 没有菜单的情况下获取菜单
