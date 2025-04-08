@@ -1,6 +1,5 @@
-import { schemaObjType } from "./typing";
-import { randomString } from "@jetlinks-web/utils";
-
+import type { schemaObjType } from './typing';
+import { randomString } from '@jetlinks-web/utils';
 
 /**
  * 将对应实体转换为表格数据返回
