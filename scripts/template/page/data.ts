@@ -1,4 +1,4 @@
-import { provide, ref } from 'vue'
+import { provide, ref } from 'vue';
 
 export const getColumns = () => {
   return [
@@ -6,36 +6,36 @@ export const getColumns = () => {
       dataIndex: 'id',
       title: 'ID',
       search: {
-        type: 'string'
-      }
+        type: 'string',
+      },
     },
     {
       dataIndex: 'action',
       title: '操作',
-      width: 200
-    }
-  ]
-}
+      width: 200,
+    },
+  ];
+};
 
 export const useSearch = () => {
-  const params = ref()
-  const columns = getColumns()
-  const type = 'advanced'
+  const params = ref();
+  const columns = getColumns();
+  const type = 'advanced';
 
   const config: any = {
     columns,
     onSearch: (p: any) => {
-      params.value = p
-    }
-  }
+      params.value = p;
+    },
+  };
 
   if (type === 'advanced') {
-    config.target = ''
+    config.target = '';
   }
 
-  provide('pro-search-config', config)
+  provide('pro-search-config', config);
 
   return {
-    params
-  }
-}
+    params,
+  };
+};

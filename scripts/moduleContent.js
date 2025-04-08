@@ -1,24 +1,24 @@
 const generateImportContent = (hasSearch, hasTable) => {
-    const keys = []
-    let content = '';
+  const keys = [];
+  let content = '';
 
-    if (hasSearch) {
-        keys.push('useSearch')
-    }
-    if (hasTable) {
-        keys.push('getColumns')
-    }
+  if (hasSearch) {
+    keys.push('useSearch');
+  }
+  if (hasTable) {
+    keys.push('getColumns');
+  }
 
-    if (keys.length > 0) {
-        content += `import { ${keys.join(', ')} } from './data' \n`;
-    }
+  if (keys.length > 0) {
+    content += `import { ${keys.join(', ')} } from './data' \n`;
+  }
 
-    if (hasTable) {
-        content += `import EditModal from './edit.vue' \n`;
-    }
+  if (hasTable) {
+    content += `import EditModal from './edit.vue' \n`;
+  }
 
-    return content;
-}
+  return content;
+};
 
 const generateDataVueContent = (hasSearch, hasTable, pageId) => {
   let content = `const authKey = '${pageId}'; // 按钮权限标识\n`;
@@ -34,8 +34,8 @@ const generateDataVueContent = (hasSearch, hasTable, pageId) => {
     content += `const editData = ref(); // 编辑的数据\n`;
   }
 
-  return content
-}
+  return content;
+};
 
 const generateEventContent = () => {
   let content = `
@@ -115,23 +115,23 @@ const getActions = (record, type = 'table') => {
 }  
 `;
 
-    return content
-}
+  return content;
+};
 
 const generateTemplateContent = (hasSearch, hasTable) => {
-    let content = `
+  let content = `
 <template>
   <j-page-container>
     <FullPage>`;
 
-    if (hasSearch) {
-        content += `
+  if (hasSearch) {
+    content += `
       <!-- 搜索 -->
       <pro-search />`;
-    }
+  }
 
-    if (hasTable) {
-        content += `
+  if (hasTable) {
+    content += `
       <!-- 表格 -->
       <j-pro-table
         ref="tableRef"
@@ -172,46 +172,46 @@ const generateTemplateContent = (hasSearch, hasTable) => {
             </template>
           </a-space>
         </template>
-      </j-pro-table>`
-    }
+      </j-pro-table>`;
+  }
 
-    content += `
+  content += `
     </FullPage>
-  </j-page-container>`
+  </j-page-container>`;
 
-    if (hasTable) {
-        content += `<!-- 编辑弹窗 -->
+  if (hasTable) {
+    content += `<!-- 编辑弹窗 -->
   <EditModal
     v-if="visible"
     :editData="editData"
     @ok="onEditOk"
     @cancel="onEditCancle"
   />`;
-}
+  }
 
-    content += `
+  content += `
 </template>
 `;
-    return content;
-}
+  return content;
+};
 
 const generateIndexVueContent = (hasSearch, hasTable, pageId) => {
-    let scriptContent = `<script setup> \n`
-    scriptContent += generateImportContent(hasSearch, hasTable); // 插件导入
-    scriptContent += generateDataVueContent(hasSearch, hasTable, pageId); // 数据定义
-    scriptContent += generateEventContent(); // 事件定义
-    scriptContent += `</script> \n`;
+  let scriptContent = `<script setup> \n`;
+  scriptContent += generateImportContent(hasSearch, hasTable); // 插件导入
+  scriptContent += generateDataVueContent(hasSearch, hasTable, pageId); // 数据定义
+  scriptContent += generateEventContent(); // 事件定义
+  scriptContent += `</script> \n`;
 
-    let templateContent =  generateTemplateContent(hasSearch, hasTable); // 模版内容
+  let templateContent = generateTemplateContent(hasSearch, hasTable); // 模版内容
 
-    let styleContent = `
+  let styleContent = `
 <style scoped lang="less"></style>
 `;
 
-    return scriptContent + templateContent + styleContent;
+  return scriptContent + templateContent + styleContent;
 };
 
-const createMenu = (code, name, index ) =>{
+const createMenu = (code, name, index) => {
   const buttons = [
     {
       id: 'view',
@@ -233,44 +233,45 @@ const createMenu = (code, name, index ) =>{
       name: '删除',
       en: 'Delete',
     },
-  ]
-    return {
-        "code": code,
-        "name": name,
-        "url": `/${code}`,
-        "owner": "iot",
-        "i18nMessages": {
-          "name": {
-            "zh_CN": name,
-            "en_US": "",
-            "en": ""
-          }
+  ];
+  return {
+    code: code,
+    name: name,
+    url: `/${code}`,
+    owner: 'iot',
+    i18nMessages: {
+      name: {
+        zh_CN: name,
+        en_US: '',
+        en: '',
+      },
+    },
+    icon: 'icon-wulianwang',
+    sortIndex: index,
+    permissions: [],
+    showPage: [],
+    buttons: buttons.map(item => {
+      return {
+        id: item.id,
+        name: item.name,
+        i18nMessages: {
+          zh_CN: item.name,
+          en_US: item.en,
+          en: item.en,
         },
-        "icon": "icon-wulianwang",
-        "sortIndex": index,
-        "permissions": [],
-        "showPage": [],
-        "buttons": buttons.map(item => {
-          return {
-            "id": item.id,
-            "name": item.name,
-            "i18nMessages": {
-                "zh_CN": item.name,
-                "en_US": item.en,
-                "en": item.en
-            },
-            "permissions": []
-          }
-        }),
-        "accessSupport": {
-          "text": "不支持",
-          "value": "unsupported"
-        },
-        "supportDataAccess": false
-    };
-}
+        permissions: [],
+      };
+    }),
+    accessSupport: {
+      text: '不支持',
+      value: 'unsupported',
+    },
+    supportDataAccess: false,
+  };
+};
 
+// @ts-ignore
 module.exports = {
-    generateIndexVueContent,
-    createMenu
-}
+  generateIndexVueContent,
+  createMenu,
+};

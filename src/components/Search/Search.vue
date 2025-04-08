@@ -1,112 +1,111 @@
 <template>
   <div :class="classNames">
     <j-advanced-search
-      :target='target || _target'
-      :type='type || _target'
-      :request='onSaveSearchHistory'
-      :historyRequest='onSearchHistory'
-      :deleteRequest='onDeleteSearchHistory'
-      :columns='_columns'
-      :class='props.class || config.class'
-      :style='style || config.style'
-      @search='searchSubmit'
+      :target="target || _target"
+      :type="type || _target"
+      :request="onSaveSearchHistory"
+      :historyRequest="onSearchHistory"
+      :deleteRequest="onDeleteSearchHistory"
+      :columns="_columns"
+      :class="props.class || config.class"
+      :style="style || config.style"
+      @search="searchSubmit"
     />
   </div>
 </template>
 
-<script setup lang='ts' name='ProSearch'>
-import type { PropType } from 'vue'
-import { saveSearchHistory, getSearchHistory, deleteSearchHistory } from '@/api/comm'
-import type {SearchContent} from './types'
+<script setup lang="ts" name="ProSearch">
+import type { PropType } from 'vue';
+import { saveSearchHistory, getSearchHistory, deleteSearchHistory } from '@/api/comm';
+import type { SearchContent } from './types';
 
 interface Emit {
-  (e: 'search', data: any): void
-  (e: 'update:value', data: any): void
+  (e: 'search', data: any): void;
+  (e: 'update:value', data: any): void;
 }
 
 const props = defineProps({
   value: {
     type: Object,
-    default: () => ({})
+    default: () => ({}),
   },
   columns: {
     type: Array as PropType<any[]>,
     default: () => [],
-    required: true
+    required: true,
   },
   type: {
     type: String,
-    default: 'advanced'
+    default: 'advanced',
   },
   target: {
     type: String,
     default: '',
-    required: true
+    required: true,
   },
   class: {
     type: String,
-    default: ''
+    default: '',
   },
   noMargin: {
     type: Boolean,
-    default: false
+    default: false,
   },
   style: {
     type: Object,
     default: () => ({
-      padding: '18px 24px'
-    })
-  }
-})
+      padding: '18px 24px',
+    }),
+  },
+});
 
-const config = inject<SearchContent>('pro-search-config', {})
-const emit = defineEmits<Emit>()
+const config = inject<SearchContent>('pro-search-config', {});
+const emit = defineEmits<Emit>();
 
 const classNames = computed(() => {
   return {
     'j-advanced-search-warp': true,
-    'no-margin': (props.noMargin || config.noMargin) !== false
-  }
-})
+    'no-margin': (props.noMargin || config.noMargin) !== false,
+  };
+});
 
 const _columns = computed(() => {
   if (props.columns.length > 0) {
-    return props.columns
+    return props.columns;
   } else if (config.columns?.length) {
-    return config.columns 
+    return config.columns;
   }
-  return []
-})
+  return [];
+});
 
-const _target = computed(() => props.target || config.target)
+const _target = computed(() => props.target || config.target);
 
 /**
  * 提交
  */
 const searchSubmit = (data: any) => {
-  emit('update:value', data)
-  emit('search', data)
-  config.onSearch?.(data)
-}
+  emit('update:value', data);
+  emit('search', data);
+  config.onSearch?.(data);
+};
 
 const onSearchHistory = async () => {
-  await getSearchHistory(_target.value!)
-}
+  await getSearchHistory(_target.value!);
+};
 
 const onSaveSearchHistory = async (data: any) => {
-  await saveSearchHistory(data, _target.value!)
-}
+  await saveSearchHistory(data, _target.value!);
+};
 
 const onDeleteSearchHistory = async (data: any, t: string) => {
-  await deleteSearchHistory(data, t)
-}
-
+  await deleteSearchHistory(data, t);
+};
 </script>
 
-<style scoped lang='less'>
-  .no-margin {
-    :deep(.JSearch-warp) {
-      margin: 0;
-    }
+<style scoped lang="less">
+.no-margin {
+  :deep(.JSearch-warp) {
+    margin: 0;
   }
+}
 </style>

@@ -11,7 +11,7 @@ const copyImage = () => {
   // 从给定子目录复制资产的函数
   function copyAssets(subDir, level = 0) {
     // 定义子目录中的资产目录
-    const assetsDir = level ? subDir :  path.join(subDir, 'assets');
+    const assetsDir = level ? subDir : path.join(subDir, 'assets');
 
     // 检查资产目录是否存在
     if (fs.existsSync(assetsDir)) {
@@ -23,7 +23,10 @@ const copyImage = () => {
 
         // 如果项目是文件且不是 .js 或 .ts 文件，则复制它
         if (stat.isFile() && !file.endsWith('.js') && !file.endsWith('.ts')) {
-          const destPath = path.join(distDir, filePath.includes('assets\\') ? filePath.split('assets\\')[1] : file);
+          const destPath = path.join(
+            distDir,
+            filePath.includes('assets\\') ? filePath.split('assets\\')[1] : file,
+          );
           if (!fs.existsSync(destPath)) {
             fs.mkdirSync(path.dirname(destPath), { recursive: true });
             fs.copyFileSync(filePath, destPath);
@@ -71,7 +74,7 @@ const copyImage = () => {
       copyAssets(subDirPath);
     }
   });
-}
+};
 
 const copySrcAssetsImage = () => {
   // 定义模块的源目录和图像的目标目录
@@ -102,24 +105,22 @@ const copySrcAssetsImage = () => {
             fs.copyFileSync(subFilePath, subDestPath);
           }
         }
-      })
-
-    } else if (!subDirPath.endsWith('js') && !subDirPath.endsWith('ts')){
+      });
+    } else if (!subDirPath.endsWith('js') && !subDirPath.endsWith('ts')) {
       const subDestPath = path.join(distDir, subDirName);
       fs.copyFileSync(subDirPath, subDestPath);
     }
   });
-}
+};
 
 export function copyImagesPlugin(isModule) {
   return {
     name: 'copy-images-plugin',
     closeBundle() {
-
-      copySrcAssetsImage()
+      copySrcAssetsImage();
       if (isModule) {
-        copyImage()
+        copyImage();
       }
-    }
+    },
   };
 }

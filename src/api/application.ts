@@ -1,3 +1,3 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@jetlinks-web/core';
 
-export const uiList = () => request.get('/system/resources/ui')
+export const uiList = () => request.get('/system/resources/ui');

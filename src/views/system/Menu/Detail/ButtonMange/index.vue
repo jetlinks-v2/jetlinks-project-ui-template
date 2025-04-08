@@ -13,11 +13,12 @@
           :hasPermission="`${permission}:update`"
           @click="openDialog($t('ButtonMange.index.544049-0'), {})"
         >
-          <AIcon type="PlusOutlined" />{{ $t('ButtonMange.index.544049-0') }}
+          <AIcon type="PlusOutlined" />
+          {{ $t('ButtonMange.index.544049-0') }}
         </j-permission-button>
       </template>
       <template #name="slotProps">
-        {{ slotProps?.i18nName || slotProps?.name}}
+        {{ slotProps?.i18nName || slotProps?.name }}
       </template>
       <template #action="slotProps">
         <a-space :size="16">
@@ -67,9 +68,9 @@
 </template>
 
 <script setup lang="ts">
-import { updateMenu } from '@/api/system/menu'
-import { onlyMessage } from '@jetlinks-web/utils'
-import ButtonAddDialog from '../../components/ButtonAddDialog.vue'
+import { updateMenu } from '@/api/system/menu';
+import { onlyMessage } from '@jetlinks-web/utils';
+import ButtonAddDialog from '../../components/ButtonAddDialog.vue';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
@@ -78,20 +79,20 @@ const columns = [
     title: $t('ButtonMange.index.544049-5'),
     dataIndex: 'id',
     key: 'id',
-    ellipsis: true
+    ellipsis: true,
   },
   {
     title: $t('ButtonMange.index.544049-6'),
     dataIndex: 'name',
     key: 'name',
     scopedSlots: true,
-    ellipsis: true
+    ellipsis: true,
   },
   {
     title: $t('ButtonMange.index.544049-7'),
     dataIndex: 'description',
     key: 'description',
-    ellipsis: true
+    ellipsis: true,
   },
   {
     title: $t('ButtonMange.index.544049-8'),
@@ -100,52 +101,50 @@ const columns = [
     scopedSlots: true,
     width: 200,
   },
-]
-const permission = 'system/Menu'
+];
+const permission = 'system/Menu';
 
 const props = defineProps({
   value: {
     type: Object,
     default: () => {},
   },
-})
+});
 
-const emits = defineEmits(['refresh'])
+const emits = defineEmits(['refresh']);
 
-const tableData = ref<any[]>([])
-const selectItem = ref<any>({})
-const dialogVisible = ref(false)
-const dialogTitle = ref($t('ButtonMange.index.544049-0'))
+const tableData = ref<any[]>([]);
+const selectItem = ref<any>({});
+const dialogVisible = ref(false);
+const dialogTitle = ref($t('ButtonMange.index.544049-0'));
 
 const openDialog = (mode: any, row: object) => {
   if (!props.value.id) {
-    return onlyMessage($t('ButtonMange.index.544049-9'), 'warning')
+    return onlyMessage($t('ButtonMange.index.544049-9'), 'warning');
   }
-  selectItem.value = { ...row }
-  dialogTitle.value = mode
-  dialogVisible.value = true
-}
+  selectItem.value = { ...row };
+  dialogTitle.value = mode;
+  dialogVisible.value = true;
+};
 
 const clickDel = (row: any) => {
-  const buttons = props.value.buttons.filter(
-    (item: any) => item.id !== row.id,
-  )
+  const buttons = props.value.buttons.filter((item: any) => item.id !== row.id);
   const params = {
     ...props.value,
     buttons,
-  }
+  };
   updateMenu(params).then(() => {
-    onlyMessage($t('ButtonMange.index.544049-10'))
-    emits('refresh')
-  })
-}
+    onlyMessage($t('ButtonMange.index.544049-10'));
+    emits('refresh');
+  });
+};
 
 const onSave = () => {
-    dialogVisible.value = false
-    emits('refresh')
-}
+  dialogVisible.value = false;
+  emits('refresh');
+};
 
 watchEffect(() => {
-  tableData.value = props.value?.buttons || []
-})
+  tableData.value = props.value?.buttons || [];
+});
 </script>

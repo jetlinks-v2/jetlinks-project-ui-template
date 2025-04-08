@@ -4,7 +4,7 @@
       :columns="columns"
       :target="type"
       style="padding: 0"
-      @search="(e) => (queryParams = e)"
+      @search="e => (queryParams = e)"
     />
     <j-pro-table
       ref="tableRef"
@@ -42,11 +42,18 @@
           <j-permission-button
             type="link"
             :popConfirm="{
-              title: $t('NotificationRecord.index.803553-0', [slotProps.state.value === 'read' ? $t('NotificationRecord.index.803553-8') : $t('NotificationRecord.index.803553-9')]),
+              title: $t('NotificationRecord.index.803553-0', [
+                slotProps.state.value === 'read'
+                  ? $t('NotificationRecord.index.803553-8')
+                  : $t('NotificationRecord.index.803553-9'),
+              ]),
               onConfirm: () => changeStatus(slotProps),
             }"
             :tooltip="{
-              title: slotProps.state.value === 'read' ? $t('NotificationRecord.index.803553-1') : $t('NotificationRecord.index.803553-2'),
+              title:
+                slotProps.state.value === 'read'
+                  ? $t('NotificationRecord.index.803553-1')
+                  : $t('NotificationRecord.index.803553-2'),
             }"
           >
             <AIcon type="icon-a-PIZHU1" />
@@ -63,40 +70,35 @@
         </a-space>
       </template>
     </j-pro-table>
-    <ViewDialog
-      v-if="viewVisible"
-      v-model:visible="viewVisible"
-      :data="viewItem"
-      :type="type"
-    />
+    <ViewDialog v-if="viewVisible" v-model:visible="viewVisible" :data="viewItem" :type="type" />
   </div>
 </template>
 
 <script setup lang="ts" name="NotificationRecord">
-import ViewDialog from './components/ViewDialog.vue'
-import { getList_api, changeStatus_api } from '@/api/account/notificationRecord'
-import dayjs from 'dayjs'
-import { useUserStore } from '@/store/user'
-import { useRouterParams } from '@jetlinks-web/hooks'
-import { getTypeListNew } from '@/api/account/notificationSubscription'
-import { onlyMessage } from '@jetlinks-web/utils'
+import ViewDialog from './components/ViewDialog.vue';
+import { getList_api, changeStatus_api } from '@/api/account/notificationRecord';
+import dayjs from 'dayjs';
+import { useUserStore } from '@/store/user';
+import { useRouterParams } from '@jetlinks-web/hooks';
+import { getTypeListNew } from '@/api/account/notificationSubscription';
+import { onlyMessage } from '@jetlinks-web/utils';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
-const user = useUserStore()
+const user = useUserStore();
 
 const props = defineProps({
   type: {
     type: String,
     default: '',
   },
-})
+});
 
 const getType = computed(() => {
   if (props.type === 'system-business') {
-    return ['device-transparent-codec']
+    return ['device-transparent-codec'];
   } else if (props.type === 'system-monitor') {
-    return ['system-event']
+    return ['system-event'];
   } else if (props.type === 'workflow-notification') {
     return [
       'workflow-task-cc',
@@ -105,17 +107,11 @@ const getType = computed(() => {
       'workflow-process-finish',
       'workflow-process-repealed',
       'workflow-task-transfer-todo',
-    ]
+    ];
   } else {
-    return [
-      'alarm',
-      'alarm-product',
-      'alarm-device',
-      'alarm-scene',
-      'alarm-org',
-    ]
+    return ['alarm', 'alarm-product', 'alarm-device', 'alarm-scene', 'alarm-org'];
   }
-})
+});
 
 const columns = [
   {
@@ -126,12 +122,11 @@ const columns = [
       type: 'select',
       termFilter: ['in', 'nin'],
       options: () =>
-      getTypeListNew(props.type).then((resp: any) => {
-                    return resp.result
-                        .map((item: any) => ({
-                            label: item.name,
-                            value: item.id,
-            }))
+        getTypeListNew(props.type).then((resp: any) => {
+          return resp.result.map((item: any) => ({
+            label: item.name,
+            value: item.id,
+          }));
         }),
     },
     scopedSlots: true,
@@ -186,12 +181,12 @@ const columns = [
     scopedSlots: true,
     width: '200px',
   },
-]
+];
 
-const viewVisible = ref<boolean>(false)
-const viewItem = ref<any>({})
+const viewVisible = ref<boolean>(false);
+const viewItem = ref<any>({});
 
-const routerParams = useRouterParams()
+const routerParams = useRouterParams();
 
 const defaultParams = {
   sorts: [{ name: 'notifyTime', order: 'desc' }],
@@ -207,35 +202,35 @@ const defaultParams = {
       type: 'and',
     },
   ],
-}
-const queryParams = ref({})
+};
+const queryParams = ref({});
 
-const tableRef = ref()
+const tableRef = ref();
 
 const view = (row: any) => {
-  viewItem.value = row
-  viewVisible.value = true
-}
+  viewItem.value = row;
+  viewVisible.value = true;
+};
 const refresh = () => {
-  tableRef.value && tableRef.value.reload()
-}
+  tableRef.value?.reload();
+};
 
 const changeStatus = (row: any) => {
-  const type = row.state.value === 'read' ? '_unread' : '_read'
+  const type = row.state.value === 'read' ? '_unread' : '_read';
   changeStatus_api(type, [row.id]).then((resp: any) => {
     if (resp.status === 200) {
-      onlyMessage($t('NotificationRecord.index.803553-11'))
-      refresh()
-      user.updateAlarm()
+      onlyMessage($t('NotificationRecord.index.803553-11'));
+      refresh();
+      user.updateAlarm();
     }
-  })
-}
+  });
+};
 
 watchEffect(() => {
   if (user.messageInfo?.id) {
-    view(user.messageInfo)
+    view(user.messageInfo);
   }
-})
+});
 
 // const onAllRead = async () => {
 //     const resp = await changeAllStatus('_read', getType.value);
@@ -248,13 +243,13 @@ watchEffect(() => {
 
 onMounted(() => {
   if (routerParams.params?.value.row) {
-    view(routerParams.params?.value.row)
+    view(routerParams.params?.value.row);
   }
-})
+});
 onUnmounted(() => {
-  user.messageInfo = {}
-  viewVisible.value = false
-})
+  user.messageInfo = {};
+  viewVisible.value = false;
+});
 </script>
 
 <style lang="less" scoped>

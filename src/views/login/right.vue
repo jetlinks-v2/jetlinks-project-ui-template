@@ -6,12 +6,7 @@
         <p class="desc">{{ title }}</p>
       </div>
       <div class="main">
-        <a-form
-          layout="vertical"
-          :model="formData"
-          :rules="rules"
-          @finish="submit"
-        >
+        <a-form layout="vertical" :model="formData" :rules="rules" @finish="submit">
           <a-form-item :label="$t('login.right.419974-0')" name="username">
             <a-input
               v-model:value="formData.username"
@@ -41,14 +36,11 @@
             </a-input>
           </a-form-item>
           <a-form-item>
-            <Remember
-              v-model:value="formData.remember"
-              v-model:expires="formData.expires"
-            />
+            <Remember v-model:value="formData.remember" v-model:expires="formData.expires" />
           </a-form-item>
           <a-form-item>
             <a-button
-              :loading="loading"
+              :loading="myLoading"
               type="primary"
               html-type="submit"
               class="login-form-button"
@@ -63,65 +55,68 @@
   </div>
 </template>
 <script setup name="LoginRight">
-import Remember from "./remember.vue";
-import {encrypt, getImage, setToken} from "@jetlinks-web/utils";
-import { useRequest } from "@jetlinks-web/hooks";
-import {captchaConfig, codeUrl, encryptionConfig, getInitSet, login} from "@/api/login";
-import { rules } from "./util";
-import {useUserStore} from "@/store";
+import Remember from './remember.vue';
+import { encrypt, getImage, setToken } from '@jetlinks-web/utils';
+import { useRequest } from '@jetlinks-web/hooks';
+import { captchaConfig, codeUrl, encryptionConfig, getInitSet, login } from '@/api/login';
+import { rules } from './util';
+import { useUserStore } from '@/store';
 
-const logoImage = getImage("/login/logo.png");
+const logoImage = getImage('/login/logo.png');
 
-const props = defineProps({
+defineProps({
   loading: {
     type: Boolean,
     default: false,
   },
   logo: {
     type: String,
-    default: "",
+    default: '',
   },
   title: {
     type: String,
-    default: "",
+    default: '',
   },
 });
 
-const emit = defineEmits(["submit", 'update:loading']);
+const emit = defineEmits(['submit', 'update:loading']);
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 const formData = reactive({
-  username: "",
-  password: "",
+  username: '',
+  password: '',
   expires: 3600000,
   remember: false,
   verifyCode: undefined,
   verifyKey: undefined,
-  encryptId: undefined
+  encryptId: undefined,
 });
 
-let timer = null
+let timer = null;
 
 const { data: encryption, run: reloadEncryption } = useRequest(encryptionConfig, {
   onSuccess() {
     if (timer) {
-      window.clearTimeout(timer)
-      timer = null
+      window.clearTimeout(timer);
+      timer = null;
     }
 
-    timer = setTimeout(() => {
-      reloadEncryption()
-    }, 3 * 60 * 1000)
-  }
-})
+    timer = setTimeout(
+      () => {
+        reloadEncryption();
+      },
+      3 * 60 * 1000,
+    );
+  },
+});
 
 const { data: config } = useRequest(captchaConfig, {
   onSuccess(resp) {
     if (resp.result?.enabled) {
       getCode();
     }
-    return resp.result?.enabled
+    return resp.result?.enabled;
   },
 });
 
@@ -129,25 +124,25 @@ const { data: url, run: getCode } = useRequest(codeUrl, {
   immediate: false,
   onSuccess(resp) {
     if (config.value && resp.result?.key) {
-      formData.verifyKey = resp.result?.key
+      formData.verifyKey = resp.result?.key;
     }
   },
 });
 
-const { loading, run } = useRequest(login, {
+const { loading: myLoading, run } = useRequest(login, {
   immediate: false,
   async onSuccess(res) {
     if (res.success) {
-      setToken(res.result.token)
-      await userStore.getUserInfo()
-      if(userStore.isAdmin){
-        const initResp = await getInitSet()
+      setToken(res.result.token);
+      await userStore.getUserInfo();
+      if (userStore.isAdmin) {
+        const initResp = await getInitSet();
         if (initResp.success && !initResp.result?.length) {
           window.location.href = '/#/init-home';
           return;
         }
       }
-      window.location.href = '/'
+      window.location.href = '/';
     }
   },
   onWarn: () => {
@@ -156,29 +151,31 @@ const { loading, run } = useRequest(login, {
       getCode();
     }
     if (encryption.value?.encrypt?.enabled) {
-      reloadEncryption()
+      reloadEncryption();
     }
-  }
-})
+  },
+});
 
 const showCode = computed(() => {
   return !!url?.value?.base64;
 });
 
-const submit = (data) => {
-  const _formData = {...toRaw(formData)}
+const submit = data => {
+  const _formData = { ...toRaw(formData) };
   if (encryption.value?.encrypt?.enabled) {
-    const _encrypt = encryption.value?.encrypt
-    _formData.password = encrypt(data.password, _encrypt.publicKey)
-    _formData.encryptId = _encrypt.id
+    const _encrypt = encryption.value?.encrypt;
+    _formData.password = encrypt(data.password, _encrypt.publicKey);
+    _formData.encryptId = _encrypt.id;
   }
-  run(_formData)
-}
+  run(_formData);
+};
 
-watch(() => loading.value, () => {
-  emit('update:loading', loading.value)
-})
-
+watch(
+  () => myLoading.value,
+  () => {
+    emit('update:loading', myLoading.value);
+  },
+);
 </script>
 <style lang="less" scoped>
 .content {

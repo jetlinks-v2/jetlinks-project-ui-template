@@ -1,34 +1,34 @@
 <template>
-  <a-spin :spinning='loading' :delay='300'>
-    <div class='container'>
-      <div class='left'>
-        <img :src='systemInfo?.front?.background || bgImage' alt=''>
-<!--        <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" rel="noopener noreferrer" class="records">-->
-<!--          备案：渝ICP备19017719号-1-->
-<!--        </a>-->
+  <a-spin :spinning="loading" :delay="300">
+    <div class="container">
+      <div class="left">
+        <img :src="systemInfo?.front?.background || bgImage" alt="" />
+        <!--        <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" rel="noopener noreferrer" class="records">-->
+        <!--          备案：渝ICP备19017719号-1-->
+        <!--        </a>-->
       </div>
-      <div class='right'>
+      <div class="right">
         <Right :logo="systemInfo?.front?.logo" :title="layout?.title" v-model:loading="loading" />
       </div>
     </div>
   </a-spin>
 </template>
 <script setup name="Login" lang="ts">
-import { getImage } from '@jetlinks-web/utils'
-import { useSystemStore } from '@/store/system'
-import { storeToRefs } from 'pinia'
-import Right from './right.vue'
-import { wsClient } from "@jetlinks-web/core";
+import { getImage } from '@jetlinks-web/utils';
+import { useSystemStore } from '@/store/system';
+import { storeToRefs } from 'pinia';
+import Right from './right.vue';
+import { wsClient } from '@jetlinks-web/core';
 
-const systemStore = useSystemStore()
-const { systemInfo, layout } = storeToRefs(systemStore)
-const loading = ref(false)
+const systemStore = useSystemStore();
+const { systemInfo, layout } = storeToRefs(systemStore);
+const loading = ref(false);
 
-const bgImage = getImage('/login/login.png')
+const bgImage = getImage('/login/login.png');
 
-systemStore.querySingleInfo('front')
+systemStore.querySingleInfo('front');
 
-wsClient.disconnect()
+wsClient.disconnect();
 </script>
 
 <style scoped lang="less">
@@ -36,7 +36,7 @@ wsClient.disconnect()
   display: flex;
   height: 100vh;
   background-color: #fff;
-  >div {
+  > div {
     height: 100%;
   }
 

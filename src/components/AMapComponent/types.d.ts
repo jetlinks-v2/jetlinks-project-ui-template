@@ -4,14 +4,14 @@ export type PathSimplifierOptions = {
   map?: any;
   zIndex?: number;
   data?: number[][];
-  getPath?: (pathData: {}, pathIndex: number) => PathDataType;
+  getPath?: (pathData: Record<string, any>, pathIndex: number) => PathDataType;
   getZIndex?: (pathData: any, pathIndex: number) => number;
   getHoverTitle?: (pathData: any, pathIndex: number, pointIndex: number) => string;
   autoSetFitView?: boolean;
   clickToSelectPath?: boolean;
   onTopWhenSelected?: boolean;
-  renderConstructor?: Function;
-  renderOptions?: {};
+  renderConstructor?: () => void;
+  renderOptions?: Record<string, any>;
 };
 
 export type PathDataItemType = {
@@ -37,7 +37,7 @@ export interface PathSimplifier {
 
   getPathData: (pathIndex: number) => any;
 
-  createPathNavigator: (pathIndex: number, options: {}) => PathNavigator;
+  createPathNavigator: (pathIndex: number, options: Record<string, any>) => PathNavigator;
 
   getPathNavigators: () => any[];
 
@@ -59,9 +59,9 @@ export interface PathSimplifier {
 
   setFitView: (pathIndex: number) => void;
 
-  on: (eventName: string, handler: Function) => void;
+  on: (eventName: string, handler: () => void) => void;
 
-  off: (eventName: string, handler: Function) => void;
+  off: (eventName: string, handler: () => void) => void;
 
   hide: () => void;
 
@@ -77,7 +77,7 @@ export interface PathSimplifier {
 export interface PathNavigatorOptions {
   loop?: boolean;
   speed?: number;
-  pathNavigatorStyle?: {};
+  pathNavigatorStyle?: Record<string, any>;
   animInterval?: number;
   dirToPosInMillsecs?: number;
   range?: [number, number];
@@ -124,7 +124,7 @@ export interface PathNavigator {
 
   setRange: (startIndex: number, endIndex: number) => void;
 
-  on: (eventName: string, handler: Function) => void;
+  on: (eventName: string, handler: () => void) => void;
 
-  off: (eventName: string, handler: Function) => void;
+  off: (eventName: string, handler: () => void) => void;
 }

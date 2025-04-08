@@ -1,43 +1,40 @@
 <template>
   <div class="api-example">
-    <monaco-editor
+    <monaco-editor v-if="loading" language="json" :model-value="codeText" :init="init" />
+    <div
+      class="api-example-tips"
+      :style="{ transform: `translateY(${scrollTop}px)` }"
       v-if="loading"
-      language="json"
-      :model-value="codeText"
-      :init="init"
-    />
-    <div class="api-example-tips" :style="{ transform: `translateY(${scrollTop}px)`}" v-if="loading">
+    >
       <div class="tips-line" v-for="tip in tips">
-        <span v-if="tip">//{{tip}}</span>
+        <span v-if="tip">//{{ tip }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup name="ApiMonaco">
-
 defineProps({
   tips: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   codeText: {
     type: String,
-    default: ''
+    default: '',
   },
   loading: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-const scrollTop = ref(0)
-const init = (editor) => {
+const scrollTop = ref(0);
+const init = editor => {
   editor.onDidScrollChange(e => {
-    scrollTop.value = 0 - e.scrollTop
-  })
-}
-
+    scrollTop.value = 0 - e.scrollTop;
+  });
+};
 </script>
 
 <style scoped lang="less">

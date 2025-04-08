@@ -3,21 +3,21 @@
 </template>
 
 <script lang="ts" setup>
-import { LocalStore } from '@jetlinks-web/utils'
-import { createScript } from '@/utils/document'
+import { LocalStore } from '@jetlinks-web/utils';
+import { createScript } from '@/utils/document';
 
 const props = defineProps({
   data: {
     type: Object,
     default: () => {},
   },
-})
-const timer = ref<any>(null)
-const emits = defineEmits(['success'])
+});
+const timer = ref<any>(null);
+const emits = defineEmits(['success']);
 const initData = async () => {
   const _script = await createScript(
     'https://wwcdn.weixin.qq.com/node/wework/wwopen/js/wwLogin-1.2.7.js',
-  )
+  );
   if (_script) {
     new WwLogin({
       id: 'login_container',
@@ -26,22 +26,22 @@ const initData = async () => {
       state: props.data.state,
       agentid: props.data.agentid,
       self_redirect: true,
-    })
+    });
   }
-}
+};
 
 watchEffect(() => {
   if (props.data?.appid) {
-    initData()
+    initData();
   }
-})
+});
 
 timer.value = setInterval(() => {
-  const code = LocalStore.get('wexin_code')
+  const code = LocalStore.get('wexin_code');
   if (code) {
-    emits('success', code)
-    window.clearInterval(timer.value)
-    timer.value = null
+    emits('success', code);
+    window.clearInterval(timer.value);
+    timer.value = null;
   }
-}, 2000)
+}, 2000);
 </script>

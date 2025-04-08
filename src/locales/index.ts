@@ -1,12 +1,12 @@
-import { createI18n } from 'vue-i18n'
+import { createI18n } from 'vue-i18n';
 import type { Locale } from 'vue-i18n';
-import {langKey} from "@/utils/consts";
-import { getLang } from '@/utils/modules'
+import { langKey } from '@/utils/consts';
+import { getLang } from '@/utils/modules';
 
-const mainModules = import.meta.glob('./lang/*.json', {eager: true})
-const modules = getLang()
+const mainModules = import.meta.glob('./lang/*.json', { eager: true });
+const modules = getLang();
 
-const allModules = Object.assign({}, mainModules, modules)
+const allModules = Object.assign({}, mainModules, modules);
 
 function loadLocalesMapFromDir(regexp: RegExp, modules: Record<string, any>) {
   const localesRaw: Record<Locale, Record<string, () => Promise<unknown>>> = {};
@@ -30,7 +30,7 @@ function loadLocalesMapFromDir(regexp: RegExp, modules: Record<string, any>) {
 }
 const messages = loadLocalesMapFromDir(/([^/]*)\.json$/, allModules);
 
-const language = (navigator.language || 'en').toLocaleLowerCase() // 这是获取浏览器的语言
+const language = (navigator.language || 'en').toLocaleLowerCase(); // 这是获取浏览器的语言
 
 const i18n = createI18n({
   legacy: false,
@@ -38,6 +38,6 @@ const i18n = createI18n({
   locale: localStorage.getItem(langKey) || language.split('-')[0] || 'en',
   fallbackLocale: language,
   messages,
-})
+});
 
-export default i18n
+export default i18n;

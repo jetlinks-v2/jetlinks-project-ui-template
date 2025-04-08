@@ -26,16 +26,13 @@
         </div>
       </template>
     </a-upload>
-    <div
-      v-if="listType === 'picture-card'"
-      style="display: none"
-    >
+    <div v-if="listType === 'picture-card'" style="display: none">
       <a-image-preview-group
         :preview="{
           visible: visible,
           minScale: 0.1,
           current: currentPreviewIndex,
-          onVisibleChange: (vis) => (visible = vis)
+          onVisibleChange: vis => (visible = vis),
         }"
       >
         <a-image
@@ -50,162 +47,164 @@
 </template>
 
 <script setup lang="ts">
-import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
-import { TOKEN_KEY } from '@jetlinks-web/constants'
-import { getToken, onlyMessage } from '@jetlinks-web/utils'
-import { FileStaticPath } from '@/api/comm'
-import { getImageUrl } from '@/utils'
+import type { UploadChangeParam, UploadProps } from 'ant-design-vue';
+import { TOKEN_KEY } from '@jetlinks-web/constants';
+import { getToken, onlyMessage } from '@jetlinks-web/utils';
+import { FileStaticPath } from '@/api/comm';
+import { getImageUrl } from '@/utils';
 
 const props = defineProps({
   value: {
     type: [String, Array<UploadProps['fileList']>],
-    default: undefined
+    default: undefined,
   },
   btnText: {
     type: String,
-    default: ''
+    default: '',
   },
   accept: {
     type: String,
-    default: undefined
+    default: undefined,
   },
   types: {
     type: Array as PropType<Array<string>>,
-    default: []
+    default: () => [],
   },
   size: {
     type: Number,
-    default: 2
+    default: 2,
   },
   maxCount: {
     type: Number,
-    default: 1
+    default: 1,
   },
   listType: {
     type: String as PropType<'text' | 'picture' | 'picture-card'>,
-    default: 'text'
+    default: 'text',
   },
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   publicAccess: {
     type: Boolean,
-    default: false
+    default: false,
   },
   isUpload: {
     type: Boolean,
-    default: true
-  }
-})
+    default: true,
+  },
+});
 
-const emit = defineEmits(['update:value', 'change', 'remove'])
-const fileList = ref([] as any[])
-const loading = ref(false)
-const action = computed(() => `${FileStaticPath}${props.publicAccess ? '' : '?options=publicAccess'}`)
-const visible = ref(false)
-const currentPreviewIndex = ref(0)
-const previewImage = ref<any>([])
+const emit = defineEmits(['update:value', 'change', 'remove']);
+const fileList = ref([] as any[]);
+const loading = ref(false);
+const action = computed(
+  () => `${FileStaticPath}${props.publicAccess ? '' : '?options=publicAccess'}`,
+);
+const visible = ref(false);
+const currentPreviewIndex = ref(0);
+const previewImage = ref<any>([]);
 
 function getBase64(file: File) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result)
-    reader.onerror = (error) => reject(error)
-  })
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
 }
 
 const handlePreview = async (file: UploadProps['fileList'][number]) => {
   if (props.listType === 'picture-card') {
     if (!file.url && !file.preview) {
-      file.preview = (await getBase64(file.originFileObj)) as string
+      file.preview = (await getBase64(file.originFileObj)) as string;
     }
     // if (file.name === file.uid) {
     //编辑状态
     previewImage.value.push({
       url: file.url,
-      uid: file.uid
-    })
+      uid: file.uid,
+    });
     // }
-    currentPreviewIndex.value = fileList.value.findIndex((f: any) => f.uid === file.uid)
-    visible.value = true
+    currentPreviewIndex.value = fileList.value.findIndex((f: any) => f.uid === file.uid);
+    visible.value = true;
   }
-}
+};
 
 const handleChange = (info: UploadChangeParam) => {
   if (info.file.status === 'uploading') {
-    loading.value = true
+    loading.value = true;
   }
   if (info.file.status === 'done') {
-    loading.value = false
-    const _id = info.file.response?.result?.id
+    loading.value = false;
+    const _id = info.file.response?.result?.id;
     previewImage.value.push({
       url: info.file.response?.result.accessUrl,
-      uid: info.file.uid
-    })
-    emit('update:value', _id)
-    emit('change', info)
+      uid: info.file.uid,
+    });
+    emit('update:value', _id);
+    emit('change', info);
   }
   if (info.file.status === 'error') {
-    loading.value = false
-    onlyMessage('上传失败', 'error')
+    loading.value = false;
+    onlyMessage('上传失败', 'error');
   }
   if (!info.file.status) {
-    fileList.value = fileList.value.filter((item: any) => item.uid !== info.file.uid)
+    fileList.value = fileList.value.filter((item: any) => item.uid !== info.file.uid);
   }
-}
+};
 
-const beforeUpload: UploadProps['beforeUpload'] = (file) => {
+const beforeUpload: UploadProps['beforeUpload'] = file => {
   if (!props.isUpload) {
-    emit('change', file)
-    return false
+    emit('change', file);
+    return false;
   }
 
-  let inType = true
+  let inType = true;
   if (props.types?.length) {
-    inType = props.types?.includes(file.type)
+    inType = props.types?.includes(file.type);
     if (file.type.includes('application')) {
-      const type = file.type.split('/')[1]
-      inType = props.types?.includes(type)
+      const type = file.type.split('/')[1];
+      inType = props.types?.includes(type);
     }
   }
 
-  const maxSize = props.size // 文件最大多少兆
-  const isMaxSize = file.size / 1024 / 1024 < maxSize
+  const maxSize = props.size; // 文件最大多少兆
+  const isMaxSize = file.size / 1024 / 1024 < maxSize;
 
   if (!inType) {
-    onlyMessage('请上传正确格式的文件', 'error')
-    return false
+    onlyMessage('请上传正确格式的文件', 'error');
+    return false;
   }
 
   if (!isMaxSize) {
-    onlyMessage(`文件大小必须小于${maxSize}M`, 'error')
-    return false
+    onlyMessage(`文件大小必须小于${maxSize}M`, 'error');
+    return false;
   }
-}
+};
 
 const handleRemove = (file: any) => {
-  previewImage.value = previewImage.value.filter((item: any) => item.uid !== file.uid)
-  emit('remove', file)
-  emit('update:value')
-}
+  previewImage.value = previewImage.value.filter((item: any) => item.uid !== file.uid);
+  emit('remove', file);
+  emit('update:value');
+};
 
 const handleImageClick = (index: number) => {
-  currentPreviewIndex.value = index
-}
+  currentPreviewIndex.value = index;
+};
 
 watch(
   () => props?.value,
   (newValue: any) => {
     if (newValue) {
-      fileList.value = [{ url: getImageUrl(newValue), name: newValue }]
+      fileList.value = [{ url: getImageUrl(newValue), name: newValue }];
     } else {
-      fileList.value = []
+      fileList.value = [];
     }
   },
-  { immediate: true }
-)
+  { immediate: true },
+);
 </script>
 
 <style scoped lang="less">

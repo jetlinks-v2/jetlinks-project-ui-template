@@ -1,1 +1,1 @@
-export const NotificationSubscriptionCode = 'message-subscribe'
+export const NotificationSubscriptionCode = 'message-subscribe';

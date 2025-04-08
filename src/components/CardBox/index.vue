@@ -1,9 +1,9 @@
 <template>
   <div class="card a-table-card-box">
     <div
-        class="card-warp"
-        :class="{ active: active ? 'active' : '', 'disabled': disabled }"
-        @click="handleClick"
+      class="card-warp"
+      :class="{ active: active ? 'active' : '', disabled: disabled }"
+      @click="handleClick"
     >
       <div class="card-type" v-if="slots.type">
         <div class="card-type-text">
@@ -11,21 +11,21 @@
         </div>
       </div>
       <div
-          class="card-content"
-          :class="{'card-content-top-line': !slots.type}"
-          :style="{ paddingTop: slots.type ? '40px' : '30px' }"
+        class="card-content"
+        :class="{ 'card-content-top-line': !slots.type }"
+        :style="{ paddingTop: slots.type ? '40px' : '30px' }"
       >
         <div
-            class="card-content-bg1"
-            :style="{
-                        background: getBackgroundColor(statusNames[status]),
-                    }"
+          class="card-content-bg1"
+          :style="{
+            background: getBackgroundColor(statusNames[status]),
+          }"
         ></div>
         <div
-            class="card-content-bg2"
-            :style="{
-                        background: getBackgroundColor(statusNames[status]),
-                    }"
+          class="card-content-bg2"
+          :style="{
+            background: getBackgroundColor(statusNames[status]),
+          }"
         ></div>
         <div style="display: flex">
           <!-- 图片 -->
@@ -41,46 +41,43 @@
         <!-- 勾选 -->
         <div v-if="active" class="checked-icon">
           <div>
-            <AIcon type="CheckOutlined"/>
+            <AIcon type="CheckOutlined" />
           </div>
         </div>
         <!-- 状态 -->
         <div
-            v-if="showStatus"
-            class="card-state"
-            :style="{
-                        backgroundColor: getHexColor(statusNames[status]),
-                    }"
+          v-if="showStatus"
+          class="card-state"
+          :style="{
+            backgroundColor: getHexColor(statusNames[status]),
+          }"
         >
           <div class="card-state-content">
             <j-badge-status
-                :status="status"
-                :text="statusText"
-                :statusNames="statusNames"
+              :status="status"
+              :text="statusText"
+              :statusNames="statusNames"
             ></j-badge-status>
           </div>
         </div>
       </div>
       <div class="card-mask" v-if="props.hasMark">
         <div class="mask-content">
-          <slot name="mark"/>
+          <slot name="mark" />
         </div>
       </div>
     </div>
 
     <!-- 按钮 -->
     <slot name="bottom-tool">
-      <div
-          v-if="showTool && actions && actions.length"
-          class="card-tools"
-      >
+      <div v-if="showTool && actions && actions.length" class="card-tools">
         <div
-            v-for="item in actions"
-            :key="item.key"
-            class="card-button"
-            :class="{
-                        delete: item.key === 'delete',
-                    }"
+          v-for="item in actions"
+          :key="item.key"
+          class="card-button"
+          :class="{
+            delete: item.key === 'delete',
+          }"
         >
           <slot name="actions" v-bind="item"></slot>
         </div>
@@ -89,7 +86,7 @@
   </div>
 </template>
 
-<script setup lang="ts" name='CardBox'>
+<script setup lang="ts" name="CardBox">
 import color, { getHexColor } from '@jetlinks-web/components/es/BadgeStatus/color';
 import { PropType } from 'vue';
 
@@ -126,7 +123,7 @@ const props = defineProps({
   },
   statusNames: {
     type: Object as PropType<Record<any, any>>,
-    default: () => ({'default': 'default'})
+    default: () => ({ default: 'default' }),
   },
   actions: {
     type: Array as PropType<TableActionsType[]>,
@@ -143,7 +140,7 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 const getBackgroundColor = (code: string | number) => {
@@ -328,9 +325,11 @@ const handleClick = () => {
       height: 100%;
       width: 44.65%;
       top: 0;
-      background: linear-gradient(188.4deg,
-      rgba(229, 0, 18, 0.03) 22.94%,
-      rgba(229, 0, 18, 0) 94.62%);
+      background: linear-gradient(
+        188.4deg,
+        rgba(229, 0, 18, 0.03) 22.94%,
+        rgba(229, 0, 18, 0) 94.62%
+      );
       transform: skewX(-15deg);
     }
 
@@ -340,9 +339,11 @@ const handleClick = () => {
       height: 100%;
       width: calc(44.65% + 34px);
       top: 0;
-      background: linear-gradient(188.4deg,
-      rgba(229, 0, 18, 0.03) 22.94%,
-      rgba(229, 0, 18, 0) 94.62%);
+      background: linear-gradient(
+        188.4deg,
+        rgba(229, 0, 18, 0.03) 22.94%,
+        rgba(229, 0, 18, 0) 94.62%
+      );
       transform: skewX(-15deg);
     }
 

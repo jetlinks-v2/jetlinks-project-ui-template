@@ -5,15 +5,11 @@
         <div style="margin-bottom: 15px">
           <div class="alert">
             <AIcon type="InfoCircleOutlined" />
-            {{ $t("NoticeRule.index.804848-0") }}
+            {{ $t('NoticeRule.index.804848-0') }}
           </div>
         </div>
         <div class="content-collapse">
-          <a-collapse
-            :bordered="false"
-            v-model:activeKey="activeKey"
-            expand-icon-position="right"
-          >
+          <a-collapse :bordered="false" v-model:activeKey="activeKey" expand-icon-position="right">
             <template #expandIcon="{ isActive }">
               <AIcon
                 type="CaretRightOutlined"
@@ -26,19 +22,13 @@
               <template #header>
                 <div>
                   {{ item.name }}
-                  <span
-                    style="margin-left: 10px"
-                    class="alert"
-                    v-if="item.provider === 'alarm'"
-                    >{{ $t("NoticeRule.index.804848-1") }}</span
-                  >
+                  <span style="margin-left: 10px" class="alert" v-if="item.provider === 'alarm'">
+                    {{ $t('NoticeRule.index.804848-1') }}
+                  </span>
                 </div>
               </template>
               <div>
-                <template
-                  v-for="(child, index) in item.children"
-                  :key="child.provider"
-                >
+                <template v-for="(child, index) in item.children" :key="child.provider">
                   <Item
                     :data="child"
                     @refresh="onRefresh"
@@ -56,17 +46,17 @@
 </template>
 
 <script lang="ts" setup>
-import { queryChannelConfig } from "@/api/system/noticeRule";
-import Item from "./components/Item/index.vue";
-import { omit } from "lodash-es";
-import { useI18n } from "vue-i18n";
+import { queryChannelConfig } from '@/api/system/noticeRule';
+import Item from './components/Item/index.vue';
+import { omit } from 'lodash-es';
+import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
 
 const activeKey = ref<string[]>([]);
 const tabs = ref<any[]>([]);
 const handleSearch = () => {
-  queryChannelConfig().then((resp) => {
+  queryChannelConfig().then(resp => {
     if (resp.status === 200) {
       const dataMap = new Map();
       resp.result.forEach((i: any) => {
@@ -76,14 +66,14 @@ const handleSearch = () => {
             provider: i.type.id,
             children: [
               {
-                ...omit(i, ["type"]),
+                ...omit(i, ['type']),
               },
             ],
           });
           activeKey.value.push(i.type.id);
         } else {
           dataMap.get(i.type.id).children.push({
-            ...omit(i, ["type"]),
+            ...omit(i, ['type']),
           });
         }
       });

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="top-card"
-    :style="{ backgroundColor: data.componentProps.background }"
-  >
+  <div class="top-card" :style="{ backgroundColor: data.componentProps.background }">
     <div class="top-card-content">
       <div class="content-left">
         <div class="content-left-title">
@@ -19,43 +16,27 @@
         </div>
         <div class="content-left-value">{{ totalData }}</div>
       </div>
-      <div
-        class="content-right"
-        v-if="img"
-      >
+      <div class="content-right" v-if="img">
         <img
           :src="getImageUrl(imgUrl || '')"
-          :style="{ width: ['collectPoints', 'collectorNum', 'channels'].includes(data.type) ? '120px' : '' }"
+          :style="{
+            width: ['collectPoints', 'collectorNum', 'channels'].includes(data.type) ? '120px' : '',
+          }"
         />
       </div>
-      <div
-        class="content-right-echart"
-        v-else
-      >
-        <Charts
-          :options="trendData"
-          style="width: 100%; height: 100%"
-        ></Charts>
+      <div class="content-right-echart" v-else>
+        <Charts :options="trendData" style="width: 100%; height: 100%"></Charts>
       </div>
     </div>
-    <div
-      class="top-card-footer"
-      v-if="data.componentProps.filterType.value === 'all'"
-    >
+    <div class="top-card-footer" v-if="data.componentProps.filterType.value === 'all'">
       <!-- {{ footerData }} -->
-      <template
-        v-for="(item, index) in footerData"
-        :key="index"
-        v-if="footerData.length"
-      >
-        <!-- {{ item }} -->
-        <span v-if="!item?.status">{{ item?.label }}</span>
-        <a-badge
-          v-else
-          :text="item.label"
-          :status="item.status"
-        />
-        <div class="footer-item-value">{{ item?.value }}</div>
+      <template v-if="footerData.length">
+        <template v-for="(item, index) in footerData" :key="index">
+          <!-- {{ item }} -->
+          <span v-if="!item?.status">{{ item?.label }}</span>
+          <a-badge v-else :text="item.label" :status="item.status" />
+          <div class="footer-item-value">{{ item?.value }}</div>
+        </template>
       </template>
     </div>
   </div>
@@ -70,46 +51,46 @@ import {
   collectorPoints,
   videoDevicesNum,
   alarmNum,
-  trendData_api
-} from '@/api/Dashboard/index'
-import { getImageUrl } from '@/utils/comm'
-import dayjs from 'dayjs'
-import Charts from './components/Charts.vue'
+  trendData_api,
+} from '@/api/dashboard/index';
+import { getImageUrl } from '@/utils/comm';
+import dayjs from 'dayjs';
+import Charts from './components/Charts.vue';
 
 const props = defineProps({
   data: {
     type: Object,
-    default: () => {}
-  }
-})
-const actionName = ref('')
+    default: () => {},
+  },
+});
+const actionName = ref('');
 const cardType = computed(() => {
-  return props.data.componentProps.filterType.value
-})
-const intervalId = ref()
-const img = ref(true)
+  return props.data.componentProps.filterType.value;
+});
+const intervalId = ref();
+const img = ref(true);
 const imgUrl = computed(() => {
   switch (props.data.type) {
     case 'product':
-      return 'localhost/device/device-product.svg'
+      return 'localhost/device/device-product.svg';
     case 'device':
-      return 'localhost/device/device-number.svg'
+      return 'localhost/device/device-number.svg';
     case 'channels':
-      return 'localhost/dataCollect/channel.png'
+      return 'localhost/dataCollect/channel.png';
     case 'collectorNum':
-      return 'localhost/dataCollect/collector.png'
+      return 'localhost/dataCollect/collector.png';
     case 'collectPoints':
-      return 'localhost/dataCollect/point.png'
+      return 'localhost/dataCollect/point.png';
     case 'alarm':
-      return 'localhost/device/device-number.svg'
+      return 'localhost/device/device-number.svg';
     default:
-      img.value = false
-      return undefined
+      img.value = false;
+      return undefined;
   }
-})
-const totalData = ref(0)
-const footerData = ref([])
-const trendData = ref([])
+});
+const totalData = ref(0);
+const footerData = ref([]);
+const trendData = ref([]);
 const action = {
   /**
    * 获取产品数量
@@ -121,61 +102,61 @@ const action = {
         terms: [
           {
             column: 'state',
-            value: '1'
-          }
-        ]
+            value: '1',
+          },
+        ],
       },
       disable: {
         terms: [
           {
             column: 'state',
-            value: '0'
-          }
-        ]
-      }
-    }
+            value: '0',
+          },
+        ],
+      },
+    };
 
-    productCount(typeParams[cardType.value]).then((res) => {
+    productCount(typeParams[cardType.value]).then(res => {
       if (res.success) {
-        totalData.value = res.result
+        totalData.value = res.result;
       }
-    })
+    });
 
     if (cardType.value === 'all') {
       productCount(typeParams.normal)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[0] = {
               label: '正常',
               value: res.result,
-              status: 'success'
-            }
+              status: 'success',
+            };
           }
         })
         .catch(() => {
           footerData.value[0] = {
             label: '正常',
             value: 0,
-            status: 'success'
-          }
-        })
+            status: 'success',
+          };
+        });
       productCount(typeParams.disable)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[1] = {
               label: '禁用',
               value: res.result,
-              status: 'error'
-            }
+              status: 'error',
+            };
           }
         })
         .catch(() => {
           footerData.value[1] = {
             label: '禁用',
             value: 0,
-            status: 'error'
-          }
-        })
+            status: 'error',
+          };
+        });
     }
   },
   /**
@@ -189,69 +170,69 @@ const action = {
           {
             column: 'state',
             termType: 'eq',
-            value: 'online'
-          }
-        ]
+            value: 'online',
+          },
+        ],
       },
       offline: {
         terms: [
           {
             column: 'state',
             termType: 'eq',
-            value: 'offline'
-          }
-        ]
-      }
-    }
+            value: 'offline',
+          },
+        ],
+      },
+    };
 
-    deviceCount(typeParams[cardType.value]).then((res) => {
+    deviceCount(typeParams[cardType.value]).then(res => {
       if (res.success) {
-        totalData.value = res.result
+        totalData.value = res.result;
       }
-    })
+    });
     if (cardType.value === 'all') {
       deviceCount(typeParams.online)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[0] = {
               label: '在线',
               value: res.result,
-              status: 'success'
-            }
+              status: 'success',
+            };
           }
         })
         .catch(() => {
           footerData.value[0] = {
             label: '在线',
             value: 0,
-            status: 'success'
-          }
-        })
+            status: 'success',
+          };
+        });
       deviceCount(typeParams.offline)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[1] = {
               label: '离线',
               value: res.result,
-              status: 'error'
-            }
+              status: 'error',
+            };
           }
         })
         .catch(() => {
           footerData.value[1] = {
             label: '离线',
             value: 0,
-            status: 'error'
-          }
-        })
+            status: 'error',
+          };
+        });
     }
   },
   /**
    * 获取在线数量
    */
   getOnline() {
-    const startTime = dayjs().subtract(0, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss')
-    const endTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    const startTime = dayjs().subtract(0, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+    const endTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
     trendData_api([
       {
         dashboard: 'device',
@@ -265,41 +246,41 @@ const action = {
           from: startTime,
           to: endTime,
           time: '1h',
-          format: 'yyyy-MM-dd HH:mm:ss'
-        }
-      }
-    ]).then((res) => {
+          format: 'yyyy-MM-dd HH:mm:ss',
+        },
+      },
+    ]).then(res => {
       if (res.success) {
-        const x: string[] = []
-        const y: number[] = []
-        ;(res.result as any)?.forEach((item: any) => {
-          x.push(item.data.timeString)
-          y.push(item.data.value)
-        })
-        x.reverse()
-        const onlineYdata = y
-        onlineYdata.reverse()
-        trendData.value = setChartOptions(x, onlineYdata, '在线数', '#D3ADF7')
+        const x: string[] = [];
+        const y: number[] = [];
+        (res.result as any)?.forEach((item: any) => {
+          x.push(item.data.timeString);
+          y.push(item.data.value);
+        });
+        x.reverse();
+        const onlineYdata = y;
+        onlineYdata.reverse();
+        trendData.value = setChartOptions(x, onlineYdata, '在线数', '#D3ADF7');
       }
-    })
+    });
     // // 今日在线
     deviceCount({
       terms: [
         {
           column: 'state',
           termType: 'eq',
-          value: 'online'
-        }
-      ]
-    }).then((res) => {
+          value: 'online',
+        },
+      ],
+    }).then(res => {
       if (res.success) {
-        totalData.value = res.result
+        totalData.value = res.result;
       }
-    })
+    });
 
     if (cardType.value === 'all') {
       // 昨日在线
-      getYesterdayOnline()
+      getYesterdayOnline();
     }
   },
 
@@ -312,64 +293,64 @@ const action = {
           {
             column: 'runningState',
             termType: 'eq',
-            value: 'running'
-          }
-        ]
+            value: 'running',
+          },
+        ],
       },
       disable: {
         terms: [
           {
             column: 'runningState',
             termType: 'not',
-            value: 'running'
-          }
-        ]
-      }
-    }
+            value: 'running',
+          },
+        ],
+      },
+    };
 
-    channelCount(typeParams[cardType.value]).then((res) => {
+    channelCount(typeParams[cardType.value]).then(res => {
       if (res.success) {
-        totalData.value = res.result
+        totalData.value = res.result;
       }
-    })
+    });
 
     if (cardType.value === 'all') {
       // 正常通道
       channelCount(typeParams.normal)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[0] = {
               label: '正常',
               value: res.result,
-              status: 'success'
-            }
+              status: 'success',
+            };
           }
         })
         .catch(() => {
           footerData.value[0] = {
             label: '正常',
             value: 0,
-            status: 'success'
-          }
-        })
+            status: 'success',
+          };
+        });
       // 异常通道
       channelCount(typeParams.disable)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[1] = {
               label: '异常',
               value: res.result,
-              status: 'error'
-            }
+              status: 'error',
+            };
           }
         })
         .catch(() => {
           footerData.value[1] = {
             label: '异常',
             value: 0,
-            status: 'error'
-          }
-        })
+            status: 'error',
+          };
+        });
     }
   },
 
@@ -382,61 +363,61 @@ const action = {
           {
             column: 'runningState',
             termType: 'eq',
-            value: 'running'
-          }
-        ]
+            value: 'running',
+          },
+        ],
       },
       disable: {
         terms: [
           {
             column: 'runningState',
             termType: 'not',
-            value: 'running'
-          }
-        ]
-      }
-    }
+            value: 'running',
+          },
+        ],
+      },
+    };
 
-    collectorCount(typeParams[cardType.value]).then((res) => {
-      totalData.value = res.result
-    })
+    collectorCount(typeParams[cardType.value]).then(res => {
+      totalData.value = res.result;
+    });
     if (cardType.value === 'all') {
       // 正常数量
       collectorCount(typeParams.normal)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[0] = {
               label: '正常',
               value: res.result,
-              status: 'success'
-            }
+              status: 'success',
+            };
           }
         })
         .catch(() => {
           footerData.value[0] = {
             label: '正常',
             value: 0,
-            status: 'success'
-          }
-        })
+            status: 'success',
+          };
+        });
       // 异常数量
       collectorCount(typeParams.disable)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[1] = {
               label: '异常',
               value: res.result,
-              status: 'error'
-            }
+              status: 'error',
+            };
           }
         })
         .catch(() => {
           footerData.value[1] = {
             label: '异常',
             value: 0,
-            status: 'error'
-          }
-        })
+            status: 'error',
+          };
+        });
     }
   },
   // 采集点位
@@ -448,61 +429,61 @@ const action = {
           {
             column: 'runningState',
             termType: 'eq',
-            value: 'running'
-          }
-        ]
+            value: 'running',
+          },
+        ],
       },
       disable: {
         terms: [
           {
             column: 'runningState',
             termType: 'not',
-            value: 'running'
-          }
-        ]
-      }
-    }
+            value: 'running',
+          },
+        ],
+      },
+    };
 
-    collectorPoints(typeParams[cardType.value]).then((res) => {
-      totalData.value = res.result
-    })
+    collectorPoints(typeParams[cardType.value]).then(res => {
+      totalData.value = res.result;
+    });
     if (cardType.value === 'all') {
       // 正常点位
       collectorPoints(typeParams.normal)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[0] = {
               label: '正常点位',
               value: res.result,
-              status: 'success'
-            }
+              status: 'success',
+            };
           }
         })
         .catch(() => {
           footerData.value[0] = {
             label: '正常点位',
             value: 0,
-            status: 'success'
-          }
-        })
+            status: 'success',
+          };
+        });
       // 异常点位
       collectorPoints(typeParams.disable)
-        .then((res) => {
+        .then(res => {
           if (res.success) {
             footerData.value[1] = {
               label: '异常点位',
               value: res.result,
-              status: 'error'
-            }
+              status: 'error',
+            };
           }
         })
         .catch(() => {
           footerData.value[2] = {
             label: '异常点位',
             value: 0,
-            status: 'error'
-          }
-        })
+            status: 'error',
+          };
+        });
     }
   },
   // 视频设备数量
@@ -514,44 +495,44 @@ const action = {
           {
             column: 'state',
             termType: 'eq',
-            value: 'online'
-          }
-        ]
+            value: 'online',
+          },
+        ],
       },
       offline: {
         terms: [
           {
             column: 'state',
             termType: 'eq',
-            value: 'offline'
-          }
-        ]
-      }
-    }
-    videoDevicesNum(typeParams[cardType.value]).then((res) => {
-      totalData.value = res.result
-    })
+            value: 'offline',
+          },
+        ],
+      },
+    };
+    videoDevicesNum(typeParams[cardType.value]).then(res => {
+      totalData.value = res.result;
+    });
     if (cardType.value === 'all') {
       // 在线
-      videoDevicesNum(typeParams.online).then((res) => {
+      videoDevicesNum(typeParams.online).then(res => {
         if (res.success) {
           footerData.value[0] = {
             label: '在线',
             value: res.result,
-            status: 'success'
-          }
+            status: 'success',
+          };
         }
-      })
+      });
 
-      videoDevicesNum(typeParams.offline).then((res) => {
+      videoDevicesNum(typeParams.offline).then(res => {
         if (res.success) {
           footerData.value[1] = {
             label: '离线',
             value: res.result,
-            status: 'error'
-          }
+            status: 'error',
+          };
         }
-      })
+      });
     }
   },
   // 告警配置
@@ -562,47 +543,47 @@ const action = {
         terms: [
           {
             column: 'state',
-            value: 'enabled'
-          }
-        ]
+            value: 'enabled',
+          },
+        ],
       },
       disable: {
         terms: [
           {
             column: 'state',
-            value: 'disabled'
-          }
-        ]
-      }
-    }
-    alarmNum(typeParams[cardType.value]).then((res) => {
+            value: 'disabled',
+          },
+        ],
+      },
+    };
+    alarmNum(typeParams[cardType.value]).then(res => {
       if (res.success) {
-        totalData.value = res.result
+        totalData.value = res.result;
       }
-    })
+    });
     if (cardType.value === 'all') {
-      alarmNum(typeParams.normal).then((res) => {
+      alarmNum(typeParams.normal).then(res => {
         if (res.success) {
           footerData.value[0] = {
             label: '正常',
             value: res.result,
-            status: 'success'
-          }
+            status: 'success',
+          };
         }
-      })
-      alarmNum(typeParams.disable).then((res) => {
+      });
+      alarmNum(typeParams.disable).then(res => {
         if (res.success) {
           footerData.value[1] = {
             label: '禁用',
             value: res.result,
-            status: 'error'
-          }
+            status: 'error',
+          };
         }
-      })
+      });
     }
   },
   getTodayAlarmNum() {
-    const startTime = dayjs().subtract(1, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss')
+    const startTime = dayjs().subtract(1, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
     // 告警趋势
     trendData_api([
       {
@@ -615,8 +596,8 @@ const action = {
           time: '1d',
           format: 'HH:mm:ss',
           from: startTime,
-          to: 'now'
-        }
+          to: 'now',
+        },
       },
       {
         dashboard: 'alarm',
@@ -628,8 +609,8 @@ const action = {
           time: '1M',
           format: 'yyyy-MM',
           limit: 1,
-          from: 'now-1M'
-        }
+          from: 'now-1M',
+        },
       },
       {
         dashboard: 'alarm',
@@ -642,38 +623,38 @@ const action = {
           format: 'yyyy-MM-dd',
           from: 'now-15d',
           to: 'now',
-          limit: 15
-        }
-      }
-    ]).then((res) => {
+          limit: 15,
+        },
+      },
+    ]).then(res => {
       if (res.success) {
         footerData.value[0] = {
           label: '当月告警',
-          value: res.result.find((item) => item.group === 'thisMonth').data.value,
-          status: 'success'
-        }
+          value: res.result.find(item => item.group === 'thisMonth').data.value,
+          status: 'success',
+        };
       }
-      totalData.value = res.result.find((item) => item.group === 'today').data.value
+      totalData.value = res.result.find(item => item.group === 'today').data.value;
 
       // 趋势图过滤数据
-      const filterData = res.result.filter((item) => item.group === '15day')
+      const filterData = res.result.filter(item => item.group === '15day');
 
-      const x: string[] = []
-      const y: number[] = []
-      ;(filterData as any)?.forEach((item: any) => {
-        x.push(item.data.timeString)
-        y.push(item.data.value)
-      })
-      x.reverse()
-      const onlineYdata = y
-      onlineYdata.reverse()
-      trendData.value = setChartOptions(x, onlineYdata, '告警数', '#ff595e')
-    })
+      const x: string[] = [];
+      const y: number[] = [];
+      (filterData as any)?.forEach((item: any) => {
+        x.push(item.data.timeString);
+        y.push(item.data.value);
+      });
+      x.reverse();
+      const onlineYdata = y;
+      onlineYdata.reverse();
+      trendData.value = setChartOptions(x, onlineYdata, '告警数', '#ff595e');
+    });
   },
   // 今日设备消息量
   getTodayDeviceMsgNum() {
-    const startTime = dayjs().subtract(0, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss')
-    const endTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    const startTime = dayjs().subtract(0, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+    const endTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
     trendData_api([
       {
         dashboard: 'device',
@@ -686,8 +667,8 @@ const action = {
           format: 'yyyy-MM-dd HH:mm:ss',
           limit: 24,
           from: startTime,
-          to: endTime
-        }
+          to: endTime,
+        },
       },
       {
         dashboard: 'device',
@@ -698,8 +679,8 @@ const action = {
         params: {
           time: '1d',
           format: 'yyyy-MM-dd',
-          from: 'now-1d'
-        }
+          from: 'now-1d',
+        },
       },
       {
         dashboard: 'device',
@@ -711,59 +692,59 @@ const action = {
           time: '1M',
           format: 'yyyy-MM',
           limit: 1,
-          from: 'now-1M'
-        }
-      }
-    ]).then((res) => {
+          from: 'now-1M',
+        },
+      },
+    ]).then(res => {
       if (res.success) {
         if (cardType.value === 'all') {
-          totalData.value = res.result?.find((item) => item.group === 'oneday')?.data?.value || 0
+          totalData.value = res.result?.find(item => item.group === 'oneday')?.data?.value || 0;
           footerData.value[0] = {
             label: '当月设备消息量',
-            value: res.result?.find((item) => item.group === 'thisMonth')?.data?.value || 0,
-            status: 'success'
-          }
+            value: res.result?.find(item => item.group === 'thisMonth')?.data?.value || 0,
+            status: 'success',
+          };
         } else {
           // 趋势图
-          totalData.value = res.result.find((item) => item.group === 'thisMonth').data.value
+          totalData.value = res.result.find(item => item.group === 'thisMonth').data.value;
         }
         // 趋势图
-        const filterData = res.result.filter((item) => item.group === 'today')
-        const x: string[] = []
-        const y: number[] = []
-        ;(filterData as any)?.forEach((item: any) => {
-          x.push(item.data.timeString)
-          y.push(item.data.value)
-        })
-        x.reverse()
-        const onlineYdata = y
-        onlineYdata.reverse()
-        trendData.value = setChartOptions(x, onlineYdata, '消息量', '#f29b55')
+        const filterData = res.result.filter(item => item.group === 'today');
+        const x: string[] = [];
+        const y: number[] = [];
+        (filterData as any)?.forEach((item: any) => {
+          x.push(item.data.timeString);
+          y.push(item.data.value);
+        });
+        x.reverse();
+        const onlineYdata = y;
+        onlineYdata.reverse();
+        trendData.value = setChartOptions(x, onlineYdata, '消息量', '#f29b55');
       }
-    })
-  }
-}
+    });
+  },
+};
 
 const setChartOptions = (x: any[], y: number[], name: string, ThemeColor: string) => {
   return {
     xAxis: {
       type: 'category',
       data: x,
-      show: false
+      show: false,
     },
     yAxis: {
       type: 'value',
-      show: false
+      show: false,
     },
     grid: {
       top: '5%',
-      bottom: 0
+      bottom: 0,
     },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        type: 'shadow'
-      }
+        type: 'shadow',
+      },
     },
     series: [
       {
@@ -784,26 +765,26 @@ const setChartOptions = (x: any[], y: number[], name: string, ThemeColor: string
             colorStops: [
               {
                 offset: 0,
-                color: ThemeColor // 100% 处的颜色
+                color: ThemeColor, // 100% 处的颜色
               },
               {
                 offset: 1,
-                color: '#FFFFFF' //   0% 处的颜色
-              }
+                color: '#FFFFFF', //   0% 处的颜色
+              },
             ],
-            global: false // 缺省为 false
-          }
-        }
-      }
-    ]
-  }
-}
+            global: false, // 缺省为 false
+          },
+        },
+      },
+    ],
+  };
+};
 /**
  * 昨日在线
  */
 const getYesterdayOnline = () => {
-  const startTime = dayjs().subtract(1, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss')
-  const endTime = dayjs().subtract(1, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss')
+  const startTime = dayjs().subtract(1, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+  const endTime = dayjs().subtract(1, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 
   trendData_api([
     {
@@ -818,91 +799,91 @@ const getYesterdayOnline = () => {
         from: startTime,
         to: endTime,
         time: '1d',
-        format: 'yyyy-MM-dd HH:mm:ss'
-      }
-    }
-  ]).then((res) => {
+        format: 'yyyy-MM-dd HH:mm:ss',
+      },
+    },
+  ]).then(res => {
     if (res.success) {
       footerData.value[0] = {
         label: '昨日在线',
         value: res.result[0]?.data?.value || 0,
-        status: 'success'
-      }
+        status: 'success',
+      };
     }
-  })
-}
+  });
+};
 // 数据刷新
 const refreshManual = () => {
-  action[actionName.value]()
-}
+  action[actionName.value]();
+};
 // 自动刷新
-const refreshInterval = (val) => {
+const refreshInterval = val => {
   intervalId.value = setInterval(() => {
-    refreshManual()
-  }, val * 1000)
-}
+    refreshManual();
+  }, val * 1000);
+};
 onMounted(() => {
   switch (props.data.type) {
     case 'product':
-      actionName.value = 'getProductData' // 产品
-      break
+      actionName.value = 'getProductData'; // 产品
+      break;
     case 'device':
-      actionName.value = 'getDeviceData' // 设备
-      break
+      actionName.value = 'getDeviceData'; // 设备
+      break;
     case 'currentOnline':
-      actionName.value = 'getOnline' // 当前在线
-      break
+      actionName.value = 'getOnline'; // 当前在线
+      break;
     case 'channels':
-      actionName.value = 'getChannelsNum' // 采集器通道数量
-      break
+      actionName.value = 'getChannelsNum'; // 采集器通道数量
+      break;
     case 'collectorNum':
-      actionName.value = 'getCollectorNum' // 采集器数量
-      break
+      actionName.value = 'getCollectorNum'; // 采集器数量
+      break;
     case 'collectPoints':
-      actionName.value = 'getPointNum' // 采集点位
-      break
+      actionName.value = 'getPointNum'; // 采集点位
+      break;
     case 'videoDevicesNum':
-      actionName.value = 'getVideoDevicesNum' // 视频设备数量
-      break
+      actionName.value = 'getVideoDevicesNum'; // 视频设备数量
+      break;
     case 'alarm':
-      actionName.value = 'getAlarmNum' // 告警配置
-      break
+      actionName.value = 'getAlarmNum'; // 告警配置
+      break;
     case 'alarmToday':
-      actionName.value = 'getTodayAlarmNum' // 今日告警
-      break
+      actionName.value = 'getTodayAlarmNum'; // 今日告警
+      break;
     case 'todayDeviceMsgNum':
-      actionName.value = 'getTodayDeviceMsgNum' // 今日设备消息量
-      break
+      actionName.value = 'getTodayDeviceMsgNum'; // 今日设备消息量
+      break;
   }
-  action[actionName.value]()
-})
+  action[actionName.value]();
+});
 onUnmounted(() => {
   if (intervalId.value !== null) {
-    clearInterval(intervalId.value)
-    intervalId.value = null
+    clearInterval(intervalId.value);
+    intervalId.value = null;
   }
-})
+});
 
-defineExpose({ refreshManual })
+defineExpose({ refreshManual });
 watch(
   () => props.data.componentProps.filterType.value,
-  (val) => {
-    refreshManual()
-  }
-)
+  () => {
+    refreshManual();
+  },
+);
 
 watch(
   () => [props.data?.componentProps?.auto?.time, props.data?.componentProps?.auto?.value],
-  (val) => {
+  val => {
     if (intervalId.value) {
-      clearInterval(intervalId.value)
+      clearInterval(intervalId.value);
     }
     if (val[1] && val[0] > 0) {
-      refreshInterval(val[0])
+      refreshInterval(val[0]);
     }
   },
-  {immediate: true}
-)
+  { immediate: true },
+);
 </script>
 
 <style lang="less" scoped>

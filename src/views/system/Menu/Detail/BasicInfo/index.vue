@@ -8,9 +8,7 @@
       <TitleComponent :data="$t('BasicInfo.index.966110-1')" />
       <Permission ref="permissionFormRef" :value="value" />
       <j-permission-button
-        :hasPermission="`${permission}:${
-          route.params.id === ':id' ? 'add' : 'update'
-        }`"
+        :hasPermission="`${permission}:${route.params.id === ':id' ? 'add' : 'update'}`"
         :loading="loading"
         type="primary"
         @click="onSave"
@@ -22,48 +20,48 @@
 </template>
 
 <script setup lang="ts">
-import Info from './Info.vue'
-import Permission from './Permission.vue'
-import { addMenu, updateMenu } from '@/api/system/menu'
-import { useRequest } from '@jetlinks-web/hooks'
-import { onlyMessage } from '@jetlinks-web/utils'
-import { useMenuStore } from '@/store/menu'
-import {OWNER_KEY} from "@/utils/consts";
+import Info from './Info.vue';
+import Permission from './Permission.vue';
+import { addMenu, updateMenu } from '@/api/system/menu';
+import { useRequest } from '@jetlinks-web/hooks';
+import { onlyMessage } from '@jetlinks-web/utils';
+import { useMenuStore } from '@/store/menu';
+import { OWNER_KEY } from '@/utils/consts';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
-const permission = 'system/Menu'
-const menuStore = useMenuStore()
-const route = useRoute()
+const permission = 'system/Menu';
+const menuStore = useMenuStore();
+const route = useRoute();
 
-const basicFormRef = ref<any>()
-const permissionFormRef = ref<any>()
+const basicFormRef = ref<any>();
+const permissionFormRef = ref<any>();
 
 const props = defineProps({
   value: {
     type: Object,
     default: () => {},
   },
-})
+});
 
 const { loading, run } = useRequest(route.query.id !== ':id' ? updateMenu : addMenu, {
   immediate: false,
   onSuccess(res: any) {
     if (res.success) {
-      onlyMessage($t('BasicInfo.index.966110-3'))
+      onlyMessage($t('BasicInfo.index.966110-3'));
       if (!props.value?.id) {
         menuStore.jumpPage('system/Menu/Detail', {
           params: { id: res.result.id },
-        })
+        });
       }
     }
   },
-})
+});
 
 const onSave = async () => {
-  const info = await basicFormRef.value?.onSave()
-  const permission = await permissionFormRef.value?.onSave()
-  const accessSupportValue = permission.accessSupport
+  const info = await basicFormRef.value?.onSave();
+  const permission = await permissionFormRef.value?.onSave();
+  const accessSupportValue = permission.accessSupport;
   const params = {
     ...info,
     ...permission,
@@ -73,13 +71,13 @@ const onSave = async () => {
         accessSupportValue === 'unsupported'
           ? $t('BasicInfo.index.966110-4')
           : accessSupportValue === 'support'
-          ? $t('BasicInfo.index.966110-5')
-          : $t('BasicInfo.index.966110-6'),
+            ? $t('BasicInfo.index.966110-5')
+            : $t('BasicInfo.index.966110-6'),
     },
     owner: OWNER_KEY,
-  }
-  run(params)
-}
+  };
+  run(params);
+};
 </script>
 
 <style lang="less" scoped>

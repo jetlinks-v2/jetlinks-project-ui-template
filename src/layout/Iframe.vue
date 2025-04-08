@@ -9,11 +9,8 @@
 </template>
 
 <script setup name="IframePage" lang="ts">
-import { ref } from 'vue'
-const iframeUrl = ref('')
-
+import { ref } from 'vue';
+const iframeUrl = ref('');
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

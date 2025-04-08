@@ -1,11 +1,5 @@
 <template>
-  <a-modal
-    :maskClosable="false"
-    :width="'900px'"
-    visible
-    @cancel="emit('close')"
-    :zIndex="1100"
-  >
+  <a-modal :maskClosable="false" :width="'900px'" visible @cancel="emit('close')" :zIndex="1100">
     <template v-if="getType === 'notifier-weixin'">
       <a-spin :spinning="loading">
         <div class="code" style="height: 450px">
@@ -49,11 +43,11 @@ import {
   getDingTalkOAuth2,
   getUserBind,
   getWechatOAuth2,
-} from '@/api/account/notificationSubscription'
-import { LocalStore } from '@jetlinks-web/utils'
-import Wechat from './Wechat.vue'
+} from '@/api/account/notificationSubscription';
+import { LocalStore } from '@jetlinks-web/utils';
+import Wechat from './Wechat.vue';
 
-const emit = defineEmits(['close', 'save'])
+const emit = defineEmits(['close', 'save']);
 const props = defineProps({
   data: {
     // 外层数据
@@ -65,121 +59,114 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-})
+});
 
-const url = ref<string>('')
-const loading = ref<boolean>(false)
+const url = ref<string>('');
+const loading = ref<boolean>(false);
 
 const getType = computed(() => {
-  return props.current?.channelProvider
-})
+  return props.current?.channelProvider;
+});
 
-const _current = ref<any>({})
+const _current = ref<any>({});
 
-const onBindHandle = (
-  type: 'notifier-weixin' | 'notifier-dingTalk',
-  code: string,
-) => {
+const onBindHandle = (type: 'notifier-weixin' | 'notifier-dingTalk', code: string) => {
   getUserBind(type === 'notifier-dingTalk' ? 'dingtalk' : 'wechat', {
     authCode: code,
     configId: props.current?.channelConfiguration.notifierId,
   })
-    .then((resp) => {
+    .then(resp => {
       if (resp.status === 200) {
-        const _bindCode = (resp?.result || '') as string
+        const _bindCode = (resp?.result || '') as string;
         if (_bindCode) {
-          bindThirdParty(
-            type,
-            props.current?.channelConfiguration.notifierId,
-            _bindCode,
-          )
-            .then((response) => {
+          bindThirdParty(type, props.current?.channelConfiguration.notifierId, _bindCode)
+            .then(response => {
               if (response.status === 200) {
                 // 订阅
-                emit('save', props.current)
+                emit('save', props.current);
               }
             })
             .finally(() => {
-              loading.value = false
-            })
+              loading.value = false;
+            });
         }
       }
     })
     .catch(() => {
-      loading.value = false
-    })
-}
+      loading.value = false;
+    });
+};
 
 const updateIframeStyle = () => {
-  const iframe = document.querySelector('#notifier_iframe') as HTMLIFrameElement
+  const iframe = document.querySelector('#notifier_iframe') as HTMLIFrameElement;
   iframe.onload = () => {
-    const currentUrl = iframe?.contentWindow?.location?.search || ''
-    const _url = new URLSearchParams(currentUrl)
-    const params = Object.fromEntries(_url?.entries())
-    let authCode = ''
+    const currentUrl = iframe?.contentWindow?.location?.search || '';
+    const _url = new URLSearchParams(currentUrl);
+    const params = Object.fromEntries(_url?.entries());
+    let authCode = '';
     if (props.current?.channelProvider === 'notifier-dingTalk') {
-      authCode = params?.authCode
+      authCode = params?.authCode;
     }
     // else {
     //     authCode = params?.code;
     // }
 
     if (authCode) {
-      loading.value = true
-      onBindHandle(props.current?.channelProvider, authCode)
+      loading.value = true;
+      onBindHandle(props.current?.channelProvider, authCode);
     }
-  }
-}
+  };
+};
 
 const handleSearch = async () => {
-  LocalStore.remove('wexin_code')
+  LocalStore.remove('wexin_code');
   if (props.current?.channelProvider === 'notifier-weixin') {
-    loading.value = true
+    loading.value = true;
     const resp: any = await getWechatOAuth2(
       props.current?.channelConfiguration.notifierId,
       props.current?.channelConfiguration.templateId,
       location.href,
     ).finally(() => {
-      loading.value = false
-    })
+      loading.value = false;
+    });
     if (resp.status === 200) {
-      const _url = new URLSearchParams(resp?.result)
-      const params = Object.fromEntries(_url?.entries())
-      _current.value = params
-      url.value = resp.result as string
+      const _url = new URLSearchParams(resp?.result);
+      const params = Object.fromEntries(_url?.entries());
+      _current.value = params;
+      url.value = resp.result as string;
     }
   }
   if (props.current?.channelProvider === 'notifier-dingTalk') {
-    loading.value = true
+    loading.value = true;
     const resp = await getDingTalkOAuth2(
       props.current?.channelConfiguration.notifierId,
       location.href,
     ).finally(() => {
-      loading.value = false
-    })
+      loading.value = false;
+    });
     if (resp.status === 200) {
-      url.value = resp.result as string
+      url.value = resp.result as string;
       nextTick(() => {
-        updateIframeStyle()
-      })
+        updateIframeStyle();
+      });
     }
   }
-}
+};
 
 const onSuccess = (code: string) => {
-  onBindHandle(props.current?.channelProvider, code)
-}
+  onBindHandle(props.current?.channelProvider, code);
+};
 
 watch(
   () => props.current,
   () => {
-    handleSearch()
+    handleSearch();
   },
   {
     immediate: true,
     deep: true,
   },
-)
+);
 </script>
 
 <style lang="less" scoped>

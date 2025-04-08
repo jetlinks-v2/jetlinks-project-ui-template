@@ -1,20 +1,13 @@
 <template>
   <div class="box-item">
     <div class="box-item-img">
-      <a-popover
-        v-model:visible="popoverVisible"
-        placement="top"
-        :trigger="['click']"
-      >
+      <a-popover v-model:visible="popoverVisible" placement="top" :trigger="['click']">
         <div
           :class="{
             disabled: !notifyChannels?.includes(current?.id),
           }"
         >
-          <img
-            :src="iconMap.get(current?.channelProvider)"
-            style="width: 32px"
-          />
+          <img :src="iconMap.get(current?.channelProvider)" style="width: 32px" />
         </div>
         <template #content>
           <j-permission-button
@@ -28,9 +21,7 @@
           <template v-else>
             <Detail
               @unsubscribe="onUnSubscribe"
-              v-if="
-                current?.channelProvider !== 'inside-mail' && popoverVisible
-              "
+              v-if="current?.channelProvider !== 'inside-mail' && popoverVisible"
               :current="current"
               :data="data"
               @bindChange="onChange('bind')"
@@ -70,21 +61,21 @@
 </template>
 
 <script lang="ts" setup>
-import { getImage } from '@jetlinks-web/utils'
-import Detail from './Detail.vue'
-import { useUserStore } from '@/store/user'
-import EditInfo from '../../EditInfo/index.vue'
-import Bind from './Bind.vue'
+import { getImage } from '@jetlinks-web/utils';
+import Detail from './Detail.vue';
+import { useUserStore } from '@/store/user';
+import EditInfo from '../../EditInfo/index.vue';
+import Bind from './Bind.vue';
 
-const iconMap = new Map()
-iconMap.set('notifier-dingTalk', getImage('/notice-rule/dingtalk.png'))
-iconMap.set('notifier-weixin', getImage('/notice-rule/wechat.png'))
-iconMap.set('notifier-email', getImage('/notice-rule/email.png'))
-iconMap.set('notifier-voice', getImage('/notice-rule/voice.png'))
-iconMap.set('notifier-sms', getImage('/notice-rule/sms.png'))
-iconMap.set('inside-mail', getImage('/notice-rule/inside-mail.png'))
+const iconMap = new Map();
+iconMap.set('notifier-dingTalk', getImage('/notice-rule/dingtalk.png'));
+iconMap.set('notifier-weixin', getImage('/notice-rule/wechat.png'));
+iconMap.set('notifier-email', getImage('/notice-rule/email.png'));
+iconMap.set('notifier-voice', getImage('/notice-rule/voice.png'));
+iconMap.set('notifier-sms', getImage('/notice-rule/sms.png'));
+iconMap.set('inside-mail', getImage('/notice-rule/inside-mail.png'));
 
-const emit = defineEmits(['save', 'unsubscribe'])
+const emit = defineEmits(['save', 'unsubscribe']);
 
 const props = defineProps({
   data: {
@@ -101,43 +92,43 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-})
-const user = useUserStore()
-const popoverVisible = ref<boolean>(false)
+});
+const user = useUserStore();
+const popoverVisible = ref<boolean>(false);
 
-const editInfoVisible = ref<boolean>(false)
-const visible = ref<boolean>(false)
+const editInfoVisible = ref<boolean>(false);
+const visible = ref<boolean>(false);
 
 const onChange = (type: 'bind' | 'info') => {
   if (type === 'bind') {
-    editInfoVisible.value = true
+    editInfoVisible.value = true;
   } else {
-    visible.value = true
+    visible.value = true;
   }
-}
+};
 
 const onSave = () => {
-  editInfoVisible.value = false
-  user.getUserInfo()
-  emit('save', props.current)
-  popoverVisible.value = false
-}
+  editInfoVisible.value = false;
+  user.getUserInfo();
+  emit('save', props.current);
+  popoverVisible.value = false;
+};
 
 const onBindSave = () => {
-  visible.value = false
-  emit('save', props.current)
-  popoverVisible.value = false
-}
+  visible.value = false;
+  emit('save', props.current);
+  popoverVisible.value = false;
+};
 
 const onUnSubscribe = (dt: any) => {
-  emit('unsubscribe', dt)
-  popoverVisible.value = false
-}
+  emit('unsubscribe', dt);
+  popoverVisible.value = false;
+};
 
 const onCheckChange = (dt: any) => {
-  emit('save', dt)
-  popoverVisible.value = false
-}
+  emit('save', dt);
+  popoverVisible.value = false;
+};
 </script>
 
 <style lang="less" scoped>

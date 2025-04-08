@@ -1,7 +1,6 @@
-import path from "path";
-import fs from "fs";
+import fs from 'fs';
 
-export function copyFile(modulesName:string) {
+export function copyFile(modulesName: string) {
   return {
     name: 'copy-module-files',
     closeBundle() {
@@ -16,6 +15,6 @@ export function copyFile(modulesName:string) {
           console.error(`Source file not found: ${src}`);
         }
       }
-    }
-  }
+    },
+  };
 }

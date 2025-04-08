@@ -1,3 +1,3 @@
-import CheckButton from "./CheckButton.vue";
+import CheckButton from './CheckButton.vue';
 
-export default CheckButton
+export default CheckButton;

@@ -1,4 +1,4 @@
-import type { PopconfirmProps } from "ant-design-vue/es/popconfirm";
+import type { PopconfirmProps } from 'ant-design-vue/es/popconfirm';
 export type AccessLogItem = {
   id: string;
   context: any;

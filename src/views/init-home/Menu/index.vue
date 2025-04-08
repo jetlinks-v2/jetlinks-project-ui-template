@@ -1,105 +1,108 @@
 <template>
-    <div class="menu-style">
-        <div class="menu-img">
-            <img :src="getImage('/init-home/menu.png')" />
-        </div>
-        <div class="menu-info">
-            <b>{{ $t('Menu.index.459633-0', [count]) }}</b>
-            <div>{{ $t('Menu.index.459633-2') }}</div>
-        </div>
+  <div class="menu-style">
+    <div class="menu-img">
+      <img :src="getImage('/init-home/menu.png')" />
     </div>
+    <div class="menu-info">
+      <b>{{ $t('Menu.index.459633-0', [count]) }}</b>
+      <div>{{ $t('Menu.index.459633-2') }}</div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { getImage } from '@jetlinks-web/utils'
-import { USER_CENTER_MENU_DATA } from '../data/baseMenu'
-import BaseMenu, { mergeMenuData, handleMenuOptions } from '../data'
+import { getImage } from '@jetlinks-web/utils';
+import { USER_CENTER_MENU_DATA } from '../data/baseMenu';
+import BaseMenu, { mergeMenuData, handleMenuOptions } from '../data';
 import { updateMenus } from '@/api/initHome';
-import { useApplication } from '@/store'
-import {BASE_API} from "@jetlinks-web/constants";
+import { useApplication } from '@/store';
+import { BASE_API } from '@jetlinks-web/constants';
 
-const app = useApplication()
+const app = useApplication();
 /**
  * 获取菜单数据
  */
 const menuDates = reactive({
-    count: 0,
-    current: [],
+  count: 0,
+  current: [],
 });
 
 const getCloudMenu = async () => {
-  const baseMenus = BaseMenu()
-  menuDates.count = menuCount(baseMenus)
-  menuDates.current = baseMenus
+  const baseMenus = BaseMenu();
+  menuDates.count = menuCount(baseMenus);
+  menuDates.current = baseMenus;
 
-  const appItems = app.appList.filter(item => !item.path.startsWith('http'))
+  const appItems = app.appList.filter(item => !item.path.startsWith('http'));
 
   for (const item of appItems) {
-    let _path = item.path.startsWith('/') ? item.path : '/' + item.path
-    const url = `${window.location.protocol}//${document.location.host}${BASE_API}${_path}/baseMenu.json`
-    const resp = await fetch(url)
+    let _path = item.path.startsWith('/') ? item.path : '/' + item.path;
+    const url = `${window.location.protocol}//${document.location.host}${BASE_API}${_path}/baseMenu.json`;
+    const resp = await fetch(url);
     if (resp.ok) {
-      const res = await resp.json()
-      menuDates.count += menuCount(res)
-      menuDates.current = mergeMenuData(menuDates.current, handleMenuOptions(res, item))
+      const res = await resp.json();
+      menuDates.count += menuCount(res);
+      menuDates.current = mergeMenuData(menuDates.current, handleMenuOptions(res, item));
     }
   }
-}
+};
 
 /**
  * 计算菜单数量
  */
 const menuCount = (menus: any[]): number => {
-    return menus.reduce((pre, next) => {
-        let _count = 1;
-        if (next.children?.length) {
-            _count = menuCount(next.children);
-        }
-        return pre + _count;
-    }, 0);
+  return menus.reduce((pre, next) => {
+    let _count = 1;
+    if (next.children?.length) {
+      _count = menuCount(next.children);
+    }
+    return pre + _count;
+  }, 0);
 };
 /**
  * 添加options show用于控制菜单是否显示函数
  */
-const dealMenu = (data:any) =>{
-    data.forEach((item:any)=>{
-        item.options = Object.assign({
-          show: true
-        }, item?.options || {})
-        if(item.children){
-            dealMenu(item.children)
-        }
-    })
-}
+const dealMenu = (data: any) => {
+  data.forEach((item: any) => {
+    item.options = Object.assign(
+      {
+        show: true,
+      },
+      item?.options || {},
+    );
+    if (item.children) {
+      dealMenu(item.children);
+    }
+  });
+};
 /**
  * 初始化菜单
  */
-const initMenu = async () => {
-    return new Promise(async (resolve) => {
-      //  用户中心
-        dealMenu(menuDates.current)
-        // console.log([...menuDates.current!, USER_CENTER_MENU_DATA]);
-        const res = await updateMenus([...menuDates.current!, USER_CENTER_MENU_DATA]);
-        resolve(res.success)
+const initMenu = () => {
+  return new Promise(resolve => {
+    //  用户中心
+    dealMenu(menuDates.current);
+    // console.log([...menuDates.current!, USER_CENTER_MENU_DATA]);
+    updateMenus([...menuDates.current!, USER_CENTER_MENU_DATA]).then(resp => {
+      resolve(resp.success);
     });
+  });
 };
 const { count } = toRefs(menuDates);
 
-onMounted(()=>{
-
-  getCloudMenu()
-})
+onMounted(() => {
+  getCloudMenu();
+});
 
 defineExpose({
-    updateMenu: initMenu,
+  updateMenu: initMenu,
 });
 </script>
 <style lang="less" scoped>
 .menu-style {
-    display: flex;
-    align-items: center;
-    .menu-img {
-        margin-right: 16px;
-    }
+  display: flex;
+  align-items: center;
+  .menu-img {
+    margin-right: 16px;
+  }
 }
 </style>

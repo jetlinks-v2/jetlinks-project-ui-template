@@ -1,56 +1,51 @@
 <script setup name="Positions">
 import { useI18n } from 'vue-i18n';
 import { useColumns } from './data';
-import {useMenuStore} from "@/store";
+import { useMenuStore } from '@/store';
 import { queryPage, del } from '@/api/system/positions';
-import {useRoute} from "vue-router";
+import { useRoute } from 'vue-router';
 
 const { t: $t } = useI18n();
 const params = ref({});
 const permission = 'system/Positions';
 const columns = useColumns(permission);
-const menuStore = useMenuStore()
-const tableRef = ref()
+const menuStore = useMenuStore();
+const tableRef = ref();
 
-const save = useRoute().query.save
+const save = useRoute().query.save;
 
 const onAdd = () => {
   menuStore.jumpPage('system/Positions/Detail', {
     params: {
       id: ':id',
     },
-  })
-}
+  });
+};
 
-const onEdit = (record) => {
+const onEdit = record => {
   menuStore.jumpPage('system/Positions/Detail', {
     params: {
       id: record.id,
     },
-  })
-}
+  });
+};
 
-const onDelete = (id) => {
+const onDelete = id => {
   del(id).then(() => {
-    tableRef.value.reload()
-  })
-}
+    tableRef.value.reload();
+  });
+};
 
 onMounted(() => {
   if (save) {
-    onAdd()
+    onAdd();
   }
-})
-
+});
 </script>
 
 <template>
   <j-page-container>
-    <pro-search
-      :columns="columns"
-      target="system-user"
-      @search="p => params = p"
-    />
+    <pro-search :columns="columns" target="system-user" @search="p => (params = p)" />
     <full-page>
       <j-pro-table
         ref="tableRef"
@@ -59,19 +54,14 @@ onMounted(() => {
         :params="params"
         :columns="columns"
         :defaultParams="{
-            sorts: [
-                { name: 'createTime', order: 'desc' },
-            ],
+          sorts: [{ name: 'createTime', order: 'desc' }],
         }"
         :scroll="{ y: 'calc(100% - 60px)' }"
       >
         <template #headerLeftRender>
-          <j-permission-button
-            :hasPermission="`${permission}:add`"
-            type="primary"
-            @click="onAdd"
-          >
-            <AIcon type="PlusOutlined" />{{ $t('User.index.673867-0') }}
+          <j-permission-button :hasPermission="`${permission}:add`" type="primary" @click="onAdd">
+            <AIcon type="PlusOutlined" />
+            {{ $t('User.index.673867-0') }}
           </j-permission-button>
         </template>
         <template #roles="record">
@@ -117,6 +107,4 @@ onMounted(() => {
   </j-page-container>
 </template>
 
-<style scoped lang="less">
-
-</style>
+<style scoped lang="less"></style>

@@ -1,19 +1,19 @@
 <script setup name="Positions">
 import { useI18n } from 'vue-i18n';
 import { queryPage } from '@/api/system/positions';
-import BindModal from './Bind.vue'
+import BindModal from './Bind.vue';
 
 const { t: $t } = useI18n();
-const permission = 'system/Department'
+const permission = 'system/Department';
 
 const props = defineProps({
   parentId: {
     type: String,
     default: '',
   },
-})
+});
 
-const emits = defineEmits(['changeTabs'])
+const emits = defineEmits(['changeTabs']);
 
 const columns = [
   {
@@ -57,26 +57,26 @@ const columns = [
     width: 100,
     scopedSlots: true,
   },
-]
+];
 
 // 搜索参数
-const queryParams = ref({})
-const dialogVisible = ref(false)
+const queryParams = ref({});
+const dialogVisible = ref(false);
 // 表格
-const tableRef = ref() // 表格实例
+const tableRef = ref(); // 表格实例
 // const _selectedRowKeys = ref([])
 
-const positionId = ref()
+const positionId = ref();
 
 // 刷新列表
 const refresh = () => {
-  tableRef.value?.reload()
-}
+  tableRef.value?.reload();
+};
 
 const onSave = () => {
-  dialogVisible.value = false
-  refresh()
-}
+  dialogVisible.value = false;
+  refresh();
+};
 //取消选择
 // const cancelSelect = () => {
 //   _selectedRowKeys.value = []
@@ -110,7 +110,7 @@ const onSave = () => {
 //   _selectedRowKeys.value = [...rowSet.values()]
 // }
 
-const handleQuery = (params) => {
+const handleQuery = params => {
   const _params = {
     ...params,
     terms: [
@@ -119,42 +119,42 @@ const handleQuery = (params) => {
         column: 'orgId',
         termType: 'eq',
         value: props.parentId,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
-  return queryPage(_params)
-}
+  return queryPage(_params);
+};
 
 // 搜索
-const handleParams = (e) => {
-  queryParams.value = e
-}
+const handleParams = e => {
+  queryParams.value = e;
+};
 
-const onJumpPage = (record) => {
-  emits('changeTabs', record.id)
-}
+const onJumpPage = record => {
+  emits('changeTabs', record.id);
+};
 
-const showBindUser = (record) => {
-  positionId.value = record.id
-  dialogVisible.value = true
-}
+const showBindUser = record => {
+  positionId.value = record.id;
+  dialogVisible.value = true;
+};
 
 watch(
   () => props.parentId,
   () => {
-    refresh()
+    refresh();
   },
-)
+);
 </script>
 
 <template>
-  <div style="overflow-y: auto;">
+  <div style="overflow-y: auto">
     <pro-search
       :columns="columns"
       noMargin
       target="category-position"
-      style="margin: 0;"
+      style="margin: 0"
       @search="handleParams"
     />
     <j-pro-table
@@ -166,7 +166,7 @@ watch(
         sorts: [{ name: 'createTime', order: 'desc' }],
       }"
       mode="TABLE"
-      :scroll="{y: 'calc(100vh - 450px)'}"
+      :scroll="{ y: 'calc(100vh - 450px)' }"
     >
       <template #memberCount="slotProps">
         <a @click="onJumpPage(slotProps)">{{ slotProps.memberCount }}</a>
@@ -183,9 +183,13 @@ watch(
       </template>
     </j-pro-table>
   </div>
-  <BindModal v-if="dialogVisible" :orgId="parentId" :positionId="positionId" @save="onSave" @close="dialogVisible = false" />
+  <BindModal
+    v-if="dialogVisible"
+    :orgId="parentId"
+    :positionId="positionId"
+    @save="onSave"
+    @close="dialogVisible = false"
+  />
 </template>
 
-<style scoped lang="less">
-
-</style>
+<style scoped lang="less"></style>

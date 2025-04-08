@@ -4,54 +4,41 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted,
-  watch,
-  onUnmounted,
-  nextTick
-} from 'vue';
+import { ref, onMounted, watch, onUnmounted, nextTick, getCurrentInstance } from 'vue';
 import * as monaco from 'monaco-editor';
 import { omit } from 'lodash-es';
 
 defineOptions({
-  name: 'JMonacoEditor'
-})
+  name: 'JMonacoEditor',
+});
 
 const props = defineProps({
   modelValue: [String, Number],
-  theme: {type: String, default: 'vs-dark'},
-  language: {type: String, default: 'json'},
-  codeTips: {type: Array, default: () => []},
-  init: {type: Function, default: undefined},
-  registrationTips: {type: Object, default: () => ({})},
-  registrationTypescript: {type: Object, default: () => ({})},
-  blurFormat: {type: Boolean, default: true},
-  readOnly: {type: Boolean, default: false},
-  options: {type: Object, default: () => ({})},
+  theme: { type: String, default: 'vs-dark' },
+  language: { type: String, default: 'json' },
+  codeTips: { type: Array, default: () => [] },
+  init: { type: Function, default: undefined },
+  registrationTips: { type: Object, default: () => ({}) },
+  registrationTypescript: { type: Object, default: () => ({}) },
+  blurFormat: { type: Boolean, default: true },
+  readOnly: { type: Boolean, default: false },
+  options: { type: Object, default: () => ({}) },
 });
 
-const emit = defineEmits([
-  'update:modelValue',
-  'blur',
-  'focus',
-  'change',
-  'errorChange',
-]);
+const emit = defineEmits(['update:modelValue', 'blur', 'focus', 'change', 'errorChange']);
 
 const dom = ref();
 
-let instance
+let instance;
 
+const vueInstance = getCurrentInstance();
 const monacoProviderRef = ref();
 const monacoTypescriptProviderRef = ref();
 
 // codeTipItem.dispose() // 销毁自定义提示
 
 const handleSuggestions = (suggestions, range) => {
-  return Array.isArray(suggestions)
-    ? suggestions.map((item) => ({...item, range}))
-    : [];
+  return Array.isArray(suggestions) ? suggestions.map(item => ({ ...item, range })) : [];
 };
 
 const disposeRegister = () => {
@@ -64,23 +51,22 @@ const disposeRegister = () => {
 const registerCompletionItemProvider = () => {
   disposeRegister();
   if (monaco.languages && props.registrationTips?.suggestions) {
-    const {name, suggestions} = props.registrationTips;
-    monacoProviderRef.value =
-      monaco.languages.registerCompletionItemProvider(name || 'json', {
-        provideCompletionItems: function (model, position) {
-          const word = model.getWordUntilPosition(position); // 获取提示代码范围位置
-          const range = {
-            startLineNumber: position.lineNumber,
-            endLineNumber: position.lineNumber,
-            startColumn: word.startColumn,
-            endColumn: word.endColumn,
-          };
+    const { name, suggestions } = props.registrationTips;
+    monacoProviderRef.value = monaco.languages.registerCompletionItemProvider(name || 'json', {
+      provideCompletionItems: function (model, position) {
+        const word = model.getWordUntilPosition(position); // 获取提示代码范围位置
+        const range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn,
+        };
 
-          return {
-            suggestions: handleSuggestions(suggestions, range),
-          };
-        },
-      });
+        return {
+          suggestions: handleSuggestions(suggestions, range),
+        };
+      },
+    });
   }
 };
 
@@ -92,11 +78,9 @@ const disposeTypescript = () => {
 const registerTypescript = () => {
   disposeTypescript();
   if (monaco.languages && props.registrationTypescript?.typescript) {
-    const {name, typescript} = props.registrationTypescript;
+    const { typescript } = props.registrationTypescript;
     monacoTypescriptProviderRef.value =
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        typescript,
-      );
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(typescript);
   }
 };
 
@@ -107,8 +91,8 @@ const editorFormat = () => {
   if (!instance) return;
   setTimeout(() => {
     instance.getAction('editor.action.formatDocument')?.run();
-  }, 300)
-  if (props.hasOwnProperty('readOnly')) {
+  }, 300);
+  if (Object.prototype.hasOwnProperty.call(vueInstance.props, 'readOnly')) {
     setTimeout(() => {
       instance.updateOptions({
         readOnly: props.readOnly !== false,
@@ -118,7 +102,7 @@ const editorFormat = () => {
 };
 
 monaco.editor.onDidChangeMarkers(([uri]) => {
-  const markers = monaco.editor.getModelMarkers({resource: uri});
+  const markers = monaco.editor.getModelMarkers({ resource: uri });
   emit('errorChange', markers);
 });
 
@@ -193,13 +177,8 @@ const insert = (val, position) => {
 
 watch(
   () => props.modelValue,
-  (val) => {
-    if (
-      !instance ||
-      (instance &&
-        props.modelValue === instance.getValue())
-    )
-      return;
+  val => {
+    if (!instance || (instance && props.modelValue === instance.getValue())) return;
     // setValue之前获取光标位置
     const position = instance.getPosition();
 
@@ -217,7 +196,7 @@ watch(
   () => {
     registerCompletionItemProvider();
   },
-  {immediate: true},
+  { immediate: true },
 );
 
 watch(
@@ -225,7 +204,7 @@ watch(
   () => {
     registerTypescript();
   },
-  {immediate: true},
+  { immediate: true },
 );
 
 onUnmounted(() => {

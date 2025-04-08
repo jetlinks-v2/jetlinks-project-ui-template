@@ -1,4 +1,4 @@
-import { request } from '@jetlinks-web/core'
+import { request } from '@jetlinks-web/core';
 
 // 获取部门数据
 export const getTreeData_api = (data: any) => request.post(`/organization/_all/tree`, data);
@@ -13,6 +13,8 @@ export const delDepartment_api = (id: string) => request.remove(`/organization/$
 // 获取绑定用户列表
 export const getBindUserList_api = (data: any) => request.post(`/user/_query`, data);
 // 绑定用户
-export const bindUser_api = (parentId:string,data: any) => request.post(`/organization/${parentId}/users/_bind`, data);
+export const bindUser_api = (parentId: string, data: any) =>
+  request.post(`/organization/${parentId}/users/_bind`, data);
 // 解绑用户
-export const unBindUser_api = (parentId:string,data: any) => request.post(`/organization/${parentId}/users/_unbind`, data);
+export const unBindUser_api = (parentId: string, data: any) =>
+  request.post(`/organization/${parentId}/users/_unbind`, data);

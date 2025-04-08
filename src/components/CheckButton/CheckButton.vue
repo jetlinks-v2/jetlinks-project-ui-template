@@ -5,14 +5,14 @@
       :key="item.value"
       :class="{
         'j-check-button-item': true,
-        'selected': myValue.includes(item.value),
-        'disabled': item.disabled
+        selected: myValue.includes(item.value),
+        disabled: item.disabled,
       }"
       @click="
-                () => {
-                    selected(item.value, item.disabled);
-                }
-            "
+        () => {
+          selected(item.value, item.disabled);
+        }
+      "
     >
       <slot name="label">
         {{ item.label }}
@@ -24,11 +24,11 @@
 <script setup lang="ts">
 import { computed, CSSProperties, PropType, ref, watch } from 'vue';
 import { isArray } from 'lodash-es';
-import { Form } from 'ant-design-vue'
+import { Form } from 'ant-design-vue';
 
 defineOptions({
-  name: 'CheckButton'
-})
+  name: 'CheckButton',
+});
 
 const props = defineProps({
   value: {
@@ -57,11 +57,11 @@ const props = defineProps({
   },
   columns: {
     type: Number,
-    default: 3
+    default: 3,
   },
   beforeChange: {
-    type: Function
-  }
+    type: Function,
+  },
 });
 const emit = defineEmits(['update:value', 'change', 'select']);
 
@@ -72,14 +72,14 @@ const optionsMap = ref(new Map());
 const styles = computed(() => {
   return {
     'grid-template-columns': `repeat(${props.columns}, 1fr)`,
-    ...props.style
-  }
-})
+    ...props.style,
+  };
+});
 
 const _options = computed(() => {
   props.options.forEach((item: any) => {
     if (props.disabled) {
-      item.disabled = props.disabled
+      item.disabled = props.disabled;
     }
     optionsMap.value.set(item.value, item);
   });
@@ -89,10 +89,10 @@ const _options = computed(() => {
 const selected = async (key: string | number, disabeld: boolean) => {
   if (disabeld || props.disabled) return;
 
-  const pending = await props.beforeChange?.(key)
+  const pending = await props.beforeChange?.(key);
 
   if (pending === false) {
-    return
+    return;
   }
 
   const values = new Set(myValue.value);
@@ -110,7 +110,7 @@ const selected = async (key: string | number, disabeld: boolean) => {
 
   myValue.value = [...values.values()];
 
-  const optionsItems = myValue.value.map((_key) => {
+  const optionsItems = myValue.value.map(_key => {
     return optionsMap.value.get(_key);
   });
 
@@ -119,7 +119,7 @@ const selected = async (key: string | number, disabeld: boolean) => {
   emit('update:value', _value);
   emit('change', _value, props.multiple ? optionsItems : optionsItems[0]);
   emit('select', _value, props.multiple ? optionsItems : optionsItems[0]);
-  formItemContext.onFieldChange()
+  formItemContext.onFieldChange();
 };
 
 watch(
@@ -133,7 +133,6 @@ watch(
   },
   { immediate: true, deep: true },
 );
-
 </script>
 
 <style scoped lang="less">
@@ -147,21 +146,21 @@ watch(
     min-width: 0;
     padding: 8px;
     border-radius: 20px;
-    background-color: #F8F9FA;
+    background-color: #f8f9fa;
     transition: all 0.3s;
     color: #333;
     text-align: center;
     cursor: pointer;
-    border: 1px solid #F8F9FA;
+    border: 1px solid #f8f9fa;
 
     &:hover {
-      background-color: #F1F7FF;
+      background-color: #f1f7ff;
       color: @primary-color;
       opacity: 0.85;
     }
 
     &.selected {
-      background-color: #F1F7FF;
+      background-color: #f1f7ff;
       border-color: @primary-color;
       color: @primary-color;
     }
@@ -170,9 +169,8 @@ watch(
       cursor: not-allowed;
       color: #00000040;
       background-color: #e6e6e6;
-      opacity: 1
+      opacity: 1;
     }
   }
 }
-
 </style>

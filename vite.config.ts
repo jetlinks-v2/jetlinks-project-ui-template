@@ -13,6 +13,7 @@ import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFi
 import { NO_MODULE, DEFAULT_POINT } from './configs/contst'
 import progress from 'vite-plugin-progress'
 
+
 process.on('SIGINT', handleRestoreModulesFile)
 process.on('SIGTERM', handleRestoreModulesFile)
 process.on('uncaughtException', handleRestoreModulesFile)

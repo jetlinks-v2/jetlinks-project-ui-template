@@ -1,6 +1,16 @@
 <template>
-  <a-modal visible :title="$t('components.AddUserDialog.659587-0')" width="1000px" @ok="confirm" @cancel="emits('update:visible', false)">
-    <pro-search :columns="columns" target="simple" @search="(params) => queryParams = { ...params }" />
+  <a-modal
+    visible
+    :title="$t('components.AddUserDialog.659587-0')"
+    width="1000px"
+    @ok="confirm"
+    @cancel="emits('update:visible', false)"
+  >
+    <pro-search
+      :columns="columns"
+      target="simple"
+      @search="params => (queryParams = { ...params })"
+    />
 
     <j-pro-table
       ref="tableRef"
@@ -9,12 +19,12 @@
       mode="TABLE"
       :params="queryParams"
       :rowSelection="{
-                selectedRowKeys: selectedRowKeys,
-                onSelect: changeSelect,
-                onSelectAll: selectAll,
-                onSelectNone: ()=>selectedRowKeys = []
-            }">
-    </j-pro-table>
+        selectedRowKeys: selectedRowKeys,
+        onSelect: changeSelect,
+        onSelectAll: selectAll,
+        onSelectNone: () => (selectedRowKeys = []),
+      }"
+    ></j-pro-table>
   </a-modal>
 </template>
 
@@ -67,8 +77,8 @@ const getUserList = (oParams: any) => {
             column: 'username',
             value: 'admin',
             termType: 'not',
-            type: 'and'
-          }
+            type: 'and',
+          },
         ],
       },
     ],
@@ -84,7 +94,7 @@ const confirm = () => {
   if (selectedRowKeys.value.length < 1) {
     onlyMessage($t('components.AddUserDialog.659587-3'), 'error');
   } else {
-    bindUser(props.orgId, props.positionId, selectedRowKeys.value).then((resp) => {
+    bindUser(props.orgId, props.positionId, selectedRowKeys.value).then(resp => {
       if (resp.success) {
         onlyMessage($t('components.AddUserDialog.659587-4'));
         emits('refresh');
@@ -103,23 +113,22 @@ const changeSelect = (item: any, state: boolean) => {
   selectedRowKeys.value = [...arr.values()];
 };
 
-const selectAll = (selected: Boolean, selectedRows: any,changeRows:any) => {
+const selectAll = (selected: boolean, selectedRows: any, changeRows: any) => {
   if (selected) {
     changeRows.map((i: any) => {
       if (!selectedRowKeys.value.includes(i.id)) {
-        selectedRowKeys.value.push(i.id)
+        selectedRowKeys.value.push(i.id);
       }
-    })
+    });
   } else {
-    const arr = changeRows.map((item: any) => item.id)
+    const arr = changeRows.map((item: any) => item.id);
     const _ids: string[] = [];
     selectedRowKeys.value.map((i: any) => {
       if (!arr.includes(i)) {
-        _ids.push(i)
+        _ids.push(i);
       }
-    })
-    selectedRowKeys.value = _ids
-
+    });
+    selectedRowKeys.value = _ids;
   }
-}
+};
 </script>

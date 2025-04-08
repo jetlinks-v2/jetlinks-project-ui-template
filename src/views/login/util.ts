@@ -3,33 +3,33 @@ export const rules = {
     {
       validator(_: any, value: string) {
         if (!value) {
-          return Promise.reject('请输入账号!')
+          return Promise.reject('请输入账号!');
         }
-        return Promise.resolve()
+        return Promise.resolve();
       },
-      trigger: 'change'
-    }
+      trigger: 'change',
+    },
   ],
   password: [
     {
       validator(_: any, value: string) {
         if (!value) {
-          return Promise.reject('请输入密码!')
+          return Promise.reject('请输入密码!');
         }
-        return Promise.resolve()
+        return Promise.resolve();
       },
-      trigger: 'change'
-    }
+      trigger: 'change',
+    },
   ],
   verifyCode: [
     {
       validator(_: any, value: string) {
         if (!value) {
-          return Promise.reject('请输入验证码!')
+          return Promise.reject('请输入验证码!');
         }
-        return Promise.resolve()
+        return Promise.resolve();
       },
-      trigger: 'change'
-    }
-  ]
-}
+      trigger: 'change',
+    },
+  ],
+};

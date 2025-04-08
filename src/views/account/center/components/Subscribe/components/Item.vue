@@ -37,23 +37,20 @@
 </template>
 
 <script lang="ts" setup>
-import { onlyMessage } from '@jetlinks-web/utils'
-import MCarousel from '@/components/MCarousel/index.vue'
-import Unsubscribe from './Unsubscribe.vue'
-import Card from './Card.vue'
-import {
-  getIsBindThird,
-  save_api,
-} from '@/api/account/notificationSubscription'
-import { useUserStore } from '@/store/user'
+import { onlyMessage } from '@jetlinks-web/utils';
+import MCarousel from '@/components/MCarousel/index.vue';
+import Unsubscribe from './Unsubscribe.vue';
+import Card from './Card.vue';
+import { getIsBindThird, save_api } from '@/api/account/notificationSubscription';
+import { useUserStore } from '@/store/user';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
-const current = ref<any>({})
-const visible = ref<boolean>(false)
-const _visible = ref<boolean>(false)
+const current = ref<any>({});
+const visible = ref<boolean>(false);
+const _visible = ref<boolean>(false);
 
-const user = useUserStore()
+const user = useUserStore();
 
 const props = defineProps({
   data: {
@@ -64,13 +61,13 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-})
+});
 
-const emits = defineEmits(['refresh'])
+const emits = defineEmits(['refresh']);
 
 const notifyChannels = computed(() => {
-  return props.subscribe?.notifyChannels || []
-})
+  return props.subscribe?.notifyChannels || [];
+});
 
 const onSubscribe = async (obj: any) => {
   const _obj = {
@@ -79,73 +76,73 @@ const onSubscribe = async (obj: any) => {
     providerId: obj.providerId,
     ...props.subscribe,
     notifyChannels: [...(props.subscribe?.notifyChannels || []), obj?.id],
-  }
-  const resp = await save_api(_obj)
+  };
+  const resp = await save_api(_obj);
   if (resp.status === 200) {
-    onlyMessage($t('components.Item.641816-0'))
-    emits('refresh')
-    _visible.value = false
+    onlyMessage($t('components.Item.641816-0'));
+    emits('refresh');
+    _visible.value = false;
   } else {
-    onlyMessage($t('components.Item.641816-1'), 'error')
+    onlyMessage($t('components.Item.641816-1'), 'error');
   }
-}
+};
 
 const onUnSubscribe = async (obj: any) => {
-  const _set = new Set(props.subscribe?.notifyChannels || [])
-  _set.delete(obj?.id)
+  const _set = new Set(props.subscribe?.notifyChannels || []);
+  _set.delete(obj?.id);
   const _obj = {
     subscribeName: obj.name,
     topicProvider: props.data?.provider,
     providerId: obj.providerId,
     ...props.subscribe,
     notifyChannels: [..._set.values()],
-  }
-  const resp = await save_api(_obj)
+  };
+  const resp = await save_api(_obj);
   if (resp.status === 200) {
-    _visible.value = false
-    onlyMessage($t('components.Item.641816-0'))
-    emits('refresh')
+    _visible.value = false;
+    onlyMessage($t('components.Item.641816-0'));
+    emits('refresh');
   } else {
-    onlyMessage($t('components.Item.641816-1'), 'error')
+    onlyMessage($t('components.Item.641816-1'), 'error');
   }
-}
+};
 
 const onCheckChange = async (_data: any) => {
-  let _bind: boolean = false
+  let _bind: boolean = false;
   if (_data?.channelProvider !== 'inside-mail') {
     // 判断是否绑定
     if (['notifier-voice', 'notifier-sms'].includes(_data?.channelProvider)) {
       if (user.userInfo?.telephone) {
-        _bind = true
+        _bind = true;
       }
     } else if (_data?.channelProvider === 'notifier-email') {
       if (user.userInfo?.email) {
-        _bind = true
+        _bind = true;
       }
     } else {
       // 钉钉和微信
-      const resp: any = await getIsBindThird()
+      const resp: any = await getIsBindThird();
       if (resp.status === 200) {
         const _item = (resp?.result || []).find((item: any) => {
-          return _data?.channelConfiguration?.notifierId === item?.provider
-        })
+          return _data?.channelConfiguration?.notifierId === item?.provider;
+        });
         if (_item) {
-          _bind = true
+          _bind = true;
         }
       }
     }
   }
   if (_data?.channelProvider === 'inside-mail' || _bind) {
-    onSubscribe(_data)
+    onSubscribe(_data);
   } else {
-    visible.value = true
-    current.value = _data
+    visible.value = true;
+    current.value = _data;
   }
-}
+};
 
-const onSave = (dt: any) => {
-  onSubscribe(dt)
-}
+// const onSave = (dt: any) => {
+//   onSubscribe(dt);
+// };
 </script>
 
 <style lang="less" scoped>

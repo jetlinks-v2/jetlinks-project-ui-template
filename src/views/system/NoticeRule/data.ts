@@ -1,4 +1,4 @@
-import { getImage } from "@jetlinks-web/utils";
+import { getImage } from '@jetlinks-web/utils';
 
 const iconMap = new Map();
 iconMap.set('notifier-dingTalk', getImage('/notice-rule/dingtalk.png'));
@@ -30,4 +30,4 @@ _variableMap.set('email', 'sendTo');
 _variableMap.set('voice', 'calledNumber');
 _variableMap.set('sms', 'phoneNumber');
 
-export { iconMap, noticeType, variableMap, _variableMap }
+export { iconMap, noticeType, variableMap, _variableMap };

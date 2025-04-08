@@ -1,125 +1,102 @@
 <!-- 第三方账户绑定 -->
 <template>
-  <div class='page-container'>
-    <div class='content-bind'>
-      <div class='title'>{{ $t('bind.index.350992-0') }}</div>
+  <div class="page-container">
+    <div class="content-bind">
+      <div class="title">{{ $t('bind.index.350992-0') }}</div>
       <!-- 已登录-绑定三方账号 -->
-      <template v-if='!!token'>
-        <div class='info'>
-          <div class='info-body'>
+      <template v-if="!!token">
+        <div class="info">
+          <div class="info-body">
             <a-avatar
               :size="86"
-              :src="
-                    user?.avatar ||
-                    getImage('/bind/jetlinksLogo.png')
-                "
-              style="margin-bottom: 16px;"
+              :src="user?.avatar || getImage('/bind/jetlinksLogo.png')"
+              style="margin-bottom: 16px"
             />
-            <div class="info-body-item"><span>{{ $t('bind.index.350992-1') }}</span>
+            <div class="info-body-item">
+              <span>{{ $t('bind.index.350992-1') }}</span>
               <j-ellipsis :lineClamp="2">{{ user?.username || '-' }}</j-ellipsis>
             </div>
-            <div class="info-body-item"><span>{{ $t('bind.index.350992-2') }}</span>
-              <j-ellipsis :lineClamp="2">{{ user?.name || "-" }}</j-ellipsis>
+            <div class="info-body-item">
+              <span>{{ $t('bind.index.350992-2') }}</span>
+              <j-ellipsis :lineClamp="2">{{ user?.name || '-' }}</j-ellipsis>
             </div>
           </div>
-          <img :src="getImage('/bind/Vector.png')"/>
-          <div class='info-body'>
+          <img :src="getImage('/bind/Vector.png')" />
+          <div class="info-body">
             <a-avatar
               :size="86"
               :src="
                 bindUser.result?.avatar ||
-                    iconMap.get(
-                        bindUser?.applicationProvider,
-                    ) || getImage('/apply/internal-standalone.png')
-                "
+                iconMap.get(bindUser?.applicationProvider) ||
+                getImage('/apply/internal-standalone.png')
+              "
               shape="square"
-              style="margin-bottom: 16px;"
+              style="margin-bottom: 16px"
             />
-            <div class="info-body-item"><span>{{ $t('bind.index.350992-1') }}</span>
+            <div class="info-body-item">
+              <span>{{ $t('bind.index.350992-1') }}</span>
               <j-ellipsis :lineClamp="2">{{ bindUser?.result?.userId || '' }}</j-ellipsis>
             </div>
-            <div class="info-body-item"><span>{{ $t('bind.index.350992-2') }}</span>
+            <div class="info-body-item">
+              <span>{{ $t('bind.index.350992-2') }}</span>
               <j-ellipsis :lineClamp="2">{{ bindUser?.result?.name || '' }}</j-ellipsis>
             </div>
           </div>
         </div>
-        <div class='btn'>
-          <a-button type='primary' @click='handleBind'
-          >{{ $t('bind.index.350992-3') }}
-          </a-button
-          >
+        <div class="btn">
+          <a-button type="primary" @click="handleBind">{{ $t('bind.index.350992-3') }}</a-button>
         </div>
       </template>
       <!-- 未登录-绑定三方账号 -->
       <template v-else>
-        <div class='not-login'>
-          <div class='logo'>
-            <img :src="getImage('/bind/jetlinksLogo.png')"/>
-            <img
-              :src="getImage('/bind/Vector.png')"
-              class='arrow'
-            />
-            <img
-              :src='bindUser?.avatar || iconMap.get(bindUser?.applicationProvider)'
-            />
+        <div class="not-login">
+          <div class="logo">
+            <img :src="getImage('/bind/jetlinksLogo.png')" />
+            <img :src="getImage('/bind/Vector.png')" class="arrow" />
+            <img :src="bindUser?.avatar || iconMap.get(bindUser?.applicationProvider)" />
           </div>
-          <div class='desc'>
+          <div class="desc">
             {{ $t('bind.index.350992-4') }}
             {{ bindUser?.appName }}
             {{ $t('bind.index.350992-5') }}
           </div>
-          <div class='login-form'>
-            <a-form layout='vertical'>
-              <a-form-item
-                :label="$t('bind.index.350992-6')"
-                v-bind='validateInfos.username'
-              >
+          <div class="login-form">
+            <a-form layout="vertical">
+              <a-form-item :label="$t('bind.index.350992-6')" v-bind="validateInfos.username">
                 <a-input
-                  v-model:value='formData.username'
+                  v-model:value="formData.username"
                   :placeholder="$t('bind.index.350992-7')"
                 />
               </a-form-item>
-              <a-form-item
-                :label="$t('bind.index.350992-8')"
-                v-bind='validateInfos.password'
-              >
+              <a-form-item :label="$t('bind.index.350992-8')" v-bind="validateInfos.password">
                 <a-input-password
-                  v-model:value='formData.password'
+                  v-model:value="formData.password"
                   :placeholder="$t('bind.index.350992-9')"
                 />
               </a-form-item>
-              <template v-if='captcha.base64'>
+              <template v-if="captcha.base64">
                 <a-form-item
                   :rules="[
                     {
-                        required: true,
-                        message: $t('bind.index.350992-10'),
+                      required: true,
+                      message: $t('bind.index.350992-10'),
                     },
-                ]"
+                  ]"
                   :label="$t('bind.index.350992-11')"
-                  v-bind='validateInfos.verifyCode'
+                  v-bind="validateInfos.verifyCode"
                 >
                   <a-input
-                    v-model:value='formData.verifyCode'
+                    v-model:value="formData.verifyCode"
                     :placeholder="$t('bind.index.350992-10')"
                   >
                     <template #addonAfter>
-                      <img
-                        :src='captcha.base64'
-                        style='cursor: pointer'
-                        @click='getCode'
-                      />
+                      <img :src="captcha.base64" style="cursor: pointer" @click="getCode" />
                     </template>
                   </a-input>
                 </a-form-item>
-
               </template>
               <a-form-item>
-                <a-button
-                  style='width: 100%'
-                  type='primary'
-                  @click='handleLoginBind'
-                >
+                <a-button style="width: 100%" type="primary" @click="handleLoginBind">
                   {{ $t('bind.index.350992-12') }}
                 </a-button>
               </a-form-item>
@@ -131,14 +108,14 @@
   </div>
 </template>
 
-<script lang='ts' name='AccountBind' setup>
-import { onlyMessage, LocalStore, getImage, encrypt } from "@jetlinks-web/utils";
-import { TOKEN_KEY } from '@jetlinks-web/constants'
-import { Form } from 'ant-design-vue'
+<script lang="ts" name="AccountBind" setup>
+import { onlyMessage, LocalStore, getImage, encrypt } from '@jetlinks-web/utils';
+import { TOKEN_KEY } from '@jetlinks-web/constants';
+import { Form } from 'ant-design-vue';
 
-import { applicationInfo, bindAccount } from '@/api/system/bind'
-import { codeUrl, authLogin, userDetail, encryptionConfig } from '@/api/login'
-import { useSystemStore } from '@/store/system'
+import { applicationInfo, bindAccount } from '@/api/system/bind';
+import { codeUrl, authLogin, userDetail, encryptionConfig } from '@/api/login';
+import { useSystemStore } from '@/store/system';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
@@ -146,210 +123,201 @@ const { t: $t } = useI18n();
 const useForm = Form.useForm;
 const systemStore = useSystemStore();
 
-interface formData {
+interface FormDataType {
   username: string;
   password: string;
   verifyCode: string;
 }
 
-const iconMap = new Map()
-iconMap.set('dingtalk-ent-app', getImage('/notice/dingtalk.png'))
-iconMap.set('wechat-webapp', getImage('/notice/wechat.png'))
-iconMap.set('internal-standalone', getImage('/apply/internal-standalone.png'))
-iconMap.set('third-party', getImage('/apply/third-party.png'))
+const iconMap = new Map();
+iconMap.set('dingtalk-ent-app', getImage('/notice/dingtalk.png'));
+iconMap.set('wechat-webapp', getImage('/notice/wechat.png'));
+iconMap.set('internal-standalone', getImage('/apply/internal-standalone.png'));
+iconMap.set('third-party', getImage('/apply/third-party.png'));
 
-const token = computed(() => LocalStore.get(TOKEN_KEY))
+const token = computed(() => LocalStore.get(TOKEN_KEY));
 
 /**
  * 用户信息
  */
-const user = ref()
+const user = ref();
 const getDetail = () => {
-  if (!token.value) return
+  if (!token.value) return;
   userDetail().then((res: any) => {
-    user.value = res?.result
-  })
-}
-
+    user.value = res?.result;
+  });
+};
 
 /**
  * 获取url参数
  */
 const getUrlCode = () => {
-  const url = new URLSearchParams(window.location.href)
-  return url.get('code') as string
-}
+  const url = new URLSearchParams(window.location.href);
+  return url.get('code') as string;
+};
 
 /**
  * 三方应用信息
  */
-const bindUser = ref<any>({appName: ''})
+const bindUser = ref<any>({ appName: '' });
 const getAppInfo = async () => {
-  const code = getUrlCode()
-  const {result, success} = await applicationInfo(code)
-  bindUser.value = result || {}
+  const code = getUrlCode();
+  const { result, success } = await applicationInfo(code);
+  bindUser.value = result || {};
 
   if (success) {
     if (result?.applicationProvider === 'dingtalk-ent-app') {
-      bindUser.value.appName = $t('bind.index.350992-13')
+      bindUser.value.appName = $t('bind.index.350992-13');
     } else if (result?.applicationProvider === 'wechat-webapp') {
-      bindUser.value.appName = $t('bind.index.350992-14')
+      bindUser.value.appName = $t('bind.index.350992-14');
     } else {
-      bindUser.value.appName = result?.applicationName
+      bindUser.value.appName = result?.applicationName;
     }
   }
-}
-
+};
 
 /**
  * 立即绑定
  */
 const handleBind = async () => {
-  const code = getUrlCode()
-  const res = await bindAccount(code)
-  console.log('bindAccount: ', res)
-  onlyMessage($t('bind.index.350992-15'))
-  goRedirect()
-  setTimeout(() => window.close(), 1000)
-}
+  const code = getUrlCode();
+  const res = await bindAccount(code);
+  console.log('bindAccount: ', res);
+  onlyMessage($t('bind.index.350992-15'));
+  goRedirect();
+  setTimeout(() => window.close(), 1000);
+};
 
 // 未登录-先登录再绑定
-const formData = ref<formData>({
+const formData = ref<FormDataType>({
   username: '',
   password: '',
-  verifyCode: ''
-})
+  verifyCode: '',
+});
 const formRules = ref({
   username: [
     {
       required: true,
-      message: $t('bind.index.350992-7')
-    }
+      message: $t('bind.index.350992-7'),
+    },
   ],
   password: [
     {
       required: true,
-      message: $t('bind.index.350992-9')
-    }
-  ]
-})
+      message: $t('bind.index.350992-9'),
+    },
+  ],
+});
 
-const {resetFields, validate, validateInfos} = useForm(
-  formData.value,
-  formRules.value
-)
+const { validate, validateInfos } = useForm(formData.value, formRules.value);
 
 /**
  * 获取图形验证码
  */
 const captcha = ref({
   base64: '',
-  key: ''
-})
+  key: '',
+});
 const getCode = async () => {
-  const res: any = await codeUrl()
-  captcha.value.base64 = res.result?.base64
-  captcha.value.key = res.result?.key
-}
+  const res: any = await codeUrl();
+  captcha.value.base64 = res.result?.base64;
+  captcha.value.key = res.result?.key;
+};
 
 const RsaConfig = reactive<any>({
   enabled: false, //是否加密
   publicKey: '', //rsa公钥,使用此公钥对密码进行加密
-  id: '' //密钥ID
-})
+  id: '', //密钥ID
+});
 /**
  * 登录并绑定账户
  */
 const handleLoginBind = () => {
   validate()
     .then(async () => {
-      const code = getUrlCode()
+      const code = getUrlCode();
       const params: any = {
         ...formData.value,
         bindCode: code,
-        expires: 3600000
-      }
-      const resq: any = await encryptionConfig()
+        expires: 3600000,
+      };
+      const resq: any = await encryptionConfig();
       if (resq.status === 200) {
         if (resq.result?.encrypt) {
-          RsaConfig.enabled = resq.result?.encrypt.enabled
-          RsaConfig.publicKey = resq.result?.encrypt.publicKey
-          RsaConfig.id = resq.result?.encrypt.id
+          RsaConfig.enabled = resq.result?.encrypt.enabled;
+          RsaConfig.publicKey = resq.result?.encrypt.publicKey;
+          RsaConfig.id = resq.result?.encrypt.id;
         }
       }
       if (captcha.value.base64) {
-        params.verifyKey = captcha.value.key
+        params.verifyKey = captcha.value.key;
       } else {
-        delete params.verifyCode
+        delete params.verifyCode;
       }
       const data = {
         ...params,
-        password: RsaConfig.enabled ? encrypt(params.password, RsaConfig.publicKey) : params.password,
-        encryptId: RsaConfig.enabled ? RsaConfig.id : undefined
-      }
-      const res = await authLogin(data)
-      console.log('res: ', res)
+        password: RsaConfig.enabled
+          ? encrypt(params.password, RsaConfig.publicKey)
+          : params.password,
+        encryptId: RsaConfig.enabled ? RsaConfig.id : undefined,
+      };
+      const res = await authLogin(data);
+      console.log('res: ', res);
       if (res.success) {
-        onlyMessage($t('bind.index.350992-16'))
-        LocalStore.set(TOKEN_KEY, res.result!.token as string)
-        goRedirect()
+        onlyMessage($t('bind.index.350992-16'));
+        LocalStore.set(TOKEN_KEY, res.result!.token as string);
+        goRedirect();
       }
     })
-    .catch((err) => {
-      console.log(err)
-      getCode()
-    })
-}
-
+    .catch(err => {
+      console.log(err);
+      getCode();
+    });
+};
 
 const getQueryVariable = (): Map<string, string> => {
-  const index = window.location.href.indexOf('?')
-  const paramsUrl = window.location.href.substr(index + 1)
-  const paramsArr = paramsUrl.split('#')?.[0] || ''
+  const index = window.location.href.indexOf('?');
+  const paramsUrl = window.location.href.substr(index + 1);
+  const paramsArr = paramsUrl.split('#')?.[0] || '';
 
   const vars = paramsArr.split('&');
-  const maps = new Map()
+  const maps = new Map();
   for (let i = 0; i < vars.length; i++) {
     const pair = vars[i].split('=');
-    const [key, value] = pair
-    maps.set(key, value)
+    const [key, value] = pair;
+    maps.set(key, value);
   }
   return maps;
-}
+};
 /**
  * 绑定成功跳转至页面url的: redirect
  */
 const goRedirect = () => {
   const urlParams = getQueryVariable();
-  const redirectUrl =
-    urlParams.get('redirect') ||
-    window.location.href.split('redirect=')?.[1]
-  console.log('redirectUrl: ', redirectUrl)
+  const redirectUrl = urlParams.get('redirect') || window.location.href.split('redirect=')?.[1];
+  console.log('redirectUrl: ', redirectUrl);
   //内部集成需要跳回它们页面
   if (redirectUrl && redirectUrl.indexOf('account/center/bind') === -1) {
-    window.location.href = decodeURIComponent(redirectUrl)
+    window.location.href = decodeURIComponent(redirectUrl);
   } else {
-    window.location.href = '/'
-    setTimeout(() => window.close(), 1000)
+    window.location.href = '/';
+    setTimeout(() => window.close(), 1000);
   }
-}
+};
 
 onMounted(() => {
-  getAppInfo()
-  getCode()
-  getDetail()
-  systemStore.getFront()
-})
-
+  getAppInfo();
+  getCode();
+  getDetail();
+  systemStore.getFront();
+});
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 :deep(
-        .ant-form-item-label
-            > label.ant-form-item-required:not(
-                .ant-form-item-required-mark-optional
-            )::before
-    ) {
+  .ant-form-item-label
+    > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before
+) {
   display: none;
 }
 

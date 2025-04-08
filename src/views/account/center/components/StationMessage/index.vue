@@ -15,12 +15,11 @@
 </template>
 
 <script lang="ts" setup>
-import NotificationRecord from "./components/NotificationRecord/index.vue";
-import { getInitData } from "../data";
-import { getAllNotice } from "@/api/account/center";
-import { useRouterParams } from "@jetlinks-web/hooks";
-import { useUserStore } from "@/store/user";
-import { omit } from "lodash-es";
+import NotificationRecord from './components/NotificationRecord/index.vue';
+import { getAllNotice } from '@/api/account/center';
+import { useRouterParams } from '@jetlinks-web/hooks';
+import { useUserStore } from '@/store/user';
+import { omit } from 'lodash-es';
 
 const tabs = ref<any[]>([]);
 const router = useRouterParams();
@@ -37,13 +36,13 @@ const queryTypeList = () => {
             provider: i.type.id,
             children: [
               {
-                ...omit(i, ["type"]),
+                ...omit(i, ['type']),
               },
             ],
           });
         } else {
           dataMap.get(i.type.id).children.push({
-            ...omit(i, ["type"]),
+            ...omit(i, ['type']),
           });
         }
       });
@@ -60,27 +59,23 @@ watchEffect(() => {
     user.other.tabKey = router.params.value?.other?.tabKey;
   }
   if (router.params?.value.row) {
-    if (
-      ["device-transparent-codec"].includes(
-        router.params?.value.row.topicProvider
-      )
-    ) {
-      user.other.tabKey = "system-business";
+    if (['device-transparent-codec'].includes(router.params?.value.row.topicProvider)) {
+      user.other.tabKey = 'system-business';
     }
-    if (["system-event"].includes(router.params?.value.row.topicProvider)) {
-      user.other.tabKey = "system-monitor";
+    if (['system-event'].includes(router.params?.value.row.topicProvider)) {
+      user.other.tabKey = 'system-monitor';
     }
     if (
       [
-        "workflow-task-cc",
-        "workflow-task-todo",
-        "workflow-task-reject",
-        "workflow-process-finish",
-        "workflow-process-repealed",
-        "workflow-task-transfer-todo",
+        'workflow-task-cc',
+        'workflow-task-todo',
+        'workflow-task-reject',
+        'workflow-process-finish',
+        'workflow-process-repealed',
+        'workflow-task-transfer-todo',
       ].includes(router.params?.value.row.topicProvider)
     ) {
-      user.other.tabKey = "workflow-notification";
+      user.other.tabKey = 'workflow-notification';
     }
   }
 });

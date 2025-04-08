@@ -1,23 +1,23 @@
 type columnsType = {
-    title: string,
-    dataIndex: string,
-    key: string,
-    scopedSlots?:boolean
-}
+  title: string;
+  dataIndex: string;
+  key: string;
+  scopedSlots?: boolean;
+};
 
 export type queryType = {
-    columns: columnsType[],
-    params?: object
-}
+  columns: columnsType[];
+  params?: object;
+};
 
 export type tableType = {
-    columns: columnsType[],
-    tableData: any[],
-    refresh: Function,
-    clickAdd: Function,
-    clickUnBind: Function,
-    unbind: Function,
-    _selectedRowKeys?: string[],
-    onSelectChange?: Function,
-    cancelSelect?: Function
-}
+  columns: columnsType[];
+  tableData: any[];
+  refresh: () => void;
+  clickAdd: () => void;
+  clickUnBind: () => void;
+  unbind: () => void;
+  _selectedRowKeys?: string[];
+  onSelectChange?: () => void;
+  cancelSelect?: () => void;
+};

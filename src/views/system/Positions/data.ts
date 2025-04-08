@@ -1,8 +1,8 @@
 import { useI18n } from 'vue-i18n';
-import {queryRole_api} from "@/api/system/user";
-import {getTreeData_api} from "@/api/system/department";
-import {useRequest} from "@jetlinks-web/hooks";
-import {queryPageNoPage} from "@/api/system/positions";
+import { queryRole_api } from '@/api/system/user';
+import { getTreeData_api } from '@/api/system/department';
+import { useRequest } from '@jetlinks-web/hooks';
+import { queryPageNoPage } from '@/api/system/positions';
 
 export const useColumns = () => {
   const { t: $t } = useI18n();
@@ -33,7 +33,7 @@ export const useColumns = () => {
         type: 'select',
         // rename:'id$in-dimension$role',
         options: () =>
-          new Promise((resolve) => {
+          new Promise(resolve => {
             queryRole_api({
               paging: false,
               sorts: [
@@ -60,13 +60,16 @@ export const useColumns = () => {
       scopedSlots: true,
       search: {
         type: 'select',
-        options: () => queryPageNoPage().then(resp => {
-          return resp.result?.map((item: any) => ({
-            ...item,
-            label: item.name,
-            value: item.id
-          })) || []
-        })
+        options: () =>
+          queryPageNoPage().then(resp => {
+            return (
+              resp.result?.map((item: any) => ({
+                ...item,
+                label: item.name,
+                value: item.id,
+              })) || []
+            );
+          }),
       },
     },
     {
@@ -78,18 +81,18 @@ export const useColumns = () => {
         termOptions: ['eq'],
 
         options: () =>
-          new Promise((resolve) => {
+          new Promise(resolve => {
             getTreeData_api({}).then((resp: any) => {
               const formatValue = (list: any[]) => {
                 const _list: any[] = [];
-                list.forEach((item) => {
+                list.forEach(item => {
                   if (item.children) {
                     item.children = formatValue(item.children);
                   }
                   _list.push({
                     ...item,
                     label: item.name,
-                    value: item.id
+                    value: item.id,
                   });
                 });
                 return _list;
@@ -116,16 +119,16 @@ export const useColumns = () => {
       width: 100,
       scopedSlots: true,
     },
-  ]
-}
+  ];
+};
 
 export const usePositionList = (params: any) => {
   const { data } = useRequest(queryPageNoPage, {
     onSuccess(resp) {
-      return resp.result.map((item: any) => ({ ...item, value: item.id, label: item.name }))
+      return resp.result.map((item: any) => ({ ...item, value: item.id, label: item.name }));
     },
-    defaultParams: params
-  })
+    defaultParams: params,
+  });
 
-  return { data }
-}
+  return { data };
+};

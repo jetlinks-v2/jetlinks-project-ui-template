@@ -1,51 +1,54 @@
 <script setup name="PositionList">
-import { filterSelectNode } from "@/utils";
+import { filterSelectNode } from '@/utils';
 import { useI18n } from 'vue-i18n';
-import { useRequest } from '@jetlinks-web/hooks'
-import { queryPageNoPage } from "@/api/system/positions";
+import { useRequest } from '@jetlinks-web/hooks';
+import { queryPageNoPage } from '@/api/system/positions';
 
 const { t: $t } = useI18n();
-const emit = defineEmits(['update:value', 'change'])
+const emit = defineEmits(['update:value', 'change']);
 
 const props = defineProps({
   value: {
     type: String,
-    default: undefined
+    default: undefined,
   },
   extraProps: {
     type: Object,
-    default: () => ({})
-  }
-})
+    default: () => ({}),
+  },
+});
 
 const { data: treeData, reload } = useRequest(queryPageNoPage, {
   defaultParams: {
     paging: false,
-    sorts: [{ name: 'sortIndex', order: 'asc' }]
+    sorts: [{ name: 'sortIndex', order: 'asc' }],
   },
-  defaultValue: []
-})
+  defaultValue: [],
+});
 
-const myValue = ref()
+const myValue = ref();
 
 const clickAddItem = () => {
   const tab = window.open(`${origin}/#/system/position?save=true`);
-  tab.onTabSaveSuccess = (value) => {
+  tab.onTabSaveSuccess = value => {
     myValue.value = props.extraProps?.multiple ? [...myValue.value, value] : value;
     emit('update:value', myValue.value);
-    reload()
+    reload();
   };
-}
+};
 
-const onChange = (value, label,  extra) => {
-  emit('update:value', myValue.value)
-  emit('change', value, label,  extra)
-}
+const onChange = (value, label, extra) => {
+  emit('update:value', myValue.value);
+  emit('change', value, label, extra);
+};
 
-watch(() => props.value, () => {
-  myValue.value = props.value
-}, { immediate: true })
-
+watch(
+  () => props.value,
+  () => {
+    myValue.value = props.value;
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -65,10 +68,7 @@ watch(() => props.value, () => {
         {{ name }}
       </template>
     </a-tree-select>
-    <j-permission-button
-      hasPermission="system/Positions:add"
-      @click="clickAddItem"
-    >
+    <j-permission-button hasPermission="system/Positions:add" @click="clickAddItem">
       <template #icon>
         <AIcon type="PlusOutlined" />
       </template>

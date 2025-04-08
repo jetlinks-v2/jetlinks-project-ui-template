@@ -1,10 +1,8 @@
-import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 export interface ContextOptions {
   filterUrl?: string[];
-  handleRequest?: (
-    config: InternalAxiosRequestConfig
-  ) => InternalAxiosRequestConfig;
+  handleRequest?: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
   handleResponse?: (response: AxiosResponse) => AxiosResponse;
   errorHandler?: (error: AxiosError) => void;
   loginInvalid?: () => void;

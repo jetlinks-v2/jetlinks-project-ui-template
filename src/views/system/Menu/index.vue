@@ -1,12 +1,7 @@
- <template>
+<template>
   <j-page-container>
     <div class="menu-container">
-      <pro-search
-        :labelWidth="56"
-        :columns="columns"
-        target="category"
-        @search="handleSearch"
-      />
+      <pro-search :labelWidth="56" :columns="columns" target="category" @search="handleSearch" />
       <FullPage>
         <j-pro-table
           ref="tableRef"
@@ -25,7 +20,8 @@
               :hasPermission="`${permission}:add`"
               @click="toDetails({})"
             >
-              <AIcon type="PlusOutlined" />{{ $t('Menu.index.599742-0') }}
+              <AIcon type="PlusOutlined" />
+              {{ $t('Menu.index.599742-0') }}
             </j-permission-button>
           </template>
           <template #createTime="slotProps">
@@ -79,16 +75,16 @@
 </template>
 
 <script setup lang="ts" name="Menu">
-import { getMenuTree, delMenu } from '@/api/system/menu'
-import { useMenuStore } from '@/store/menu'
-import { onlyMessage } from '@jetlinks-web/utils'
-import {OWNER_KEY} from "@/utils/consts";
+import { getMenuTree, delMenu } from '@/api/system/menu';
+import { useMenuStore } from '@/store/menu';
+import { onlyMessage } from '@jetlinks-web/utils';
+import { OWNER_KEY } from '@/utils/consts';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
-const permission = 'system/Menu'
+const permission = 'system/Menu';
 
-const menuStore = useMenuStore()
+const menuStore = useMenuStore();
 
 const columns = [
   {
@@ -166,18 +162,18 @@ const columns = [
     scopedSlots: true,
     width: 140,
   },
-]
-const queryParams = ref({ terms: [] })
-const expandedRowKeys = ref<string[]>([])
-const tableRef = ref<Record<string, any>>({}) // 表格实例
-const total = ref<number>(0)
+];
+const queryParams = ref({ terms: [] });
+const expandedRowKeys = ref<string[]>([]);
+const tableRef = ref<Record<string, any>>({}); // 表格实例
+const total = ref<number>(0);
 
 const handleSearch = (e: any) => {
-  queryParams.value = e
+  queryParams.value = e;
   if (!e.length) {
-    expandedRowKeys.value = []
+    expandedRowKeys.value = [];
   }
-}
+};
 
 const getList = async (_params: any) => {
   //过滤非集成的菜单
@@ -207,37 +203,30 @@ const getList = async (_params: any) => {
             column: 'options',
           },
         ],
-      }
+      },
     ],
-  }
+  };
   const params = {
     ..._params,
-    terms:
-      _params.terms && _params.length !== 0 ? [..._params.terms, item] : [item],
+    terms: _params.terms && _params.length !== 0 ? [..._params.terms, item] : [item],
     sorts: [{ name: 'sortIndex', order: 'asc' }],
     paging: false,
-  }
-  const resp: any = await getMenuTree(params)
-  const menuArr = resp.result.filter(
-    (i: any) => i.code !== 'account-center',
-  );
+  };
+  const resp: any = await getMenuTree(params);
+  const menuArr = resp.result.filter((i: any) => i.code !== 'account-center');
   const lastItem = menuArr[menuArr.length - 1];
   //个人中心排序为9999需要做过滤特殊处理
-  total.value = lastItem
-    ? lastItem.sortIndex + 1 === 9999
-      ? 10000
-      : lastItem.sortIndex + 1
-    : 1;
+  total.value = lastItem ? (lastItem.sortIndex + 1 === 9999 ? 10000 : lastItem.sortIndex + 1) : 1;
 
   return {
     code: resp.message,
     result: resp.result,
     status: resp.status,
-    success: resp.status === 200
-  }
-}
+    success: resp.status === 200,
+  };
+};
 const addChildren = (row: any) => {
-  const sortIndex = row?.children?.length || 0
+  const sortIndex = row?.children?.length || 0;
   menuStore.jumpPage('system/Menu/Detail', {
     params: {
       id: ':id',
@@ -247,8 +236,8 @@ const addChildren = (row: any) => {
       basePath: row.url || '',
       sortIndex: sortIndex + 1,
     },
-  })
-}
+  });
+};
 // 跳转至详情页
 const toDetails = (row: any) => {
   menuStore.jumpPage('system/Menu/Detail', {
@@ -260,15 +249,15 @@ const toDetails = (row: any) => {
       basePath: row.url || '',
       sortIndex: total.value,
     },
-  })
-}
+  });
+};
 // 删除
 const clickDel = (row: any) => {
   delMenu(row.id).then((resp: any) => {
     if (resp.status === 200) {
-      tableRef.value?.reload()
-      onlyMessage($t('Menu.index.599742-16'))
+      tableRef.value?.reload();
+      onlyMessage($t('Menu.index.599742-16'));
     }
-  })
-}
+  });
+};
 </script>

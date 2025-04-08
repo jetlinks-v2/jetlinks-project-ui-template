@@ -40,28 +40,28 @@
 </template>
 
 <script lang="ts" setup name="JProUpload">
-import { UploadChangeParam, UploadProps } from 'ant-design-vue'
-import { FileStaticPath} from '@/api/comm'
-import { TOKEN_KEY } from '@jetlinks-web/constants'
-import { getBase64ByImg, LocalStore, onlyMessage } from '@jetlinks-web/utils'
-import { CSSProperties } from 'vue'
-import ImageCropper from '@/components/Upload/Cropper.vue'
+import { UploadChangeParam, UploadProps } from 'ant-design-vue';
+import { FileStaticPath } from '@/api/comm';
+import { TOKEN_KEY } from '@jetlinks-web/constants';
+import { getBase64ByImg, LocalStore, onlyMessage } from '@jetlinks-web/utils';
+import { CSSProperties } from 'vue';
+import ImageCropper from '@/components/Upload/Cropper.vue';
 
 type Emits = {
-  (e: 'update:modelValue', data: string): void
-  (e: 'change', data: string): void
-}
+  (e: 'update:modelValue', data: string): void;
+  (e: 'change', data: string): void;
+};
 
 interface JUploadProps extends UploadProps {
-  modelValue: string
-  disabled?: boolean
-  types?: string[]
-  errorMessage?: string
-  size?: number
-  borderStyle?: CSSProperties
+  modelValue: string;
+  disabled?: boolean;
+  types?: string[];
+  errorMessage?: string;
+  size?: number;
+  borderStyle?: CSSProperties;
 }
 
-const emit = defineEmits<Emits>()
+const emit = defineEmits<Emits>();
 
 const props: JUploadProps = defineProps({
   modelValue: {
@@ -80,73 +80,72 @@ const props: JUploadProps = defineProps({
     type: Object,
     default: undefined,
   },
-})
+});
 
-const loading = ref<boolean>(false)
-const imageUrl = ref<string>(props?.modelValue || '')
-const imageTypes = props.types ? props.types : ['image/jpeg', 'image/png']
+const loading = ref<boolean>(false);
+const imageUrl = ref<string>(props?.modelValue || '');
+const imageTypes = props.types ? props.types : ['image/jpeg', 'image/png'];
 
-const cropperImg = ref()
-const cropperVisible = ref(false)
+const cropperImg = ref();
+const cropperVisible = ref(false);
 
 watch(
   () => props.modelValue,
-  (newValue) => {
-
-    imageUrl.value = newValue
+  newValue => {
+    imageUrl.value = newValue;
   },
   {
     immediate: true,
   },
-)
+);
 
 const handleChange = (info: UploadChangeParam) => {
   if (info.file.status === 'uploading') {
-    loading.value = true
+    loading.value = true;
   }
   if (info.file.status === 'done') {
-    imageUrl.value = info.file.response?.result.accessUrl
-    loading.value = false
-    emit('update:modelValue', info.file.response?.result.accessUrl)
-    emit('change', info.file.response?.result.accessUrl)
+    imageUrl.value = info.file.response?.result.accessUrl;
+    loading.value = false;
+    emit('update:modelValue', info.file.response?.result.accessUrl);
+    emit('change', info.file.response?.result.accessUrl);
   }
   if (info.file.status === 'error') {
-    loading.value = false
-    onlyMessage($t('UploadAvatar.index.820744-2'), 'error')
+    loading.value = false;
+    onlyMessage($t('UploadAvatar.index.820744-2'), 'error');
   }
-}
+};
 
 const beforeUpload = (file: UploadProps['fileList'][number]) => {
-  const isType = imageTypes.includes(file.type)
-  const maxSize = props.size || 2 // 最大值
+  const isType = imageTypes.includes(file.type);
+  const maxSize = props.size || 2; // 最大值
   if (!isType) {
     if (props.errorMessage) {
-      onlyMessage(props.errorMessage, 'error')
+      onlyMessage(props.errorMessage, 'error');
     } else {
-      onlyMessage($t('UploadAvatar.index.820744-3'), 'error')
+      onlyMessage($t('UploadAvatar.index.820744-3'), 'error');
     }
-    return false
+    return false;
   }
-  const isSize = file.size / 1024 / 1024 < maxSize
+  const isSize = file.size / 1024 / 1024 < maxSize;
   if (!isSize) {
-    onlyMessage($t('UploadAvatar.index.820744-4', [maxSize]), 'error')
-    return false
+    onlyMessage($t('UploadAvatar.index.820744-4', [maxSize]), 'error');
+    return false;
   }
 
-  getBase64ByImg(file, (base64Url) => {
-    cropperImg.value = base64Url
-    cropperVisible.value = true
-  })
+  getBase64ByImg(file, base64Url => {
+    cropperImg.value = base64Url;
+    cropperVisible.value = true;
+  });
 
-  return false
-}
+  return false;
+};
 
 const saveImage = (url: string) => {
-  cropperVisible.value = false
-  imageUrl.value = url
-  emit('update:modelValue', url)
-  emit('change', url)
-}
+  cropperVisible.value = false;
+  imageUrl.value = url;
+  emit('update:modelValue', url);
+  emit('change', url);
+};
 </script>
 
 <style lang="less" scoped>

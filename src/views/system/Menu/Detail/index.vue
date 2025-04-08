@@ -14,41 +14,41 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import BasicInfo from './BasicInfo/index.vue'
-import ButtonMange from './ButtonMange/index.vue'
-import { getMenuInfo } from '@/api/system/menu'
+import { useRoute } from 'vue-router';
+import BasicInfo from './BasicInfo/index.vue';
+import ButtonMange from './ButtonMange/index.vue';
+import { getMenuInfo } from '@/api/system/menu';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
-const route = useRoute()
-const activeKey = ref('basic')
-const initData = ref<any>({})
+const route = useRoute();
+const activeKey = ref('basic');
+const initData = ref<any>({});
 
 const handleSearch = (id: string) => {
   getMenuInfo(id).then((resp: any) => {
     if (resp.success) {
-      initData.value = resp.result
+      initData.value = resp.result;
     }
-  })
-}
+  });
+};
 
 watch(
   () => route.params.id,
-  (newValue) => {
+  newValue => {
     if (newValue && newValue !== ':id') {
-      handleSearch(newValue as string)
+      handleSearch(newValue as string);
     }
   },
   {
     immediate: true,
     deep: true,
   },
-)
+);
 
 const onRefresh = () => {
-  handleSearch(route.params.id as string)
-}
+  handleSearch(route.params.id as string);
+};
 </script>
 
 <style lang="less" scoped>

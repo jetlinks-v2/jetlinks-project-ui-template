@@ -7,11 +7,11 @@
     <template #overlay>
       <a-menu @click="click">
         <a-menu-item key="userCenter">
-          <AIcon type="UserOutlined" style="margin-right: 8px;" />
+          <AIcon type="UserOutlined" style="margin-right: 8px" />
           <span>个人中心</span>
         </a-menu-item>
         <a-menu-item key="logout">
-          <AIcon type="LogoutOutlined" style="margin-right: 8px;" />
+          <AIcon type="LogoutOutlined" style="margin-right: 8px" />
           <span>退出登录</span>
         </a-menu-item>
       </a-menu>
@@ -20,34 +20,33 @@
 </template>
 
 <script setup lang="ts" name="HeaderUser">
-import { computed } from "vue";
-import { jumpLogin } from '@/router'
-import { useUserStore } from '@/store/user'
-import { logout } from '@/api/login'
+import { computed } from 'vue';
+import { jumpLogin } from '@/router';
+import { useUserStore } from '@/store/user';
+import { logout } from '@/api/login';
 
-const userStore = useUserStore()
-const router = useRouter()
+const userStore = useUserStore();
+const router = useRouter();
 const click = (e: { key: string }) => {
   switch (e.key) {
     case 'userCenter':
-      router.push('/account/center')
+      router.push('/account/center');
       return;
     case 'logout':
-      logout().then((resp) => {
+      logout().then(resp => {
         if (resp.success) {
-          jumpLogin()
+          jumpLogin();
         }
-      })
+      });
       return;
     default:
-      return
+      return;
   }
-}
+};
 
 const userName = computed(() => {
-  return userStore.userInfo.name
-})
-
+  return userStore.userInfo.name;
+});
 </script>
 
 <style scoped lang="less">

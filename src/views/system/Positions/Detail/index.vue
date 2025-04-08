@@ -1,42 +1,50 @@
 <script setup name="Detail">
 import { useI18n } from 'vue-i18n';
-import User from './User.vue'
-import {onlyMessage} from "@jetlinks-web/utils";
-import {detail, save, update} from '@/api/system/positions'
-import { useRequest } from '@jetlinks-web/hooks'
-import {usePositionList} from "../data";
+import User from './User.vue';
+import { onlyMessage } from '@jetlinks-web/utils';
+import { detail, save, update } from '@/api/system/positions';
+import { useRequest } from '@jetlinks-web/hooks';
+import { usePositionList } from '../data';
 
 const { t: $t } = useI18n();
 
-const activeKey = ref('basic')
-const formRef = ref()
-const route = useRoute()
-const router = useRouter()
+const activeKey = ref('basic');
+const formRef = ref();
+const route = useRoute();
+const router = useRouter();
 const { loading, run } = useRequest(save, {
-  onSuccess: (resp) => {
-    onlyMessage($t('Detail.index.707691-33'))
+  onSuccess: resp => {
+    onlyMessage($t('Detail.index.707691-33'));
     if (window.onTabSaveSuccess) {
       window.onTabSaveSuccess(resp);
       setTimeout(() => window.close(), 300);
     } else {
-      router.replace({ name: 'system/Positions/Detail', params: { id: resp.result.id } })
+      router.replace({ name: 'system/Positions/Detail', params: { id: resp.result.id } });
     }
   },
-  immediate: false
-})
+  immediate: false,
+});
 
 const { loading: updateLoading, run: updateRun } = useRequest(update, {
   onSuccess: () => {
-    onlyMessage($t('Detail.index.707691-33'))
+    onlyMessage($t('Detail.index.707691-33'));
   },
-  immediate: false
-})
+  immediate: false,
+});
 
-const { data: positionsList } = usePositionList(route.params.id !== ':id' ? { terms: [{
-    column: 'id',
-    termType: 'not',
-    value: route.params.id
-  }]} : undefined)
+const { data: positionsList } = usePositionList(
+  route.params.id !== ':id'
+    ? {
+        terms: [
+          {
+            column: 'id',
+            termType: 'not',
+            value: route.params.id,
+          },
+        ],
+      }
+    : undefined,
+);
 
 const formModel = reactive({
   name: undefined,
@@ -44,54 +52,57 @@ const formModel = reactive({
   roles: undefined,
   parentId: undefined,
   description: undefined,
-})
+});
 
-const onTabClick = (v) => {
+const onTabClick = v => {
   if (route.params.id !== ':id') {
-    activeKey.value = v
-    return
+    activeKey.value = v;
+    return;
   }
-  onlyMessage($t('positions.index.223804-3'), 'warning')
-}
+  onlyMessage($t('positions.index.223804-3'), 'warning');
+};
 
 const onSave = async () => {
-  const result = await formRef.value.validateFields()
+  const result = await formRef.value.validateFields();
   if (result) {
     const obj = {
       ...formModel,
-      roles: formModel.roles.map(item => ({ id: item }))
-    }
+      roles: formModel.roles.map(item => ({ id: item })),
+    };
 
     if (formModel.id) {
-      updateRun(formModel.orgId, [toRaw(obj)])
+      updateRun(formModel.orgId, [toRaw(obj)]);
     } else {
-      run(formModel.orgId, toRaw(obj))
+      run(formModel.orgId, toRaw(obj));
     }
   }
-}
+};
 
-const getDetail = (id) => {
-  detail(id).then((resp) => {
+const getDetail = id => {
+  detail(id).then(resp => {
     if (resp.success && resp.result.length) {
-      const record = resp.result[0]
+      const record = resp.result[0];
       Object.keys(formModel).forEach(key => {
         if (key === 'roles') {
-          formModel[key] = record.roles?.map(item => item.id)
+          formModel[key] = record.roles?.map(item => item.id);
         } else {
-          formModel[key] = record[key]
+          formModel[key] = record[key];
         }
-      })
-      formModel.id = record.id
+      });
+      formModel.id = record.id;
     }
-  })
-}
+  });
+};
 
-watch(() => route.params.id, (v) => {
-  if (v !== ':id') {
-    getDetail(v)
-  }
-}, { immediate: true })
-
+watch(
+  () => route.params.id,
+  v => {
+    if (v !== ':id') {
+      getDetail(v);
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -107,19 +118,29 @@ watch(() => route.params.id, (v) => {
                     :label="$t('components.EditUserDialog.939453-3')"
                     name="name"
                     :rules="[
-                            { required: true, message: $t('components.EditUserDialog.939453-4') },
-                            {
-                                max: 64,
-                                message: $t('components.EditUserDialog.939453-5'),
-                            },
-                        ]"
+                      { required: true, message: $t('components.EditUserDialog.939453-4') },
+                      {
+                        max: 64,
+                        message: $t('components.EditUserDialog.939453-5'),
+                      },
+                    ]"
                   >
-                    <a-input v-model:value="formModel.name" :placeholder="$t('components.EditUserDialog.939453-4')" />
+                    <a-input
+                      v-model:value="formModel.name"
+                      :placeholder="$t('components.EditUserDialog.939453-4')"
+                    />
                   </a-form-item>
                 </a-col>
                 <a-col :span="12">
-                  <a-form-item name="orgId" :label="$t('components.EditUserDialog.939453-14')" :rules="[{ required : true, message: '请选择组织'}]">
-                    <form-item-org v-model:value="formModel.orgId" :extraProps="{ multiple: false }" />
+                  <a-form-item
+                    name="orgId"
+                    :label="$t('components.EditUserDialog.939453-14')"
+                    :rules="[{ required: true, message: '请选择组织' }]"
+                  >
+                    <form-item-org
+                      v-model:value="formModel.orgId"
+                      :extraProps="{ multiple: false }"
+                    />
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -128,14 +149,20 @@ watch(() => route.params.id, (v) => {
                   <a-form-item
                     name="roles"
                     :label="$t('components.EditUserDialog.939453-12')"
-                    :rules="[{ required: true, message: $t('components.EditUserDialog.939453-13') }]"
+                    :rules="[
+                      { required: true, message: $t('components.EditUserDialog.939453-13') },
+                    ]"
                   >
                     <form-item-role v-model:value="formModel.roles" />
                   </a-form-item>
                 </a-col>
                 <a-col :span="12">
                   <a-form-item :label="$t('positions.index.223804-1')">
-                    <a-select v-model:value="formModel.parentId" :options="positionsList" :placeholder="$t('positions.index.223804-2')" />
+                    <a-select
+                      v-model:value="formModel.parentId"
+                      :options="positionsList"
+                      :placeholder="$t('positions.index.223804-2')"
+                    />
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -159,7 +186,7 @@ watch(() => route.params.id, (v) => {
               :loading="loading || updateLoading"
               @click="onSave"
             >
-              {{ $t('Setting.index.113436-2')}}
+              {{ $t('Setting.index.113436-2') }}
             </j-permission-button>
           </a-tab-pane>
           <a-tab-pane key="user" :tab="$t('Detail.index.386725-1')">
@@ -172,7 +199,7 @@ watch(() => route.params.id, (v) => {
 </template>
 
 <style scoped lang="less">
-  .menu-detail-container {
-    padding: 24px;
-  }
+.menu-detail-container {
+  padding: 24px;
+}
 </style>

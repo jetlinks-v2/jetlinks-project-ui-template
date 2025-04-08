@@ -11,12 +11,7 @@
       {{ $t('components.HomePage.726029-5') }}
     </div>
     <div
-        style="
-                display: flex;
-                border: 1px solid #e6e6e6;
-                padding: 15;
-                justify-content: space-between;
-            "
+      style="display: flex; border: 1px solid #e6e6e6; padding: 15; justify-content: space-between"
     >
       <div>
         <h3>{{ $t('components.HomePage.726029-6') }}</h3>
@@ -32,28 +27,26 @@
             pageIndex=0&pageSize=201574993804802testSecure
           </div>
           <div class="h3-text">
-            {{ $t('components.HomePage.726029-10') }}(pageIndex=0&pageSize=201574993804802testSecure){{ $t('components.HomePage.726029-11') }}
+            {{
+              $t('components.HomePage.726029-10')
+            }}(pageIndex=0&pageSize=201574993804802testSecure){{
+              $t('components.HomePage.726029-11')
+            }}
           </div>
         </div>
         <h3>{{ $t('components.HomePage.726029-12') }}</h3>
         <div class="div-border">
-          <div class="h3-text">
-            GET /api/device?pageIndex=0&amp;pageSize=20
-          </div>
+          <div class="h3-text">GET /api/device?pageIndex=0&amp;pageSize=20</div>
           <div class="h3-text">X-Client-Id: testId</div>
           <div class="h3-text">X-Timestamp: 1574993804802</div>
-          <div class="h3-text">
-            X-Sign: 837fe7fa29e7a5e4852d447578269523
-          </div>
+          <div class="h3-text">X-Sign: 837fe7fa29e7a5e4852d447578269523</div>
         </div>
         <h3>{{ $t('components.HomePage.726029-13') }}</h3>
         <div class="div-border">
           <div class="h3-text">xxx</div>
           <div class="h3-text">HTTP/1.1 200 OK</div>
           <div class="h3-text">X-Timestamp: 1574994269075</div>
-          <div class="h3-text">
-            X-Sign: c23faa3c46784ada64423a8bba433f25
-          </div>
+          <div class="h3-text">X-Sign: c23faa3c46784ada64423a8bba433f25</div>
           <div class="h3-text">status:200,result:[ ]</div>
         </div>
       </div>
@@ -61,48 +54,50 @@
         <h3>{{ $t('components.HomePage.726029-14') }}</h3>
         <div>
           <j-pro-table
-              :dataSource="data"
-              mode="TABLE"
-              noPagination
-              :columns="[
-                            {
-                                title: $t('components.HomePage.726029-15'),
-                                dataIndex: 'type',
-                            },
-                            {
-                                title: $t('components.HomePage.726029-14'),
-                                dataIndex: 'data',
-                            },
-                        ]"
+            :dataSource="data"
+            mode="TABLE"
+            noPagination
+            :columns="[
+              {
+                title: $t('components.HomePage.726029-15'),
+                dataIndex: 'type',
+              },
+              {
+                title: $t('components.HomePage.726029-14'),
+                dataIndex: 'data',
+              },
+            ]"
           />
         </div>
       </div>
     </div>
     <div
-        :style="{
-                display: 'flex',
-                border: '1px solid #e6e6e6',
-                padding: 15,
-                justifyContent: 'space-between',
-                marginTop: 20,
-            }"
+      :style="{
+        display: 'flex',
+        border: '1px solid #e6e6e6',
+        padding: 15,
+        justifyContent: 'space-between',
+        marginTop: 20,
+      }"
     >
       <div>
         <h3>{{ $t('components.HomePage.726029-16') }}</h3>
         <div>
-          <img :src="systemImg.apiHome"/>
+          <img :src="systemImg.apiHome" />
         </div>
       </div>
       <div style="width: 505px">
         <h3>{{ $t('components.HomePage.726029-17') }}</h3>
         <div>
-          <p>{{ $t('components.HomePage.726029-18') }}({{ $t('components.HomePage.726029-19') }})</p>
+          <p>
+            {{ $t('components.HomePage.726029-18') }}({{ $t('components.HomePage.726029-19') }})
+          </p>
           <div>
             <a-monaco-editor
-                language="java"
-                style="height: 370px"
-                theme="vs-dark"
-                v-model:modelValue="javaStr1"
+              language="java"
+              style="height: 370px"
+              theme="vs-dark"
+              v-model:modelValue="javaStr1"
             />
           </div>
         </div>
@@ -120,19 +115,19 @@
       <div class="h3-text">{{ $t('components.HomePage.726029-23') }}</div>
       <div>
         <a-monaco-editor
-            language="java"
-            style="height: 370px"
-            theme="vs-dark"
-            v-model:modelValue="javaStr2"
+          language="java"
+          style="height: 370px"
+          theme="vs-dark"
+          v-model:modelValue="javaStr2"
         />
       </div>
       <h3>{{ $t('components.HomePage.726029-24') }}</h3>
       <div>
         <a-monaco-editor
-            language="java"
-            style="height: 370px"
-            theme="vs-dark"
-            v-model:modelValue="javaStr"
+          language="java"
+          style="height: 370px"
+          theme="vs-dark"
+          v-model:modelValue="javaStr"
         />
       </div>
     </div>
@@ -140,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import {systemImg} from "@/assets/system/index"
+import { systemImg } from '@/assets/system/index';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
@@ -183,9 +178,9 @@ const data = [
 ];
 const javaStr1 = `String secureKey = ...; //密钥\r\nString responseBody = ...;//服务端响应结果\r\nString timestampHeader = ...;//响应头: X-Timestamp\r\nString signHeader = ...; //响应头: X-Sign\r\n\r\nString sign = DigestUtils.md5Hex(responseBody+timestampHeader+secureKey);\r\nif(sign.equalsIgnoreCase(signHeader)){\r\n //验签通过\r\n}`;
 const javaStr2 =
-    '<dependency>\r\n    <groupId>org.jetlinks.sdk</groupId>\r\n    <artifactId>api-sdk</artifactId>\r\n    <version>1.0.0</version>\r\n</dependency>';
+  '<dependency>\r\n    <groupId>org.jetlinks.sdk</groupId>\r\n    <artifactId>api-sdk</artifactId>\r\n    <version>1.0.0</version>\r\n</dependency>';
 const javaStr =
-    '\r\n        //服务器的baseUrl\r\n        String baseUrl = "http://localhost:9000/jetlinks";\r\n  //客户端Id\r\n        String clientId = "aSoq98aAxzP";\r\n  //访问秘钥\r\n        String secureKey = "DaYsxpiWSfdTAPJyKW8rP2WAGyWErnsR";\r\n\r\n        ClientConfig clientConfig = new ClientConfig(baseUrl, clientId, secureKey);\r\n\r\n        ApiClient client = new WebApiClient(clientConfig);\r\n\r\nApiResponse < PagerResult < DeviceInfo >> response = client\r\n    .request(QueryDeviceRequest\r\n        .of(query -> query\r\n            .where("productId", "demo-device")\r\n            .doPaging(0, 100)));';
+  '\r\n        //服务器的baseUrl\r\n        String baseUrl = "http://localhost:9000/jetlinks";\r\n  //客户端Id\r\n        String clientId = "aSoq98aAxzP";\r\n  //访问秘钥\r\n        String secureKey = "DaYsxpiWSfdTAPJyKW8rP2WAGyWErnsR";\r\n\r\n        ClientConfig clientConfig = new ClientConfig(baseUrl, clientId, secureKey);\r\n\r\n        ApiClient client = new WebApiClient(clientConfig);\r\n\r\nApiResponse < PagerResult < DeviceInfo >> response = client\r\n    .request(QueryDeviceRequest\r\n        .of(query -> query\r\n            .where("productId", "demo-device")\r\n            .doPaging(0, 100)));';
 </script>
 
 <style lang="less" scoped>
@@ -193,7 +188,7 @@ const javaStr =
   padding: 20px;
   height: 100%;
   overflow-y: auto;
-  
+
   h1 {
     font-weight: 600;
     font-size: 20px;

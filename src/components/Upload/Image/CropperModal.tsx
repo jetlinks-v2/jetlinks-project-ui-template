@@ -1,98 +1,97 @@
-import { defineComponent } from "vue";
-import type { CSSProperties, PropType } from "vue";
-import { Modal } from 'ant-design-vue'
+import { defineComponent } from 'vue';
+import type { CSSProperties, PropType } from 'vue';
+import { Modal } from 'ant-design-vue';
 import { VueCropper } from 'vue-cropper';
-import { useRequest } from '@jetlinks-web/hooks'
-import { fileUpload } from '@/api/comm'
-import 'vue-cropper/dist/index.css'
+import { useRequest } from '@jetlinks-web/hooks';
+import { fileUpload } from '@/api/comm';
+import 'vue-cropper/dist/index.css';
 
 const CropperModalProps = {
   title: {
-    type: String
+    type: String,
   },
   img: {
-    type: String
+    type: String,
   },
   width: {
     type: Number,
-    default: 400
+    default: 400,
   },
   bodyStyle: {
     type: Object as PropType<CSSProperties>,
-    default: () => ({})
+    default: () => ({}),
   },
   fixedBox: {
     type: Boolean,
-    default: true
+    default: true,
   },
   autoCrop: {
     type: Boolean,
-    default: true
+    default: true,
   },
   autoCropWidth: {
     type: Number,
-    default: 200
+    default: 200,
   },
   autoCropHeight: {
     type: Number,
-    default: 200
+    default: 200,
   },
   outputSize: {
     type: Number,
-    default: 1
+    default: 1,
   },
   outputType: {
     type: String,
-    default: 'jpeg'
+    default: 'jpeg',
   },
   openServer: {
     type: Boolean,
-    default: true
-  }
-}
+    default: true,
+  },
+};
 
 const CropperModal = defineComponent({
   name: 'CropperModal',
   props: CropperModalProps,
   emits: ['cancel', 'ok', 'change'],
-  setup( props, { emit }) {
-
-    const { title, width, openServer, bodyStyle, ...cropper } = props
+  setup(props, { emit }) {
+    const { title, width, openServer, bodyStyle, ...cropper } = props;
 
     const { loading, run } = useRequest(fileUpload, {
       immediate: false,
       onSuccess(resp) {
         if (resp.success) {
-          emit('ok', resp.result.accessUrl)
+          emit('ok', resp.result.accessUrl);
         }
-      }
-    })
+      },
+    });
 
-    const cropperRef = ref()
-    const imgUrl = ref()
+    const cropperRef = ref();
+    const imgUrl = ref();
 
     const onCancel = () => {
-      emit('cancel')
-    }
+      emit('cancel');
+    };
 
     const onOk = () => {
-      cropperRef.value.getCropBlob( async (data: Blob) => {
+      cropperRef.value.getCropBlob(async (data: Blob) => {
         if (openServer) {
-          const formData = new FormData()
-          formData.append('file', data, new Date().getTime() + '.jpg')
-          imgUrl.value = data
-          loading.value = true
+          const formData = new FormData();
+          formData.append('file', data, new Date().getTime() + '.jpg');
+          imgUrl.value = data;
+          loading.value = true;
           // 上传文件
-          run(formData)
+          run(formData);
         } else {
-          emit('change', data)
-          emit('ok', data)
+          emit('change', data);
+          emit('ok', data);
         }
-      })
-    }
+      });
+    };
 
     return () => {
-      console.log('cropper', cropper, loading.value)
+      console.log('cropper', cropper, loading.value);
       return (
         <Modal
           visible
@@ -106,15 +105,15 @@ const CropperModal = defineComponent({
             style={{
               height: '300px',
               width: '100%',
-              ...(bodyStyle || {})
+              ...(bodyStyle || {}),
             }}
           >
-            <VueCropper ref={cropperRef} {...cropper}/>
+            <VueCropper ref={cropperRef} {...cropper} />
           </div>
         </Modal>
-      )
-    }
-  }
-})
+      );
+    };
+  },
+});
 
-export default CropperModal
+export default CropperModal;

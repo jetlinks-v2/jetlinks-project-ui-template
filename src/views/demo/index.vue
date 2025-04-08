@@ -6,54 +6,42 @@
     <permission-button
       type="primary"
       hasPermission="DataCollect/Channel:add1"
-      @click="() => {console.log('caozuo')}"
+      @click="
+        () => {
+          console.log('caozuo');
+        }
+      "
     >
-      <template #icon>
-        123
-      </template>
+      <template #icon>123</template>
       测试
     </permission-button>
 
     <permission-button
       type="primary"
       :tooltip="{
-        title: '测试'
+        title: '测试',
       }"
     >
-      <template #button>
-        button
-      </template>
+      <template #button>button</template>
     </permission-button>
-    <a-table-card
-      name="卡片标题"
-      width="400px"
-    >
-      <template #content>
-        中间内容
-      </template>
+    <a-table-card name="卡片标题" width="400px">
+      <template #content>中间内容</template>
     </a-table-card>
   </j-page-container>
   <div style="width: 100%; height: 300px">
-    <init-Amap
-      @dragstart="mapClick"
-      mapStyle="dark"
-    >
-      <el-amap-marker
-        :position="[0,0]"
-      />
+    <init-Amap @dragstart="mapClick" mapStyle="dark">
+      <el-amap-marker :position="[0, 0]" />
     </init-Amap>
   </div>
 </template>
 
 <script setup name="Demo" lang="ts">
-import { useRoute } from 'vue-router'
-const route = useRoute()
+import { useRoute } from 'vue-router';
+const route = useRoute();
 
 const mapClick = (e: any) => {
-  console.log(e)
-}
+  console.log(e);
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,12 +1,11 @@
 <template>
   <div></div>
 </template>
-<script setup name="Micro">
-
-</script>
+<script setup name="Micro"></script>
 
 <style scoped lang="less">
-.micro-app-container, .micro-app-content {
+.micro-app-container,
+.micro-app-content {
   width: 100%;
   height: 100%;
 

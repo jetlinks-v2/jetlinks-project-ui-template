@@ -1,26 +1,14 @@
 <template>
   <div>
-    <a-form
-      ref="formRef"
-      :model="formModel"
-      layout="vertical"
-      class="basic-form permission-form"
-    >
+    <a-form ref="formRef" :model="formModel" layout="vertical" class="basic-form permission-form">
       <a-form-item name="accessSupport" required>
         <template #label>
           <span style="margin-right: 3px">{{ $t('BasicInfo.Permission.040830-0') }}</span>
           <a-tooltip :title="$t('BasicInfo.Permission.040830-1')">
-            <AIcon
-              type="QuestionCircleOutlined"
-              class="img-style"
-              style="color: #a6a6a6"
-            />
+            <AIcon type="QuestionCircleOutlined" class="img-style" style="color: #a6a6a6" />
           </a-tooltip>
         </template>
-        <a-radio-group
-          v-model:value="formModel.accessSupport"
-          name="radioGroup"
-        >
+        <a-radio-group v-model:value="formModel.accessSupport" name="radioGroup">
           <a-radio value="unsupported">{{ $t('BasicInfo.Permission.040830-2') }}</a-radio>
           <a-radio value="support">{{ $t('BasicInfo.Permission.040830-3') }}</a-radio>
           <a-radio value="indirect">
@@ -43,8 +31,7 @@
             :placeholder="$t('BasicInfo.Permission.040830-6')"
             show-search
             :options="assetsType"
-          >
-          </a-select>
+          ></a-select>
         </a-form-item>
 
         <a-form-item
@@ -69,8 +56,7 @@
               label: 'name',
               value: 'id',
             }"
-          >
-          </a-tree-select>
+          ></a-tree-select>
         </a-form-item>
       </a-form-item>
       <a-form-item :label="$t('BasicInfo.Permission.040830-8')" name="permissions">
@@ -86,15 +72,15 @@
 </template>
 
 <script lang="ts" setup>
-import PermissionChoose from '../../components/PermissionChoose.vue'
-import { getAssetsType, getMenuTree } from '@/api/system/menu'
+import PermissionChoose from '../../components/PermissionChoose.vue';
+import { getAssetsType, getMenuTree } from '@/api/system/menu';
 
 const props = defineProps({
   value: {
     type: Object,
     default: () => {},
   },
-})
+});
 
 const formModel = reactive({
   id: '',
@@ -102,29 +88,29 @@ const formModel = reactive({
   accessSupport: 'unsupported',
   assetType: undefined,
   indirectMenus: [],
-})
-const formRef = ref<any>()
-const assetsType = ref<any[]>([])
-const treeData = ref<any[]>([])
+});
+const formRef = ref<any>();
+const assetsType = ref<any[]>([]);
+const treeData = ref<any[]>([]);
 
 watch(
   () => props.value,
   () => {
-    Object.assign(formModel, props.value)
-    formModel.accessSupport = props.value?.accessSupport?.value || 'unsupported'
+    Object.assign(formModel, props.value);
+    formModel.accessSupport = props.value?.accessSupport?.value || 'unsupported';
   },
   {
     deep: true,
     immediate: true,
   },
-)
+);
 
 // 获取关联菜单
 const queryMenuTree = () => {
   getMenuTree({ paging: false }).then((resp: any) => {
-    treeData.value = resp.result
-  })
-}
+    treeData.value = resp.result;
+  });
+};
 
 // 获取资产类型
 const queryAssetsType = () => {
@@ -132,26 +118,26 @@ const queryAssetsType = () => {
     assetsType.value = resp.result.map((item: any) => ({
       label: item.i18nName || item.name,
       value: item.id,
-    }))
-  })
-}
+    }));
+  });
+};
 
 onMounted(() => {
-  queryMenuTree()
-  queryAssetsType()
-})
+  queryMenuTree();
+  queryAssetsType();
+});
 
 const onSave = () =>
   new Promise((resolve, reject) => {
     formRef.value
       .validate()
-      .then((_data) => {
-        resolve(_data)
+      .then(_data => {
+        resolve(_data);
       })
       .catch(() => {
-        reject(false)
-      })
-  })
+        reject(false);
+      });
+  });
 
-defineExpose({ onSave })
+defineExpose({ onSave });
 </script>

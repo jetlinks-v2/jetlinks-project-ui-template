@@ -1,6 +1,12 @@
 <template>
   <div class="radio-button" :style="styles">
-    <div v-for="item in options" @click="onClick(item)"  class="radio-button-item" :class="{'active': myValue === item.value }">
+    <div
+      v-for="item in options"
+      :key="item.value"
+      @click="onClick(item)"
+      class="radio-button-item"
+      :class="{ active: myValue === item.value }"
+    >
       {{ item.label }}
     </div>
   </div>
@@ -9,45 +15,47 @@
 <script setup>
 defineOptions({
   name: 'RadioButton',
-})
+});
 
 const props = defineProps({
   value: {
     type: [String, Number],
-    default: undefined
+    default: undefined,
   },
   options: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   columns: {
     type: Number,
-    default: 3
-  }
-})
+    default: 3,
+  },
+});
 
-const emit = defineEmits(['update:value'])
+const emit = defineEmits(['update:value']);
 
-const myValue = ref(props.value)
+const myValue = ref(props.value);
 
 const styles = computed(() => {
   return {
-    'grid-template-columns': `repeat(${props.columns}, 1fr)`
-  }
-})
+    'grid-template-columns': `repeat(${props.columns}, 1fr)`,
+  };
+});
 
-const onClick = (record) => {
+const onClick = record => {
   if (myValue.value !== record.value) {
-    myValue.value = record.value
-    emit('update:value', record.value)
-    emit('select', record.value)
+    myValue.value = record.value;
+    emit('update:value', record.value);
+    emit('select', record.value);
   }
-}
+};
 
-watch(() => props.value, () => {
- myValue.value = props.value
-})
-
+watch(
+  () => props.value,
+  () => {
+    myValue.value = props.value;
+  },
+);
 </script>
 
 <style scoped lang="less">

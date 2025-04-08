@@ -75,13 +75,13 @@
 </template>
 
 <script setup lang="ts">
-import { onlyMessage } from '@jetlinks-web/utils'
-import PermissionChoose from './PermissionChoose.vue'
-import { updateMenu } from '@/api/system/menu'
+import { onlyMessage } from '@jetlinks-web/utils';
+import PermissionChoose from './PermissionChoose.vue';
+import { updateMenu } from '@/api/system/menu';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
-const emits = defineEmits(['save', 'close'])
+const emits = defineEmits(['save', 'close']);
 const props = defineProps({
   menuInfo: {
     type: Object,
@@ -95,61 +95,62 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-})
+});
 
 const codeOptions = [
   { label: 'add', value: 'add', message: $t('components.ButtonAddDialog.947292-3') },
   { label: 'delete', value: 'delete', message: $t('components.ButtonAddDialog.947292-11') },
   { label: 'update', value: 'update', message: $t('components.ButtonAddDialog.947292-12') },
-]
-const loading = ref<boolean>(false)
-const formRef = ref<any>()
+];
+const loading = ref<boolean>(false);
+const formRef = ref<any>();
 const formModel = reactive({
   name: '',
   id: '',
   permissions: [],
   describe: '',
-})
+});
 
 const checkPermission = (_rule: any, value: string[]) => {
-  if (!value || value.length < 1) return Promise.reject($t('components.ButtonAddDialog.947292-8'))
-  return Promise.resolve()
-}
+  if (!value || value.length < 1) return Promise.reject($t('components.ButtonAddDialog.947292-8'));
+  return Promise.resolve();
+};
 
 watchEffect(() => {
-  Object.assign(formModel, props.data)
-})
+  Object.assign(formModel, props.data);
+});
 
 const confirm = () => {
-  formRef.value &&
+  if (formRef.value) {
     formRef.value.validate().then(() => {
-      const buttons = toRaw(props.menuInfo?.buttons) || []
-      const button = buttons?.find((item) => item.id === formModel.id)
+      const buttons = toRaw(props.menuInfo?.buttons) || [];
+      const button = buttons?.find(item => item.id === formModel.id);
       if (button) {
         Object.entries(formModel).forEach(([key, value]) => {
-          button[key] = value
-        })
+          button[key] = value;
+        });
       } else {
-        buttons.push({ ...formModel })
+        buttons.push({ ...formModel });
       }
       const params = {
         ...props.menuInfo,
         buttons,
-      }
-      loading.value = true
+      };
+      loading.value = true;
       updateMenu(params)
-        .then((resp) => {
+        .then(resp => {
           if (resp.success) {
-            onlyMessage($t('components.ButtonAddDialog.947292-13'))
-            emits('save')
+            onlyMessage($t('components.ButtonAddDialog.947292-13'));
+            emits('save');
           }
         })
         .finally(() => (loading.value = false))
         .catch(() => {
-          loading.value = false
-        })
-    })
-}
+          loading.value = false;
+        });
+    });
+  }
+};
 </script>
 
 <style lang="less" scoped>

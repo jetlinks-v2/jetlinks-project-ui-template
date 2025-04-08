@@ -1,9 +1,6 @@
 <template>
   <!-- 仪表盘 -->
-  <div
-    class="echarts-item"
-    :style="{ backgroundColor: cardData?.componentProps?.background }"
-  >
+  <div class="echarts-item" :style="{ backgroundColor: cardData?.componentProps?.background }">
     <!-- <div class="echarts-item-left">
       <div class="echarts-item-title">{{ data?.componentProps?.name || '--' }}</div>
       <div class="echarts-item-value">{{ topValues[gaugeType] || 0 }} {{ formatter || '%' }}</div>
@@ -24,21 +21,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { wsClient } from '@jetlinks-web/core'
-import { map } from 'rxjs/operators'
-import * as echarts from 'echarts'
-import { topOptionsSeries } from './components/tools'
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { wsClient } from '@jetlinks-web/core';
+import { map } from 'rxjs/operators';
+import * as echarts from 'echarts';
+import { topOptionsSeries } from './components/tools';
 
 const props = defineProps({
   data: {
     type: Object,
-    default: () => ({})
-  }
-})
-const formatter = ref()
-const max = ref()
-const bottom = ref()
+    default: () => ({}),
+  },
+});
+const formatter = ref();
+const max = ref();
+const bottom = ref();
 const topValues = ref({
   cpu: 0,
   jvm: 0,
@@ -46,83 +43,86 @@ const topValues = ref({
   usage: 0,
   usageTotal: 0,
   systemUsage: 0,
-  systemUsageTotal: 0
-})
+  systemUsageTotal: 0,
+});
 const gaugeType = computed(() => {
-  return props.data.type
-})
-const chartRef = ref(null)
-let myChart = null
-const options = ref({})
-const wsRef = ref()
+  return props.data.type;
+});
+const chartRef = ref(null);
+let myChart = null;
+const options = ref({});
+const wsRef = ref();
 
 const unSub = () => {
   if (wsRef.value) {
-    wsRef.value.unsubscribe()
+    wsRef.value.unsubscribe();
   }
-}
+};
 // 获取数据
 
 const getData = () => {
-  const id = 'operations-statistics-system-info-realTime'
-  const topic = '/dashboard/systemMonitor/stats/info/realTime'
-  unSub()
+  const id = 'operations-statistics-system-info-realTime';
+  const topic = '/dashboard/systemMonitor/stats/info/realTime';
+  unSub();
 
-  wsRef.value = wsClient.getWebSocket(id, topic, {
-    type: 'all',
-    // serverNodeId: serverId.value,
-    serverNodeId: '',
-    interval: '1s',
-    agg: 'avg'
-  })
-    .pipe(map((res) => res.payload))
-    .subscribe((payload) => {
+  wsRef.value = wsClient
+    .getWebSocket(id, topic, {
+      type: 'all',
+      // serverNodeId: serverId.value,
+      serverNodeId: '',
+      interval: '1s',
+      agg: 'avg',
+    })
+    .pipe(map(res => res.payload))
+    .subscribe(payload => {
       if (payload?.value) {
-        const { cpu, memory, disk } = payload.value
+        const { cpu, memory, disk } = payload.value;
         topValues.value = {
           cpu: cpu.systemUsage,
           jvm: Number(((memory.jvmHeapUsage / 100) * (memory.jvmHeapTotal / 1024)).toFixed(1)),
           jvmTotal: Math.ceil(memory.jvmHeapTotal / 1024),
           usage: Number(((disk.total / 1024) * (disk.usage / 100)).toFixed(1)),
           usageTotal: Math.ceil(disk.total / 1024),
-          systemUsage: Number(((memory.systemTotal / 1024) * (memory.systemUsage / 100)).toFixed(1)),
-          systemUsageTotal: Math.ceil(memory.systemTotal / 1024)
-        }
+          systemUsage: Number(
+            ((memory.systemTotal / 1024) * (memory.systemUsage / 100)).toFixed(1),
+          ),
+          systemUsageTotal: Math.ceil(memory.systemTotal / 1024),
+        };
         switch (gaugeType.value) {
           case 'jvm':
-            max.value = topValues.value.jvmTotal
-            bottom.value = `总JVM内存:${topValues.value.jvmTotal}`
-            break
+            max.value = topValues.value.jvmTotal;
+            bottom.value = `总JVM内存:${topValues.value.jvmTotal}`;
+            break;
           case 'cpu':
-            max.value = 100
-            break
+            max.value = 100;
+            break;
           case 'disk':
-            bottom.value = `总磁盘大小:${topValues.value.usageTotal}`
-            break
+            bottom.value = `总磁盘大小:${topValues.value.usageTotal}`;
+            break;
           case 'system':
-            bottom.value = `系统内存:${topValues.value.systemUsageTotal}`
-            break
+            bottom.value = `系统内存:${topValues.value.systemUsageTotal}`;
+            break;
         }
-        getOptions()
+        getOptions();
       }
-    })
-}
+    });
+};
 
 function createChart() {
-  const chart = chartRef.value
+  const chart = chartRef.value;
   if (chart && !myChart) {
-    myChart = echarts.init(chart)
-    myChart.setOption(options.value)
+    myChart = echarts.init(chart);
+    myChart.setOption(options.value);
   } else if (myChart) {
-    myChart.setOption(options.value)
+    myChart.setOption(options.value);
   }
 }
 
 function resize() {
-  myChart?.resize()
+  myChart?.resize();
 }
 const getOptions = () => {
-  let formatterCount = 0
+  let formatterCount = 0;
   options.value = {
     series: [
       {
@@ -134,53 +134,53 @@ const getOptions = () => {
           fontSize: 12,
           width: 30,
           padding: [6, 10, 0, 10],
-          formatter: (value) => {
-            formatterCount += 1
+          formatter: value => {
+            formatterCount += 1;
             if ([1, 3, 6, 9, 11].includes(formatterCount)) {
-              return value + (formatter.value || '%')
+              return value + (formatter.value || '%');
             }
-            return ''
-          }
+            return '';
+          },
         },
-        data: [{ value: topValues.value[gaugeType.value] || 0 }]
-      }
-    ]
-  }
-  createChart()
-  window.addEventListener('resize', resize)
-}
+        data: [{ value: topValues.value[gaugeType.value] || 0 }],
+      },
+    ],
+  };
+  createChart();
+  window.addEventListener('resize', resize);
+};
 
 // 数据刷新
 const refreshManual = () => {
-  getData()
-}
+  getData();
+};
 // 自动刷新
-const refreshInterval = () => {
-  setInterval(() => {
-    refreshManual()
-  }, props.data?.componentProps?.auto?.time * 1000)
-}
+// const refreshInterval = () => {
+//   setInterval(() => {
+//     refreshManual();
+//   }, props.data?.componentProps?.auto?.time * 1000);
+// };
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', resize)
-})
+  window.removeEventListener('resize', resize);
+});
 
 onMounted(() => {
   switch (props.data.type) {
     case 'cpu':
-      formatter.value = '%'
-      break
+      formatter.value = '%';
+      break;
 
     default:
-      formatter.value = 'G'
-      break
+      formatter.value = 'G';
+      break;
   }
-  getData()
+  getData();
   if (props.data?.componentProps?.auto?.value) {
     // refreshInterval()
   }
-})
-defineExpose({ refreshManual })
+});
+defineExpose({ refreshManual });
 </script>
 
 <style lang="less" scoped>

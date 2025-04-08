@@ -4,10 +4,7 @@
       <slot name="top" />
     </div>
     <div class="api-page-content" :style="styles">
-      <div
-        v-if="props.showTitle"
-        style="font-size: 16px;margin-bottom: 48px;"
-      >
+      <div v-if="props.showTitle" style="font-size: 16px; margin-bottom: 48px">
         {{ $t('Api.index.558884-0') }}
       </div>
       <div class="api-page-body">
@@ -33,26 +30,20 @@
               @refresh="getSelectKeys"
             />
 
-            <div
-              class="api-details"
-              v-if="selectedApi.url && tableData.length > 0"
-            >
+            <div class="api-details" v-if="selectedApi.url && tableData.length > 0">
               <a-button
                 @click="selectedApi = initSelectedApi"
-                style="margin-bottom: 24px; width: 80px">{{ $t('Api.index.558884-1') }}</a-button>
+                style="margin-bottom: 24px; width: 80px"
+              >
+                {{ $t('Api.index.558884-1') }}
+              </a-button>
               <div class="api-details-tabs">
                 <a-tabs v-model:activeKey="activeKey" type="card">
                   <a-tab-pane key="does" :tab="$t('Api.index.558884-2')">
-                    <ApiDoes
-                      :select-api="selectedApi"
-                      :schemas="schemas"
-                    />
+                    <ApiDoes :select-api="selectedApi" :schemas="schemas" />
                   </a-tab-pane>
                   <a-tab-pane key="test" :tab="$t('Api.index.558884-3')">
-                    <ApiTest
-                      :select-api="selectedApi"
-                      :schemas="schemas"
-                    />
+                    <ApiTest :select-api="selectedApi" :schemas="schemas" />
                   </a-tab-pane>
                 </a-tabs>
               </div>
@@ -66,18 +57,13 @@
 
 <script setup lang="ts" name="apiPage">
 import HomePage from './components/HomePage.vue';
-import {getApiGranted_api, apiOperations_api} from '@/api/system/apiPage';
-import type {
-  treeNodeTpye,
-  apiObjType,
-  apiDetailsType,
-  modeType,
-} from './typing';
+import { getApiGranted_api, apiOperations_api } from '@/api/system/apiPage';
+import type { treeNodeTpye, apiObjType, apiDetailsType, modeType } from './typing';
 import LeftTree from './components/LeftTree.vue';
 import ChooseApi from './components/ChooseApi.vue';
 import ApiDoes from './components/ApiDoes.vue';
 import ApiTest from './components/ApiTest.vue';
-import {useDepartmentStore} from '@/store/department';
+import { useDepartmentStore } from '@/store/department';
 
 const department = useDepartmentStore();
 
@@ -92,9 +78,9 @@ const tableData = ref([]);
 
 const styles = computed(() => {
   return {
-    padding: props.mode === 'api' ? 0 : '24px'
-  }
-})
+    padding: props.mode === 'api' ? 0 : '24px',
+  };
+});
 const treeSelect = (node: treeNodeTpye, nodeSchemas: object = {}) => {
   if (node.key === 'home') return (showHome.value = true);
   schemas.value = nodeSchemas;
@@ -103,8 +89,8 @@ const treeSelect = (node: treeNodeTpye, nodeSchemas: object = {}) => {
   const apiList: apiObjType[] = node.apiList as apiObjType[];
   const table: any = [];
   // 将对象形式的数据转换为表格需要的形式
-  apiList?.forEach((apiItem) => {
-    const {method, url} = apiItem as any;
+  apiList?.forEach(apiItem => {
+    const { method, url } = apiItem as any;
     for (const key in method) {
       if (Object.prototype.hasOwnProperty.call(method, key)) {
         table.push({
@@ -144,8 +130,8 @@ function init() {
     selectedApi.value = initSelectedApi;
   });
   watch(
-      () => selectedApi.value.url,
-      () => (activeKey.value = 'does'),
+    () => selectedApi.value.url,
+    () => (activeKey.value = 'does'),
   );
 }
 
@@ -154,13 +140,13 @@ function init() {
  */
 function getSelectKeys() {
   if (props.mode === 'appManger') {
-    getApiGranted_api(props.code as string).then((resp) => {
+    getApiGranted_api(props.code as string).then(resp => {
       selectedKeys.value = resp.result as string[];
       selectSourceKeys.value = [...(resp.result as string[])];
       changedApis.value = {};
     });
   } else if (props.mode === 'api') {
-    apiOperations_api().then((resp) => {
+    apiOperations_api().then(resp => {
       selectedKeys.value = resp.result as string[];
       selectSourceKeys.value = [...(resp.result as string[])];
     });
@@ -168,18 +154,18 @@ function getSelectKeys() {
 }
 
 watch(
-    () => selectedKeys.value,
-    (val: any) => {
-      // console.log('selectedKeys: ', val);
-      department.setSelectedKeys(val);
-    },
+  () => selectedKeys.value,
+  (val: any) => {
+    // console.log('selectedKeys: ', val);
+    department.setSelectedKeys(val);
+  },
 );
 watch(
-    () => changedApis.value,
-    (val: any) => {
-      // console.log('changedApis: ', val);
-      department.setChangedApis(val);
-    },
+  () => changedApis.value,
+  (val: any) => {
+    // console.log('changedApis: ', val);
+    department.setChangedApis(val);
+  },
 );
 </script>
 
@@ -225,8 +211,6 @@ watch(
         }
       }
     }
-
   }
-
 }
 </style>

@@ -1,69 +1,73 @@
 <script setup>
-import {filterSelectNode} from "@/utils";
-import {useI18n} from "vue-i18n";
-import { useRequest } from '@jetlinks-web/hooks'
-import {getRoleList} from "@/api/system/user";
+import { filterSelectNode } from '@/utils';
+import { useI18n } from 'vue-i18n';
+import { useRequest } from '@jetlinks-web/hooks';
+import { getRoleList } from '@/api/system/user';
 
 const { t: $t } = useI18n();
-const emit = defineEmits(['update:value', 'change'])
+const emit = defineEmits(['update:value', 'change']);
 
 const props = defineProps({
   value: {
     type: String,
-    default: undefined
+    default: undefined,
   },
   extraProps: {
     type: Object,
-    default: () => ({})
+    default: () => ({}),
   },
   disabled: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
 const { data: treeData, reload } = useRequest(getRoleList, {
   defaultParams: {
     paging: false,
-    sorts: [{ name: 'createTime', order: 'desc' }]
+    sorts: [{ name: 'createTime', order: 'desc' }],
   },
   defaultValue: [],
   onSuccess(resp) {
-    return resp.result.map((item)=>{
+    return resp.result.map(item => {
       return {
         name: item.groupName,
         id: item.groupId,
         disabled: true,
-        children: item.roles?.map((i)=>{
-          return {
-            name:i.name,
-            id:i.id
-          }
-        }) || []
-      }
-    })
-  }
-})
-const myValue = ref()
+        children:
+          item.roles?.map(i => {
+            return {
+              name: i.name,
+              id: i.id,
+            };
+          }) || [],
+      };
+    });
+  },
+});
+const myValue = ref();
 
 const clickAddItem = () => {
   const tab = window.open(`${origin}/#/system/Role?save=true`);
-  tab.onTabSaveSuccess = (value) => {
+  tab.onTabSaveSuccess = value => {
     myValue.value = props.extraProps?.multiple ? [...myValue.value, value] : value;
     emit('update:value', myValue.value);
-    reload()
+    reload();
   };
-}
+};
 
-const onChange = (value, label,  extra) => {
-  emit('update:value', myValue.value)
-  emit('change', value, label,  extra)
-}
+const onChange = (value, label, extra) => {
+  emit('update:value', myValue.value);
+  emit('change', value, label, extra);
+};
 
-watch(() => props.value, () => {
-  myValue.value = props.value
-}, { immediate: true })
-
+watch(
+  () => props.value,
+  () => {
+    myValue.value = props.value;
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -74,13 +78,13 @@ watch(() => props.value, () => {
       show-search
       :placeholder="$t('components.EditUserDialog.939453-13')"
       :tree-data="treeData"
-      :fieldNames="{ label: 'name', value: 'id', children:'children' }"
+      :fieldNames="{ label: 'name', value: 'id', children: 'children' }"
       :disabled="disabled"
       :filterTreeNode="(v, node) => filterSelectNode(v, node, 'name')"
       @change="onChange"
     >
       <template #title="{ name }">
-        <div style="width: calc(100% - 10px) ">
+        <div style="width: calc(100% - 10px)">
           <j-ellipsis>{{ name }}</j-ellipsis>
         </div>
       </template>

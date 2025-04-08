@@ -1,4 +1,3 @@
 export const useMap = () => {
-    return inject('parentInstance')
-}
-
+  return inject('parentInstance');
+};

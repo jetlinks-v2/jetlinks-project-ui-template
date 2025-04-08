@@ -3,9 +3,11 @@
     <div class="top">
       <h5>{{ props.selectApi.summary }}</h5>
       <div class="input">
-        <InputCard :value="props.selectApi.method"/>
-        <a-input :value="props.selectApi?.url" disabled/>
-        <a-button type="primary" @click="send" :loading="loading">{{ $t('components.ApiTest.726024-0') }}</a-button>
+        <InputCard :value="props.selectApi.method" />
+        <a-input :value="props.selectApi?.url" disabled />
+        <a-button type="primary" @click="send" :loading="loading">
+          {{ $t('components.ApiTest.726024-0') }}
+        </a-button>
       </div>
     </div>
 
@@ -23,11 +25,7 @@
               <template #bodyCell="{ column, record, index }">
                 <template v-if="column.key === 'name'">
                   <a-form-item
-                    :name="[
-                      'paramsTable',
-                      index,
-                      'name',
-                    ]"
+                    :name="['paramsTable', index, 'name']"
                     :rules="[
                       {
                         required: true,
@@ -35,34 +33,23 @@
                       },
                     ]"
                   >
-                    <a-input
-                      v-model:value="record.name"
-                    ></a-input>
+                    <a-input v-model:value="record.name"></a-input>
                   </a-form-item>
                 </template>
                 <template v-else-if="column.key === 'value'">
-                  <a-form-item
-                    :name="[
-                      'paramsTable',
-                      index,
-                      'value',
-                    ]"
-                  >
-                    <a-input
-                      v-model:value="record.value"
-                    ></a-input>
+                  <a-form-item :name="['paramsTable', index, 'value']">
+                    <a-input v-model:value="record.value"></a-input>
                   </a-form-item>
                 </template>
                 <template v-else-if="column.key === 'action'">
                   <j-permission-button
                     type="text"
                     :popConfirm="{
-                    title: $t('components.ApiTest.726024-3'),
-                    onConfirm: () =>
-                        requestBody.clickDel(index),
+                      title: $t('components.ApiTest.726024-3'),
+                      onConfirm: () => requestBody.clickDel(index),
                     }"
                   >
-                    <AIcon type="DeleteOutlined"/>
+                    <AIcon type="DeleteOutlined" />
                   </j-permission-button>
                 </template>
               </template>
@@ -73,7 +60,7 @@
             @click="requestBody.addRow"
             style="width: 100%; text-align: center; margin-top: 5px"
           >
-            <AIcon type="PlusOutlined"/>
+            <AIcon type="PlusOutlined" />
             {{ $t('components.ApiTest.726024-4') }}
           </a-button>
         </div>
@@ -81,14 +68,12 @@
           <a-select-option value="json">Json</a-select-option>
           <a-select-option value="text">Text</a-select-option>
         </a-select>
-        <template
-          v-if="showRequestBody"
-        >
+        <template v-if="showRequestBody">
           <monaco-editor
             v-if="bodyType === 'json'"
             ref="editorRef"
             language="json"
-            style="height: 100% ; min-height: 200px;"
+            style="height: 100%; min-height: 200px"
             theme="vs"
             v-model:modelValue="requestBody.code"
           />
@@ -96,32 +81,31 @@
             v-else
             ref="editorRef"
             language="text"
-            style="height: 100% ; min-height: 200px;"
+            style="height: 100%; min-height: 200px"
             theme="vs"
             v-model:modelValue="requestBody.code"
           />
         </template>
-
       </div>
     </div>
     <div class="api-card">
       <h5>{{ $t('components.ApiTest.726024-5') }}</h5>
       <div class="content">
-        <JsonViewer :value="responsesContent" copyable/>
+        <JsonViewer :value="responsesContent" copyable />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {JsonViewer} from 'vue3-json-viewer';
+import { JsonViewer } from 'vue3-json-viewer';
 import 'vue3-json-viewer/dist/index.css';
-import type {apiDetailsType} from '../typing';
+import type { apiDetailsType } from '../typing';
 import InputCard from './InputCard.vue';
-import {cloneDeep, toLower} from 'lodash-es';
-import {FormInstance} from 'ant-design-vue';
-import { request } from "@jetlinks-web/core";
-import {findData, getCodeText} from '../utils';
+import { cloneDeep, toLower } from 'lodash-es';
+import { FormInstance } from 'ant-design-vue';
+import { request } from '@jetlinks-web/core';
+import { findData, getCodeText } from '../utils';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();
@@ -132,8 +116,8 @@ const props = defineProps<{
 const responsesContent = ref({});
 const editorRef = ref();
 const formRef = ref<FormInstance>();
-const method = ref()
-const showRequestBody = ref(!!props.selectApi?.requestBody)
+const method = ref();
+const showRequestBody = ref(!!props.selectApi?.requestBody);
 const bodyType = ref('text');
 const loading = ref(false);
 const requestBody = reactive({
@@ -161,9 +145,7 @@ const requestBody = reactive({
   pageSize: 10,
   pageNum: 1,
   params: {
-    paramsTable: cloneDeep(
-      props.selectApi.parameters || [],
-    ) as requestObj[],
+    paramsTable: cloneDeep(props.selectApi.parameters || []) as requestObj[],
   },
 
   code: '',
@@ -183,7 +165,7 @@ let schema: any = {};
 const refStr = ref('');
 
 const init = () => {
-  method.value = props.selectApi.method
+  method.value = props.selectApi.method;
   // if (!props.selectApi.requestBody) return;
   // schema = props.selectApi.requestBody.content['application/json'].schema;
   // refStr.value = schema.$ref || schema?.items?.$ref;
@@ -192,15 +174,16 @@ init();
 
 const handleChangeBodyType = () => {
   // editorRef.value?.setModelLanguage(editorRef.value?.getModel(), bodyType.value);
-}
+};
 
 const send = () => {
-  if (requestBody.params.paramsTable.length)
-    formRef.value &&
-    formRef.value.validate().then(() => {
+  if (requestBody.params.paramsTable.length) {
+    formRef.value?.validate().then(() => {
       _send();
     });
-  else _send();
+  } else {
+    _send();
+  }
 };
 const _send = () => {
   const methodName = toLower(props.selectApi.method);
@@ -214,40 +197,46 @@ const _send = () => {
 
   let url = props.selectApi?.url;
   let _data;
-  let _params;
+  // let _params;
   const urlParams = {};
-  requestBody.params.paramsTable.forEach((item) => {
+  requestBody.params.paramsTable.forEach(item => {
     urlParams[item.name] = item.value;
-    if (url.includes(`{${item.name}}`))
-      url = url.replace(`{${item.name}}`, item.value);
+    if (url.includes(`{${item.name}}`)) url = url.replace(`{${item.name}}`, item.value);
   });
   if (methodName === 'get') {
     _data = {
       ...JSON.parse(requestBody.code || '{}'),
       ...urlParams,
     };
-    _params = {}
+    // _params = {};
   } else {
     if (bodyType.value == 'text') {
-      _data = requestBody.code
+      _data = requestBody.code;
     } else {
-      _data = JSON.parse(requestBody.code || '{}')
+      _data = JSON.parse(requestBody.code || '{}');
     }
-    _params = urlParams
+    // _params = urlParams;
   }
   loading.value = true;
-  request[methodObj[methodName]](url, _data, bodyType.value === 'text' ? {headers: {'Content-Type': 'text/plain'}} : {}).then((resp: any) => {
-    // 如果用户没填写参数且有body的情况下，给用户展示请求示例
-    if (Object.keys(_data).length === 0 && refStr.value) {
-      requestBody.code = JSON.stringify(getDefaultParams());
-      editorRef.value?.editorFormat();
-    }
-    responsesContent.value = resp;
-  }).catch((err) => {
-    responsesContent.value = err.response?.data || {};
-  }).finally(() => {
-    loading.value = false;
-  });
+  request[methodObj[methodName]](
+    url,
+    _data,
+    bodyType.value === 'text' ? { headers: { 'Content-Type': 'text/plain' } } : {},
+  )
+    .then((resp: any) => {
+      // 如果用户没填写参数且有body的情况下，给用户展示请求示例
+      if (Object.keys(_data).length === 0 && refStr.value) {
+        requestBody.code = JSON.stringify(getDefaultParams());
+        editorRef.value?.editorFormat();
+      }
+      responsesContent.value = resp;
+    })
+    .catch(err => {
+      responsesContent.value = err.response?.data || {};
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
 /**
