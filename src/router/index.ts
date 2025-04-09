@@ -28,7 +28,7 @@ const getModulesRoutes = () => {
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: [LOGIN_ROUTE, DEMO, ...getModulesRoutes()],
+  routes: [LOGIN_ROUTE, DEMO, AUTHORIZE_ROUTE, ...getModulesRoutes()],
   scrollBehavior(to, form, savedPosition) {
     return savedPosition || { top: 0 }
   }
@@ -72,7 +72,7 @@ const getRoutesByServer = async (to: any, next: any) => {
       next()
     } else {
       MenuStore.menu.forEach((r) => {
-        console.log('MenuStore',r)
+        console.log('MenuStore', r)
         router.addRoute(r)
       })
       router.addRoute(NOT_FIND_ROUTE)
