@@ -27,11 +27,9 @@
         </a-space>
       </div>
     </template>
-    <slot>
-      <router-view v-if="routerAlive.router" v-slot="{ Component }">
-        <component :is="components || Component" />
-      </router-view>
-    </slot>
+    <router-view v-if="routerAlive.router" v-slot="{ Component }">
+      <component :is="components || Component" />
+    </router-view>
   </j-pro-layout>
 </template>
 
@@ -89,7 +87,7 @@ const state = reactive<StateType>({
 const breadcrumb = computed(() =>
   {
     const paths = router.currentRoute.value.matched
-    return paths.map((item, index) => {
+    return paths.filter(item => item.meta.title).map((item, index) => {
       return {
         index,
         isLast: index === (paths.length -1),
