@@ -12,6 +12,7 @@ type MenuItem = {
   url: string
   isShow?: boolean
   buttons?: Buttons
+  options?: any
 }
 
 const hasAppID = (item: { appId?: string, url?: string }): { isApp: boolean, appUrl: string } => {
@@ -26,7 +27,9 @@ const handleButtons = (buttons?: Buttons) => {
 }
 
 const handleMeta = (item: MenuItem, isApp: boolean) => {
+  const _meta = item.options?.meta || {}
   return {
+    ..._meta,
     ...(item.meta || {}),
     icon: item.icon,
     title: item.i18nName || item.name,
