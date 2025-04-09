@@ -1,6 +1,6 @@
 import { BasicLayoutPage, BlankLayoutPage, Iframe } from '@/layout'
 import {ShallowRef, shallowRef} from 'vue'
-import {isArray} from "lodash-es";
+import {isArray, isFunction} from "lodash-es";
 
 type Buttons = Array<{ id: string }>
 
@@ -45,19 +45,19 @@ const findComponents: FindComponentsFn = (code, level, isApp, components, meta, 
     return () => import('../views/mirco/SubAppRedirect/base.vue')
   }
 
+  if (isApp){ // iframe
+    return () => Iframe
+  }
+
   if (level === 1) { // BasicLayoutPage
-    if (myComponents && !hasChildren) {
-      return meta?.hasLayout === false ? () => myComponents() : h(BasicLayoutPage, {}, h(defineAsyncComponent(() => myComponents()), {}))
-    }
+    // if (myComponents && !hasChildren) {
+    //   return meta?.hasLayout === false ? () => myComponents() : h(BasicLayoutPage, {}, h(defineAsyncComponent(() => myComponents()), {}))
+    // }
     return myComponents ? () => myComponents() : shallowRef(BasicLayoutPage)
   }
 
   if (level === 2) { // BlankLayoutPage or components
     return myComponents ? () => myComponents() : BlankLayoutPage
-  }
-
-  if (isApp){ // iframe
-    return () => Iframe
   }
 
   if(myComponents) { // components
@@ -76,6 +76,7 @@ const hasExtraChildren = (item: MenuItem, extraMenus: any ) => {
   if (extraItem && extraRoutes) {
     return extraRoutes.map(e => ({
       ...e,
+      meta: e.meta,
       code: `${item.code}/${e.code}`,
       url: `${item.url}${e.url}`,
       isShow: false
@@ -100,15 +101,25 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
         children: item.children || []
       }
 
-      // if (!route.children?.length && !isApp) {
-      //   route.path = route.path + '/:page*'
-      // }
+      const myComponent = findComponents(item.code, level, isApp, components, meta, route.children.length)
+      if (level === 1 && !route.children.lengt && myComponent && isFunction(myComponent)) { // 一级菜单，没有子菜单，且有组件，使用组件
+        const _path = isApp ? appUrl : `${item.url}`
+        const parentPath = _path + '/parent'
+        route.name = `${item.code}-parent`
+        route.path = parentPath
+        route.url = parentPath
+        route.component = shallowRef(BasicLayoutPage)
+        meta.title = ''
+        route.meta = meta
+        route.children = [item]
+      } else {
+        route.component = item.component ?? myComponent
 
-      route.component = item.component ?? findComponents(item.code, level, isApp, components, meta, route.children.length)
-      const extraRoute = hasExtraChildren(item, extraMenus)
-      if (extraRoute && !isApp) { // 包含额外的子路由
+        const extraRoute = hasExtraChildren(item, extraMenus)
+        if (extraRoute && !isApp) { // 包含额外的子路由
 
-        route.children = [...route.children, ...extraRoute]
+          route.children = [...route.children, ...extraRoute]
+        }
       }
 
       if (route.children && route.children.length) {
@@ -145,7 +156,7 @@ const hideInMenu = (code: string) => {
 
 export const handleSiderMenu = (menuData: any) => {
   if (menuData && menuData.length) {
-    return menuData.map(item => {
+    return menuData.filter(item => item.isShow !== false).map(item => {
       const { isApp, appUrl } = hasAppID(item) // 是否为第三方程序
       const meta = handleMeta(item, isApp)
       const route: any = {
