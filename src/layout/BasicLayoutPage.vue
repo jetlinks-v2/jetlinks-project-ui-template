@@ -27,9 +27,11 @@
         </a-space>
       </div>
     </template>
+    <slot>
       <router-view v-if="routerAlive.router" v-slot="{ Component }">
         <component :is="components || Component" />
       </router-view>
+    </slot>
   </j-pro-layout>
 </template>
 
