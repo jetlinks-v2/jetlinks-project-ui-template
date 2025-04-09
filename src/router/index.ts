@@ -1,28 +1,37 @@
-import {
-  createRouter,
-  createWebHashHistory, createWebHistory,
-} from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { getToken, removeToken } from '@jetlinks-web/utils'
-import { NOT_FIND_ROUTE, LOGIN_ROUTE, DEMO } from './basic'
-import {useUserStore} from "@/store/user";
-import {useSystemStore} from "@/store/system";
-import {useMenuStore} from "@/store/menu";
-import {isSubApp} from "@/utils";
-import {useApplication} from "@/store";
-import microApp from "@micro-zoe/micro-app";
+import { NOT_FIND_ROUTE, LOGIN_ROUTE, DEMO, AUTHORIZE_ROUTE, RouteRecordItem } from './basic'
+import { useUserStore } from '@/store/user'
+import { useSystemStore } from '@/store/system'
+import { useMenuStore } from '@/store/menu'
+import { isSubApp } from '@/utils'
+import { useApplication } from '@/store'
+import microApp from '@micro-zoe/micro-app'
+import { modules } from '@/utils/modules'
 
-let TokenFilterRoute: string[] = [ DEMO.path ]
+let TokenFilterRoute: string[] = [DEMO.path, AUTHORIZE_ROUTE.path]
 
-let FilterPath: string[] = [DEMO.path]
+let FilterPath: string[] = [DEMO.path, AUTHORIZE_ROUTE.path]
+
+// 获取子模块默认路由
+const getModulesRoutes = () => {
+  const modulesFile = modules()
+  const _routes: RouteRecordItem[] = []
+  Object.keys(modulesFile).forEach((key) => {
+    const routes = (modulesFile[key] as any).default?.getDefaultRoutes()
+    const filter = (modulesFile[key] as any).default?.getFilterRoutes()
+    routes?.length && _routes.push(...routes)
+    filter?.length && TokenFilterRoute.push(...filter)
+  })
+  return _routes
+}
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: [
-    LOGIN_ROUTE, DEMO
-  ],
+  routes: [LOGIN_ROUTE, DEMO, ...getModulesRoutes()],
   scrollBehavior(to, form, savedPosition) {
-    return savedPosition || {top: 0}
-  },
+    return savedPosition || { top: 0 }
+  }
 })
 microApp.router.setBaseAppRouter(router)
 const NoTokenJump = (to: any, next: any, isLogin: boolean) => {
@@ -30,18 +39,18 @@ const NoTokenJump = (to: any, next: any, isLogin: boolean) => {
   if (isLogin || TokenFilterRoute.includes(to.path)) {
     next()
   } else {
-    next({path: LOGIN_ROUTE.path})
+    next({ path: LOGIN_ROUTE.path })
   }
 }
 
 const getRoutesByServer = async (to: any, next: any) => {
-
   const UserInfoStore = useUserStore()
   const SystemStore = useSystemStore()
   const MenuStore = useMenuStore()
   const application = useApplication()
 
-  if (!Object.keys(UserInfoStore.userInfo).length) { // 没有用户信息
+  if (!Object.keys(UserInfoStore.userInfo).length) {
+    // 没有用户信息
     // 获取有用户信息
     await UserInfoStore.getUserInfo()
     //
@@ -65,8 +74,8 @@ const getRoutesByServer = async (to: any, next: any) => {
       MenuStore.menu.forEach((r) => {
         router.addRoute(r)
       })
-      router.addRoute( NOT_FIND_ROUTE)
-      await next({...to, replace: true})
+      router.addRoute(NOT_FIND_ROUTE)
+      await next({ ...to, replace: true })
     }
   } else {
     next()
@@ -78,7 +87,7 @@ router.beforeEach((to, from, next) => {
   const isLogin = to.path === LOGIN_ROUTE.path
   if (token) {
     if (isLogin) {
-      next({path: '/'})
+      next({ path: '/' })
     } else {
       getRoutesByServer(to, next)
     }
@@ -91,7 +100,7 @@ export const jumpLogin = () => {
   setTimeout(() => {
     removeToken()
     router.replace({
-      path: LOGIN_ROUTE.path,
+      path: LOGIN_ROUTE.path
     })
   })
 }
