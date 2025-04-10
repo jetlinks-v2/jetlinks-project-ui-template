@@ -18,10 +18,12 @@ const getModulesRoutes = () => {
   const modulesFile = modules()
   const _routes: RouteRecordItem[] = []
   Object.keys(modulesFile).forEach((key) => {
-    const routes = (modulesFile[key] as any).default?.getDefaultRoutes()
-    const filter = (modulesFile[key] as any).default?.getFilterRoutes()
-    routes?.length && _routes.push(...routes)
-    filter?.length && TokenFilterRoute.push(...filter)
+    if ((modulesFile[key] as any).default) {
+      const routes = (modulesFile[key] as any).default.getDefaultRoutes?.()
+      const filter = (modulesFile[key] as any).default.getFilterRoutes?.()
+      routes?.length && _routes.push(...routes)
+      filter?.length && TokenFilterRoute.push(...filter)
+    }
   })
   return _routes
 }
