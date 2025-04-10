@@ -122,9 +122,8 @@
 <script setup>
 import { getTokenConfig, getTokenRedirect } from '@/api/comm'
 import { codeUrl } from '@/api/login'
-import { setPersonalToken } from '@visualization/utils'
 import { useRequest } from '@jetlinks-web/hooks'
-import { encrypt, onlyMessage } from '@jetlinks-web/utils'
+import { encrypt, onlyMessage, LocalStore } from '@jetlinks-web/utils'
 
 const formState = reactive({
   password: '',
@@ -155,20 +154,13 @@ const handleRedirect = async (params) => {
   try {
     isLoading.value = true
     const redirectRes = await getTokenRedirect(personalToken.value, params || {})
-
-    //发布过期
-    if (redirectRes?.status === 401) {
-      isExpired.value = true
-      return
-    }
-
     if (redirectRes?.result) {
       if (params) onlyMessage('授权成功，即将跳转...')
       setTimeout(() => {
         const urlString = redirectRes.result
         const urlObject = new URL(urlString)
         const token = urlObject.searchParams.get(personalTokenKey)
-        setPersonalToken(token)
+        LocalStore.set('X-Personal-Token', token)
 
         urlObject.searchParams.delete(personalTokenKey)
         const cleanUrl = urlObject.toString()
@@ -180,7 +172,12 @@ const handleRedirect = async (params) => {
   } catch (error) {
     console.error('Redirect error:', error)
     refreshVerificationCode()
-    onlyMessage('授权失败，请重试', 'error')
+    //发布过期
+    if (redirectRes?.status === 401) {
+      onlyMessage('链接已过期', 'error')
+      isExpired.value = true
+      return
+    }
   } finally {
     isLoading.value = false
   }
@@ -216,13 +213,6 @@ const initialize = async () => {
 
     isLoading.value = true
     const res = await getTokenConfig(personalToken.value)
-
-    //发布过期
-    if (res.status === 401) {
-      isExpired.value = true
-      return
-    }
-
     if (res?.result) {
       config.value = res.result
 
@@ -236,7 +226,12 @@ const initialize = async () => {
     }
   } catch (error) {
     console.error('初始化失败:', error)
-    onlyMessage('系统错误，请稍后再试', 'error')
+    //发布过期
+    if (error.status === 401) {
+      onlyMessage('链接已过期', 'error')
+      isExpired.value = true
+      return
+    }
   } finally {
     isLoading.value = false
   }
