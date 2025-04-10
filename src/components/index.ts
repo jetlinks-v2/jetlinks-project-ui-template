@@ -12,6 +12,7 @@ import BatchDropdown from './BatchDropdown/index.vue'
 import ConfirmModal from './ConfirmModal/index.vue'
 import CheckButton from './CheckButton/CheckButton.vue'
 import MonacoEditor from './MonacoEditor/monacoEditor.vue'
+import Echarts from './Echarts/Echarts.vue'
 
 import FormItemValue from './FormItem'
 export default {
@@ -31,6 +32,7 @@ export default {
             .component('ConfirmModal',ConfirmModal)
             .component('CheckButton',CheckButton)
           .component('monaco-editor', MonacoEditor)
+          .component(Echarts.name, Echarts)
 
 
         Object.keys(FormItemValue).forEach(key => {
