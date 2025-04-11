@@ -27,7 +27,6 @@ watch(
   () => JSON.stringify(props.options),
   () => {
     if (props.options) {
-      debugger
       nextTick(() => {
         setOptions(props.options)
       })

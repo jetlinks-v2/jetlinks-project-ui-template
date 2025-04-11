@@ -13,6 +13,7 @@ import ConfirmModal from './ConfirmModal/index.vue'
 import CheckButton from './CheckButton/CheckButton.vue'
 import MonacoEditor from './MonacoEditor/monacoEditor.vue'
 import Echarts from './Echarts/Echarts.vue'
+import { TimeSelect } from './Dashboard/components'
 
 import FormItemValue from './FormItem'
 export default {
@@ -33,6 +34,7 @@ export default {
             .component('CheckButton',CheckButton)
           .component('monaco-editor', MonacoEditor)
           .component(Echarts.name, Echarts)
+          .component(TimeSelect.name, TimeSelect)
 
 
         Object.keys(FormItemValue).forEach(key => {
