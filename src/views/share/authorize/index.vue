@@ -1,15 +1,14 @@
 <template>
-  <div class="login-container">
-    <div
-      v-if="!isExpired"
-      class="login-card"
-    >
+  <div
+    class="login-container"
+    v-if="config.authType === 'password'"
+  >
+    <div class="login-card">
       <div class="login-header">
         <h1>授权认证</h1>
       </div>
 
       <a-form
-        v-if="config.authType === 'password'"
         :model="formState"
         name="login"
         @finish="handleSubmit"
@@ -72,49 +71,6 @@
           </a-button>
         </a-form-item>
       </a-form>
-
-      <div
-        v-else-if="config.authType === 'none'"
-        class="auto-login-message"
-      >
-        <a-spin
-          :spinning="isLoading"
-          tip="正在自动授权，请稍候..."
-        >
-          <a-result
-            status="info"
-            title="自动授权中"
-            sub-title="系统正在为您处理授权，无需输入凭证"
-          >
-            <template #extra>
-              <a-button
-                type="primary"
-                :loading="isLoading"
-              >
-                处理中
-              </a-button>
-            </template>
-          </a-result>
-        </a-spin>
-      </div>
-
-      <div
-        v-else
-        class="loading-container"
-      >
-        <a-spin tip="加载中..."></a-spin>
-      </div>
-    </div>
-
-    <div
-      v-else
-      class="login-card"
-    >
-      <a-result
-        status="error"
-        title="链接已过期"
-        sub-title="请重新获取授权链接"
-      />
     </div>
   </div>
 </template>
@@ -131,12 +87,12 @@ const formState = reactive({
   verifyKey: ''
 })
 
-const personalTokenKey = ':X_Personal_Token'
+const personalTokenKey = 'X-Personal-Token'
+const personalTokenKeyUrl = ':X_Personal_Token'
 const config = ref({})
 const personalToken = ref('')
 const isLoading = ref(false)
 const verificationData = ref({})
-const isExpired = ref(false)
 const showVerificationCode = computed(() => !!verificationData.value?.base64)
 const verificationCodeUrl = computed(() => verificationData.value?.base64 || '')
 
@@ -151,31 +107,35 @@ const { run: refreshVerificationCode } = useRequest(codeUrl, {
 })
 
 const handleRedirect = async (params) => {
+  let redirectRes
   try {
     isLoading.value = true
-    const redirectRes = await getTokenRedirect(personalToken.value, params || {})
+    redirectRes = await getTokenRedirect(personalToken.value, params || {})
     if (redirectRes?.result) {
-      if (params) onlyMessage('授权成功，即将跳转...')
-      setTimeout(() => {
-        const urlString = redirectRes.result
-        const urlObject = new URL(urlString)
-        const token = urlObject.searchParams.get(personalTokenKey)
-        LocalStore.set('X-Personal-Token', token)
+      const urlString = redirectRes.result
+      const urlObject = new URL(urlString)
+      const token = urlObject.searchParams.get(personalTokenKeyUrl)
+      LocalStore.set(personalTokenKey, token)
 
-        urlObject.searchParams.delete(personalTokenKey)
-        const cleanUrl = urlObject.toString()
+      urlObject.searchParams.delete(personalTokenKeyUrl)
+      const cleanUrl = urlObject.toString()
+      if (params) {
+        onlyMessage('授权成功，即将跳转...')
+        setTimeout(() => {
+          window.location.href = cleanUrl
+        }, 1000)
+      } else {
         window.location.href = cleanUrl
-      }, 1000)
+      }
     } else {
       throw new Error('获取重定向URL失败')
     }
   } catch (error) {
     console.error('Redirect error:', error)
     refreshVerificationCode()
-    //发布过期
+    // 如果重定向返回状态是 401，则认为链接过期
     if (redirectRes?.status === 401) {
       onlyMessage('链接已过期', 'error')
-      isExpired.value = true
       return
     }
   } finally {
@@ -213,6 +173,7 @@ const initialize = async () => {
 
     isLoading.value = true
     const res = await getTokenConfig(personalToken.value)
+
     if (res?.result) {
       config.value = res.result
 
@@ -226,10 +187,9 @@ const initialize = async () => {
     }
   } catch (error) {
     console.error('初始化失败:', error)
-    //发布过期
+    // 如果错误状态为 401，则标记链接过期
     if (error.status === 401) {
       onlyMessage('链接已过期', 'error')
-      isExpired.value = true
       return
     }
   } finally {
@@ -284,18 +244,6 @@ onMounted(() => {
 .login-form-button {
   width: 100%;
   margin-top: 8px;
-}
-
-.auto-login-message {
-  text-align: center;
-  padding: 20px 0;
-}
-
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
 }
 
 .verification-image {
