@@ -15,9 +15,6 @@ type MenuItem = {
   options?: any
 }
 
-// 可视化菜单发布标识
-const VIEW_RELEASE_CODE = 'viewRelease'
-
 const hasAppID = (item: { appId?: string; url?: string }): { isApp: boolean; appUrl: string } => {
   return {
     isApp: !!item.appId,
@@ -52,8 +49,7 @@ type FindComponentsFn = (
 ) => undefined | Function | VNode | ShallowRef
 
 const findComponents: FindComponentsFn = (code, level, isApp, components, meta, hasChildren) => {
-  const myComponents =
-    components[code] || (code.startsWith(VIEW_RELEASE_CODE) ? components[VIEW_RELEASE_CODE] : undefined)
+  const myComponents = components[meta?.componentCode || code]
 
   if (!hasChildren && meta && meta.appName && meta.appUrl) {
     return () => import('../views/mirco/SubAppRedirect/base.vue')

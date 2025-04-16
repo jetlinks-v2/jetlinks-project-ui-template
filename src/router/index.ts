@@ -74,7 +74,6 @@ const getRoutesByServer = async (to: any, next: any) => {
       next()
     } else {
       MenuStore.menu.forEach((r) => {
-        console.log('MenuStore', r)
         router.addRoute(r)
       })
       router.addRoute(NOT_FIND_ROUTE)
