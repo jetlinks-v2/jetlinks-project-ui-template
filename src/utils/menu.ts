@@ -1,11 +1,11 @@
 import { BasicLayoutPage, BlankLayoutPage, Iframe } from '@/layout'
-import {ShallowRef, shallowRef} from 'vue'
-import {isArray, isFunction} from "lodash-es";
+import { ShallowRef, shallowRef } from 'vue'
+import { isArray, isFunction } from 'lodash-es'
 
 type Buttons = Array<{ id: string }>
 
 type MenuItem = {
-  icon: string,
+  icon: string
   name: string
   i18nName: string
   code: string
@@ -15,7 +15,10 @@ type MenuItem = {
   options?: any
 }
 
-const hasAppID = (item: { appId?: string, url?: string }): { isApp: boolean, appUrl: string } => {
+// 可视化菜单发布标识
+const VIEW_RELEASE_CODE = 'viewRelease'
+
+const hasAppID = (item: { appId?: string; url?: string }): { isApp: boolean; appUrl: string } => {
   return {
     isApp: !!item.appId,
     appUrl: `/${item.appId}${item.url}`
@@ -39,45 +42,57 @@ const handleMeta = (item: MenuItem, isApp: boolean) => {
   }
 }
 
-type FindComponentsFn = (code: string, level: number, isApp: boolean, components: any, meta: any, hasChildren: false) => undefined | Function | VNode | ShallowRef
+type FindComponentsFn = (
+  code: string,
+  level: number,
+  isApp: boolean,
+  components: any,
+  meta: any,
+  hasChildren: false
+) => undefined | Function | VNode | ShallowRef
 
 const findComponents: FindComponentsFn = (code, level, isApp, components, meta, hasChildren) => {
-  const myComponents = components[code]
+  const myComponents =
+    components[code] || (code.startsWith(VIEW_RELEASE_CODE) ? components[VIEW_RELEASE_CODE] : undefined)
 
   if (!hasChildren && meta && meta.appName && meta.appUrl) {
     return () => import('../views/mirco/SubAppRedirect/base.vue')
   }
 
-  if (isApp){ // iframe
+  if (isApp) {
+    // iframe
     return () => Iframe
   }
 
-  if (level === 1) { // BasicLayoutPage
+  if (level === 1) {
+    // BasicLayoutPage
     // if (myComponents && !hasChildren) {
     //   return meta?.hasLayout === false ? () => myComponents() : h(BasicLayoutPage, {}, h(defineAsyncComponent(() => myComponents()), {}))
     // }
     return myComponents ? () => myComponents() : shallowRef(BasicLayoutPage)
   }
 
-  if (level === 2) { // BlankLayoutPage or components
+  if (level === 2) {
+    // BlankLayoutPage or components
     return myComponents ? () => myComponents() : BlankLayoutPage
   }
 
-  if(myComponents) { // components
+  if (myComponents) {
+    // components
     return () => myComponents()
   }
 
   return undefined
 }
 
-const hasExtraChildren = (item: MenuItem, extraMenus: any ) => {
+const hasExtraChildren = (item: MenuItem, extraMenus: any) => {
   const extraItem = extraMenus[item.code]
 
   if (!extraItem) return undefined
 
   const extraRoutes = isArray(extraItem) ? extraItem : extraItem.children
   if (extraItem && extraRoutes) {
-    return extraRoutes.map(e => ({
+    return extraRoutes.map((e) => ({
       ...e,
       meta: e.meta,
       code: `${item.code}/${e.code}`,
@@ -93,50 +108,54 @@ const filterMenuCode = ['account-center']
 
 export const handleMenus = (menuData: any, extraMenus: any, components: any, level: number = 1) => {
   if (menuData && menuData.length) {
-    return menuData.filter(item => !filterMenuCode.includes(item.code)).map(item => {
-      const { isApp, appUrl } = hasAppID(item) // 是否为第三方程序
-      const meta = handleMeta(item, isApp)
-      const route: any = {
-        path: isApp ? appUrl : `${item.url}`,
-        name: isApp ? appUrl : item.code,
-        url: isApp ? appUrl : item.url,
-        meta: meta,
-        children: item.children || []
-      }
-
-      const myComponent = findComponents(item.code, level, isApp, components, meta, route.children.length)
-      if (level === 1 && !route.children.lengt && myComponent && isFunction(myComponent)) { // 一级菜单，没有子菜单，且有组件，使用组件
-        const _path = isApp ? appUrl : `${item.url}`
-        const parentPath = _path + '/parent'
-        route.name = `${item.code}-parent`
-        route.path = parentPath
-        route.url = parentPath
-        route.component = shallowRef(BasicLayoutPage)
-        meta.title = ''
-        route.meta = meta
-        route.children = [item]
-      } else {
-        route.component = item.component ?? myComponent
-
-        const extraRoute = hasExtraChildren(item, extraMenus)
-        if (extraRoute && !isApp) { // 包含额外的子路由
-
-          route.children = [...route.children, ...extraRoute]
+    return menuData
+      .filter((item) => !filterMenuCode.includes(item.code))
+      .map((item) => {
+        const { isApp, appUrl } = hasAppID(item) // 是否为第三方程序
+        const meta = handleMeta(item, isApp)
+        const route: any = {
+          path: isApp ? appUrl : `${item.url}`,
+          name: isApp ? appUrl : item.code,
+          url: isApp ? appUrl : item.url,
+          meta: meta,
+          children: item.children || []
         }
-      }
 
-      if (route.children && route.children.length) {
-        route.children = handleMenus(route.children, extraMenus, components, level + 1)
-      }
+        const myComponent = findComponents(item.code, level, isApp, components, meta, route.children.length)
+        if (level === 1 && !route.children.length && myComponent && isFunction(myComponent)) {
+          // 一级菜单，没有子菜单，且有组件，使用组件
+          const _path = isApp ? appUrl : `${item.url}`
+          const parentPath = _path + '/parent'
+          route.name = `${item.code}-parent`
+          route.path = parentPath
+          route.url = parentPath
+          route.component = shallowRef(BasicLayoutPage)
+          meta.title = ''
+          route.meta = meta
+          route.children = [item]
+        } else {
+          route.component = item.component ?? myComponent
 
-      const showChildren = route.children?.filter(r => !r.meta?.hideInMenu) || []
+          const extraRoute = hasExtraChildren(item, extraMenus)
+          if (extraRoute && !isApp) {
+            // 包含额外的子路由
 
-      if (route.children && route.children.length && showChildren.length) {
-        route.redirect = showChildren[0].path
-      }
+            route.children = [...route.children, ...extraRoute]
+          }
+        }
 
-      return route
-    })
+        if (route.children && route.children.length) {
+          route.children = handleMenus(route.children, extraMenus, components, level + 1)
+        }
+
+        const showChildren = route.children?.filter((r) => !r.meta?.hideInMenu) || []
+
+        if (route.children && route.children.length && showChildren.length) {
+          route.redirect = showChildren[0].path
+        }
+
+        return route
+      })
   }
 
   return []
@@ -144,7 +163,7 @@ export const handleMenus = (menuData: any, extraMenus: any, components: any, lev
 
 export const handleMenusMap = (menuData: any, cb: (data: any) => void) => {
   if (menuData && menuData.length) {
-    menuData.forEach(item => {
+    menuData.forEach((item) => {
       cb(item)
       if (item.children) {
         handleMenusMap(item.children, cb)
@@ -159,37 +178,41 @@ const hideInMenu = (code: string) => {
 
 export const handleSiderMenu = (menuData: any) => {
   if (menuData && menuData.length) {
-    return menuData.filter(item => item.isShow !== false).map(item => {
-      const { isApp, appUrl } = hasAppID(item) // 是否为第三方程序
-      const meta = handleMeta(item, isApp)
-      const route: any = {
-        path: isApp ? appUrl : `${item.url}`,
-        name: isApp ? appUrl : item.code,
-        url: isApp ? appUrl : item.url,
-        meta: meta,
-        children: item.children
-      }
+    return menuData
+      .filter((item) => item.isShow !== false)
+      .map((item) => {
+        const { isApp, appUrl } = hasAppID(item) // 是否为第三方程序
+        const meta = handleMeta(item, isApp)
+        const route: any = {
+          path: isApp ? appUrl : `${item.url}`,
+          name: isApp ? appUrl : item.code,
+          url: isApp ? appUrl : item.url,
+          meta: meta,
+          children: item.children
+        }
 
-      if (route.children && route.children.length) {
-        route.children = handleSiderMenu(route.children)
-      }
+        if (route.children && route.children.length) {
+          route.children = handleSiderMenu(route.children)
+        }
 
-      route.meta.hideInMenu = hideInMenu(item.code)
+        route.meta.hideInMenu = hideInMenu(item.code)
 
-      return route
-    })
+        return route
+      })
   }
   return []
 }
 
-
 export const handleAuthMenu = (menuData: any, cb: (code, buttons) => void) => {
   if (menuData && menuData.length) {
-    return menuData.forEach(item => {
-      const { code, buttons, children} = item
+    return menuData.forEach((item) => {
+      const { code, buttons, children } = item
 
       if (buttons) {
-        cb(code, buttons.map(a => a.id))
+        cb(
+          code,
+          buttons.map((a) => a.id)
+        )
       }
 
       if (children) {
