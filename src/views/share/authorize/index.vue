@@ -80,6 +80,7 @@ import { getTokenConfig, getTokenRedirect } from '@/api/comm'
 import { codeUrl } from '@/api/login'
 import { useRequest } from '@jetlinks-web/hooks'
 import { encrypt, onlyMessage, LocalStore } from '@jetlinks-web/utils'
+import { useRoute } from 'vue-router'
 
 const formState = reactive({
   password: '',
@@ -87,6 +88,7 @@ const formState = reactive({
   verifyKey: ''
 })
 
+const route = useRoute()
 const personalTokenKey = 'X-Personal-Token'
 const personalTokenKeyUrl = ':X_Personal_Token'
 const config = ref({})
@@ -118,11 +120,13 @@ const handleRedirect = async (params) => {
       LocalStore.set(personalTokenKey, token)
 
       urlObject.searchParams.delete(personalTokenKeyUrl)
-      const cleanUrl = urlObject.toString()
+      const queryString = new URLSearchParams(route.query).toString()
+      const cleanUrl = `${urlObject.toString()}?${queryString}`
       if (params) {
         onlyMessage('授权成功，即将跳转...')
-        setTimeout(() => {
+        const timer = setTimeout(() => {
           window.location.href = cleanUrl
+          clearTimeout(timer)
         }, 1000)
       } else {
         window.location.href = cleanUrl
