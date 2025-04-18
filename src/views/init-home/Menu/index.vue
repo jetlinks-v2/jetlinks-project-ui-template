@@ -13,24 +13,46 @@
 <script lang="ts" setup>
 import { getImage } from '@jetlinks-web/utils'
 import { USER_CENTER_MENU_DATA } from '../data/baseMenu'
-import BaseMenu from '../data'
-import {  updateMenus } from '@/api/initHome';
+import BaseMenu, { mergeMenuData, handleMenuOptions } from '../data'
+import { updateMenus } from '@/api/initHome';
+import { useApplication } from '@/store'
+import {BASE_API} from "@jetlinks-web/constants";
 
+const app = useApplication()
 /**
  * 获取菜单数据
  */
 const menuDates = reactive({
     count: 0,
-    current: BaseMenu,
+    current: [],
 });
+
+const getCloudMenu = async () => {
+  const baseMenus = BaseMenu()
+  menuDates.count = menuCount(baseMenus)
+  menuDates.current = baseMenus
+
+  const appItems = app.appList.filter(item => !item.path.startsWith('http'))
+
+  for (const item of appItems) {
+    let _path = item.path.startsWith('/') ? item.path : '/' + item.path
+    const url = `${window.location.protocol}//${document.location.host}${BASE_API}${_path}/baseMenu.json`
+    const resp = await fetch(url)
+    if (resp.ok) {
+      const res = await resp.json()
+      menuDates.count += menuCount(res)
+      menuDates.current = mergeMenuData(menuDates.current, handleMenuOptions(res, item))
+    }
+  }
+}
 
 /**
  * 计算菜单数量
  */
-const menuCount = (menus: any[]) => {
+const menuCount = (menus: any[]): number => {
     return menus.reduce((pre, next) => {
         let _count = 1;
-        if (next.children) {
+        if (next.children?.length) {
             _count = menuCount(next.children);
         }
         return pre + _count;
@@ -58,20 +80,18 @@ const initMenu = async () => {
         dealMenu(menuDates.current)
         // console.log([...menuDates.current!, USER_CENTER_MENU_DATA]);
         const res = await updateMenus([...menuDates.current!, USER_CENTER_MENU_DATA]);
-        if (res.status === 200) {
-            resolve(true);
-        } else {
-            resolve(false);
-        }
+        resolve(res.success)
     });
 };
 const { count } = toRefs(menuDates);
 
 onMounted(()=>{
-    menuDates.count = menuCount(BaseMenu)
+
+  getCloudMenu()
 })
+
 defineExpose({
-    updataMenu: initMenu,
+    updateMenu: initMenu,
 });
 </script>
 <style lang="less" scoped>

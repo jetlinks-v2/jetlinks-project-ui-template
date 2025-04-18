@@ -9,3 +9,6 @@ export const default_app_id = 'authentication-service'
 export const URL_TOKEN_KET = import.meta.env.VITE_TOKEN_KEY.replace(/-/g, '_')
 
 export const langKey = 'Accept-Language'
+
+export const APPLICATION_ROUTE_BASE_PATH = '/application'
+

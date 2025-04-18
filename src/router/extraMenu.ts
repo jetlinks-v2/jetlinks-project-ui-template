@@ -1,4 +1,4 @@
-const modulesFiles = import.meta.glob('../modules/*/index.ts', { eager: true})
+import { modules } from '@/utils/modules'
 import i18n from "@/locales";
 
 export const getExtraRouters = () => {
@@ -24,9 +24,9 @@ export const getExtraRouters = () => {
     ]
   }
 
-
-  Object.keys(modulesFiles).forEach(key => {
-    const routes = (modulesFiles[key] as any).default.getExtraRoutesMap()
+  const modulesFile = modules()
+  Object.keys(modulesFile).forEach(key => {
+    const routes = (modulesFile[key] as any).default.getExtraRoutesMap()
     Object.assign(extraMenu, routes)
   })
 

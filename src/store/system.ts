@@ -5,6 +5,7 @@ import {
 } from '@/api/system/calendar'
 import {LocalStore} from "@jetlinks-web/utils";
 import {langKey} from "@/utils/consts";
+import {isSubApp} from "@/utils";
 
 interface LayoutType {
   siderWidth: number
@@ -57,7 +58,9 @@ export const useSystemStore = defineStore('system', () => {
   const changeIco = (url: string) => {
     ico.value = url
     const icoDom: any = document.querySelector('link[rel="icon"]')!;
-    icoDom.href = url
+    if (icoDom) {
+      icoDom.href = url
+    }
   }
 
   const changeTitle = (value: string) => {
@@ -68,7 +71,9 @@ export const useSystemStore = defineStore('system', () => {
     const _data = systemInfo.value['front']
     if (_data) {
       const ico: any = document.querySelector('link[rel="icon"]');
-      ico.href = _data.ico;
+      if (ico) {
+        ico.href = _data.ico;
+      }
       document.title = _data.title || '';
     }
   }
@@ -109,7 +114,7 @@ export const useSystemStore = defineStore('system', () => {
   }
 
   const setMircoData = () => {
-    if ((window as any).__MICRO_APP_ENVIRONMENT__) {
+    if (isSubApp) {
       microApp.value = (window as any).microApp.getData() // 获取主应用下发的数据
     }
   }

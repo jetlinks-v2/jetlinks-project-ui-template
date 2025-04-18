@@ -1,5 +1,7 @@
+import { modules } from '@/utils/modules'
+
 const routerModules = import.meta.glob('../views/**/index.vue')
-const modulesFiles = import.meta.glob('../modules/*/index.ts', { eager: true})
+
 export const getAsyncRoutesMap = () => {
   const modules = {}
   Object.keys(routerModules).forEach(item => {
@@ -14,9 +16,9 @@ export const getAsyncRoutesMap = () => {
 
 export const getGlobModules = () => {
   const asyncRoutesMap = getAsyncRoutesMap()
-
-  Object.keys(modulesFiles).forEach(key => {
-    const routes = (modulesFiles[key] as any).default.getAsyncRoutesMap()
+  const modulesFile = modules()
+  Object.keys(modulesFile).forEach(key => {
+    const routes = (modulesFile[key] as any).default.getAsyncRoutesMap()
     Object.assign(asyncRoutesMap, routes)
   })
 

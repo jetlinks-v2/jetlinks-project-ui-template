@@ -6,18 +6,31 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { VueAmapResolver } from '@vuemap/unplugin-resolver'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
-import {
-    createStyleImportPlugin,
-    AndDesignVueResolve,
-} from 'vite-plugin-style-import'
+import { createStyleImportPlugin, AndDesignVueResolve } from 'vite-plugin-style-import'
 import * as path from 'path'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
-import { optimizeDeps, registerModulesAlias } from './configs/plugin'
+import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile, copyFile, copyImagesPlugin } from './configs/plugin'
+import { NO_MODULE, DEFAULT_POINT } from './configs/contst'
 import progress from 'vite-plugin-progress'
 
+process.on('SIGINT', handleRestoreModulesFile)
+process.on('SIGTERM', handleRestoreModulesFile)
+process.on('uncaughtException', handleRestoreModulesFile)
+process.on('unhandledRejection', handleRestoreModulesFile)
+
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-    const env: Partial<ImportMetaEnv> = loadEnv(mode, process.cwd())
+export default defineConfig(({ mode, command }) => {
+  const env: Partial<ImportMetaEnv> = loadEnv(mode, process.cwd())
+  let modulesName
+  let isModule = false
+
+    if (String(command) === 'build') {
+        backupModulesFile();
+        modulesName = process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || DEFAULT_POINT;
+        updateModulesFile(modulesName)
+    }
+
+    isModule = modulesName && ![DEFAULT_POINT, NO_MODULE].includes(modulesName)
 
     return {
         base: './',
@@ -28,18 +41,24 @@ export default defineConfig(({ mode }) => {
             },
         },
         build: {
-            outDir: 'dist',
-            assetsDir: 'assets',
+            outDir: isModule ? `src/modules/${modulesName}/dist` : 'dist',
+            assetsDir: isModule ? `src/modules/${modulesName}/assets` : 'assets',
             sourcemap: false,
             cssCodeSplit: false,
             manifest: true,
             chunkSizeWarningLimit: 2000,
-            assetsInlineLimit: 1000,
+            assetsInlineLimit: 4000,
             rollupOptions: {
                 output: {
-                    entryFileNames: `assets/[name].${ new Date().getTime() }.js`,
-                    chunkFileNames: `assets/[name].${ new Date().getTime() }.js`,
-                    assetFileNames: `assets/[name].${ new Date().getTime() }.[ext]`,
+                    entryFileNames: `assets/[name].[hash].js`,
+                    chunkFileNames: `assets/[name].[hash].js`,
+                    assetFileNames: (pre) => {
+                        const fileType = pre.name.split('.')?.pop()
+                        if (['png', 'svg', 'ico', 'jpg'].includes(fileType)) {
+                            return `images/[name].[ext]`
+                        }
+                        return `assets/[name].[hash].[ext]`
+                    },
                     compact: true,
                     manualChunks: {
                         vue: ['vue', 'vue-router', 'pinia'],
@@ -72,6 +91,18 @@ export default defineConfig(({ mode }) => {
                 resolves: [AndDesignVueResolve()],
             }),
             progress(),
+            {
+                name: 'vite-plugin-error-handler',
+                buildEnd(error) {
+                    if (error) {
+                        console.error('Build failed:', error);
+                        handleRestoreModulesFile();
+                    }
+                }
+            },
+            restoreModulesFile(),
+            copyFile(isModule ? modulesName : ''),
+            copyImagesPlugin(isModule)
         ],
         server: {
             host: '0.0.0.0',

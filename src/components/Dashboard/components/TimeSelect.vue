@@ -31,6 +31,10 @@
 import dayjs from 'dayjs'
 import { PropType } from 'vue'
 
+defineOptions({
+  name: 'JDashboardTimeSelect'
+})
+
 interface BtnOptions {
   label: string
   value: string

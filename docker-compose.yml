@@ -6,7 +6,7 @@ services:
       - "9100:9100"
     volumes:
       # 只挂载 modules 目录和运行时配置
-#      - ./modules/data-collector-ui:/app/src/modules/data-collector-ui
+      - ./src/modules:/app/src/modules
 #      - ./modules/device-manager-ui:/app/src/modules/device-manager-ui
       - ${RUNTIME_CONFIG:-./config}:/runtime-config
     environment:
