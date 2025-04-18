@@ -73,7 +73,7 @@ const _columns = computed(() => {
   if (props.columns.length > 0) {
     return props.columns
   } else if (config.columns?.length) {
-    return config.columns 
+    return config.columns
   }
   return []
 })
@@ -89,17 +89,11 @@ const searchSubmit = (data: any) => {
   config.onSearch?.(data)
 }
 
-const onSearchHistory = async () => {
-  await getSearchHistory(_target.value!)
-}
+const onSearchHistory = () => getSearchHistory(_target.value!)
 
-const onSaveSearchHistory = async (data: any) => {
-  await saveSearchHistory(data, _target.value!)
-}
+const onSaveSearchHistory = (data: any) => saveSearchHistory(data, _target.value!)
 
-const onDeleteSearchHistory = async (data: any, t: string) => {
-  await deleteSearchHistory(data, t)
-}
+const onDeleteSearchHistory = (data: any, t: string) => deleteSearchHistory(data, t)
 
 </script>
 
