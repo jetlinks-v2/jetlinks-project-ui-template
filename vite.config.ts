@@ -12,6 +12,7 @@ import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile, copyFile, copyImagesPlugin } from './configs/plugin'
 import { NO_MODULE, DEFAULT_POINT } from './configs/contst'
 import progress from 'vite-plugin-progress'
+import federation from '@originjs/vite-plugin-federation'
 
 process.on('SIGINT', handleRestoreModulesFile)
 process.on('SIGTERM', handleRestoreModulesFile)
@@ -32,12 +33,48 @@ export default defineConfig(({ mode, command }) => {
 
     isModule = modulesName && ![DEFAULT_POINT, NO_MODULE].includes(modulesName)
 
+    let buildConfig = {}
+
+    if (isModule) {
+        buildConfig = {
+            lib: {
+                entry: path.resolve(__dirname, `src/modules/${modulesName}/plugins/index.ts`),
+                name: 'plugin-components',
+                fileName: 'plugin-components'
+            },
+            rollupOptions: {
+                external: ['vue', '@jetlinks-web/core', '@jetlinks-web/utils', '@jetlinks-web/hooks'],
+                output: {
+                    globals: {
+                        vue: 'Vue',
+                        '@jetlinks-web/core': '@jetlinks-web/core',
+                        '@jetlinks-web/utils': '@jetlinks-web/utils',
+                        '@jetlinks-web/hooks': '@jetlinks-web/hooks'
+                    }
+                },
+            }
+        }
+    }
+
     return {
         base: './',
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, 'src'),
-                ...registerModulesAlias()
+                ...registerModulesAlias(),
+                vue: 'vue',
+                '@jetlinks-web/core': '@jetlinks-web/core',
+                '@jetlinks-web/utils': '@jetlinks-web/utils',
+                '@jetlinks-web/hooks': '@jetlinks-web/hooks',
+            },
+        },
+        define: {
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+            // 可选，如果用到其它 process 变量
+            'process.env': {
+                'VITE_APP_BASE_API': '/api',
+                'VITE_TOKEN_KEY': 'X-Access-Token',
+                'VITE_TOKEN_KEY_URL': ':X_Access_Token'
             },
         },
         build: {
@@ -49,22 +86,30 @@ export default defineConfig(({ mode, command }) => {
             chunkSizeWarningLimit: 2000,
             assetsInlineLimit: 4000,
             rollupOptions: {
+                external: ['vue', '@jetlinks-web/core', '@jetlinks-web/utils', '@jetlinks-web/hooks'],
                 output: {
-                    entryFileNames: `assets/[name].[hash].js`,
-                    chunkFileNames: `assets/[name].[hash].js`,
+                    entryFileNames: `assets/[name].js`,
+                    chunkFileNames: `assets/[name].js`,
                     assetFileNames: (pre) => {
                         const fileType = pre.name.split('.')?.pop()
                         if (['png', 'svg', 'ico', 'jpg'].includes(fileType)) {
                             return `images/[name].[ext]`
                         }
-                        return `assets/[name].[hash].[ext]`
+                        return `assets/[name].[ext]`
                     },
                     compact: true,
                     manualChunks: {
-                        vue: ['vue', 'vue-router', 'pinia'],
+                        vue: ['vue-router', 'pinia'],
                     },
+                    globals: {
+                        vue: 'Vue',
+                        '@jetlinks-web/core': '@jetlinks-web/core',
+                        '@jetlinks-web/utils': '@jetlinks-web/utils',
+                        '@jetlinks-web/hooks': '@jetlinks-web/hooks'
+                    }
                 },
             },
+            ...buildConfig,
         },
         plugins: [
             vue(),
@@ -102,7 +147,7 @@ export default defineConfig(({ mode, command }) => {
             },
             restoreModulesFile(),
             copyFile(isModule ? modulesName : ''),
-            copyImagesPlugin(isModule)
+            copyImagesPlugin(isModule),
         ],
         server: {
             host: '0.0.0.0',

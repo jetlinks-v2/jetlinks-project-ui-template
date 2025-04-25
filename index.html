@@ -4,9 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="modulepreload" href="./libs/vue/vue.js">
+      <script type="importmap">
+          {
+            "imports": {
+              "vue": "./libs/vue/vue.js",
+              "@jetlinks-web/core": "./libs/@jetlinks-web/core.js",
+              "@jetlinks-web/utils": "./libs/@jetlinks-web/utils.js",
+              "@jetlinks-web/hooks": "./libs/@jetlinks-web/hooks.js"
+            }
+          }
+      </script>
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/main.ts" async></script>
   </body>
 </html>

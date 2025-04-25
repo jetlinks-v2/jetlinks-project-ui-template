@@ -12,6 +12,7 @@
     "modules:init": "git submodule init && git submodule update && git submodule foreach git checkout master && git submodule foreach git pull origin master",
     "modules:update": "git submodule update",
     "build:modules": "pnpm build --mode server --",
+    "build:module": "node scripts/build-module.js",
     "create:module": "node ./scripts/template.js create"
   },
   "dependencies": {
@@ -22,7 +23,7 @@
     "@fullcalendar/vue3": "^6.1.15",
     "@jetlinks-web/components": "2.6.8",
     "@jetlinks-web/constants": "^1.0.9",
-    "@jetlinks-web/core": "^2.2.9",
+    "@jetlinks-web/core": "^2.2.10",
     "@jetlinks-web/hooks": "^1.0.25",
     "@jetlinks-web/types": "^1.0.2",
     "@jetlinks-web/utils": "^1.2.9",
@@ -49,6 +50,7 @@
     "xgplayer-hls": "^3.0.20"
   },
   "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.4.1",
     "@types/lodash-es": "^4.17.11",
     "@types/node": "^22.13.9",
     "@vitejs/plugin-vue": "^4.2.3",
@@ -70,6 +72,7 @@
     "unplugin-auto-import": "^0.16.4",
     "unplugin-vue-components": "^0.24.1",
     "vite": "^4.5.3",
+    "vite-plugin-html": "^3.2.2",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-style-import": "^2.0.0",

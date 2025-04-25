@@ -108,3 +108,19 @@ export const getModulesComponents = (name: string) =>{
 }
 
 export const isSubApp = (window as any).__MICRO_APP_ENVIRONMENT__
+
+export async function loadRemoteModule(url: string) {
+    const script = document.createElement('script');
+    script.src = url;
+    script.type = 'module';
+    document.body.appendChild(script);
+
+    return new Promise((resolve, reject) => {
+        script.onload = () => {
+            resolve(true);
+        };
+        script.onerror = () => {
+            reject(new Error(`模块加载失败: ${url}`));
+        };
+    });
+}
