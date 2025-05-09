@@ -4,7 +4,7 @@
             <img :src="getImage('/init-home/menu.png')" />
         </div>
         <div class="menu-info">
-            <b>{{ $t('Menu.index.459633-0', [count]) }}</b>
+            <b>{{ $t('Menu.index.459633-0', [menusData.count]) }}</b>
             <div>{{ $t('Menu.index.459633-2') }}</div>
         </div>
     </div>
@@ -13,8 +13,8 @@
 <script lang="ts" setup>
 import { getImage } from '@jetlinks-web/utils'
 import { USER_CENTER_MENU_DATA } from '../data/baseMenu'
-import BaseMenu, { mergeMenuData, handleMenuOptions } from '../data'
-import { updateMenus } from '@/api/initHome';
+import BaseMenuData, { mergeMenuData, handleMenuOptions } from '../data'
+import { updateMenus, getSystemPermission } from '@/api/initHome';
 import { useApplication } from '@/store'
 import {BASE_API} from "@jetlinks-web/constants";
 
@@ -22,28 +22,69 @@ const app = useApplication()
 /**
  * 获取菜单数据
  */
-const menuDates = reactive({
+const menusData = reactive<{ count: number; current: any[]}>({
     count: 0,
     current: [],
 });
 
+/**
+ * 过滤菜单
+ */
+const filterMenu = (
+  permissions: string[],
+  menus: any[],
+) => {
+  return menus.filter((item) => {
+    let isShow = false;
+    if (item.showPage && item.showPage.length) {
+      isShow = item.showPage.every((pItem: any) => {
+        return permissions.includes(pItem);
+      });
+    }
+    if (item.children) {
+      item.children = filterMenu(permissions, item.children);
+    }
+
+    return isShow || !!item.children?.length;
+  });
+};
+
+
+/**
+ * 获取当前系统权限信息
+ */
+const getSystemPermissionData = async (BaseMenu: any[]) => {
+  const resp = await getSystemPermission();
+  if (resp.success) {
+    const newTree = filterMenu(
+      resp.result.map((item: any) => JSON.parse(item).id),
+      BaseMenu,
+    );
+    const _count = menuCount(newTree);
+    menusData.current = newTree;
+    menusData.count = _count;
+  }
+  console.log(menusData.current)
+};
+
 const getCloudMenu = async () => {
-  const baseMenus = BaseMenu()
-  menuDates.count = menuCount(baseMenus)
-  menuDates.current = baseMenus
+  let bseMenus = BaseMenuData();
 
-  const appItems = app.appList.filter(item => !item.path.startsWith('http'))
+  if (app.appList.length > 0) {
+    const appItems = app.appList.filter(item => !item.path.startsWith('http'))
 
-  for (const item of appItems) {
-    let _path = item.path.startsWith('/') ? item.path : '/' + item.path
-    const url = `${window.location.protocol}//${document.location.host}${BASE_API}${_path}/baseMenu.json`
-    const resp = await fetch(url)
-    if (resp.ok) {
-      const res = await resp.json()
-      menuDates.count += menuCount(res)
-      menuDates.current = mergeMenuData(menuDates.current, handleMenuOptions(res, item))
+    for (const item of appItems) {
+      let _path = item.path.startsWith('/') ? item.path : '/' + item.path
+      const url = `${window.location.protocol}//${document.location.host}${BASE_API}${_path}/baseMenu.json`
+      const resp = await fetch(url)
+      if (resp.ok) {
+        const res = await resp.json()
+        bseMenus = mergeMenuData(bseMenus, handleMenuOptions(res, item))
+      }
     }
   }
+
+  getSystemPermissionData(bseMenus)
 }
 
 /**
@@ -77,16 +118,13 @@ const dealMenu = (data:any) =>{
 const initMenu = async () => {
     return new Promise(async (resolve) => {
       //  用户中心
-        dealMenu(menuDates.current)
-        // console.log([...menuDates.current!, USER_CENTER_MENU_DATA]);
-        const res = await updateMenus([...menuDates.current!, USER_CENTER_MENU_DATA]);
+        dealMenu(menusData.current)
+        const res = await updateMenus([...menusData.current, USER_CENTER_MENU_DATA]);
         resolve(res.success)
     });
 };
-const { count } = toRefs(menuDates);
 
 onMounted(()=>{
-
   getCloudMenu()
 })
 

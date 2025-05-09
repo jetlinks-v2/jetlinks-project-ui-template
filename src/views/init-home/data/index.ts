@@ -1,6 +1,5 @@
 import proMenu from './baseMenu';
 import { getModulesMenu } from '@/utils/modules'
-import p from "@/modules/notify-manager-ui/package.json";
 
 /**
  * 合并菜单数据
