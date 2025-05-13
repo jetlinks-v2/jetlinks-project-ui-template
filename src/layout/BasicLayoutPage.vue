@@ -27,7 +27,7 @@
         </a-space>
       </div>
     </template>
-    <router-view v-if="routerAlive.router" v-slot="{ Component }">
+    <router-view v-if="routerAlive.router" v-slot="{ Component }" :key="$route.fullPath">
       <component :is="components || Component" />
     </router-view>
   </j-pro-layout>
