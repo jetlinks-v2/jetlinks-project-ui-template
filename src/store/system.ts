@@ -4,8 +4,7 @@ import {
   getTagsColor,
 } from '@/api/system/calendar'
 import {LocalStore} from "@jetlinks-web/utils";
-import {langKey} from "@/utils/consts";
-import {isSubApp} from "@/utils";
+import {langKey, OpenMicroApp} from "@/utils/consts";
 
 interface LayoutType {
   siderWidth: number
@@ -21,7 +20,7 @@ export const useSystemStore = defineStore('system', () => {
   const ico = ref<string>('/favicon.ico') // 浏览器标签页logo
   const systemInfo = ref<Record<string, any>>({})
   const microApp = ref<Record<string, any>>({})
-  const calendarTagColor = new Map()
+  const calendarTagColor = new Map([['holiday','rgb(161, 180, 204)'],['weekend','rgb(149, 222, 100)'],['workday', 'rgba(105,177,255)']])
   const showThreshold = ref(true)
   const language = ref(LocalStore.get(langKey) || 'zh');
 
@@ -58,9 +57,8 @@ export const useSystemStore = defineStore('system', () => {
   const changeIco = (url: string) => {
     ico.value = url
     const icoDom: any = document.querySelector('link[rel="icon"]')!;
-    if (icoDom) {
-      icoDom.href = url
-    }
+    if (!icoDom) return
+    icoDom.href = url
   }
 
   const changeTitle = (value: string) => {
@@ -71,9 +69,8 @@ export const useSystemStore = defineStore('system', () => {
     const _data = systemInfo.value['front']
     if (_data) {
       const ico: any = document.querySelector('link[rel="icon"]');
-      if (ico) {
-        ico.href = _data.ico;
-      }
+      if (!ico) return
+      ico.href = _data.ico;
       document.title = _data.title || '';
     }
   }
@@ -114,7 +111,7 @@ export const useSystemStore = defineStore('system', () => {
   }
 
   const setMircoData = () => {
-    if (isSubApp) {
+    if ((window as any).__MICRO_APP_ENVIRONMENT__ && OpenMicroApp) {
       microApp.value = (window as any).microApp.getData() // 获取主应用下发的数据
     }
   }
@@ -131,8 +128,8 @@ export const useSystemStore = defineStore('system', () => {
   const queryVersion = async () => {
     const resp = await systemVersion()
     if (resp.success && resp.result) {
-      const isCommunity = resp.result.edition === 'community'
-      LocalStore.set('version_code', isCommunity)
+      // const isCommunity = resp.result.edition === 'community'
+      LocalStore.set('version_code', resp.result.edition)
     }
   }
 

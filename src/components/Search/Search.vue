@@ -1,34 +1,30 @@
 <template>
   <div :class="classNames">
     <j-advanced-search
-      :target='target || _target'
-      :type='type || _target'
-      :request='onSaveSearchHistory'
-      :historyRequest='onSearchHistory'
-      :deleteRequest='onDeleteSearchHistory'
-      :columns='_columns'
-      :class='props.class || config.class'
-      :style='style || config.style'
+      :target='target'
+      :type='type'
+      :request='(data) => saveSearchHistory(data, target)'
+      :historyRequest='() => getSearchHistory(target)'
+      :deleteRequest='(_target: string, id: string) => deleteSearchHistory(target, id)'
+      :columns='columns'
+      :class='props.class'
+      :style='myStyles'
       @search='searchSubmit'
+      ref="searchRef"
     />
   </div>
 </template>
 
 <script setup lang='ts' name='ProSearch'>
-import type { PropType } from 'vue'
+import { PropType } from 'vue'
 import { saveSearchHistory, getSearchHistory, deleteSearchHistory } from '@/api/comm'
-import type {SearchContent} from './types'
+import {isObject} from "lodash-es";
 
 interface Emit {
   (e: 'search', data: any): void
-  (e: 'update:value', data: any): void
 }
 
 const props = defineProps({
-  value: {
-    type: Object,
-    default: () => ({})
-  },
   columns: {
     type: Array as PropType<any[]>,
     default: () => [],
@@ -52,49 +48,47 @@ const props = defineProps({
     default: false
   },
   style: {
-    type: Object,
+    type: [String, Object],
     default: () => ({
-      padding: '18px 24px'
+      paddingTop: '18px',
+      paddingBottom: '18px',
     })
   }
 })
 
-const config = inject<SearchContent>('pro-search-config', {})
 const emit = defineEmits<Emit>()
 
+const searchRef = ref()
 const classNames = computed(() => {
   return {
     'j-advanced-search-warp': true,
-    'no-margin': (props.noMargin || config.noMargin) !== false
+    'no-margin': props.noMargin !== false
   }
 })
 
-const _columns = computed(() => {
-  if (props.columns.length > 0) {
-    return props.columns
-  } else if (config.columns?.length) {
-    return config.columns
+const myStyles = computed(() => {
+  if (isObject(props.style)) {
+    return {
+      paddingTop: '18px',
+      paddingBottom: '18px',
+      ...props.style
+    }
   }
-  return []
+  return props.style
 })
-
-const _target = computed(() => props.target || config.target)
 
 /**
  * 提交
  */
 const searchSubmit = (data: any) => {
-  emit('update:value', data)
   emit('search', data)
-  config.onSearch?.(data)
 }
 
-const onSearchHistory = () => getSearchHistory(_target.value!)
+const reset = () => {
+  searchRef.value?.reset?.()
+}
 
-const onSaveSearchHistory = (data: any) => saveSearchHistory(data, _target.value!)
-
-const onDeleteSearchHistory = (data: any, t: string) => deleteSearchHistory(data, t)
-
+defineExpose({ reset })
 </script>
 
 <style scoped lang='less'>

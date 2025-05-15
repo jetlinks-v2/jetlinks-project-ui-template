@@ -19,8 +19,8 @@ const props = defineProps({
         default: '',
     },
     onConfirm: {
-        type: Object,
-        default: {},
+        type: [Object,Function],
+        default: () => ({}),
     },
     className: {
         type: String,

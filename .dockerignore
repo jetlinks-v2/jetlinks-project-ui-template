@@ -1,5 +1,7 @@
+.dockerignore
 .git
 .gitignore
+.gitmodules
 .vscode
 .DS_Store
 .idea
@@ -7,4 +9,4 @@ dist
 node_modules
 Dockerfile
 docker-compose.yml
-.dockerignore
+src/modules

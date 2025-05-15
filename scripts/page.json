@@ -1,0 +1,81 @@
+{
+  "test": {
+    "type": "module",
+    "children": {
+      "page1": {
+        "type": "page",
+        "components": [
+          {
+            "type": "search",
+            "fields": [
+              {
+                "id": "name",
+                "label": "名称",
+                "type": "input"
+              },
+              {
+                "id": "type",
+                "label": "类型",
+                "type": "select",
+                "options": [
+                  {
+                    "label": "类型1",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "id": "status",
+                "label": "状态",
+                "type": "select",
+                "options": "request()"
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "fields": [
+              {
+                "id": "name",
+                "label": "名称",
+                "type": "input"
+              },
+              {
+                "id": "type",
+                "label": "类型",
+                "type": "select"
+              }
+            ]
+          }
+        ],
+        "children": {
+          "Detail": {
+            "type": "page",
+            "components": [
+
+            ]
+          },
+          "Save": {
+            "type": "modal",
+            "fields": [
+              {
+                "label": "id",
+                "id": "ID",
+                "type": "input",
+                "required": true,
+                "rules": "rules.id"
+              },
+              {
+                "label": "名称",
+                "id": "name",
+                "type": "input",
+                "required": true,
+                "rules": "rules.name"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

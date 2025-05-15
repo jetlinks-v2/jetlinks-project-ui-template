@@ -3,13 +3,11 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { VueAmapResolver } from '@vuemap/unplugin-resolver'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
-import { createStyleImportPlugin, AndDesignVueResolve } from 'vite-plugin-style-import'
 import * as path from 'path'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
-import { optimizeDeps, registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile, copyFile, copyImagesPlugin } from './configs/plugin'
+import { registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile, copyFile, copyImagesPlugin } from './configs/plugin'
 import { NO_MODULE, DEFAULT_POINT } from './configs/contst'
 import progress from 'vite-plugin-progress'
 
@@ -50,14 +48,14 @@ export default defineConfig(({ mode, command }) => {
             assetsInlineLimit: 4000,
             rollupOptions: {
                 output: {
-                    entryFileNames: `assets/[name].[hash].js`,
-                    chunkFileNames: `assets/[name].[hash].js`,
+                    entryFileNames: `assets/[name].${ new Date().getTime() }.js`,
+                    chunkFileNames: `assets/[name].${ new Date().getTime() }.js`,
                     assetFileNames: (pre) => {
                         const fileType = pre.name.split('.')?.pop()
                         if (['png', 'svg', 'ico', 'jpg'].includes(fileType)) {
                             return `images/[name].[ext]`
                         }
-                        return `assets/[name].[hash].[ext]`
+                        return `assets/[name].${ new Date().getTime() }.[ext]`
                     },
                     compact: true,
                     manualChunks: {
@@ -70,14 +68,12 @@ export default defineConfig(({ mode, command }) => {
             vue(),
             vueJsx(),
             VueSetupExtend(),
-            monacoEditorPlugin({}),
-            optimizeDeps(),
+            monacoEditorPlugin({
+                languages: ['json', 'yaml','less', 'javascript', 'typescript', 'java', 'xml', 'sql'],
+                languageWorkers: [ 'editorWorkerService', 'json', 'typescript']
+            }),
             Components({
                 resolvers: [
-                    AntDesignVueResolver({
-                        resolveIcons: true,
-                        importStyle: 'less',
-                    }),
                     VueAmapResolver(),
                 ],
                 directoryAsNamespace: true,
@@ -86,9 +82,6 @@ export default defineConfig(({ mode, command }) => {
                 imports: ['vue', 'vue-router'],
                 dts: 'src/auto-imports.d.ts',
                 resolvers: [VueAmapResolver()],
-            }),
-            createStyleImportPlugin({
-                resolves: [AndDesignVueResolve()],
             }),
             progress(),
             {

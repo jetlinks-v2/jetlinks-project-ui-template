@@ -1,9 +1,9 @@
 <template>
   <ConfigProvider
-      :locale="language[systemStore.language]"
-      :componentsLocale="componentsLocale[systemStore.language]"
-      :IconConfig="{
-      scriptUrl: '//at.alicdn.com/t/c/font_4035907_yy50diag6g8.js'
+    :locale="language[systemStore.language]"
+    :componentsLocale="componentsLocale[systemStore.language]"
+    :IconConfig="{
+      scriptUrl: '//at.alicdn.com/t/c/font_4035907_e2upz5fi7ew.js'
     }"
   >
     <router-view/>
@@ -17,10 +17,9 @@ import componentsZhCN from '@jetlinks-web/components/es/locale/zh-CN'
 import componentsEnUS from '@jetlinks-web/components/es/locale/en-US'
 import theme from '../configs/theme'
 import { useAuthStore, useSystemStore } from '@/store';
-import { usePermissionContext } from '@jetlinks-web/hooks'
+import { ComponentsEnum } from '@jetlinks-web/constants'
 import {initPackages} from "@/package";
 import { setToken} from "@jetlinks-web/utils";
-import {BASE_API, LOCAL_BASE_API} from '@jetlinks-web/constants'
 
 const route = useRoute()
 
@@ -38,18 +37,13 @@ const componentsLocale = {
 // 为公共hooks提供权限校验方法
 const { hasPermission } = useAuthStore();
 
-usePermissionContext({ hasPermission })
-
-initPackages()
-
-if (import.meta.env.DEV) {
-  localStorage.setItem(LOCAL_BASE_API, BASE_API)
-}
+provide(ComponentsEnum.Permission, { hasPermission })
 
 ConfigProvider.config({
   theme: theme,
 })
 
+initPackages()
 
 watch(() => JSON.stringify(route.query || {}), () => {
   if (route.query.token) {

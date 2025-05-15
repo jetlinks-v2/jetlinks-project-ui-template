@@ -18,13 +18,13 @@
         <div
             class="card-content-bg1"
             :style="{
-                        background: getBackgroundColor(statusNames[status]),
+                        background: showStatus ? getBackgroundColor(statusNames[status]) : 'transparent',
                     }"
         ></div>
         <div
             class="card-content-bg2"
             :style="{
-                        background: getBackgroundColor(statusNames[status]),
+                        background: showStatus ? getBackgroundColor(statusNames[status]) : 'transparent',
                     }"
         ></div>
         <div style="display: flex">
@@ -90,8 +90,9 @@
 </template>
 
 <script setup lang="ts" name='CardBox'>
-import color, { getHexColor } from '@jetlinks-web/components/es/BadgeStatus/color';
+import { getHexColor } from '@jetlinks-web/components/es/BadgeStatus/color';
 import { PropType } from 'vue';
+import i18n from '@/locales';
 
 type EmitProps = {
   // (e: 'update:modelValue', data: Record<string, any>): void;
@@ -118,7 +119,7 @@ const props = defineProps({
   },
   statusText: {
     type: String,
-    default: '正常',
+    default: () => i18n.global.t('DeviceAccess.accessModal.551011-8'),
   },
   status: {
     type: [String, Number] as PropType<string | number>,
@@ -146,12 +147,13 @@ const props = defineProps({
   }
 });
 
-const getBackgroundColor = (code: string | number) => {
-  const _color = color[code] || color.default;
+const getBackgroundColor = (code: string) => {
+  const _color1 = getHexColor(code, 0.03);
+  const _color2 = getHexColor(code, 0);
   return `linear-gradient(
                 188.4deg,
-                rgba(${_color}, 0.03) 30%,
-                rgba(${_color}, 0) 80%
+                ${_color1} 30%,
+                ${_color2} 80%
             )`;
 };
 
@@ -261,8 +263,7 @@ const handleClick = () => {
         right: -12px;
         display: flex;
         justify-content: center;
-        width: 100px;
-        padding: 2px 0;
+        padding: 0 20px 0 20px;
         background-color: rgba(#5995f5, 0.15);
         transform: skewX(45deg);
 

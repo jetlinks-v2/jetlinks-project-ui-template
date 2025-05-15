@@ -1,29 +1,19 @@
-export const modules = () => {
+import {getTargetModule} from "./modules-loader";
+
+export const modules = async () => {
   const modulesMap = {}
-  const modulesFiles = [
-    import.meta.glob('../modules/*/index.ts', { eager: true })
-  ]
-  return Object.assign(modulesMap, ...modulesFiles)
+  const modulesFiles = await getTargetModule(import.meta.glob('../modules/*/index.ts'), /..\/modules\/(.*?)\/index\.ts/)
+  console.log('modulesFiles', modulesFiles)
+  return Object.assign(modulesMap, modulesFiles)
 }
 
-export const getModulesMenu = (): any[] => {
-  const modulesFiles = [
-    import.meta.glob('../modules/*/baseMenu.ts', {eager: true})
-  ]
+export const getModulesMenu = async () => {
+  const modulesFiles = await getTargetModule(import.meta.glob('../modules/*/baseMenu.ts'), /..\/modules\/(.*?)\/baseMenu\.ts/)
   const menus: any[] = []
 
-  modulesFiles.forEach(item => {
-    const modules = Object.values(item)
-    menus.push(...modules.map((m:any) => m.default?.()))
+  Object.values(modulesFiles).forEach((item: any) => {
+    menus.push(...item.default?.())
   })
 
   return menus
-}
-
-export const getLang = () => {
-  const modulesMap = {}
-  const modulesFiles = [
-    import.meta.glob('../modules/*/locales/lang/*.json', {eager: true})
-  ]
-  return Object.assign(modulesMap, ...modulesFiles)
 }
