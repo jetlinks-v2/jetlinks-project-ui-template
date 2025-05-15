@@ -47,12 +47,3 @@ export interface SearchHistoryList {
 export interface SearchProps extends SearchBaseProps, SearchItemProps {
 
 }
-
-export interface SearchContent {
-  noMargin?: boolean
-  columns?: any[]
-  target?: string
-  onSearch?: (value: SearchItemData) => void
-  style?: any
-  class?: string | array | object
-}

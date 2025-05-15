@@ -47,6 +47,19 @@ export const userDetail = () => request.get<any>('/user/detail')
  */
 export const getInitSet = () => request.get(`/user/settings/init`)
 
+/**
+ * 查看后端配置模块
+ */
+export const queryModal  = (serviceId:string) => request.get(`/command-supports/service/${serviceId}/exists`)
+
+/**
+ * 获取支持的SSO的应用
+ * @returns
+ */
+export const bindInfo = () => request.get(`/application/sso/_all`)
+
+export const getOAuth2 = (params: any) => request.get('/oauth2/authorize', params)
+
+export const initApplication = (clientId: string | number) => request.get<{name: string}>(`/application/${clientId}/info`)
+
 export const changeToken = (data: any) => request.post('/token', data)
-
-

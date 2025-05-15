@@ -1,34 +1,63 @@
 <template>
-  <a-spin :spinning='loading' :delay='300'>
-    <div class='container'>
-      <div class='left'>
-        <img :src='systemInfo?.front?.background || bgImage' alt=''>
-<!--        <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" rel="noopener noreferrer" class="records">-->
-<!--          备案：渝ICP备19017719号-1-->
-<!--        </a>-->
+  <a-spin :spinning="loading" :delay="300">
+    <div class="container">
+      <div class="left">
+        <img :src="systemInfo?.front?.background || bgImage" alt="" />
+        <a
+          v-if="basis?.showRecordNumber"
+          href="https://beian.miit.gov.cn/#/Integrated/index"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="records"
+        >
+          {{ $t('login.index.102238-0') }}{{ basis?.recordNumber }}
+        </a>
       </div>
-      <div class='right'>
-        <Right :logo="systemInfo?.front?.logo" :title="layout?.title" v-model:loading="loading" />
+      <div class="right">
+        <Right
+          :logo="systemInfo?.front?.logo"
+          :title="layout?.title"
+          :bindings="bindings"
+          v-model:loading="loading"
+        />
       </div>
     </div>
   </a-spin>
 </template>
 <script setup name="Login" lang="ts">
-import { getImage } from '@jetlinks-web/utils'
-import { useSystemStore } from '@/store/system'
-import { storeToRefs } from 'pinia'
-import Right from './right.vue'
-import { wsClient } from "@jetlinks-web/core";
+import { getImage, LocalStore } from "@jetlinks-web/utils";
+import { useSystemStore } from "@/store/system";
+import { storeToRefs } from "pinia";
+import Right from "./right.vue";
+import { bindInfo } from "@/api/login";
+import {useI18n} from "vue-i18n";
 
-const systemStore = useSystemStore()
-const { systemInfo, layout } = storeToRefs(systemStore)
-const loading = ref(false)
+const { t: $t } = useI18n();
+const systemStore = useSystemStore();
+const { systemInfo, layout } = storeToRefs(systemStore);
+const loading = ref(false);
 
-const bgImage = getImage('/login/login.png')
+const bgImage = getImage("/login/login.png");
+const bindings = ref([]);
 
-systemStore.querySingleInfo('front')
+const basis: any = computed(() => {
+  return systemInfo.value.front || {};
+});
 
-wsClient.disconnect()
+const getOpen = async () => {
+  await systemStore.queryVersion();
+  const version = LocalStore.get("version_code");
+  if (version !== "community") {
+    bindInfo().then((res: any) => {
+      if (res.success) {
+        bindings.value = res.result
+      }
+    });
+  }
+  await systemStore.querySingleInfo("front");
+};
+
+getOpen();
 </script>
 
 <style scoped lang="less">
@@ -36,7 +65,7 @@ wsClient.disconnect()
   display: flex;
   height: 100vh;
   background-color: #fff;
-  >div {
+  > div {
     height: 100%;
   }
 
@@ -59,6 +88,7 @@ wsClient.disconnect()
     min-width: 400px;
     width: 27%;
     display: flex;
+    padding-top: 10%;
     flex-direction: column;
     justify-content: space-between;
   }

@@ -11,11 +11,11 @@ import {
   onUnmounted,
   nextTick
 } from 'vue';
-import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { omit } from 'lodash-es';
 
 defineOptions({
-  name: 'JMonacoEditor'
+  name: 'MonacoEditor'
 })
 
 const props = defineProps({
