@@ -15,7 +15,7 @@ COPY package*.json ./
 COPY . .
 
 # 复制并设置启动脚本
-COPY /template-docker/docker-entrypoint.sh /usr/local/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # 创建 node_modules 挂载点
