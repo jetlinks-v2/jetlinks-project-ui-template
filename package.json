@@ -11,7 +11,8 @@
     "modules:init": "gitmodules.sh",
     "modules:update": "git submodule update",
     "test": "playwright test",
-    "build:server": "pnpm build --mode server"
+    "build:server": "pnpm build --mode server",
+    "build:modules": "pnpm build --mode server --"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
