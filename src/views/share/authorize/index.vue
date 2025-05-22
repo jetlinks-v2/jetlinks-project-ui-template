@@ -93,13 +93,13 @@ const config = ref({})
 const personalToken = ref('')
 const isLoading = ref(false)
 const verificationData = ref({})
-const showVerificationCode = ref(false)
+const showVerificationCode = computed(() => !!verificationData.value?.base64)
 const verificationCodeUrl = computed(() => verificationData.value?.base64 || '')
 
 const { run: refreshVerificationCode } = useRequest(codeUrl, {
   immediate: false,
   onSuccess(resp) {
-    if (resp.result?.key && showVerificationCode.value) {
+    if (resp.result?.key) {
       formState.verifyKey = resp.result.key
       verificationData.value = resp.result
     }
@@ -148,7 +148,7 @@ const handleSubmit = async () => {
     password: formState.password
   }
 
-  if (config.value?.authConfiguration?.encrypt.enabled) {
+  if (config.value?.authConfiguration?.encrypt) {
     authParameters.password = encrypt(formState.password, config.value.authConfiguration.encrypt.publicKey)
     authParameters.encryptId = config.value.authConfiguration.encrypt.id
   }
@@ -178,8 +178,6 @@ const initialize = async () => {
       config.value = res.result
 
       if (res.result.authType === 'password') {
-        //是否启用验证码
-        showVerificationCode.value = res.result.authConfiguration?.captchaType === 'img'
         refreshVerificationCode()
       } else if (res.result.authType === 'none') {
         handleRedirect()

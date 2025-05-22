@@ -1,31 +1,6 @@
-# 使用Node.js LTS版本
-FROM node:18-alpine
-
-# 设置工作目录
-WORKDIR /app
-
-# 设置环境变量，允许用户自定义npm源
-ARG NPM_REGISTRY=https://registry.npmmirror.com
-ENV NPM_REGISTRY=${NPM_REGISTRY}
-
-# 复制包管理文件
-COPY package*.json ./
-
-# 复制项目文件
-COPY . .
-
-# 复制并设置启动脚本
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-# 创建 node_modules 挂载点
-VOLUME /app/node_modules
-
-# 暴露端口
-EXPOSE 9100
-
-# 使用启动脚本
-ENTRYPOINT ["docker-entrypoint.sh"]
-
-# 启动开发服务器
-CMD ["pnpm", "run", "dev"]
+FROM nginx:1.20.2
+ADD nginx.conf /etc/nginx/conf.d/default.conf
+ADD docker-entrypoint.sh /docker-entrypoint.sh
+COPY dist /usr/share/nginx/html
+CMD ["sh","/docker-entrypoint.sh"]
+#ADD oauth2 /usr/share/nginx/html/oauth2

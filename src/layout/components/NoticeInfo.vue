@@ -22,7 +22,7 @@
                                     :data="i"
                                     :type="item.key"
                                     @action="emits('action')"
-                                    @refresh="onRefresh(item.key,index)"
+                                    @refresh="onRefresh(item.key)"
                                 />
                             </template>
                             <div
@@ -33,7 +33,7 @@
                                     padding: 8px;
                                 "
                             >
-                                这是最后一条数据了
+                                {{ $t('components.NoticeInfo.811677-0') }}
                             </div>
                         </j-scrollbar>
                         <div class="no-data" v-else>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="btns">
                             <a-button type="link" @click="onMore(item.key)"
-                                >查看更多</a-button
+                                >{{ $t('components.NoticeInfo.811677-1') }}</a-button
                             >
                         </div>
                     </div>
@@ -61,7 +61,9 @@ import { useUserStore } from '@/store/user';
 import { cloneDeep } from 'lodash-es';
 import NoticeItem from './NoticeItem.vue';
 import NoticeTab from './NoticeTab.vue';
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 const emits = defineEmits(['action']);
 
 type DataType = 'alarm' | 'system-monitor' | 'system-business' | 'workflow-notification';
@@ -132,11 +134,9 @@ const onChange = (_key: string) => {
     getData(type.value);
 };
 
-onMounted(async () => {
-    onChange(props.tabs?.[0]?.key || "alarm");
-});
 
-const onRefresh = (id: string,index:number) => {
+
+const onRefresh = (id: string) => {
     const flag = cloneDeep(refreshObj.value[id]);
     refreshObj.value = {
         ...refreshObj.value,
@@ -163,6 +163,10 @@ const onMore = (key: string) => {
 
     emits('action');
 };
+
+onMounted(async () => {
+    onChange(props.tabs?.[0]?.key || "alarm");
+});
 </script>
 
 <style lang="less" scoped>

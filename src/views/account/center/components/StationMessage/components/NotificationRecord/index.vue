@@ -16,11 +16,11 @@
       :defaultParams="defaultParams"
       :scroll="{ y: 420 }"
     >
-      <!-- <template #rightExtraRender>
-                <a-popconfirm title="确认全部已读？" @confirm="onAllRead">
-                    <a-button type="primary">全部已读</a-button>
-                </a-popconfirm>
-            </template> -->
+<!--      <template #headerRightRender>-->
+<!--        <a-popconfirm title="确认全部已读？" @confirm="on">-->
+<!--          <a-button type="link">全部已读</a-button>-->
+<!--        </a-popconfirm>-->
+<!--      </template>-->
       <template #topicProvider="slotProps">
         {{ slotProps.topicName }}
       </template>
@@ -28,14 +28,14 @@
         {{ dayjs(slotProps.notifyTime).format('YYYY-MM-DD HH:mm:ss') }}
       </template>
       <template #state="slotProps">
-        <a-badge-status
+        <j-badge-status
           :status="slotProps.state.value"
           :text="slotProps.state.text"
           :statusNames="{
             read: 'success',
             unread: 'error',
           }"
-        ></a-badge-status>
+        ></j-badge-status>
       </template>
       <template #action="slotProps">
         <a-space :size="16">
@@ -90,31 +90,36 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  children: {
+    type: Array,
+    default: () => ([])
+  }
 })
 
 const getType = computed(() => {
-  if (props.type === 'system-business') {
-    return ['device-transparent-codec']
-  } else if (props.type === 'system-monitor') {
-    return ['system-event']
-  } else if (props.type === 'workflow-notification') {
-    return [
-      'workflow-task-cc',
-      'workflow-task-todo',
-      'workflow-task-reject',
-      'workflow-process-finish',
-      'workflow-process-repealed',
-      'workflow-task-transfer-todo',
-    ]
-  } else {
-    return [
-      'alarm',
-      'alarm-product',
-      'alarm-device',
-      'alarm-scene',
-      'alarm-org',
-    ]
-  }
+  return props.children.map(item => item.provider)
+  // if (props.type === 'system-business') {
+  //   return ['device-transparent-codec']
+  // } else if (props.type === 'system-monitor') {
+  //   return ['system-event']
+  // } else if (props.type === 'workflow-notification') {
+  //   return [
+  //     'workflow-task-cc',
+  //     'workflow-task-todo',
+  //     'workflow-task-reject',
+  //     'workflow-process-finish',
+  //     'workflow-process-repealed',
+  //     'workflow-task-transfer-todo',
+  //   ]
+  // } else {
+  //   return [
+  //     'alarm',
+  //     'alarm-product',
+  //     'alarm-device',
+  //     'alarm-other',
+  //     'alarm-org',
+  //   ]
+  // }
 })
 
 const columns = [
@@ -231,10 +236,12 @@ const changeStatus = (row: any) => {
   })
 }
 
-watchEffect(() => {
-  if (user.messageInfo?.id) {
+watch(() => user.messageInfo?.id, (val) => {
+  if(val){
     view(user.messageInfo)
   }
+}, {
+  immediate: true
 })
 
 // const onAllRead = async () => {
@@ -251,9 +258,11 @@ onMounted(() => {
     view(routerParams.params?.value.row)
   }
 })
+
 onUnmounted(() => {
   user.messageInfo = {}
   viewVisible.value = false
+  routerParams?.clear?.()
 })
 </script>
 

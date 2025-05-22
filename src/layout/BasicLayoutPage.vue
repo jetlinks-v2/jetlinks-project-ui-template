@@ -18,18 +18,16 @@
 
     <template #rightContentRender>
       <div class="right-content">
-        <a-space :size="24">
-          <Positions @change="changeRouterAlive" />
-          <OrgList @change="changeRouterAlive" />
-          <Language />
-          <Notice v-if="routerAlive.notice" />
-          <User />
-        </a-space>
+        <Language />
+        <Resource v-if="systemInfo?.['front']?.resources"/>
+        <Notice />
+        <User />
       </div>
     </template>
-    <router-view v-if="routerAlive.router" v-slot="{ Component }" :key="$route.fullPath">
-      <component :is="components || Component" />
-    </router-view>
+
+      <router-view v-if="updateRoute" v-slot="{ Component }">
+        <component :is="components || Component" />
+      </router-view>
   </j-pro-layout>
 </template>
 
@@ -37,27 +35,17 @@
 import { reactive, computed, watchEffect } from 'vue'
 import { useSystemStore } from '@/store/system'
 import { useMenuStore } from '@/store/menu'
-import { User, Notice, OrgList, Positions, Language } from './components'
+import { User, Notice, Language, Resource } from './components'
 import { storeToRefs } from 'pinia'
-
-type StateType = {
-  collapsed: boolean;
-  openKeys: string[];
-  selectedKeys: string[];
-  pure: boolean;
-};
 
 const router = useRouter();
 const route = useRoute();
 const systemStore = useSystemStore()
 const menuStore = useMenuStore()
 const layoutType = ref('list')
-const routerAlive = reactive({
-  router: true,
-  notice: true
-})
+const updateRoute = ref(true)
 
-const { theme, layout } = storeToRefs(systemStore)
+const { theme, layout, language, systemInfo } = storeToRefs(systemStore)
 
 const components = computed(() => {
   const componentName = route.matched[route.matched.length - 1]?.components?.default?.name
@@ -74,7 +62,7 @@ const config = computed(() => ({
   splitMenus: layout.value.layout === 'mix'
 }))
 
-const state = reactive<StateType>({
+const state = reactive({
   pure: false,
   collapsed: false, // default value
   openKeys: [],
@@ -87,7 +75,7 @@ const state = reactive<StateType>({
 const breadcrumb = computed(() =>
   {
     const paths = router.currentRoute.value.matched
-    return paths.filter(item => item.meta.title).map((item, index) => {
+    return paths.map((item, index) => {
       return {
         index,
         isLast: index === (paths.length -1),
@@ -109,27 +97,6 @@ const routerBack = () => {
   router.go(-1)
 }
 
-const changeRouterAlive = () => {
-  routerAlive.notice = true
-
-  const matched = route.matched
-  const matchedLength = route.matched.length
-  const prevComponentName = matchedLength - 2 >= 0 ? matched[matchedLength - 2]?.components?.default?.name || '' : ''
-
-  const jumpBack = !['BasicLayoutPage', 'BlankLayoutPage'].includes(prevComponentName)
-
-  if (jumpBack) {
-    routerBack()
-  } else {
-    routerAlive.router = false
-  }
-
-  nextTick(() => {
-    routerAlive.router = true
-    routerAlive.notice = true
-  })
-}
-
 const init = () => {
   (window as any).microApp?.addDataListener((data: any) => {
     if (data.layoutType) {
@@ -139,6 +106,13 @@ const init = () => {
 }
 
 init()
+
+// watch(() => systemStore.language, () => {
+//   updateRoute.value = false
+//   nextTick(() => {
+//     updateRoute.value = true
+//   })
+// })
 
 /**
  * 处理菜单选中，展开状态
@@ -163,5 +137,6 @@ watchEffect(() => {
   margin-right: 24px;
   display: flex;
   align-items: center;
+  gap: 24px;
 }
 </style>

@@ -1,3 +1,4 @@
+// 是否不是community版本
 import {getToken} from "@jetlinks-web/utils";
 import { useSystemStore } from '@/store'
 

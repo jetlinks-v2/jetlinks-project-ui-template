@@ -62,4 +62,3 @@ export const getOAuth2 = (params: any) => request.get('/oauth2/authorize', param
 
 export const initApplication = (clientId: string | number) => request.get<{name: string}>(`/application/${clientId}/info`)
 
-export const changeToken = (data: any) => request.post('/token', data)

@@ -1,18 +1,23 @@
 <template>
   <a-dropdown placement="bottomRight">
     <div class="user-info">
-      <a-avatar :size="28" :src="userStore.userInfo?.avatar" />
+      <a-avatar :size="28">
+        <template #icon>
+          <img v-if="userStore.userInfo?.avatar" :src="userStore.userInfo?.avatar" alt="">
+          <AIcon v-else type="UserOutlined"></AIcon>
+        </template>  
+      </a-avatar> 
       <span class="name">{{ userName }}</span>
     </div>
     <template #overlay>
       <a-menu @click="click">
         <a-menu-item key="userCenter">
           <AIcon type="UserOutlined" style="margin-right: 8px;" />
-          <span>个人中心</span>
+          <span>{{ $t('components.User.635192-0') }}</span>
         </a-menu-item>
         <a-menu-item key="logout">
           <AIcon type="LogoutOutlined" style="margin-right: 8px;" />
-          <span>退出登录</span>
+          <span>{{ $t('components.User.635192-1') }}</span>
         </a-menu-item>
       </a-menu>
     </template>

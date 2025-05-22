@@ -26,8 +26,8 @@ const route = useRoute()
 const systemStore = useSystemStore()
 
 const language = {
-  en: enUs,
-  zh: zhCN
+    en: enUs,
+    zh: zhCN
 }
 
 const componentsLocale = {
@@ -52,7 +52,7 @@ watch(() => JSON.stringify(route.query || {}), () => {
 }, { immediate: true })
 
 window.addEventListener('vite:preloadError', (event) => {
-  console.error('资源版本不对，请清除浏览器缓存')
+    console.error('资源版本不对，请清除浏览器缓存')
 })
 
 </script>

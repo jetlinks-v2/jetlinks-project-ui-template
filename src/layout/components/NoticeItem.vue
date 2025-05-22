@@ -13,7 +13,7 @@
                         <div>
                             {{ props.data?.topicName }}
                         </div>
-                        <span :style="{color: state === 'unread' ? 'red' : '#AAAAAA'}">{{ state === 'unread' ? '未读' : '已读' }}</span>
+                        <span :style="{color: state === 'unread' ? 'red' : '#AAAAAA'}">{{ state === 'unread' ? $t('components.NoticeItem.265390-0') : $t('components.NoticeItem.265390-1') }}</span>
                     </div>
                     <div class="time">
                         {{
@@ -28,9 +28,9 @@
                 </j-ellipsis>
             </div>
             <div class="list-item-right">
-                <a-button style="margin-bottom: 5px;" class="btn" @click.stop="detail">查看详情</a-button>
-                <a-button class="btn" v-if="state === 'unread'" @click.stop="read('_read')">标为已读</a-button>
-                <a-button class="btn" v-else @click.stop="read('_unread')">标为未读</a-button>
+                <a-button style="margin-bottom: 5px;" class="btn" @click.stop="detail">{{ $t('components.NoticeItem.265390-2') }}</a-button>
+                <a-button class="btn" v-if="state === 'unread'" @click.stop="read('_read')">{{ $t('components.NoticeItem.265390-3') }}</a-button>
+                <a-button class="btn" v-else @click.stop="read('_unread')">{{ $t('components.NoticeItem.265390-4') }}</a-button>
             </div>
         </div>
     </div>
@@ -42,7 +42,9 @@ import { changeStatus_api } from '@/api/account/notificationRecord';
 import { useMenuStore } from '@/store/menu';
 import { useUserStore } from '@/store/user';
 import { onlyMessage } from '@jetlinks-web/utils';
+import { useI18n } from 'vue-i18n';
 
+const { t: $t } = useI18n();
 const menuStory = useMenuStore();
 const route = useRoute();
 
@@ -61,7 +63,7 @@ const props = defineProps({
     }
 });
 
-const num = ref<-100 | 0>(0);
+const num = ref<-120 | 0>(0);
 
 const state = ref(props.data.state?.value)
 
@@ -70,7 +72,7 @@ watchEffect(() => {
 })
 
 const onMove = () => {
-    num.value = num.value === 0 ? -100 : 0;
+    num.value = num.value === 0 ? -120 : 0;
 };
 
 const detail = () => {
@@ -103,7 +105,7 @@ const read = (type: '_read' | '_unread') => {
             }
             num.value = 0;
             state.value = type === '_read' ? 'read' : 'unread'
-            onlyMessage('操作成功！');
+            onlyMessage($t('components.NoticeItem.265390-5'));
             emits('refresh')
         }
     });
@@ -126,7 +128,7 @@ const read = (type: '_read' | '_unread') => {
     list-style: none;
     cursor: pointer;
     display: flex;
-    width: 412px;
+    width: 432px;
     transition: all 0.3s;
     gap: 24px;
 
@@ -142,7 +144,7 @@ const read = (type: '_read' | '_unread') => {
                 display: flex;
                 align-items: center;
                 width: calc(100% - 120px);
-                
+
                 div {
                     color: rgba(0, 0, 0, 0.85);
                     font-size: 14px;
@@ -168,7 +170,7 @@ const read = (type: '_read' | '_unread') => {
     }
 
     .list-item-right {
-        width: 100px;
+        width: 120px;
         padding: 5px 12px 5px 0;
         display: flex;
         flex-direction: column;
@@ -178,6 +180,7 @@ const read = (type: '_read' | '_unread') => {
             border: none;
             background-color: #F1F4FF;
             color: @primary-color;
+            padding: 0;
         }
     }
 }

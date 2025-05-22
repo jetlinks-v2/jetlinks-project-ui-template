@@ -7,7 +7,7 @@
       v-model:activeKey="user.other.tabKey"
     >
       <a-tab-pane v-for="item in tabs" :key="item.provider" :tab="item.name">
-        <NotificationRecord :type="item.provider" />
+        <NotificationRecord :type="item.provider" :children="item.children" />
       </a-tab-pane>
     </a-tabs>
     <j-empty v-else style="margin: 200px 0" />
@@ -16,7 +16,6 @@
 
 <script lang="ts" setup>
 import NotificationRecord from "./components/NotificationRecord/index.vue";
-import { getInitData } from "../data";
 import { getAllNotice } from "@/api/account/center";
 import { useRouterParams } from "@jetlinks-web/hooks";
 import { useUserStore } from "@/store/user";
@@ -62,7 +61,7 @@ watchEffect(() => {
   if (router.params?.value.row) {
     if (
       ["device-transparent-codec"].includes(
-        router.params?.value.row.topicProvider
+        router.params?.value.row.topicProvider,
       )
     ) {
       user.other.tabKey = "system-business";
