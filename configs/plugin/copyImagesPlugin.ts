@@ -111,12 +111,15 @@ const copySrcAssetsImage = () => {
   });
 }
 
-export function copyImagesPlugin() {
+export function copyImagesPlugin(isModule) {
   return {
     name: 'copy-images-plugin',
     closeBundle() {
+
       copySrcAssetsImage()
-      copyImage()
+      if (isModule) {
+        copyImage()
+      }
     }
   };
 }

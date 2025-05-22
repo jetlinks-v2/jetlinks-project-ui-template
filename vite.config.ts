@@ -6,13 +6,31 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { VueAmapResolver } from '@vuemap/unplugin-resolver'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
-import { optimizeDeps, registerModulesAlias, copyImagesPlugin } from './configs/plugin'
+ import { registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile, copyFile, copyImagesPlugin } from './configs/plugin'
+ import { NO_MODULE, DEFAULT_POINT } from './configs/contst'
 import progress from 'vite-plugin-progress'
 import * as path from 'path'
 
+ process.on('SIGINT', handleRestoreModulesFile)
+ process.on('SIGTERM', handleRestoreModulesFile)
+ process.on('uncaughtException', handleRestoreModulesFile)
+ process.on('unhandledRejection', handleRestoreModulesFile)
+
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, command }) => {
     const env: Partial<ImportMetaEnv> = loadEnv(mode, process.cwd())
+
+    let modulesName
+    let isModule = false
+
+    if (String(command) === 'build') {
+        backupModulesFile();
+        modulesName = process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || DEFAULT_POINT;
+        updateModulesFile(modulesName)
+    }
+
+    isModule = modulesName && ![DEFAULT_POINT, NO_MODULE].includes(modulesName)
+
     return {
         base: './',
         resolve: {
@@ -22,8 +40,8 @@ export default defineConfig(({ mode }) => {
             },
         },
         build: {
-            outDir: 'dist',
-            assetsDir: 'assets',
+            outDir: isModule ? `src/modules/${modulesName}/dist` : 'dist',
+            assetsDir: isModule ? `src/modules/${modulesName}/assets` : 'assets',
             sourcemap: false,
             cssCodeSplit: false,
             manifest: true,
@@ -69,7 +87,18 @@ export default defineConfig(({ mode }) => {
                 resolvers: [VueAmapResolver()],
             }),
             progress(),
-            copyImagesPlugin()
+            {
+                name: 'vite-plugin-error-handler',
+                buildEnd(error) {
+                    if (error) {
+                        console.error('Build failed:', error);
+                        handleRestoreModulesFile();
+                    }
+                }
+            },
+            restoreModulesFile(),
+            copyFile(isModule ? modulesName : ''),
+            copyImagesPlugin(isModule)
         ],
         server: {
             host: '0.0.0.0',
@@ -79,7 +108,7 @@ export default defineConfig(({ mode }) => {
                     // target: 'http://192.168.32.93:8844',
                     // target: 'http://192.168.32.233:8601', // 王
                     // target: 'http://192.168.35.114:8844',
-                    target: 'http://192.168.33.210:8848',
+                    target: 'http://192.168.33.33:8848',
                     ws: true,
                     changeOrigin: true,
                     rewrite: (path) => path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), ''),
