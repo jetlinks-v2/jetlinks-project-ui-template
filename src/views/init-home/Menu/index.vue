@@ -144,7 +144,7 @@ const initMenu = async () => {
 };
 
 const getCloudMenu = async () => {
-  let bseMenus = await BaseMenuData();
+  let bseMenus = BaseMenuData();
 
   if (app.appList.length > 0 && OpenMicroApp) {
     const appItems = app.appList.filter(item => !item.path.startsWith('http'))
@@ -155,11 +155,10 @@ const getCloudMenu = async () => {
       const resp = await fetch(url)
       if (resp.ok) {
         const res = await resp.json()
-        bseMenus = mergeTrees(bseMenus, handleMenuOptions(res, item))
+        bseMenus = await mergeTrees(bseMenus, handleMenuOptions(res, item))
       }
     }
   }
-
   getSystemPermissionData(bseMenus)
 }
 
