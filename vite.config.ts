@@ -11,10 +11,10 @@ import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 import progress from 'vite-plugin-progress'
 import * as path from 'path'
 
- process.on('SIGINT', handleRestoreModulesFile)
- process.on('SIGTERM', handleRestoreModulesFile)
- process.on('uncaughtException', handleRestoreModulesFile)
- process.on('unhandledRejection', handleRestoreModulesFile)
+ // process.on('SIGINT', handleRestoreModulesFile)
+ // process.on('SIGTERM', handleRestoreModulesFile)
+ // process.on('uncaughtException', handleRestoreModulesFile)
+ // process.on('unhandledRejection', handleRestoreModulesFile)
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode, command }) => {
@@ -26,7 +26,7 @@ export default defineConfig(({ mode, command }) => {
     if (String(command) === 'build') {
         backupModulesFile();
         modulesName = process.argv.find(arg => arg.startsWith('--modules='))?.split('=')[1] || DEFAULT_POINT;
-        updateModulesFile(modulesName)
+        // updateModulesFile(modulesName)
     }
 
     isModule = modulesName && ![DEFAULT_POINT, NO_MODULE].includes(modulesName)
@@ -86,15 +86,15 @@ export default defineConfig(({ mode, command }) => {
                 resolvers: [VueAmapResolver()],
             }),
             progress(),
-            {
-                name: 'vite-plugin-error-handler',
-                buildEnd(error) {
-                    if (error) {
-                        console.error('Build failed:', error);
-                        handleRestoreModulesFile();
-                    }
-                }
-            },
+            // {
+            //     name: 'vite-plugin-error-handler',
+            //     buildEnd(error) {
+            //         if (error) {
+            //             console.error('Build failed:', error);
+            //             handleRestoreModulesFile();
+            //         }
+            //     }
+            // },
             restoreModulesFile(),
             copyFile(isModule ? modulesName : ''),
             copyImagesPlugin(isModule)
@@ -104,7 +104,7 @@ export default defineConfig(({ mode, command }) => {
             port: Number(env.VITE_PORT),
             proxy: {
                 [env.VITE_APP_BASE_API]: {
-                    target: 'http://192.168.32.93:8844',
+                    target: 'http://192.168.33.33:8800',
                     // target: 'http://192.168.32.233:8601', // 王
                     // target: 'http://192.168.35.114:8844',
                     // target: 'http://192.168.33.210:8800',
