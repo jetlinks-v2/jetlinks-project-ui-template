@@ -7,5 +7,5 @@ export const isNoCommunity = !(localStorage.getItem('version_code') === 'communi
 export const openEdgeUrl = (id: string) => {
   const systemStore = useSystemStore()
 
-  window.open(`${systemStore.systemInfo.paths['api-path']}/#/login?token=${getToken()}&thingId=${id}&deviceId=${id}&terminal=cloud-pc&thingType=device`)
+  window.open(`/ui/edge/cloud/default/index.html/#/login?token=${getToken()}&thingId=${id}&deviceId=${id}&terminal=cloud-pc&thingType=device`)
 }

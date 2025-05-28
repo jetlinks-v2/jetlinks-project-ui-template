@@ -118,7 +118,7 @@ export default defineConfig(({ mode, command }) => {
       cors: true,
       proxy: {
         [env.VITE_APP_BASE_API]: {
-          target: 'http://192.168.33.52:8844',
+          target: 'http://192.168.33.57:8844',
           // target: 'http://192.168.32.233:8601', // 王
           // target: 'http://192.168.35.114:8844',
           // target: 'http://192.168.33.210:8800',
