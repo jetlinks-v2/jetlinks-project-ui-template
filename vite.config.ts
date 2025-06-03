@@ -5,7 +5,7 @@ import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { VueAmapResolver } from '@vuemap/unplugin-resolver'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import monacoEditorPlugin from './configs/plugin/monaco-editor'
  import { registerModulesAlias, backupModulesFile, restoreModulesFile, updateModulesFile, handleRestoreModulesFile, copyFile, copyImagesPlugin } from './configs/plugin'
  import { NO_MODULE, DEFAULT_POINT } from './configs/contst'
 import progress from 'vite-plugin-progress'
@@ -102,9 +102,10 @@ export default defineConfig(({ mode, command }) => {
         server: {
             host: '0.0.0.0',
             port: Number(env.VITE_PORT),
+            cors: true,
             proxy: {
                 [env.VITE_APP_BASE_API]: {
-                    target: 'http://192.168.33.33:8800',
+                    target: 'http://192.168.33.52:8844',
                     // target: 'http://192.168.32.233:8601', // 王
                     // target: 'http://192.168.35.114:8844',
                     // target: 'http://192.168.33.210:8800',
