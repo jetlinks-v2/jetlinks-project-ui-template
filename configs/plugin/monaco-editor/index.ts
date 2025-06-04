@@ -101,8 +101,10 @@ export default function monacoEditorPlugin(options: IMonacoEditorOpts): Plugin {
               var _location = window.__MICRO_APP_ENVIRONMENT__ ? window.rawWindow.location : window.location;
               var currentUrl = String(_location);
               var currentOrigin = currentUrl.substr(0, currentUrl.length - _location.hash.length - _location.search.length - _location.pathname.length);
+              
+              
               if (window.__MICRO_APP_ENVIRONMENT__) {
-                result =  currentOrigin + result
+                result =  currentOrigin + result.replace('./', '/')
               }
               
               if (/^((http:)|(https:)|(file:)|(\\/\\/))/.test(result)) {
@@ -161,7 +163,6 @@ export default function monacoEditorPlugin(options: IMonacoEditorOpts): Plugin {
         });
       }
 
-          console.log('work',works)
       for (const work of works) {
         if (!existsSync(cacheDir + getFilenameByEntry(work.entry))) {
           buildSync({
