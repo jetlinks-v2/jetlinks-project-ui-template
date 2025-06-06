@@ -1,5 +1,5 @@
-import type { ButtonProps } from "ant-design-vue/es/button";
-import type { PopconfirmProps } from "ant-design-vue/es/popconfirm";
+import type { ButtonProps } from "ant-design-vue/button";
+import type { PopconfirmProps } from "ant-design-vue/popconfirm";
 
 export interface BatchActionsType extends ButtonProps {
   key: string;

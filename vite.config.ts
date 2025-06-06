@@ -34,20 +34,27 @@ export default defineConfig(({ mode, command }) => {
     return {
         base: './',
         resolve: {
-            alias: {
-                '@': path.resolve(__dirname, 'src'),
-                ...registerModulesAlias()
-            },
+            alias: [
+                { find: '@', replacement: path.resolve(__dirname, 'src') },
+                { find: /^@jetlinks-web\/components$/, replacement: '@jetlinks-web/components/es' },
+                { find: /^ant-design-vue$/, replacement: 'ant-design-vue/es' },
+                ...registerModulesAlias('array') as Array<Record<string, string>>
+            ]
+            // alias: {
+            //     '@': path.resolve(__dirname, 'src'),
+            //     ...registerModulesAlias()
+            // },
         },
         build: {
             outDir: isModule ? `src/modules/${modulesName}/dist` : 'dist',
             assetsDir: isModule ? `src/modules/${modulesName}/assets` : 'assets',
-            sourcemap: false,
+            sourcemap: true,
             cssCodeSplit: false,
             manifest: true,
             chunkSizeWarningLimit: 2000,
             assetsInlineLimit: 1000,
             rollupOptions: {
+                external: ['vue', 'vue-router', 'pinia', 'lodash-es', 'vue-i18n', 'axios', 'dayjs', 'vue-i18n'],
                 output: {
                     entryFileNames: `assets/[name].${ new Date().getTime() }.js`,
                     chunkFileNames: `assets/[name].${ new Date().getTime() }.js`,
@@ -60,10 +67,19 @@ export default defineConfig(({ mode, command }) => {
                     },
                     compact: true,
                     manualChunks: {
-                        vue: ['vue', 'vue-router', 'pinia'],
-                        'lodash-es': ['lodash-es'],
-                        'echarts': ['echarts']
+                        'echarts': ['echarts'],
+                        'ant-design-vue': ['ant-design-vue'],
+                        'JComponents': ['@jetlinks-web/components'],
                     },
+                    globals: {
+                        vue: 'Vue',
+                        'vue-router': 'VueRouter',
+                        'pinia': 'Pinia',
+                        'vue-i18n': 'VueI18n',
+                        'axios': 'axios',
+                        'dayjs': 'dayjs',
+                        'lodash-es': '_'
+                    }
                 },
             },
         },
@@ -137,6 +153,7 @@ export default defineConfig(({ mode, command }) => {
                 '@vueuse/core',
                 'echarts',
                 'dayjs',
+                '@jetlinks-web/components'
             ],
         },
     }

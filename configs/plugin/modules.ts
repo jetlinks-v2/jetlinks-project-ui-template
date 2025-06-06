@@ -4,8 +4,9 @@ import * as path from 'path'
 const rootPath = path.resolve(__dirname, '../../')
 const modulesBasePath = 'src/modules'
 
-function registerModulesAlias() {
+function registerModulesAlias(type: 'object' | 'array' =  'object') : {} | [] {
   const modulesAlias = {}
+  const modulesArray = []
   const pattern = path.resolve(rootPath, modulesBasePath)
   try {
     const folders = fs.readdirSync(pattern)
@@ -15,7 +16,14 @@ function registerModulesAlias() {
           const result = fs.readFileSync(path.resolve(rootPath, modulesBasePath, `${name}/config.json`), 'utf-8')
           const content = JSON.parse(result)
           if (content.aliasName) {
-            modulesAlias[content.aliasName] = path.resolve(modulesBasePath, name)
+            if (type === 'array') {
+              modulesArray.push({
+                find: content.aliasName,
+                replacement: path.resolve(modulesBasePath, name)
+              })
+            } else {
+              modulesAlias[content.aliasName] = path.resolve(modulesBasePath, name)
+            }
           }
         }
       } catch (error) {
@@ -26,7 +34,7 @@ function registerModulesAlias() {
     console.warn(`Failed to load ${modulesBasePath} Folder`)
   }
 
-  return modulesAlias
+  return type === 'array' ? modulesArray : modulesAlias
 }
 
 function registerModulesLessVariable() {
