@@ -42,4 +42,27 @@ function registerModulesLessVariable() {
   }
 }
 
-export { registerModulesAlias, registerModulesLessVariable }
+function loadViteModulesPlugins() {
+  const modulesPlugins = []
+  const pattern = path.resolve(rootPath, modulesBasePath)
+  try {
+    const folders = fs.readdirSync(pattern)
+    folders?.map((name) => {
+      try {
+        if (fs.existsSync(path.resolve(rootPath, modulesBasePath, `${name}/vite-plugin.js`))) {
+          const plugin = require(path.resolve(rootPath, modulesBasePath, `${name}/vite-plugin.js`))
+          if (plugin.default) {
+            modulesPlugins.push(...plugin.default)
+          }
+        }
+      } catch (error) {
+        console.warn(`Failed to load ${modulesBasePath} vite-plugin file!`)
+      }
+    })
+  } catch (error) {
+    console.warn(`Failed to load ${modulesBasePath} Folder`)
+  }
+  return modulesPlugins
+}
+
+export { registerModulesAlias, registerModulesLessVariable, loadViteModulesPlugins }
