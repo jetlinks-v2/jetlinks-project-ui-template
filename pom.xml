@@ -57,6 +57,10 @@
                                 <arguments>
                                     <argument>run</argument>
                                     <argument>--rm</argument>
+                                    <!--  挂载其余源码依赖的子模块-->
+                                    <argument>-v</argument>
+                                    <argument>${project.basedir}/../dependency-modules:/app/src/modules</argument>
+                                    <!--  挂载本模块-->
                                     <argument>-v</argument>
                                     <argument>${project.basedir}:/app/src/modules/${jetlinks.ui.build.module}</argument>
                                     <argument>registry.cn-shenzhen.aliyuncs.com/jetlinks/jetlinks-template-ui:1.0</argument>
