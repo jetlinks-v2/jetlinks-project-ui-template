@@ -23,9 +23,10 @@
     "@jetlinks-web/components": "2.6.16",
     "@jetlinks-web/constants": "^1.0.9",
     "@jetlinks-web/core": "^2.2.16",
-    "@jetlinks-web/hooks": "^1.0.25",
+    "@jetlinks-web/hooks": "^1.1.1",
     "@jetlinks-web/types": "^1.0.2",
     "@jetlinks-web/utils": "^1.2.8",
+    "@jetlinks-web/vite": "^2.0.7",
     "@micro-zoe/micro-app": "1.0.0-rc.5",
     "@vuemap/vue-amap": "^2.1.9",
     "@vueuse/router": "^11.3.0",
@@ -49,6 +50,7 @@
     "xgplayer-hls": "^3.0.21"
   },
   "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.4.1",
     "@playwright/test": "^1.51.1",
     "@types/fs-extra": "^11.0.4",
     "@types/glob": "^8.1.0",

@@ -5,7 +5,7 @@ import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { VueAmapResolver } from '@vuemap/unplugin-resolver'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
-import monacoEditorPlugin from './configs/plugin/monaco-editor'
+// import monacoEditorPlugin from './configs/plugin/monaco-editor'
 import {
   registerModulesAlias,
   backupModulesFile,
@@ -19,6 +19,8 @@ import {
 import { NO_MODULE, DEFAULT_POINT } from './configs/contst'
 import progress from 'vite-plugin-progress'
 import * as path from 'path'
+// import federation from '@originjs/vite-plugin-federation';
+import { federation, monacoEditorPlugin } from '@jetlinks-web/vite'
 
 // process.on('SIGINT', handleRestoreModulesFile)
 // process.on('SIGTERM', handleRestoreModulesFile)
@@ -82,6 +84,9 @@ export default defineConfig(({ mode, command }) => {
       VueSetupExtend(),
       monacoEditorPlugin({
         languageWorkers: ['editorWorkerService', 'json', 'typescript']
+      }),
+      federation({
+        isHost: true
       }),
       Components({
         resolvers: [VueAmapResolver()],
