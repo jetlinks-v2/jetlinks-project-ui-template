@@ -24,6 +24,9 @@ pnpm dev
 ### 4. 其它指令
 
 ```shell
+# 修改tsconfig,将子模块的别名写入paths中
+pnpm update:tsconfig
+
 # 更新子仓库
 pnpm modules:update
 

@@ -38,3 +38,6 @@ java/**
 !java/build_modules.sh
 !java/module_config.properties
 !java/*/pom.xml
+
+# 插件生成文件不需要提交
+tsconfig.paths.json
