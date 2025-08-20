@@ -11,7 +11,9 @@ export function copyFile(modulesName:string) {
 
         if (fs.existsSync(src)) {
           console.log(`Copying ${src} to ${dest}`);
-          fs.copyFileSync(src, dest);
+          setTimeout(() => {
+            fs.copyFileSync(src, dest);
+          }, 500)
         } else {
           console.error(`Source file not found: ${src}`);
         }
