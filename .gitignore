@@ -26,7 +26,8 @@ apps
 *.sln
 *.sw?
 .history
-src/modules
+.claude
+modules
 
 # 忽略所有 java 目录中的内容
 java/**
@@ -38,6 +39,3 @@ java/**
 !java/build_modules.sh
 !java/module_config.properties
 !java/*/pom.xml
-
-# 插件生成文件不需要提交
-tsconfig.paths.json
