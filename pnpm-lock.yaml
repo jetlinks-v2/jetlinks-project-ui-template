@@ -24,8 +24,8 @@ importers:
         specifier: ^6.1.15
         version: 6.1.19(@fullcalendar/core@6.1.19)(vue@3.5.25(typescript@5.8.3))
       '@jetlinks-web/components':
-        specifier: 3.1.12
-        version: 3.1.12(@types/markdown-it@14.1.2)(typescript@5.8.3)(vue-router@4.6.3(vue@3.5.25(typescript@5.8.3)))(vue@3.5.25(typescript@5.8.3))
+        specifier: 3.1.15
+        version: 3.1.15(@types/markdown-it@14.1.2)(typescript@5.8.3)(vue-router@4.6.3(vue@3.5.25(typescript@5.8.3)))(vue@3.5.25(typescript@5.8.3))
       '@jetlinks-web/constants':
         specifier: ^1.0.9
         version: 1.0.9
@@ -42,8 +42,8 @@ importers:
         specifier: ^1.2.14
         version: 1.2.14(@types/lodash-es@4.17.12)(lodash@4.17.21)
       '@jetlinks-web/vite':
-        specifier: ^2.1.11
-        version: 2.1.11
+        specifier: ^2.1.12
+        version: 2.1.12
       '@micro-zoe/micro-app':
         specifier: 1.0.0-rc.26
         version: 1.0.0-rc.26
@@ -1054,8 +1054,8 @@ packages:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
 
-  '@jetlinks-web/components@3.1.12':
-    resolution: {integrity: sha512-bwaJxV5cpy1/C2O0HxmhACsQtti01M3RXBATAywkhUbkTg1QZ0UtG0Xt0MzlK/X3SUBwvyUAfub15wirVQgGEw==}
+  '@jetlinks-web/components@3.1.15':
+    resolution: {integrity: sha512-14gxomPUmBhIPl73EYhkrPpgQP+p7HyeQyA3PooWqy7SMz7t3qgJKePyWhFNPTM0S3L+nSw4xYvjZkjltrFO3g==}
 
   '@jetlinks-web/constants@1.0.9':
     resolution: {integrity: sha512-ouIZbvBwD8wCdk9rbnuSbecwjxnE+dmtqS4qrTUvldPIP/9X0fC0m7w3B/MFyttshpELaCZybPoYwQe7PPAzCg==}
@@ -1072,8 +1072,8 @@ packages:
   '@jetlinks-web/utils@1.2.14':
     resolution: {integrity: sha512-Nf5RxxXhbatjwysmStxBSmX1n833RbLLvdncTDfhGGWYE2WR7OezbJ1I53fm/6c8G4U1T8xqFY+TYhHeau6IUA==}
 
-  '@jetlinks-web/vite@2.1.11':
-    resolution: {integrity: sha512-5oObTmY2xc6eOHlDtT67ULjrZ3ZXhnXGQY3CIgnIut5OCIB7oWqG+YqgqApXLG9gPW0IEHLgSMjt/qM/0NxUiw==}
+  '@jetlinks-web/vite@2.1.12':
+    resolution: {integrity: sha512-qgLUKQNi27l0X7n3nxR2Yauib6nUo4iBxkuTH/qli7RBN737ScwPIZFUf5MeBwCi10I8PU93n5EWLzjy0x1sbQ==}
     engines: {node: '>=14.0.0', pnpm: '>=7.0.1'}
 
   '@jridgewell/gen-mapping@0.3.13':
@@ -3820,7 +3820,7 @@ snapshots:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
-  '@jetlinks-web/components@3.1.12(@types/markdown-it@14.1.2)(typescript@5.8.3)(vue-router@4.6.3(vue@3.5.25(typescript@5.8.3)))(vue@3.5.25(typescript@5.8.3))':
+  '@jetlinks-web/components@3.1.15(@types/markdown-it@14.1.2)(typescript@5.8.3)(vue-router@4.6.3(vue@3.5.25(typescript@5.8.3)))(vue@3.5.25(typescript@5.8.3))':
     dependencies:
       '@vueuse/core': 10.11.1(vue@3.5.25(typescript@5.8.3))
       '@vueuse/router': 12.8.2(typescript@5.8.3)(vue-router@4.6.3(vue@3.5.25(typescript@5.8.3)))
@@ -3892,7 +3892,7 @@ snapshots:
       - '@types/lodash-es'
       - lodash
 
-  '@jetlinks-web/vite@2.1.11':
+  '@jetlinks-web/vite@2.1.12':
     dependencies:
       sharp: 0.34.5
 
