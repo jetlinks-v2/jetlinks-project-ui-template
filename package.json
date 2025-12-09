@@ -10,12 +10,11 @@
     "preview": "pnpm -F jetlinks-web-core preview",
     "micro": "node scripts/start-micro.js",
     "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo",
-    "modules:init": "gitmodules.sh && update:tsconfig",
+    "modules:init": "gitmodules.sh",
     "modules:update": "git submodule update",
     "test": "playwright test",
     "build:server": "pnpm -F jetlinks-web-core build --mode server",
-    "build:modules": "pnpm -F jetlinks-web-core build -- --module-name",
-    "update:tsconfig": "node ./configs/plugin/tsconfig.ts"
+    "build:modules": "pnpm -F jetlinks-web-core build -- --module-name"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
