@@ -8,7 +8,7 @@
     "dev:force": "pnpm -F jetlinks-web-core dev:force",
     "build": "pnpm -F jetlinks-web-core build",
     "preview": "pnpm -F jetlinks-web-core preview",
-    "micro": "node scripts/start-micro.js",
+    "micro": "pnpm -F jetlinks-web-core micro",
     "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo",
     "modules:init": "gitmodules.sh",
     "modules:update": "git submodule update",

@@ -270,6 +270,8 @@ importers:
         specifier: ^3.0.5
         version: 3.0.5
 
+  modules/jetlinks-ai-ui: {}
+
   modules/jetlinks-aliyun-bridge-gateway-ui: {}
 
   modules/jetlinks-components-ui:
@@ -364,9 +366,6 @@ importers:
       colorpicker-v3:
         specifier: ^2.10.2
         version: 2.10.2(typescript@5.8.3)
-      driver.js:
-        specifier: 0.9.8
-        version: 0.9.8
       echarts-gl:
         specifier: ^2.0.9
         version: 2.0.9(echarts@5.6.0)
@@ -422,6 +421,12 @@ importers:
       stats.js:
         specifier: ^0.17.0
         version: 0.17.0
+
+  modules/visualization-report-ui:
+    dependencies:
+      vue3-colorpicker:
+        specifier: ^2.3.0
+        version: 2.3.0(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.11.1(vue@3.5.25(typescript@5.8.3)))(gradient-parser@1.1.1)(lodash-es@4.17.21)(tinycolor2@1.6.0)(vue-types@3.0.2(vue@3.5.25(typescript@5.8.3)))(vue@3.5.25(typescript@5.8.3))
 
   modules/visualization-resources:
     dependencies:

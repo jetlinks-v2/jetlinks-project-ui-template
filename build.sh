@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-docker build -t registry.cn-shenzhen.aliyuncs.com/jetlinks/jetlinks-ui-vue:2.3.0 .
-docker push registry.cn-shenzhen.aliyuncs.com/jetlinks/jetlinks-ui-vue:2.3.0
+docker build --no-cache -t registry.cn-shenzhen.aliyuncs.com/jetlinks/jetlinks-ui-vue:2.12.0 --push .
+docker build --no-cache --platform linux/arm64 -t registry.cn-shenzhen.aliyuncs.com/jetlinks/jetlinks-ui-vue:2.12.0-arm64 --push .
