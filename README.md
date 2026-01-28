@@ -13,7 +13,7 @@
 | 工具   | 版本要求        | 检查命令            |
 | ---- |-------------|-----------------|
 | Git  | ≥ 2.30      | `git --version` |
-| Node.js | ≥ 28        | `node -v`       |
+| Node.js | ≥ 20        | `node -v`       |
 | pnpm | ≥ 10        | `pnpm -v`       |
 | SSH Key | 已添加到 GitHub | 见下方配置说明         |
 
@@ -128,20 +128,13 @@ pnpm modules:init
 pnpm install
 ```
 
-### 3. 生成子tsconfig.paths.json文件
-这是添加在ts中添加子模块别名，一定要执行。后面每新增一个子模块都需要运行一次
-```shell
-# 修改tsconfig,将子模块的别名写入paths中
-pnpm update:tsconfig
-```
-
-### 4. 运行
+### 3. 运行
 ```shell
 pnpm dev
 ```
 - 运行完成之后在浏览器访问`http://localhost:9100`即可
 
-### 5. 其它指令
+### 4. 其它指令
 
 ```shell
 
