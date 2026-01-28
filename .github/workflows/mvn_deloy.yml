@@ -2,7 +2,7 @@ name: Auto Deploy jetlinks-ui to the JetLinks Maven Repository
 
 on:
   push:
-    branches: ["master"]
+    branches: ["2.12"]
 
 jobs:
   publish:
@@ -13,15 +13,20 @@ jobs:
         #        os: [ubuntu-latest, windows-latest, macOS-latest]
         os: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout Main Repository
+        uses: actions/checkout@v3
+      - name: Clone jetlinks-web-core Repository
+        uses: actions/checkout@v3
+        with:
+          run: |
+            git clone -b 2.12 https://github.com/jetlinks-v2/jetlinks-web-core.git ./target-directory
       - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
       - run: echo ${{github.ref}}
       - run: npm install pnpm -g
       - run: pnpm install --no-frozen-lockfile
-      - run: pnpm update:tsconfig
       - run: pnpm run build:server
         env:
           CI: true
