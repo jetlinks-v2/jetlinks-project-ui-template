@@ -1,60 +1,39 @@
-name: Auto Deploy jetlinks-ui to the JetLinks Maven Repository
+name: Publish UI parent SNAPSHOT
 
 on:
   push:
-    branches: ["2.12","2.20"]
+    branches: ["2.12", "2.20"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: snapshot-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node_version: [ 18.x ]
-        #        os: [ubuntu-latest, windows-latest, macOS-latest]
-        os: [ ubuntu-latest ]
     steps:
-      - name: Checkout Main Repository
-        uses: actions/checkout@v3
-      - name: Clone jetlinks-web-core Repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
-          run: |
-            git clone -b 2.12 https://github.com/jetlinks-v2/jetlinks-web-core.git ./target-directory
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node_version }}
-      - run: echo ${{github.ref}}
-      - run: npm install pnpm -g
-      - run: pnpm install --no-frozen-lockfile
-      - run: pnpm run build:server
-        env:
-          CI: true
-          NODE_OPTIONS: --max_old_space_size=8192
-      - name: Set up Repository info
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-      - name: Cache Maven Repository
-        #uses: actions/cache@v3
+          java-version: '17'
+          distribution: temurin
+      - name: Verify SNAPSHOT version
+        run: |
+          version="$(mvn --batch-mode --quiet --non-recursive --settings .mvn/settings.xml help:evaluate -Dexpression=project.version -DforceStdout -Dstyle.color=never)"
+          case "$version" in
+            *-SNAPSHOT) ;;
+            *) echo "Only SNAPSHOT publication is supported" >&2; exit 1 ;;
+          esac
+      - name: Deploy parent SNAPSHOT
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
         run: |
-          mkdir -p ~/.m2
-          echo "<settings>
-                  <servers>
-                    <server>
-                      <id>snapshots</id>
-                      <username>${MAVEN_USERNAME}</username>
-                      <password>${MAVEN_PASSWORD}</password>
-                    </server>
-                  </servers>
-                </settings>" > ~/.m2/settings.xml
-          
-          # Step 4: 构建并发布到 Maven 私有仓库
-      - name: Make shell script executable
-        run: chmod +x ./java/build_modules.sh
-      - name: Build and Deploy to Maven
-        run: ./java/build_modules.sh
+          : "${MAVEN_USERNAME:?MAVEN_USERNAME is required}"
+          : "${MAVEN_PASSWORD:?MAVEN_PASSWORD is required}"
+          mvn --batch-mode --update-snapshots --non-recursive clean deploy --settings .mvn/settings.xml

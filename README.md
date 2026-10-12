@@ -2,6 +2,16 @@
 
 [更新说明](./CHANGELOG.md)
 
+## 共享 UI 父工程与资源模块
+
+根 `pom.xml` 定义共享父工程 `org.jetlinks.ui:ui-parent:2.20.0-SNAPSHOT`，为 UI 模块提供
+资源构建容器、模块目录挂载约定和 Maven SNAPSHOT 发布仓库。`exec-maven-plugin` 的
+`build-ui` 执行由需要编译 UI 的子模块启用；父 POM 本身不需要构建前端资源。
+
+`java/` 下的 Maven 模块把前端构建产物打包为动态资源、字体、图片及编辑器 worker 等 jar，
+`jetlinks-ui-resource` 聚合这些依赖，供后端加载 UI 静态资源。独立业务 UI 资源模块也可继承
+该父工程，并定义自己的资源目录及 jar 内目标路径。
+
 ## 项目说明
 本项目包含多个 **Git 子模块（submodule）**，用于拆分组件、公共模块等。
 请严格按照下列步骤进行操作，否则会出现代码不全、依赖安装失败、无法运行、缺少菜单等问题。
